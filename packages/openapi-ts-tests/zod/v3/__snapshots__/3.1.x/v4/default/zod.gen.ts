@@ -194,7 +194,7 @@ export const zAnyOfArrays = z.object({
 /**
  * This is a string dictionary
  */
-export const zDictionaryWithString = z.object({}).catchall(z.string());
+export const zDictionaryWithString = z.record(z.string(), z.string());
 
 export const zDictionaryWithPropertiesAndAdditionalProperties = z.object({
     foo: z.number().optional(),
@@ -204,12 +204,12 @@ export const zDictionaryWithPropertiesAndAdditionalProperties = z.object({
 /**
  * This is a string dictionary
  */
-export const zDictionaryWithDictionary = z.object({}).catchall(z.object({}).catchall(z.string()));
+export const zDictionaryWithDictionary = z.record(z.string(), z.record(z.string(), z.string()));
 
 /**
  * This is a complex dictionary
  */
-export const zDictionaryWithProperties = z.object({}).catchall(z.object({
+export const zDictionaryWithProperties = z.record(z.string(), z.object({
     foo: z.string().optional(),
     bar: z.string().optional()
 }));
@@ -253,12 +253,12 @@ export const zArrayWithArray = z.array(z.array(zModelWithString));
 /**
  * This is a string reference
  */
-export const zDictionaryWithReference = z.object({}).catchall(zModelWithString);
+export const zDictionaryWithReference = z.record(z.string(), zModelWithString);
 
 /**
  * This is a complex dictionary
  */
-export const zDictionaryWithArray = z.object({}).catchall(z.array(zModelWithString));
+export const zDictionaryWithArray = z.record(z.string(), z.array(zModelWithString));
 
 /**
  * This is a model with one string property
@@ -327,12 +327,12 @@ export const zModelWithEnumFromDescription = z.object({
  * This is a model with nested enums
  */
 export const zModelWithNestedEnums = z.object({
-    dictionaryWithEnum: z.object({}).catchall(z.enum([
+    dictionaryWithEnum: z.record(z.string(), z.enum([
         'Success',
         'Warning',
         'Error'
     ])).optional(),
-    dictionaryWithEnumFromDescription: z.object({}).catchall(z.int()).optional(),
+    dictionaryWithEnumFromDescription: z.record(z.string(), z.int()).optional(),
     arrayWithEnum: z.array(z.enum([
         'Success',
         'Warning',
@@ -360,7 +360,7 @@ export const zModelWithArray = z.object({
  * This is a model with one property containing a dictionary
  */
 export const zModelWithDictionary = z.object({
-    prop: z.object({}).catchall(z.string()).optional()
+    prop: z.record(z.string(), z.string()).optional()
 });
 
 /**
@@ -494,7 +494,7 @@ export const zCompositionWithOneOfAndNullable = z.object({
 export const zCompositionWithOneOfAndSimpleDictionary = z.object({
     propA: z.union([
         z.boolean(),
-        z.object({}).catchall(z.number())
+        z.record(z.string(), z.number())
     ]).optional()
 });
 
@@ -504,7 +504,7 @@ export const zCompositionWithOneOfAndSimpleDictionary = z.object({
 export const zCompositionWithOneOfAndSimpleArrayDictionary = z.object({
     propA: z.union([
         z.boolean(),
-        z.object({}).catchall(z.array(z.boolean()))
+        z.record(z.string(), z.array(z.boolean()))
     ]).optional()
 });
 
@@ -514,7 +514,7 @@ export const zCompositionWithOneOfAndSimpleArrayDictionary = z.object({
 export const zCompositionWithOneOfAndComplexArrayDictionary = z.object({
     propA: z.union([
         z.boolean(),
-        z.object({}).catchall(z.array(z.union([z.number(), z.string()])))
+        z.record(z.string(), z.array(z.union([z.number(), z.string()])))
     ]).optional()
 });
 
@@ -672,17 +672,17 @@ export const zPageable = z.object({
 /**
  * This is a free-form object without additionalProperties.
  */
-export const zFreeFormObjectWithoutAdditionalProperties = z.object({}).catchall(z.unknown());
+export const zFreeFormObjectWithoutAdditionalProperties = z.record(z.string(), z.unknown());
 
 /**
  * This is a free-form object with additionalProperties: true.
  */
-export const zFreeFormObjectWithAdditionalPropertiesEqTrue = z.object({}).catchall(z.unknown());
+export const zFreeFormObjectWithAdditionalPropertiesEqTrue = z.record(z.string(), z.unknown());
 
 /**
  * This is a free-form object with additionalProperties: {}.
  */
-export const zFreeFormObjectWithAdditionalPropertiesEqEmptyObject = z.object({}).catchall(z.unknown());
+export const zFreeFormObjectWithAdditionalPropertiesEqEmptyObject = z.record(z.string(), z.unknown());
 
 export const zModelWithConst = z.object({
     String: z.literal('String').optional(),
@@ -721,7 +721,7 @@ export const zModelWithNullableObject = z.object({
 /**
  * An object with additional properties that can be null (anyOf ref + null)
  */
-export const zModelWithAdditionalPropertiesRef = z.object({}).catchall(zNullableObject.nullable());
+export const zModelWithAdditionalPropertiesRef = z.record(z.string(), zNullableObject.nullable());
 
 export const zModelWithOneOfEnum = z.union([
     z.object({
@@ -912,18 +912,18 @@ export const zIoK8sApimachineryPkgApisMetaV1DeleteOptions = z.object({
     preconditions: zIoK8sApimachineryPkgApisMetaV1Preconditions.optional()
 });
 
-export const zAdditionalPropertiesUnknownIssue = z.object({}).catchall(z.union([
+export const zAdditionalPropertiesUnknownIssue = z.record(z.string(), z.union([
     z.string(),
     z.number()
 ]));
 
-export const zAdditionalPropertiesUnknownIssue2 = z.object({}).catchall(z.union([
+export const zAdditionalPropertiesUnknownIssue2 = z.record(z.string(), z.union([
     z.string(),
     z.number()
 ]));
 
 export const zAdditionalPropertiesUnknownIssue3 = z.intersection(z.string(), z.object({
-    entries: z.object({}).catchall(zAdditionalPropertiesUnknownIssue)
+    entries: z.record(z.string(), zAdditionalPropertiesUnknownIssue)
 }));
 
 export const zAdditionalPropertiesIntegerIssue = z.object({
@@ -934,7 +934,7 @@ export const zGenericSchemaDuplicateIssue1SystemBoolean = z.object({
     item: z.boolean().optional(),
     error: z.string().nullish(),
     hasError: z.boolean().readonly().optional(),
-    data: z.object({}).catchall(z.never()).optional()
+    data: z.record(z.string(), z.never()).optional()
 });
 
 export const zGenericSchemaDuplicateIssue1SystemString = z.object({
@@ -1028,7 +1028,7 @@ export const zModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = z.tup
         zImport
     ])]);
 
-export const zAdditionalPropertiesUnknownIssueWritable = z.object({}).catchall(z.union([
+export const zAdditionalPropertiesUnknownIssueWritable = z.record(z.string(), z.union([
     z.string(),
     z.number()
 ]));
@@ -1036,7 +1036,7 @@ export const zAdditionalPropertiesUnknownIssueWritable = z.object({}).catchall(z
 export const zGenericSchemaDuplicateIssue1SystemBooleanWritable = z.object({
     item: z.boolean().optional(),
     error: z.string().nullish(),
-    data: z.object({}).catchall(z.never()).optional()
+    data: z.record(z.string(), z.never()).optional()
 });
 
 export const zGenericSchemaDuplicateIssue1SystemStringWritable = z.object({
@@ -1144,7 +1144,7 @@ export const zDeprecatedCallHeaders = z.object({
 /**
  * This is the parameter that goes into the body
  */
-export const zCallWithParametersBody = z.object({}).catchall(z.unknown()).nullable();
+export const zCallWithParametersBody = z.record(z.string(), z.unknown()).nullable();
 
 export const zCallWithParametersHeaders = z.object({
     parameterHeader: z.string().nullable()
@@ -1310,9 +1310,9 @@ export const zTypesQuery = z.object({
     parameterNumber: z.number().default(123),
     parameterString: z.string().nullable().default('default'),
     parameterBoolean: z.boolean().nullable().default(true),
-    parameterObject: z.object({}).catchall(z.unknown()).nullable().default(null),
+    parameterObject: z.record(z.string(), z.unknown()).nullable().default(null),
     parameterArray: z.array(z.string()).nullable(),
-    parameterDictionary: z.object({}).catchall(z.unknown()).nullable(),
+    parameterDictionary: z.record(z.string(), z.unknown()).nullable(),
     parameterEnum: z.union([
         z.literal('Success'),
         z.literal('Warning'),
@@ -1324,7 +1324,7 @@ export const zTypesResponse = z.union([
     z.number(),
     z.string(),
     z.boolean(),
-    z.object({}).catchall(z.unknown())
+    z.record(z.string(), z.unknown())
 ]);
 
 export const zUploadFileBody = z.string();

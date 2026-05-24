@@ -9,7 +9,6 @@ export const identifiers = {
   array: 'array',
   bigint: 'bigint',
   boolean: 'boolean',
-  catchall: 'catchall',
   check: 'check',
   coerce: 'coerce',
   date: 'date',

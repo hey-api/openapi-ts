@@ -49,7 +49,7 @@ function baseNode(ctx: ExtendedContext): Chain {
   const shape = nodes.shape(ctx);
 
   if (additional) {
-    return $(z).attr(identifiers.object).call(shape).attr(identifiers.catchall).call(additional);
+    return $(z).attr(identifiers.record).call($(z).attr(identifiers.string).call(), additional);
   }
 
   return $(z).attr(identifiers.object).call(shape);

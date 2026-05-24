@@ -143,17 +143,17 @@ export const zArrayWithProperties = z.array(z.object({
 /**
  * This is a string dictionary
  */
-export const zDictionaryWithString = z.object({}).catchall(z.string());
+export const zDictionaryWithString = z.record(z.string());
 
 /**
  * This is a string dictionary
  */
-export const zDictionaryWithDictionary = z.object({}).catchall(z.object({}).catchall(z.string()));
+export const zDictionaryWithDictionary = z.record(z.record(z.string()));
 
 /**
  * This is a complex dictionary
  */
-export const zDictionaryWithProperties = z.object({}).catchall(z.object({
+export const zDictionaryWithProperties = z.record(z.object({
     foo: z.string().optional(),
     bar: z.string().optional()
 }));
@@ -199,12 +199,12 @@ export const zArrayWithArray = z.array(z.array(zModelWithString));
 /**
  * This is a string reference
  */
-export const zDictionaryWithReference = z.object({}).catchall(zModelWithString);
+export const zDictionaryWithReference = z.record(zModelWithString);
 
 /**
  * This is a complex dictionary
  */
-export const zDictionaryWithArray = z.object({}).catchall(z.array(zModelWithString));
+export const zDictionaryWithArray = z.record(z.array(zModelWithString));
 
 /**
  * This is a model with one string property
@@ -253,12 +253,12 @@ export const zModelWithEnumFromDescription = z.object({
  * This is a model with nested enums
  */
 export const zModelWithNestedEnums = z.object({
-    dictionaryWithEnum: z.object({}).catchall(z.enum([
+    dictionaryWithEnum: z.record(z.enum([
         'Success',
         'Warning',
         'Error'
     ])).optional(),
-    dictionaryWithEnumFromDescription: z.object({}).catchall(z.number().int()).optional(),
+    dictionaryWithEnumFromDescription: z.record(z.number().int()).optional(),
     arrayWithEnum: z.array(z.enum([
         'Success',
         'Warning',
@@ -280,7 +280,7 @@ export const zModelWithArray = z.object({
  * This is a model with one property containing a dictionary
  */
 export const zModelWithDictionary = z.object({
-    prop: z.object({}).catchall(z.string()).optional()
+    prop: z.record(z.string()).optional()
 });
 
 /**
@@ -573,7 +573,7 @@ export const zTypesQuery = z.object({
     parameterString: z.string().default('default'),
     parameterBoolean: z.boolean().default(true),
     parameterArray: z.array(z.string()),
-    parameterDictionary: z.object({}).catchall(z.unknown()),
+    parameterDictionary: z.record(z.unknown()),
     parameterEnum: z.enum([
         'Success',
         'Warning',
@@ -585,7 +585,7 @@ export const zTypesResponse = z.union([
     z.number(),
     z.string(),
     z.boolean(),
-    z.object({}).catchall(z.unknown())
+    z.record(z.unknown())
 ]);
 
 export const zComplexTypesQuery = z.object({
