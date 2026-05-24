@@ -72,12 +72,7 @@ export const defaultConfig: SwrPlugin['Config'] = {
         enabled: true,
         name: 'use{{name}}',
       },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
+      mappers,
       value: plugin.config.useSwr,
     });
 
