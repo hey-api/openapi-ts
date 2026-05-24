@@ -26,7 +26,7 @@ export function nullToPipes({
 }: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'null'>;
 }): Pipe {
-  const ctx: NullResolverContext = {
+  const resolverCtx: NullResolverContext = {
     $,
     nodes: {
       base: baseNode,
@@ -44,6 +44,6 @@ export function nullToPipes({
   };
 
   const resolver = plugin.config['~resolvers']?.null;
-  const node = resolver?.(ctx) ?? nullResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? nullResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

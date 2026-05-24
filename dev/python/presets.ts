@@ -20,7 +20,11 @@ export const presets = {
       name: '@hey-api/python-sdk',
       paramsStructure: 'flat',
     },
-    'pydantic',
+    {
+      fieldStyle: 'field',
+      modelType: 'BaseModel',
+      name: 'pydantic',
+    },
   ],
 } as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;
 

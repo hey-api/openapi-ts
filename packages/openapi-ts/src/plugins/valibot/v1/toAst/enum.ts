@@ -79,7 +79,7 @@ export function enumToPipes({
 }): Pipe {
   const v = plugin.external('valibot.v');
 
-  const ctx: EnumResolverContext = {
+  const resolverCtx: EnumResolverContext = {
     $,
     nodes: {
       base: baseNode,
@@ -96,7 +96,7 @@ export function enumToPipes({
   };
 
   const resolver = plugin.config['~resolvers']?.enum;
-  const node = resolver?.(ctx) ?? enumResolver(ctx);
+  const node = resolver?.(resolverCtx) ?? enumResolver(resolverCtx);
 
-  return ctx.pipes.toNode(node, plugin);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

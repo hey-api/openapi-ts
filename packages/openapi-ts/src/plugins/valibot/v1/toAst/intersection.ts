@@ -14,7 +14,7 @@ function baseNode(ctx: IntersectionResolverContext): PipeResult {
   }
 
   if (childResults.length === 1) {
-    const finalResult = applyModifiers!(childResults[0]!);
+    const finalResult = applyModifiers(childResults[0]!);
     return finalResult.pipes;
   }
 
