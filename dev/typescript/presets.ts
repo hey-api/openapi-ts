@@ -17,6 +17,7 @@ export const presets = {
       paramsStructure: 'flat',
     },
     {
+      dates: true,
       name: '@hey-api/transformers',
     },
     {
