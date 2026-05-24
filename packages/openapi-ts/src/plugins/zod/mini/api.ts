@@ -167,7 +167,7 @@ export function createRequestSchemaMini(
 
   return exportAst({
     final: {
-      expression: schema,
+      chain: schema,
     },
     meta: {
       resource: 'operation',

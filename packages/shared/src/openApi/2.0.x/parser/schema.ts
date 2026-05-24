@@ -11,11 +11,9 @@ import type {
 import { discriminatorValues } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
 
-export function getSchemaType({
-  schema,
-}: {
-  schema: OpenAPIV2.SchemaObject;
-}): SchemaType<OpenAPIV2.SchemaObject> | undefined {
+export function getSchemaType(
+  schema: OpenAPIV2.SchemaObject,
+): SchemaType<OpenAPIV2.SchemaObject> | undefined {
   if (schema.type) {
     return schema.type;
   }
@@ -139,10 +137,7 @@ function parseArray({
         const ofArray = schema.items.allOf;
         if (ofArray && ofArray.length > 1 && !schema.items['x-nullable']) {
           // bring composition up to avoid incorrectly nested arrays
-          irSchema = {
-            ...irSchema,
-            ...irItemsSchema,
-          };
+          Object.assign(irSchema, irItemsSchema);
         } else {
           schemaItems.push(irItemsSchema);
         }
@@ -198,24 +193,30 @@ function parseObject({
 }): IR.SchemaObject {
   irSchema.type = 'object';
 
-  const schemaProperties: Record<string, IR.SchemaObject> = {};
+  let isSchemaPropertiesEmpty = true;
 
-  for (const name in schema.properties) {
-    const property = schema.properties[name]!;
-    if (typeof property === 'boolean') {
-      // TODO: parser - handle boolean properties
-    } else {
-      const irPropertySchema = schemaToIrSchema({
-        context,
-        schema: property,
-        state,
-      });
-      schemaProperties[name] = irPropertySchema;
+  if (schema.properties) {
+    const schemaProperties: Record<string, IR.SchemaObject> = {};
+
+    for (const name in schema.properties) {
+      isSchemaPropertiesEmpty = false;
+
+      const property = schema.properties[name]!;
+      if (typeof property === 'boolean') {
+        // TODO: parser - handle boolean properties
+      } else {
+        const irPropertySchema = schemaToIrSchema({
+          context,
+          schema: property,
+          state,
+        });
+        schemaProperties[name] = irPropertySchema;
+      }
     }
-  }
 
-  if (Object.keys(schemaProperties).length) {
-    irSchema.properties = schemaProperties;
+    if (!isSchemaPropertiesEmpty) {
+      irSchema.properties = schemaProperties;
+    }
   }
 
   if (schema.additionalProperties === undefined) {
@@ -230,7 +231,7 @@ function parseObject({
     const isEmptyObjectInAllOf =
       state.inAllOf &&
       schema.additionalProperties === false &&
-      (!schema.properties || !Object.keys(schema.properties).length);
+      (!schema.properties || isSchemaPropertiesEmpty);
 
     if (!isEmptyObjectInAllOf) {
       irSchema.additionalProperties = {
@@ -302,7 +303,7 @@ function parseAllOf({
   let irSchema = initIrSchema({ schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaType = getSchemaType({ schema });
+  const schemaType = getSchemaType(schema);
 
   const compositionSchemas = schema.allOf;
 
@@ -318,13 +319,10 @@ function parseAllOf({
       state,
     });
     state.inAllOf = originalInAllOf;
-    if (state.inAllOf === undefined) {
-      delete state.inAllOf;
-    }
 
     if (schema.required) {
       if (irCompositionSchema.required) {
-        irCompositionSchema.required = [...irCompositionSchema.required, ...schema.required];
+        irCompositionSchema.required.push(...schema.required);
       } else {
         irCompositionSchema.required = schema.required;
       }
@@ -380,7 +378,7 @@ function parseAllOf({
               ? context.resolveRef<OpenAPIV2.SchemaObject>(compositionSchema.$ref)
               : compositionSchema;
 
-            if (getSchemaType({ schema: finalCompositionSchema }) === 'object') {
+            if (getSchemaType(finalCompositionSchema) === 'object') {
               const irCompositionSchema = parseOneType({
                 context,
                 schema: {
@@ -459,8 +457,12 @@ function parseEnum({
   irSchema.type = 'enum';
 
   const schemaItems: Array<IR.SchemaObject> = [];
+  const xEnumDescriptions = schema['x-enum-descriptions'];
+  const xEnumVarnames = schema['x-enum-varnames'];
+  const xEnumNames = schema['x-enumNames'];
 
-  for (const [index, enumValue] of schema.enum.entries()) {
+  for (let index = 0, len = schema.enum.length; index < len; index++) {
+    const enumValue = schema.enum[index];
     const typeOfEnumValue = typeof enumValue;
     let enumType: SchemaType<OpenAPIV2.SchemaObject> | 'null' | undefined;
 
@@ -492,8 +494,8 @@ function parseEnum({
     const irTypeSchema = parseOneType({
       context,
       schema: {
-        description: schema['x-enum-descriptions']?.[index],
-        title: schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
+        description: xEnumDescriptions?.[index],
+        title: xEnumVarnames?.[index] ?? xEnumNames?.[index],
         // cast enum to string temporarily
         type: enumType === 'null' ? 'string' : enumType,
       },
@@ -630,7 +632,7 @@ function parseType({
 
   parseSchemaMeta({ irSchema, schema });
 
-  const type = getSchemaType({ schema });
+  const type = getSchemaType(schema);
 
   if (!type) {
     return irSchema;

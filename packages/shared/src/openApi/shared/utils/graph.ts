@@ -32,13 +32,13 @@ export const annotateChildScopes = (nodes: Graph['nodes']): void => {
 
 interface Cache {
   parentToChildren: Map<string, Array<string>>;
-  subtreeDependencies: Map<string, Set<string>>;
-  transitiveDependencies: Map<string, Set<string>>;
+  subtreeDependencies: Map<string, Set<string> | null>;
+  transitiveDependencies: Map<string, Set<string> | null>;
 }
 
 type PointerDependenciesResult = {
-  subtreeDependencies: Set<string>;
-  transitiveDependencies: Set<string>;
+  subtreeDependencies: Set<string> | null;
+  transitiveDependencies: Set<string> | null;
 };
 
 /**
@@ -55,32 +55,25 @@ const collectPointerDependencies = ({
   pointer: string;
   visited: Set<string>;
 }): PointerDependenciesResult => {
-  const cached = cache.transitiveDependencies.get(pointer);
-  if (cached) {
+  if (cache.transitiveDependencies.has(pointer)) {
     return {
-      subtreeDependencies: cache.subtreeDependencies.get(pointer)!,
-      transitiveDependencies: cached,
+      subtreeDependencies: cache.subtreeDependencies.get(pointer) ?? null,
+      transitiveDependencies: cache.transitiveDependencies.get(pointer) ?? null,
     };
   }
 
   if (visited.has(pointer)) {
-    return {
-      subtreeDependencies: new Set(),
-      transitiveDependencies: new Set(),
-    };
+    return { subtreeDependencies: null, transitiveDependencies: null };
   }
   visited.add(pointer);
 
   const nodeInfo = graph.nodes.get(pointer);
   if (!nodeInfo) {
-    return {
-      subtreeDependencies: new Set(),
-      transitiveDependencies: new Set(),
-    };
+    return { subtreeDependencies: null, transitiveDependencies: null };
   }
 
-  const transitiveDependencies = new Set<string>();
-  const subtreeDependencies = new Set<string>();
+  let transitiveDependencies: Set<string> | null = null;
+  let subtreeDependencies: Set<string> | null = null;
 
   // Add direct $ref dependencies for this node
   // (from the dependencies map, or by checking nodeInfo.node directly)
@@ -88,8 +81,8 @@ const collectPointerDependencies = ({
   const nodeDependencies = graph.nodeDependencies.get(pointer);
   if (nodeDependencies) {
     for (const depPointer of nodeDependencies) {
-      transitiveDependencies.add(depPointer);
-      subtreeDependencies.add(depPointer);
+      (transitiveDependencies ??= new Set()).add(depPointer);
+      (subtreeDependencies ??= new Set()).add(depPointer);
       // Recursively collect dependencies of the referenced node
       const depResult = collectPointerDependencies({
         cache,
@@ -97,42 +90,43 @@ const collectPointerDependencies = ({
         pointer: depPointer,
         visited,
       });
-      for (const dependency of depResult.transitiveDependencies) {
-        transitiveDependencies.add(dependency);
+      if (depResult.transitiveDependencies) {
+        for (const dependency of depResult.transitiveDependencies) {
+          transitiveDependencies.add(dependency);
+        }
       }
     }
   }
 
   const children = cache.parentToChildren.get(pointer) ?? [];
   for (const childPointer of children) {
-    let childResult: Partial<PointerDependenciesResult> = {
-      subtreeDependencies: cache.subtreeDependencies.get(childPointer),
-      transitiveDependencies: cache.transitiveDependencies.get(childPointer),
-    };
-    if (!childResult.subtreeDependencies || !childResult.transitiveDependencies) {
-      childResult = collectPointerDependencies({
+    if (!cache.transitiveDependencies.has(childPointer)) {
+      const childResult = collectPointerDependencies({
         cache,
         graph,
         pointer: childPointer,
         visited,
       });
-      cache.transitiveDependencies.set(childPointer, childResult.transitiveDependencies!);
-      cache.subtreeDependencies.set(childPointer, childResult.subtreeDependencies!);
+      cache.transitiveDependencies.set(childPointer, childResult.transitiveDependencies);
+      cache.subtreeDependencies.set(childPointer, childResult.subtreeDependencies);
     }
-    for (const dependency of childResult.transitiveDependencies!) {
-      transitiveDependencies.add(dependency);
+    const childTransitive = cache.transitiveDependencies.get(childPointer) ?? null;
+    const childSubtree = cache.subtreeDependencies.get(childPointer) ?? null;
+    if (childTransitive) {
+      for (const dependency of childTransitive) {
+        (transitiveDependencies ??= new Set()).add(dependency);
+      }
     }
-    for (const dependency of childResult.subtreeDependencies!) {
-      subtreeDependencies.add(dependency);
+    if (childSubtree) {
+      for (const dependency of childSubtree) {
+        (subtreeDependencies ??= new Set()).add(dependency);
+      }
     }
   }
 
   cache.transitiveDependencies.set(pointer, transitiveDependencies);
   cache.subtreeDependencies.set(pointer, subtreeDependencies);
-  return {
-    subtreeDependencies,
-    transitiveDependencies,
-  };
+  return { subtreeDependencies, transitiveDependencies };
 };
 
 /**
@@ -360,8 +354,12 @@ export function buildGraph(
       pointer,
       visited: new Set(),
     });
-    graph.transitiveDependencies.set(pointer, result.transitiveDependencies);
-    graph.subtreeDependencies.set(pointer, result.subtreeDependencies);
+    if (result.transitiveDependencies) {
+      graph.transitiveDependencies.set(pointer, result.transitiveDependencies);
+    }
+    if (result.subtreeDependencies) {
+      graph.subtreeDependencies.set(pointer, result.subtreeDependencies);
+    }
   }
 
   eventBuildGraph.timeEnd();
