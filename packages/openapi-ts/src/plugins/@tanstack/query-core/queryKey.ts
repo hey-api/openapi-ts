@@ -172,11 +172,12 @@ export function queryKeyStatement({
   typeQueryKey?: ReturnType<typeof $.type>;
 }): ReturnType<typeof $.const> {
   const typeData = useTypeData({ operation, plugin });
+  const partialType = $.type('Partial').generic(typeData);
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) => p.optional().type(`Partial<${typeData}>`))
+        .param('options', (p) => p.optional().type(partialType))
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
           createQueryKeyLiteral({

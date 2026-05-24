@@ -146,7 +146,7 @@ const createQueryKey = <TOptions extends Options>(
   return [params];
 };
 
-export const findPetsByStatusQueryKey = (options: Options<FindPetsByStatusData>) =>
+export const findPetsByStatusQueryKey = (options?: Partial<Options<FindPetsByStatusData>>) =>
   createQueryKey('findPetsByStatus', options);
 
 /**
@@ -173,7 +173,7 @@ export const findPetsByStatusOptions = (options: Options<FindPetsByStatusData>) 
     queryKey: findPetsByStatusQueryKey(options),
   });
 
-export const findPetsByTagsQueryKey = (options: Options<FindPetsByTagsData>) =>
+export const findPetsByTagsQueryKey = (options?: Partial<Options<FindPetsByTagsData>>) =>
   createQueryKey('findPetsByTags', options);
 
 /**
@@ -221,7 +221,7 @@ export const deletePetMutation = (
   return mutationOptions;
 };
 
-export const getPetByIdQueryKey = (options: Options<GetPetByIdData>) =>
+export const getPetByIdQueryKey = (options?: Partial<Options<GetPetByIdData>>) =>
   createQueryKey('getPetById', options);
 
 /**
@@ -298,7 +298,7 @@ export const uploadFileMutation = (
   return mutationOptions;
 };
 
-export const getInventoryQueryKey = (options?: Options<GetInventoryData>) =>
+export const getInventoryQueryKey = (options?: Partial<Options<GetInventoryData>>) =>
   createQueryKey('getInventory', options);
 
 /**
@@ -371,7 +371,7 @@ export const deleteOrderMutation = (
   return mutationOptions;
 };
 
-export const getOrderByIdQueryKey = (options: Options<GetOrderByIdData>) =>
+export const getOrderByIdQueryKey = (options?: Partial<Options<GetOrderByIdData>>) =>
   createQueryKey('getOrderById', options);
 
 /**
@@ -452,7 +452,7 @@ export const createUsersWithListInputMutation = (
   return mutationOptions;
 };
 
-export const loginUserQueryKey = (options?: Options<LoginUserData>) =>
+export const loginUserQueryKey = (options?: Partial<Options<LoginUserData>>) =>
   createQueryKey('loginUser', options);
 
 /**
@@ -479,7 +479,7 @@ export const loginUserOptions = (options?: Options<LoginUserData>) =>
     queryKey: loginUserQueryKey(options),
   });
 
-export const logoutUserQueryKey = (options?: Options<LogoutUserData>) =>
+export const logoutUserQueryKey = (options?: Partial<Options<LogoutUserData>>) =>
   createQueryKey('logoutUser', options);
 
 /**
@@ -522,7 +522,7 @@ export const deleteUserMutation = (
   return mutationOptions;
 };
 
-export const getUserByNameQueryKey = (options: Options<GetUserByNameData>) =>
+export const getUserByNameQueryKey = (options?: Partial<Options<GetUserByNameData>>) =>
   createQueryKey('getUserByName', options);
 
 /**
