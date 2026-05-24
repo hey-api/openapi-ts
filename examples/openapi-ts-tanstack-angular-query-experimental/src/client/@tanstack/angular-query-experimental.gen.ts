@@ -121,7 +121,7 @@ export type QueryKey<TOptions extends Options> = [
 
 const createQueryKey = <TOptions extends Options>(
   id: string,
-  options?: TOptions,
+  options?: Partial<TOptions>,
   infinite?: boolean,
   tags?: ReadonlyArray<string>,
 ): [QueryKey<TOptions>[0]] => {
