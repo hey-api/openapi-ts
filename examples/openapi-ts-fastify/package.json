@@ -16,7 +16,7 @@
     "@hey-api/openapi-ts": "workspace:*",
     "eslint": "9.39.2",
     "oxfmt": "0.49.0",
-    "typescript": "6.0.2",
+    "typescript": "6.0.3",
     "vite": "8.0.8",
     "vitest": "4.1.0"
   }

@@ -53,7 +53,7 @@
     "@types/cross-spawn": "6.0.6",
     "@types/semver": "7.7.1",
     "eslint": "9.39.2",
-    "typescript": "6.0.2",
+    "typescript": "6.0.3",
     "yaml": "2.9.0"
   },
   "engines": {
