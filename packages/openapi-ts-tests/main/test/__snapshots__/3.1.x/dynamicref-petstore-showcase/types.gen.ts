@@ -27,16 +27,16 @@ export type Owner = {
     email: string;
 };
 
-export type ApiEnvelopeTemplate<DataType> = {
-    data: DataType;
+export type ApiEnvelopeTemplate<dataType> = {
+    data: dataType;
     requestId: string;
     links?: {
         [key: string]: Link;
     };
 };
 
-export type PaginatedTemplate<ItemType> = {
-    items: Array<ItemType>;
+export type PaginatedTemplate<itemType> = {
+    items: Array<itemType>;
     total: number;
     page: number;
     pageSize: number;
@@ -67,21 +67,15 @@ export type Document = {
     title: string;
 };
 
-export type ShelterFolderTemplate<FolderType, ResourceType> = {
+export type ShelterFolderTemplate<folderType, resourceType> = {
     kind: 'folder';
     id: string;
     name: string;
-    children: Array<Document | FolderType>;
-    shortcuts?: Array<ResourceType>;
+    children: Array<Document | folderType>;
+    shortcuts?: Array<resourceType>;
 };
 
-export type ShelterFolder = {
-    kind: 'folder';
-    id: string;
-    name: string;
-    children: Array<Document | ShelterFolder>;
-    shortcuts?: Array<ShelterResource>;
-} & {
+export type ShelterFolder = ShelterFolderTemplate<ShelterFolder, ShelterResource> & {
     accessLevel: 'public' | 'staff' | 'admin';
 };
 

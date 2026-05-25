@@ -4,7 +4,6 @@ import type { Context } from '../../../ir/context';
 import type { IR } from '../../../ir/types';
 import { addItemsToSchema } from '../../../ir/utils';
 import type { SchemaState } from '../../../openApi/shared/types/schema';
-import { toCase } from '../../../utils/naming/naming';
 import { isTopLevelComponent } from '../../../utils/ref';
 
 const isSchemaObject = (value: unknown): value is OpenAPIV3_1.SchemaObject =>
@@ -24,10 +23,9 @@ export function getDynamicDefsBindings(
 }
 
 function anchorToParamName(anchor: string): string {
-  const name = toCase(anchor, 'PascalCase');
   let sanitized = '';
 
-  for (const char of name) {
+  for (const char of anchor) {
     if (!sanitized) {
       sanitized += /^[$_\p{ID_Start}]$/u.test(char) ? char : '_';
     } else {
