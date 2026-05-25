@@ -1,4 +1,5 @@
 import { log } from '@hey-api/codegen-core';
+import type { PluginTag } from '@hey-api/shared';
 import { definePluginConfig } from '@hey-api/shared';
 
 import { resolveExamples } from './examples';
@@ -30,17 +31,32 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   handler,
   name: '@hey-api/sdk',
   resolveConfig: (plugin, context) => {
-    if (plugin.config.client) {
-      if (typeof plugin.config.client === 'boolean') {
-        plugin.config.client = context.pluginByTag('client', {
-          defaultPlugin: '@hey-api/client-fetch',
-        });
+    function resolvePlugin<T>(
+      value: boolean | T | undefined,
+      tag: PluginTag,
+      options?: { defaultPlugin?: string; warn?: string },
+    ): T | false {
+      if (value === false) return false;
+      if (typeof value === 'string') {
+        plugin.dependencies.add(value);
+        return value;
       }
-
-      plugin.dependencies.add(plugin.config.client!);
-    } else {
-      plugin.config.client = false;
+      try {
+        const resolved = context.pluginByTag(
+          tag,
+          options?.defaultPlugin ? { defaultPlugin: options.defaultPlugin } : undefined,
+        );
+        if (resolved) plugin.dependencies.add(resolved);
+        return (resolved as T) ?? false;
+      } catch {
+        if (value !== undefined && options?.warn) log.warn(options.warn);
+        return false;
+      }
     }
+
+    plugin.config.client = resolvePlugin(plugin.config.client, 'client', {
+      defaultPlugin: '@hey-api/client-fetch',
+    });
 
     if (typeof plugin.config.transformer !== 'object') {
       plugin.config.transformer = {
@@ -48,21 +64,11 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       };
     }
 
-    if (plugin.config.transformer.response) {
-      if (typeof plugin.config.transformer.response === 'boolean') {
-        try {
-          plugin.config.transformer.response = context.pluginByTag('transformer');
-          plugin.dependencies.add(plugin.config.transformer.response!);
-        } catch {
-          log.warn(transformerInferWarn);
-          plugin.config.transformer.response = false;
-        }
-      } else {
-        plugin.dependencies.add(plugin.config.transformer.response);
-      }
-    } else {
-      plugin.config.transformer.response = false;
-    }
+    plugin.config.transformer.response = resolvePlugin(
+      plugin.config.transformer.response,
+      'transformer',
+      { warn: transformerInferWarn },
+    );
 
     if (typeof plugin.config.validator !== 'object') {
       plugin.config.validator = {
@@ -71,37 +77,16 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       };
     }
 
-    if (plugin.config.validator.request) {
-      if (typeof plugin.config.validator.request === 'boolean') {
-        try {
-          plugin.config.validator.request = context.pluginByTag('validator');
-          plugin.dependencies.add(plugin.config.validator.request!);
-        } catch {
-          log.warn(validatorInferWarn);
-          plugin.config.validator.request = false;
-        }
-      } else {
-        plugin.dependencies.add(plugin.config.validator.request);
-      }
-    } else {
-      plugin.config.validator.request = false;
-    }
-
-    if (plugin.config.validator.response) {
-      if (typeof plugin.config.validator.response === 'boolean') {
-        try {
-          plugin.config.validator.response = context.pluginByTag('validator');
-          plugin.dependencies.add(plugin.config.validator.response!);
-        } catch {
-          log.warn(validatorInferWarn);
-          plugin.config.validator.response = false;
-        }
-      } else {
-        plugin.dependencies.add(plugin.config.validator.response);
-      }
-    } else {
-      plugin.config.validator.response = false;
-    }
+    plugin.config.validator.request = resolvePlugin(plugin.config.validator.request, 'validator', {
+      warn: validatorInferWarn,
+    });
+    plugin.config.validator.response = resolvePlugin(
+      plugin.config.validator.response,
+      'validator',
+      {
+        warn: validatorInferWarn,
+      },
+    );
 
     plugin.config.examples = resolveExamples(plugin.config, context);
     plugin.config.operations = resolveOperations(plugin.config, context);

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { log } from '@hey-api/codegen-core';
 import type { PostProcessor, UserPostProcessor } from '@hey-api/shared';
-import { findTsConfigPath, resolveSource, valueToObject } from '@hey-api/shared';
+import { coerce, findTsConfigPath, resolveSource, valueToObject } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 import type { TsConfigJsonResolved } from 'get-tsconfig';
 import { parseTsconfig } from 'get-tsconfig';
@@ -30,11 +30,20 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
     defaultValue: {
       clean: true,
       entryFile: true,
-      fileName: {
-        case: 'preserve',
-        name: '{{name}}',
-        suffix: '.gen',
-      },
+      fileName: coerce((value) =>
+        valueToObject({
+          defaultValue: {
+            case: 'preserve',
+            name: '{{name}}',
+            suffix: '.gen',
+          },
+          mappers: {
+            function: (name) => ({ name }),
+            string: (name) => ({ name }),
+          },
+          value,
+        }),
+      ),
       format: null,
       lint: null,
       module: {},
@@ -42,40 +51,10 @@ export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> 
       postProcess: [],
       preferExportAll: false,
     },
-    mappers: {
-      object: (fields, defaultValue) => ({
-        ...fields,
-        fileName: valueToObject({
-          defaultValue: {
-            ...(defaultValue.fileName as Extract<
-              typeof defaultValue.fileName,
-              Record<string, unknown>
-            >),
-          },
-          mappers: {
-            function: (name) => ({ name }),
-            string: (name) => ({ name }),
-          },
-          value: fields.fileName,
-        }),
-        module: valueToObject({
-          defaultValue: {
-            extension: fields.importFileExtension,
-            resolve: fields.resolveModuleName,
-          },
-          mappers: {
-            object: (moduleFields) => ({
-              ...moduleFields,
-              extension: fields.importFileExtension ?? moduleFields.extension,
-              resolve: fields.resolveModuleName ?? moduleFields.resolve,
-            }),
-          },
-          value: fields.module,
-        }),
-      }),
-    },
     value: userOutput,
   }) as Output;
+  output.module.extension = userOutput.importFileExtension ?? output.module.extension;
+  output.module.resolve = userOutput.resolveModuleName ?? output.module.resolve;
   output.tsConfig = loadTsConfig(findTsConfigPath(__dirname, output.tsConfigPath));
   if (
     output.module.extension === undefined &&
