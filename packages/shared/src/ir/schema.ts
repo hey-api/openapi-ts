@@ -64,23 +64,22 @@ export function deduplicateSchema<T extends IR.SchemaObject>({
     uniqueItems.push(item);
   }
 
-  let result = { ...schema };
-  result.items = uniqueItems;
+  const result = { ...schema };
 
   if (
-    result.items.length <= 1 &&
+    uniqueItems.length <= 1 &&
     result.type !== 'array' &&
     result.type !== 'enum' &&
     result.type !== 'tuple'
   ) {
     // bring the only item up to clean up the schema
-    const liftedSchema = result.items[0];
-    delete result.logicalOperator;
-    delete result.items;
-    result = {
-      ...result,
-      ...liftedSchema,
-    };
+    const liftedSchema = uniqueItems[0];
+    result.items = undefined;
+    result.logicalOperator = undefined;
+
+    Object.assign(result, liftedSchema);
+  } else {
+    result.items = uniqueItems;
   }
 
   // exclude unknown if it's the only type left

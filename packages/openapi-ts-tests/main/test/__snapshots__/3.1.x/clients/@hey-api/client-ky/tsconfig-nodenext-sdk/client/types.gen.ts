@@ -13,30 +13,22 @@ import type { Middleware } from './utils.gen.js';
 
 export type ResponseStyle = 'data' | 'fields';
 
-export interface RetryOptions {
-  /**
-   * Maximum number of retry attempts
-   *
-   * @default 2
-   */
-  limit?: number;
-  /**
-   * HTTP methods to retry
-   *
-   * @default ['get', 'put', 'head', 'delete', 'options', 'trace']
-   */
-  methods?: Array<'get' | 'post' | 'put' | 'delete' | 'patch' | 'head' | 'options' | 'trace'>;
-  /**
-   * HTTP status codes to retry
-   *
-   * @default [408, 413, 429, 500, 502, 503, 504]
-   */
-  statusCodes?: number[];
-}
-
 export interface Config<T extends ClientOptions = ClientOptions>
   extends
-    Omit<KyOptions, 'body' | 'headers' | 'method' | 'prefixUrl' | 'retry' | 'throwHttpErrors'>,
+    Pick<
+      KyOptions,
+      | 'cache'
+      | 'credentials'
+      | 'retry'
+      | 'signal'
+      | 'integrity'
+      | 'keepalive'
+      | 'mode'
+      | 'redirect'
+      | 'referrer'
+      | 'referrerPolicy'
+      | 'timeout'
+    >,
     CoreConfig {
   /**
    * Base URL for all requests made by this client.
@@ -45,6 +37,10 @@ export interface Config<T extends ClientOptions = ClientOptions>
   /**
    * Ky instance to use. You can use this option to provide a custom
    * ky instance.
+   *
+   * Note that the `prefixUrl` of your ky instance will be ignored, as we
+   * will always build the full URL and pass it to your ky instance. You
+   * should configure `baseUrl` instead.
    */
   ky?: typeof ky;
   /**
@@ -68,21 +64,11 @@ export interface Config<T extends ClientOptions = ClientOptions>
    */
   responseStyle?: ResponseStyle;
   /**
-   * Retry configuration
-   */
-  retry?: RetryOptions;
-  /**
    * Throw an error instead of returning it in the response?
    *
    * @default false
    */
   throwOnError?: T['throwOnError'];
-  /**
-   * Request timeout in milliseconds
-   *
-   * @default 10000
-   */
-  timeout?: number;
 }
 
 export interface RequestOptions<
@@ -125,6 +111,7 @@ export interface ResolvedRequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends RequestOptions<unknown, TResponseStyle, ThrowOnError, Url> {
+  headers: Headers;
   serializedBody?: string;
 }
 
@@ -158,8 +145,10 @@ export type RequestResult<
                 error: TError extends Record<string, unknown> ? TError[keyof TError] : TError;
               }
           ) & {
-            request: Request;
-            response: Response;
+            /** request may be undefined, because error may be from building the request object itself */
+            request?: Request;
+            /** response may be undefined due to a network error where no response object is produced */
+            response?: Response;
           }
     >;
 
@@ -180,12 +169,13 @@ type MethodFn = <
 
 type SseFn = <
   TData = unknown,
-  TError = unknown,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _TError = unknown,
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
 >(
   options: Omit<RequestOptions<never, TResponseStyle, ThrowOnError>, 'method'>,
-) => Promise<ServerSentEventsResult<TData, TError>>;
+) => Promise<ServerSentEventsResult<TData>>;
 
 type RequestFn = <
   TData = unknown,

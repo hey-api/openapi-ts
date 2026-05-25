@@ -47,9 +47,24 @@ export default tseslint.config(
     },
   },
   {
+    files: ['web/.astro/**/*'],
+    rules: {
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/triple-slash-reference': 'off',
+    },
+  },
+  {
     files: ['**/*.cjs'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
+    files: ['**/*.gen.ts'],
+    rules: {
+      'sort-keys-fix/sort-keys-fix': 'off',
+      'typescript-sort-keys/interface': 'off',
+      'typescript-sort-keys/string-enum': 'off',
     },
   },
   {
@@ -60,17 +75,15 @@ export default tseslint.config(
       'temp/',
       'dev/gen/',
       'dev/playground.ts',
-      'examples/openapi-ts-nestjs/src/client/**/*.ts',
-      'examples/openapi-ts-openai/src/client/**/*.ts',
       '**/test/generated/',
       '**/__snapshots__/',
       '**/.next/',
       '**/.nuxt/',
       '**/.output/',
       '**/.svelte-kit/',
-      '**/.vitepress/cache',
-      '**/.vitepress/dist',
+      '**/.vercel',
       '**/.angular',
+      '**/web/src/components/pages/**/previews/',
     ],
   },
 );

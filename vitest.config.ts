@@ -88,6 +88,15 @@ export default defineConfig({
         extends: true,
         test: {
           globalSetup: ['./test/globalTeardown.ts'],
+          name: '@test/openapi-ts-tanstack-query-v5',
+          root: 'packages/openapi-ts-tests/tanstack-query/v5',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          globalSetup: ['./test/globalTeardown.ts'],
           name: '@test/openapi-ts-valibot-v1',
           root: 'packages/openapi-ts-tests/valibot/v1',
           setupFiles: ['./vitest.setup.ts'],
@@ -96,6 +105,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          globalSetup: ['./test/globalTeardown.ts'],
           name: '@test/openapi-ts-zod-v3',
           root: 'packages/openapi-ts-tests/zod/v3',
           setupFiles: ['./vitest.setup.ts'],
@@ -104,6 +114,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          globalSetup: ['./test/globalTeardown.ts'],
           name: '@test/openapi-ts-zod-v4',
           root: 'packages/openapi-ts-tests/zod/v4',
           setupFiles: ['./vitest.setup.ts'],

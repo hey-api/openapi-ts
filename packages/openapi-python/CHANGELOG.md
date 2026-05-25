@@ -1,5 +1,49 @@
 # @hey-api/openapi-python
 
+## 0.0.20
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.5
+- @hey-api/codegen-core@0.8.2
+
+## 0.0.19
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.4
+
+## 0.0.18
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.2
+- @hey-api/shared@0.4.3
+
+## 0.0.17
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.1
+- @hey-api/shared@0.4.2
+
+## 0.0.16
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.1
+- @hey-api/json-schema-ref-parser@1.4.1
+
 ## 0.0.15
 
 ### Patch Changes

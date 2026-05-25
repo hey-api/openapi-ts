@@ -1,0 +1,45 @@
+openapi: 3.1.1
+info:
+  title: query-options name conflict
+  version: '1'
+paths:
+  /members:
+    get:
+      operationId: getMembers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+  /members/options:
+    get:
+      operationId: getMembersOptions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Option'
+components:
+  schemas:
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Option:
+      type: object
+      properties:
+        label:
+          type: string
+        value:
+          type: string

@@ -98,6 +98,7 @@ export interface ResolvedRequestOptions<
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
 > extends RequestOptions<unknown, TResponseStyle, ThrowOnError, Url> {
+  headers: HttpHeaders;
   serializedBody?: string;
 }
 
@@ -129,8 +130,10 @@ export type RequestResult<
           | {
               data: undefined;
               error: TError[keyof TError];
-              request: HttpRequest<unknown>;
-              response: HttpErrorResponse & {
+              /** request may be undefined, because error may be from building the request object itself */
+              request?: HttpRequest<unknown>;
+              /** response may be undefined, because error may be from building the request object itself or from a network error */
+              response?: HttpErrorResponse & {
                 error: TError[keyof TError] | null;
               };
             }
@@ -153,12 +156,13 @@ type MethodFn = <
 
 type SseFn = <
   TData = unknown,
-  TError = unknown,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _TError = unknown,
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
 >(
   options: Omit<RequestOptions<never, TResponseStyle, ThrowOnError>, 'method'>,
-) => Promise<ServerSentEventsResult<TData, TError>>;
+) => Promise<ServerSentEventsResult<TData>>;
 
 type RequestFn = <
   TData = unknown,

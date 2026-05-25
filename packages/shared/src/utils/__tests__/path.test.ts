@@ -142,12 +142,6 @@ describe('pathToName', () => {
     );
   });
 
-  // ── Encoded characters ──
-
-  it('handles URI-encoded names', () => {
-    expect(pathToName(['components', 'schemas', 'My%20Schema'])).toBe('My Schema');
-  });
-
   // ── Anchor option ──
 
   it('uses anchor for component schema', () => {

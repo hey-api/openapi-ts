@@ -180,13 +180,12 @@ export const getParseAs = (
   return;
 };
 
-export const setAuthParams = async (
-  options: Pick<Required<RequestOptions>, 'security'> &
-    Pick<RequestOptions, 'auth' | 'query'> & {
-      headers: HttpHeaders;
-    },
-) => {
-  for (const auth of options.security) {
+export async function setAuthParams(
+  options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
+    headers: HttpHeaders;
+  },
+): Promise<void> {
+  for (const auth of options.security ?? []) {
     const token = await getAuthToken(auth, options.auth);
 
     if (!token) {
@@ -213,7 +212,7 @@ export const setAuthParams = async (
 
     return;
   }
-};
+}
 
 export const buildUrl: Client['buildUrl'] = (options) => {
   const url = getUrl({
@@ -312,8 +311,10 @@ export const mergeHeaders = (
 
 type ErrInterceptor<Err, Res, Req, Options> = (
   error: Err,
-  response: Res,
-  request: Req,
+  /** response may be undefined due to a network error where no response object is produced */
+  response: Res | undefined,
+  /** request may be undefined, because error may be from building the request object itself */
+  request: Req | undefined,
   options: Options,
 ) => Err | Promise<Err>;
 

@@ -4,13 +4,13 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-ts';
 
 import { getFilePaths } from '../../../utils';
-import { createConfigFactory, getSnapshotsPath, getTempSnapshotsPath, zodVersions } from './utils';
+import { snapshotsDir, tmpDir } from './constants';
+import { createConfigFactory, zodVersions } from './utils';
 
 const version = '3.1.x';
 
 for (const zodVersion of zodVersions) {
-  const outputDir = path.join(getTempSnapshotsPath(), version, zodVersion.folder);
-  const snapshotsDir = path.join(getSnapshotsPath(), version, zodVersion.folder);
+  const outputDir = path.join(tmpDir, version, zodVersion.folder);
 
   describe(`OpenAPI ${version}`, () => {
     const createConfig = createConfigFactory({
@@ -113,6 +113,8 @@ for (const zodVersion of zodVersions) {
               name: 'zod',
               types: {
                 infer: true,
+                input: true,
+                output: true,
               },
             },
           ],
@@ -156,6 +158,43 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'discriminator-all-of.yaml',
+          output: 'discriminator-all-of',
+        }),
+        description: 'generates discriminated union for oneOf with discriminator mapping',
+      },
+      {
+        config: createConfig({
+          input: 'discriminator-allof-member.yaml',
+          output: 'discriminator-allof-member',
+        }),
+        description:
+          'falls back to z.union() when discriminated union members have allOf (intersection)',
+      },
+      {
+        config: createConfig({
+          input: 'discriminator-empty-object-member.yaml',
+          output: 'discriminator-empty-object-member',
+        }),
+        description:
+          'falls back to z.union() when a discriminated union member is an empty object (z.record cannot be extended)',
+      },
+      {
+        config: createConfig({
+          input: 'discriminator-any-of.yaml',
+          output: 'discriminator-any-of',
+        }),
+        description: 'generates discriminated union for anyOf with discriminator mapping',
+      },
+      {
+        config: createConfig({
+          input: 'discriminator-one-of.yaml',
+          output: 'discriminator-one-of',
+        }),
+        description: 'handles oneOf discriminator (falls back to z.union when needed)',
+      },
+      {
+        config: createConfig({
           input: 'enum-null.json',
           output: 'enum-resolver-permissive',
           plugins: [
@@ -166,9 +205,9 @@ for (const zodVersion of zodVersions) {
                 enum(ctx) {
                   const { $, symbols } = ctx;
                   const { z } = symbols;
-                  const { allStrings, enumMembers } = ctx.nodes.items(ctx);
+                  const { enumMembers, literalSchemas } = ctx.nodes.items(ctx);
 
-                  if (!allStrings || !enumMembers.length) {
+                  if (!enumMembers.length || enumMembers.length !== literalSchemas.length) {
                     return;
                   }
 
@@ -185,6 +224,24 @@ for (const zodVersion of zodVersions) {
         }),
         description: 'generates permissive enums with enum resolver',
       },
+      {
+        config: createConfig({
+          input: 'type-format.yaml',
+          output: 'transformer',
+          plugins: [
+            {
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
+            },
+            {
+              name: '@hey-api/sdk',
+              transformer: true,
+              validator: true,
+            },
+          ],
+        }),
+        description: 'handles various schema types and formats',
+      },
     ];
 
     it.each(scenarios)('$description', async ({ config }) => {
@@ -196,7 +253,12 @@ for (const zodVersion of zodVersions) {
         filePaths.map(async (filePath) => {
           const fileContent = fs.readFileSync(filePath, 'utf-8');
           await expect(fileContent).toMatchFileSnapshot(
-            path.join(snapshotsDir, filePath.slice(outputDir.length + 1)),
+            path.join(
+              snapshotsDir,
+              version,
+              zodVersion.folder,
+              filePath.slice(outputDir.length + 1),
+            ),
           );
         }),
       );

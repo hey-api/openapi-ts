@@ -1,5 +1,65 @@
 # @hey-api/shared
 
+## 0.4.5
+
+### Patch Changes
+
+- **types**: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/openapi-ts/pull/3907)) ([`3aabff2`](https://github.com/hey-api/openapi-ts/commit/3aabff24719d7e5ed82ce9b0ba64a9d8050e94c2)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: expose getHooks method ([#3913](https://github.com/hey-api/openapi-ts/pull/3913)) ([`7c330bc`](https://github.com/hey-api/openapi-ts/commit/7c330bcc6bc1849aba979e1028a7d5e9dd97e0dd)) by [@mrlubos](https://github.com/mrlubos)
+
+- **fix**: various performance improvements ([#3917](https://github.com/hey-api/openapi-ts/pull/3917)) ([`ec2bdba`](https://github.com/hey-api/openapi-ts/commit/ec2bdba19e0afee59e9fb8bcbfeff837ee2535b1)) by [@SukkaW](https://github.com/SukkaW)
+
+- **utils**: turn on `enabled` flag in `mappers` ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **parser**: fix: encode special characters in JSON Pointer ([#3903](https://github.com/hey-api/openapi-ts/pull/3903)) ([`e6c66b0`](https://github.com/hey-api/openapi-ts/commit/e6c66b0d009d38a4c68ec5724c23bef8ae836fb4)) by [@aqeelat](https://github.com/aqeelat)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.2
+
+## 0.4.4
+
+### Patch Changes
+
+- **plugin**: add `querySymbols()` function ([#3884](https://github.com/hey-api/openapi-ts/pull/3884)) ([`abc8ceb`](https://github.com/hey-api/openapi-ts/commit/abc8ceb43f37e7c9739fe010d3fcdb3be0bb5290)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.4.3
+
+### Patch Changes
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.2
+
+## 0.4.2
+
+### Patch Changes
+
+- **utils**: speed up deep equality check ([#3823](https://github.com/hey-api/openapi-ts/pull/3823)) ([`b05bfd7`](https://github.com/hey-api/openapi-ts/commit/b05bfd7442203d768b831fccac5dfdeb4112ea6c)) by [@SukkaW](https://github.com/SukkaW)
+
+- **graph**: speed up graph builder ([#3823](https://github.com/hey-api/openapi-ts/pull/3823)) ([`b05bfd7`](https://github.com/hey-api/openapi-ts/commit/b05bfd7442203d768b831fccac5dfdeb4112ea6c)) by [@SukkaW](https://github.com/SukkaW)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.1
+
+## 0.4.1
+
+### Patch Changes
+
+- **parser**: fix: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791)) ([`0d3cb9f`](https://github.com/hey-api/openapi-ts/commit/0d3cb9f49b9f1d9fa5b47b73a2c85141c0cd78b6)) by [@sbs44](https://github.com/sbs44)
+
+- **parser**: fix: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782)) ([`290c14f`](https://github.com/hey-api/openapi-ts/commit/290c14fba3c104a6e820eaa981b29c3b6a378e16)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **output**: fix: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683)) ([`e69d79f`](https://github.com/hey-api/openapi-ts/commit/e69d79f0d7de8a0a2f955457a522b88f505ae80d)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **config**: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753)) ([`e78ce75`](https://github.com/hey-api/openapi-ts/commit/e78ce75bcc63374cd9ec4178bfe18a2e09ca128d)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.1
+
 ## 0.4.0
 
 ### Minor Changes

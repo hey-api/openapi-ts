@@ -612,14 +612,6 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'internal-name-conflict.json',
-        output: 'internal-name-conflict',
-        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
-      }),
-      description: 'handles conflict between generated code and internal artifacts',
-    },
-    {
-      config: createConfig({
         input: 'negative-property-names.json',
         output: 'negative-property-names',
       }),
@@ -662,14 +654,6 @@ describe(`OpenAPI ${version}`, () => {
         output: 'operation-204',
       }),
       description: 'handles empty response status codes',
-    },
-    {
-      config: createConfig({
-        input: 'pagination-ref.yaml',
-        output: 'pagination-ref',
-        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
-      }),
-      description: 'detects pagination fields',
     },
     {
       config: createConfig({
@@ -938,6 +922,20 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'transformers-temporal.json',
+        output: 'transformers-temporal',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            dates: 'temporal',
+            name: '@hey-api/transformers',
+          },
+        ],
+      }),
+      description: 'transforms dates using the Temporal API',
+    },
+    {
+      config: createConfig({
         input: 'type-invalid.json',
         output: 'type-invalid',
       }),
@@ -1032,14 +1030,6 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['@hey-api/client-nuxt', '@hey-api/sdk'],
       }),
       description: 'client with SSE (Nuxt)',
-    },
-    {
-      config: createConfig({
-        input: 'sse-post.yaml',
-        output: 'sse-tanstack-react-query',
-        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
-      }),
-      description: 'SSE POST endpoint is excluded from TanStack React Query mutations',
     },
     {
       config: createConfig({

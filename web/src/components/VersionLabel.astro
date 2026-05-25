@@ -1,0 +1,19 @@
+---
+interface Props { label: string; }
+const { label } = Astro.props;
+---
+<div class="version-label">{label}</div>
+
+<style>
+  .version-label {
+    align-items: center;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    color: var(--sl-color-gray-2);
+    display: flex;
+    font-size: var(--sl-text-xs);
+    padding: 0.3125rem 0.625rem;
+    white-space: nowrap;
+  }
+</style>

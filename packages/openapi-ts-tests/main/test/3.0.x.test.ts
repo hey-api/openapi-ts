@@ -557,14 +557,6 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'internal-name-conflict.json',
-        output: 'internal-name-conflict',
-        plugins: ['@hey-api/client-fetch', '@tanstack/react-query'],
-      }),
-      description: 'handles conflict between generated code and internal artifacts',
-    },
-    {
-      config: createConfig({
         input: 'operation-204.json',
         output: 'operation-204',
       }),

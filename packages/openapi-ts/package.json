@@ -1,7 +1,7 @@
 {
   "name": "@hey-api/openapi-ts",
-  "version": "0.96.0",
-  "description": "🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.",
+  "version": "0.97.3",
+  "description": "🌀 OpenAPI to TypeScript codegen. Production-grade SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.",
   "keywords": [
     "angular",
     "axios",
@@ -73,10 +73,11 @@
     "@hey-api/shared": "workspace:*",
     "@hey-api/spec-types": "workspace:*",
     "@hey-api/types": "workspace:*",
+    "@lukeed/ms": "2.0.2",
     "ansi-colors": "4.1.3",
     "color-support": "1.1.3",
     "commander": "14.0.3",
-    "get-tsconfig": "4.13.7"
+    "get-tsconfig": "4.14.0"
   },
   "devDependencies": {
     "@angular/common": "21.2.7",

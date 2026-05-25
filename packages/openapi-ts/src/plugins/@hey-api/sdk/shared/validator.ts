@@ -1,12 +1,15 @@
-import type { IR, RequestSchemaContext } from '@hey-api/shared';
+import type { RequestSchemaContext } from '@hey-api/shared';
 
 import type { $ } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
+import type { ResponseHandlers, ValidatorArgs } from './types';
+
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
 
 export function createRequestValidator({
   plugin,
   ...args
-}: RequestSchemaContext<HeyApiSdkPlugin['Instance']>): ReturnType<typeof $.func> | undefined {
+}: RequestSchemaContext<HeyApiSdkPlugin['Instance']>): ArrowFunc | undefined {
   if (!plugin.config.validator.request) return;
 
   const validator = plugin.getPluginOrThrow(plugin.config.validator.request);
@@ -22,12 +25,7 @@ export function createRequestValidator({
 export function createResponseValidator({
   operation,
   plugin,
-}: {
-  /** The operation object. */
-  operation: IR.OperationObject;
-  /** The plugin instance. */
-  plugin: HeyApiSdkPlugin['Instance'];
-}): ReturnType<typeof $.func> | undefined {
+}: ValidatorArgs): ResponseHandlers['validator'] {
   if (!plugin.config.validator.response) return;
 
   const validator = plugin.getPluginOrThrow(plugin.config.validator.response);

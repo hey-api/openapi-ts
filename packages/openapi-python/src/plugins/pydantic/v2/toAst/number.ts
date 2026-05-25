@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import type { NumberResolverContext } from '../../resolvers';
@@ -56,10 +56,10 @@ function numberResolver(ctx: NumberResolverContext): PydanticType {
 }
 
 export function numberToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): PydanticType {
   const ctx: NumberResolverContext = {
@@ -68,6 +68,7 @@ export function numberToType({
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
   };

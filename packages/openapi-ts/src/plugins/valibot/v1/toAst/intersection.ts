@@ -1,11 +1,8 @@
-import type { IR } from '@hey-api/shared';
-
 import { $ } from '../../../../ts-dsl';
 import type { IntersectionResolverContext } from '../../resolvers';
 import type { PipeResult, Pipes } from '../../shared/pipes';
 import { pipes, pipesToNode } from '../../shared/pipes';
-import type { CompositeHandlerResult, ValibotFinal, ValibotResult } from '../../shared/types';
-import type { ValibotPlugin } from '../../types';
+import type { CompositeHandlerResult } from '../../shared/types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: IntersectionResolverContext): PipeResult {
@@ -17,7 +14,7 @@ function baseNode(ctx: IntersectionResolverContext): PipeResult {
   }
 
   if (childResults.length === 1) {
-    const finalResult = applyModifiers!(childResults[0]!);
+    const finalResult = applyModifiers(childResults[0]!);
     return finalResult.pipes;
   }
 
@@ -35,14 +32,16 @@ function intersectionResolver(ctx: IntersectionResolverContext): Pipes {
   return ctx.pipes.current;
 }
 
-export function intersectionToPipes(ctx: {
-  applyModifiers: (result: ValibotResult, options?: { optional?: boolean }) => ValibotFinal;
-  childResults: Array<ValibotResult>;
-  parentSchema: IR.SchemaObject;
-  plugin: ValibotPlugin['Instance'];
-}): CompositeHandlerResult {
-  const { applyModifiers, childResults, parentSchema, plugin } = ctx;
-
+export function intersectionToPipes({
+  applyModifiers,
+  childResults,
+  parentSchema,
+  path,
+  plugin,
+}: Pick<
+  IntersectionResolverContext,
+  'applyModifiers' | 'childResults' | 'parentSchema' | 'path' | 'plugin'
+>): CompositeHandlerResult {
   const resolverCtx: IntersectionResolverContext = {
     $,
     applyModifiers,
@@ -51,6 +50,7 @@ export function intersectionToPipes(ctx: {
       base: baseNode,
     },
     parentSchema,
+    path,
     pipes: {
       ...pipes,
       current: [],

@@ -2356,7 +2356,7 @@ export const OneOfAllOfIssueWritableSchema = {
                             $ref: '#/components/schemas/ConstValue'
                         },
                         {
-                            $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]'
+                            $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.Boolean]Writable'
                         }
                     ]
                 },
@@ -2366,7 +2366,7 @@ export const OneOfAllOfIssueWritableSchema = {
             ]
         },
         {
-            $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]'
+            $ref: '#/components/schemas/Generic.Schema.Duplicate.Issue`1[System.String]Writable'
         }
     ]
 } as const;

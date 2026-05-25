@@ -1,9 +1,13 @@
 import type { PluginHandler } from '../types';
+import { createGetQueryData } from './getQueryData';
 import { createInfiniteQueryOptions } from './infiniteQueryOptions';
 import { createMutationOptions } from './mutationOptions';
 import { createQueryOptions } from './queryOptions';
+import { createSetQueryData } from './setQueryData';
+import { createUseGetQueryData } from './useGetQueryData';
 import { createUseMutation } from './useMutation';
 import { createUseQuery } from './useQuery';
+import { createUseSetQueryData } from './useSetQueryData';
 
 export const handlerV5: PluginHandler = ({ plugin }) => {
   plugin.symbol('DefaultError', {
@@ -30,6 +34,13 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
   plugin.symbol('infiniteQueryOptions', {
     external: plugin.name,
   });
+  plugin.symbol('QueryClient', {
+    external: plugin.name,
+    kind: 'type',
+    meta: {
+      resource: `${plugin.name}.QueryClient`,
+    },
+  });
   plugin.symbol('queryOptions', {
     external: plugin.name,
   });
@@ -37,6 +48,9 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
     external: plugin.name,
   });
   plugin.symbol('useQuery', {
+    external: plugin.name,
+  });
+  plugin.symbol('useQueryClient', {
     external: plugin.name,
   });
   plugin.symbol('AxiosError', {
@@ -56,8 +70,24 @@ export const handlerV5: PluginHandler = ({ plugin }) => {
           createInfiniteQueryOptions({ operation, plugin });
         }
 
+        if (plugin.config.getQueryData.enabled) {
+          createGetQueryData({ operation, plugin });
+        }
+
+        if (plugin.config.setQueryData.enabled) {
+          createSetQueryData({ operation, plugin });
+        }
+
+        if ('useGetQueryData' in plugin.config && plugin.config.useGetQueryData.enabled) {
+          createUseGetQueryData({ operation, plugin });
+        }
+
         if ('useQuery' in plugin.config && plugin.config.useQuery.enabled) {
           createUseQuery({ operation, plugin });
+        }
+
+        if ('useSetQueryData' in plugin.config && plugin.config.useSetQueryData.enabled) {
+          createUseSetQueryData({ operation, plugin });
         }
       }
 

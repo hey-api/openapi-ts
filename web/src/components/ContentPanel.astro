@@ -1,0 +1,37 @@
+---
+const { entry } = Astro.locals.starlightRoute;
+
+const isSplash = entry.data.template === 'splash';
+---
+
+<div class:list={['content-panel', { splash: isSplash }]}>
+  <div class="sl-container"><slot /></div>
+</div>
+
+<style>
+  .content-panel {
+    padding: 2.5rem var(--sl-content-pad-x) 1.5rem;
+  }
+
+  .content-panel + .content-panel {
+    padding-top: 1.5rem;
+  }
+
+  .content-panel.splash {
+    padding: 0;
+  }
+
+  .sl-container {
+    max-width: var(--sl-content-width);
+  }
+
+  .sl-container > :global(* + *) {
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 72rem) {
+    .sl-container {
+      margin-inline: var(--sl-content-margin-inline, auto);
+    }
+  }
+</style>

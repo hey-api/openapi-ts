@@ -6,8 +6,5 @@
   "devDependencies": {
     "@hey-api/openapi-python": "workspace:*",
     "typescript": "6.0.2"
-  },
-  "engines": {
-    "node": ">=22.13.0"
   }
 }

@@ -1,5 +1,499 @@
 # Changelog
 
+# 2026-05-25
+
+## @hey-api/openapi-ts 0.97.3
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-axios
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-fetch
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-ky
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-next
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-ofetch
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/transformers
+
+- add support for Temporal API via [temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) in `dates` ([#3916](https://github.com/hey-api/openapi-ts/pull/3916))
+
+#### @tanstack/angular-query-experimental
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/preact-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/react-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/solid-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/svelte-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/vue-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### zod
+
+- avoid invalid `.extend()` on `z.record()` when a discriminated union member is an empty object ([#3915](https://github.com/hey-api/openapi-ts/pull/3915))
+
+---
+
+## @hey-api/codegen-core 0.8.2
+
+### Updates
+
+- symbols: prefer recursive over top-level merging in registry ([#3917](https://github.com/hey-api/openapi-ts/pull/3917))
+
+---
+
+## @hey-api/shared 0.4.5
+
+### Updates
+
+- parser: encode special characters in JSON Pointer ([#3903](https://github.com/hey-api/openapi-ts/pull/3903))
+- fix: various performance improvements ([#3917](https://github.com/hey-api/openapi-ts/pull/3917))
+- plugin: expose getHooks method ([#3913](https://github.com/hey-api/openapi-ts/pull/3913))
+- types: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/openapi-ts/pull/3907))
+- utils: turn on `enabled` flag in `mappers` ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+---
+
+# 2026-05-17
+
+## @hey-api/openapi-ts 0.97.2
+
+### Updates
+
+- dsl: cache lazy node result ([#3855](https://github.com/hey-api/openapi-ts/pull/3855))
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-axios
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-fetch
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-ky
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-next
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-nuxt
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-ofetch
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/sdk
+
+- support `valibot` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847))
+- support `zod` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847))
+
+#### @tanstack/angular-query-experimental
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/preact-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/react-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/solid-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/svelte-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/vue-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### valibot
+
+- use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+#### zod
+
+- use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+---
+
+## @hey-api/shared 0.4.4
+
+### Updates
+
+- plugin: add `querySymbols()` function ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+---
+
+# 2026-04-30
+
+## @hey-api/openapi-ts 0.97.1
+
+### Plugins
+
+#### @hey-api/transformers
+
+- use symbols for `additionalProperties` key variables ([#3841](https://github.com/hey-api/openapi-ts/pull/3841))
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.2
+
+### Updates
+
+- yaml: swap `yaml` back to `js-yaml` ([#3843](https://github.com/hey-api/openapi-ts/pull/3843))
+
+---
+
+## @hey-api/shared 0.4.3
+
+No user-facing changes.
+
+---
+
+# 2026-04-28
+
+## @hey-api/openapi-ts 0.97.0
+
+### ⚠️ Breaking
+
+This release has 15 breaking changes. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- cli: print file count and generator speed ([#3828](https://github.com/hey-api/openapi-ts/pull/3828))
+- **⚠️ Breaking:** client: resolve `runtimeConfigPath` relative to the output folder ([#3770](https://github.com/hey-api/openapi-ts/pull/3770))
+
+### Changed `runtimeConfigPath` behavior
+
+This was a known, long-standing issue confusing first-time users. Before, defining client `runtimeConfigPath` value would paste it verbatim to the generated output. This release changes the behavior to resolve relative to the current working directory the same way output path works.
+- config: remove `--apply` flag from Biome post-processor commands ([#3812](https://github.com/hey-api/openapi-ts/pull/3812))
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+
+#### @hey-api/client-fetch
+
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+
+#### @hey-api/client-ky
+
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect ky instance defaults ([#3806](https://github.com/hey-api/openapi-ts/pull/3806))
+
+### Changed Ky client behavior
+
+The Ky client was updated to be more intuitive. Some Ky options now need to be passed via the `kyOptions` field and you need to pass `undefined` to unset an option.
+
+#### @hey-api/client-next
+
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+
+#### @hey-api/client-ofetch
+
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+
+#### @tanstack/angular-query-experimental
+
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/preact-query
+
+- add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/react-query
+
+- add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/solid-query
+
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/svelte-query
+
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### @tanstack/vue-query
+
+- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+
+#### zod
+
+- fallback `.discriminatedUnion` to `.union` if members contain intersection ([#3813](https://github.com/hey-api/openapi-ts/pull/3813))
+
+---
+
+## @hey-api/codegen-core 0.8.1
+
+### Updates
+
+- planner: speed up identifier conflict detector ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+- symbol: speed up symbol registry cache ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+
+---
+
+## @hey-api/shared 0.4.2
+
+### Updates
+
+- graph: speed up graph builder ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+- utils: speed up deep equality check ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+
+---
+
+# 2026-04-20
+
+## @hey-api/openapi-ts 0.96.1
+
+### Updates
+
+- config: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753))
+- output: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683))
+- parser: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791))
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### @hey-api/client-fetch
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### @hey-api/client-ky
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### @hey-api/client-next
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### @hey-api/client-ofetch
+
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+
+#### valibot
+
+- add support for `.variant()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780))
+
+#### zod
+
+- add support for `.discriminatedUnion()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780))
+- support generating `z.input` and `z.output` types ([#3759](https://github.com/hey-api/openapi-ts/pull/3759))
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.1
+
+### Updates
+
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
+
+---
+
+## @hey-api/shared 0.4.1
+
+### Updates
+
+- output: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683))
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
+- parser: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791))
+- config: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753))
+
+---
+
+## @hey-api/vite-plugin 0.3.1
+
+### Updates
+
+- api: expose `vite` options ([#3776](https://github.com/hey-api/openapi-ts/pull/3776))
+
+---
+
+# 2026-04-13
+
+## @hey-api/openapi-ts 0.96.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+- cli: improve error message on invalid input ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
+- parser: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/openapi-ts/pull/3714))
+- parser: process enum metadata ([#3727](https://github.com/hey-api/openapi-ts/pull/3727))
+
+### Plugins
+
+#### @angular/common
+
+- requests and resources broken default configuration ([#3678](https://github.com/hey-api/openapi-ts/pull/3678))
+
+#### @hey-api/client-angular
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-axios
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-fetch
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-ky
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-next
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-nuxt
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/client-ofetch
+
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+
+#### @hey-api/transformers
+
+- return value for primitive array entries ([#3733](https://github.com/hey-api/openapi-ts/pull/3733))
+
+---
+
+## @hey-api/codegen-core 0.8.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+- internal: export errors ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
+
+---
+
+## @hey-api/shared 0.4.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+- parser: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/openapi-ts/pull/3714))
+- parser: process enum metadata ([#3727](https://github.com/hey-api/openapi-ts/pull/3727))
+- error: handle InputError ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
+
+---
+
+## @hey-api/spec-types 0.2.0
+
+### ⚠️ Breaking
+
+This release has 2 breaking changes. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** remove OpenAPI types from JSON Schema documents ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+- **⚠️ Breaking:** rename `OpenAPIExtensions` to `SpecExtensions` ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+- types: add `WithSpecExtensions` type ([#3734](https://github.com/hey-api/openapi-ts/pull/3734))
+- openapi: stricter 2.0 version type ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+- types: use mutable arrays ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+
+---
+
+## @hey-api/vite-plugin 0.3.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** This package is now ESM-only. ([#3688](https://github.com/hey-api/openapi-ts/pull/3688))
+
+---
+
 # 2026-04-02
 
 ## @hey-api/openapi-ts 0.95.0
@@ -2163,7 +2657,7 @@ export default {
 
   ### Bundle `@hey-api/client-*` plugins
 
-  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm add @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
+  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm install @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
 
   ```sh
   npm uninstall @hey-api/client-fetch

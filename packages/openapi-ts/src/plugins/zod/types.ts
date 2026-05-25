@@ -136,6 +136,72 @@ export type UserConfig = Plugin.Name<'zod'> &
                    */
                   name?: NameTransformer;
                 };
+            /**
+             * Configuration for `input` types.
+             *
+             * Can be:
+             * - `boolean`: Shorthand for `{ enabled: boolean }`
+             * - `string` or `function`: Shorthand for `{ name: string | function }`
+             * - `object`: Full configuration object
+             *
+             * @default false
+             */
+            input?:
+              | boolean
+              | NameTransformer
+              | {
+                  /**
+                   * Casing convention for generated names.
+                   *
+                   * @default 'PascalCase'
+                   */
+                  case?: Casing;
+                  /**
+                   * Whether this feature is enabled.
+                   *
+                   * @default true
+                   */
+                  enabled?: boolean;
+                  /**
+                   * Naming pattern for generated names.
+                   *
+                   * @default '{{name}}ZodInput'
+                   */
+                  name?: NameTransformer;
+                };
+            /**
+             * Configuration for `output` types.
+             *
+             * Can be:
+             * - `boolean`: Shorthand for `{ enabled: boolean }`
+             * - `string` or `function`: Shorthand for `{ name: string | function }`
+             * - `object`: Full configuration object
+             *
+             * @default false
+             */
+            output?:
+              | boolean
+              | NameTransformer
+              | {
+                  /**
+                   * Casing convention for generated names.
+                   *
+                   * @default 'PascalCase'
+                   */
+                  case?: Casing;
+                  /**
+                   * Whether this feature is enabled.
+                   *
+                   * @default true
+                   */
+                  enabled?: boolean;
+                  /**
+                   * Naming pattern for generated names.
+                   *
+                   * @default '{{name}}ZodOutput'
+                   */
+                  name?: NameTransformer;
+                };
           };
         };
     /**
@@ -248,6 +314,72 @@ export type UserConfig = Plugin.Name<'zod'> &
                          */
                         name?: NameTransformer;
                       };
+                  /**
+                   * Configuration for `input` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  input?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}BodyZodInput'
+                         */
+                        name?: NameTransformer;
+                      };
+                  /**
+                   * Configuration for `output` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  output?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}BodyZodOutput'
+                         */
+                        name?: NameTransformer;
+                      };
                 };
               };
           /**
@@ -333,6 +465,72 @@ export type UserConfig = Plugin.Name<'zod'> &
                          */
                         name?: NameTransformer;
                       };
+                  /**
+                   * Configuration for `input` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  input?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}HeadersZodInput'
+                         */
+                        name?: NameTransformer;
+                      };
+                  /**
+                   * Configuration for `output` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  output?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}HeadersZodOutput'
+                         */
+                        name?: NameTransformer;
+                      };
                 };
               };
           /**
@@ -412,6 +610,72 @@ export type UserConfig = Plugin.Name<'zod'> &
                          */
                         name?: NameTransformer;
                       };
+                  /**
+                   * Configuration for `input` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  input?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}PathZodInput'
+                         */
+                        name?: NameTransformer;
+                      };
+                  /**
+                   * Configuration for `output` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  output?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}PathZodOutput'
+                         */
+                        name?: NameTransformer;
+                      };
                 };
               };
           /**
@@ -485,6 +749,72 @@ export type UserConfig = Plugin.Name<'zod'> &
                          */
                         name?: NameTransformer;
                       };
+                  /**
+                   * Configuration for `input` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  input?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}QueryZodInput'
+                         */
+                        name?: NameTransformer;
+                      };
+                  /**
+                   * Configuration for `output` types.
+                   *
+                   * Can be:
+                   * - `boolean`: Shorthand for `{ enabled: boolean }`
+                   * - `string` or `function`: Shorthand for `{ name: string | function }`
+                   * - `object`: Full configuration object
+                   *
+                   * @default false
+                   */
+                  output?:
+                    | boolean
+                    | NameTransformer
+                    | {
+                        /**
+                         * Casing convention for generated names.
+                         *
+                         * @default 'PascalCase'
+                         */
+                        case?: Casing;
+                        /**
+                         * Whether this feature is enabled.
+                         *
+                         * @default true
+                         */
+                        enabled?: boolean;
+                        /**
+                         * Naming pattern for generated names.
+                         *
+                         * @default '{{name}}QueryZodOutput'
+                         */
+                        name?: NameTransformer;
+                      };
                 };
               };
           /**
@@ -552,6 +882,72 @@ export type UserConfig = Plugin.Name<'zod'> &
                    * Naming pattern for generated names.
                    *
                    * @default '{{name}}DataZodType'
+                   */
+                  name?: NameTransformer;
+                };
+            /**
+             * Configuration for `input` types.
+             *
+             * Can be:
+             * - `boolean`: Shorthand for `{ enabled: boolean }`
+             * - `string` or `function`: Shorthand for `{ name: string | function }`
+             * - `object`: Full configuration object
+             *
+             * @default false
+             */
+            input?:
+              | boolean
+              | NameTransformer
+              | {
+                  /**
+                   * Casing convention for generated names.
+                   *
+                   * @default 'PascalCase'
+                   */
+                  case?: Casing;
+                  /**
+                   * Whether this feature is enabled.
+                   *
+                   * @default true
+                   */
+                  enabled?: boolean;
+                  /**
+                   * Naming pattern for generated names.
+                   *
+                   * @default '{{name}}DataZodInput'
+                   */
+                  name?: NameTransformer;
+                };
+            /**
+             * Configuration for `output` types.
+             *
+             * Can be:
+             * - `boolean`: Shorthand for `{ enabled: boolean }`
+             * - `string` or `function`: Shorthand for `{ name: string | function }`
+             * - `object`: Full configuration object
+             *
+             * @default false
+             */
+            output?:
+              | boolean
+              | NameTransformer
+              | {
+                  /**
+                   * Casing convention for generated names.
+                   *
+                   * @default 'PascalCase'
+                   */
+                  case?: Casing;
+                  /**
+                   * Whether this feature is enabled.
+                   *
+                   * @default true
+                   */
+                  enabled?: boolean;
+                  /**
+                   * Naming pattern for generated names.
+                   *
+                   * @default '{{name}}DataZodOutput'
                    */
                   name?: NameTransformer;
                 };
@@ -631,6 +1027,72 @@ export type UserConfig = Plugin.Name<'zod'> &
                    */
                   name?: NameTransformer;
                 };
+            /**
+             * Configuration for `input` types.
+             *
+             * Can be:
+             * - `boolean`: Shorthand for `{ enabled: boolean }`
+             * - `string` or `function`: Shorthand for `{ name: string | function }`
+             * - `object`: Full configuration object
+             *
+             * @default false
+             */
+            input?:
+              | boolean
+              | NameTransformer
+              | {
+                  /**
+                   * Casing convention for generated names.
+                   *
+                   * @default 'PascalCase'
+                   */
+                  case?: Casing;
+                  /**
+                   * Whether this feature is enabled.
+                   *
+                   * @default true
+                   */
+                  enabled?: boolean;
+                  /**
+                   * Naming pattern for generated names.
+                   *
+                   * @default '{{name}}ResponseZodInput'
+                   */
+                  name?: NameTransformer;
+                };
+            /**
+             * Configuration for `output` types.
+             *
+             * Can be:
+             * - `boolean`: Shorthand for `{ enabled: boolean }`
+             * - `string` or `function`: Shorthand for `{ name: string | function }`
+             * - `object`: Full configuration object
+             *
+             * @default false
+             */
+            output?:
+              | boolean
+              | NameTransformer
+              | {
+                  /**
+                   * Casing convention for generated names.
+                   *
+                   * @default 'PascalCase'
+                   */
+                  case?: Casing;
+                  /**
+                   * Whether this feature is enabled.
+                   *
+                   * @default true
+                   */
+                  enabled?: boolean;
+                  /**
+                   * Naming pattern for generated names.
+                   *
+                   * @default '{{name}}ResponseZodOutput'
+                   */
+                  name?: NameTransformer;
+                };
           };
         };
     /**
@@ -644,14 +1106,62 @@ export type UserConfig = Plugin.Name<'zod'> &
        *
        * Can be:
        * - `boolean`: Shorthand for `{ enabled: boolean }`
-       * - `string` or `function`: Shorthand for `{ name: string | function }`
        * - `object`: Full configuration object
        *
        * @default false
        */
       infer?:
         | boolean
-        | NameTransformer
+        | {
+            /**
+             * Casing convention for generated names.
+             *
+             * @default 'PascalCase'
+             */
+            case?: Casing;
+            /**
+             * Whether this feature is enabled.
+             *
+             * @default true
+             */
+            enabled?: boolean;
+          };
+      /**
+       * Configuration for `input` types.
+       *
+       * Can be:
+       * - `boolean`: Shorthand for `{ enabled: boolean }`
+       * - `object`: Full configuration object
+       *
+       * @default false
+       */
+      input?:
+        | boolean
+        | {
+            /**
+             * Casing convention for generated names.
+             *
+             * @default 'PascalCase'
+             */
+            case?: Casing;
+            /**
+             * Whether this feature is enabled.
+             *
+             * @default true
+             */
+            enabled?: boolean;
+          };
+      /**
+       * Configuration for `output` types.
+       *
+       * Can be:
+       * - `boolean`: Shorthand for `{ enabled: boolean }`
+       * - `object`: Full configuration object
+       *
+       * @default false
+       */
+      output?:
+        | boolean
         | {
             /**
              * Casing convention for generated names.
@@ -740,6 +1250,72 @@ export type UserConfig = Plugin.Name<'zod'> &
                    */
                   name?: NameTransformer;
                 };
+            /**
+             * Configuration for `input` types.
+             *
+             * Can be:
+             * - `boolean`: Shorthand for `{ enabled: boolean }`
+             * - `string` or `function`: Shorthand for `{ name: string | function }`
+             * - `object`: Full configuration object
+             *
+             * @default false
+             */
+            input?:
+              | boolean
+              | NameTransformer
+              | {
+                  /**
+                   * Casing convention for generated names.
+                   *
+                   * @default 'PascalCase'
+                   */
+                  case?: Casing;
+                  /**
+                   * Whether this feature is enabled.
+                   *
+                   * @default true
+                   */
+                  enabled?: boolean;
+                  /**
+                   * Naming pattern for generated names.
+                   *
+                   * @default '{{name}}WebhookRequestZodInput'
+                   */
+                  name?: NameTransformer;
+                };
+            /**
+             * Configuration for `output` types.
+             *
+             * Can be:
+             * - `boolean`: Shorthand for `{ enabled: boolean }`
+             * - `string` or `function`: Shorthand for `{ name: string | function }`
+             * - `object`: Full configuration object
+             *
+             * @default false
+             */
+            output?:
+              | boolean
+              | NameTransformer
+              | {
+                  /**
+                   * Casing convention for generated names.
+                   *
+                   * @default 'PascalCase'
+                   */
+                  case?: Casing;
+                  /**
+                   * Whether this feature is enabled.
+                   *
+                   * @default true
+                   */
+                  enabled?: boolean;
+                  /**
+                   * Naming pattern for generated names.
+                   *
+                   * @default '{{name}}WebhookRequestZodOutput'
+                   */
+                  name?: NameTransformer;
+                };
           };
         };
   };
@@ -792,6 +1368,16 @@ export type Config = Plugin.Name<'zod'> &
     types: {
       /** Configuration for `infer` types. */
       infer: FeatureToggle & {
+        /** Casing convention for generated names. */
+        case: Casing;
+      };
+      /** Configuration for `input` types. */
+      input: FeatureToggle & {
+        /** Casing convention for generated names. */
+        case: Casing;
+      };
+      /** Configuration for `output` types. */
+      output: FeatureToggle & {
         /** Casing convention for generated names. */
         case: Casing;
       };

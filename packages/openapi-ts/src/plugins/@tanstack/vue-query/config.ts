@@ -13,6 +13,16 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
   handler: handler as TanStackVueQueryPlugin['Handler'],
   name: '@tanstack/vue-query',
   resolveConfig: (plugin, context) => {
+    plugin.config.getQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}GetQueryData',
+      },
+      mappers,
+      value: plugin.config.getQueryData,
+    });
+
     plugin.config.infiniteQueryKeys = context.valueToObject({
       defaultValue: {
         case: plugin.config.case ?? 'camelCase',
@@ -32,6 +42,17 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
       },
       mappers,
       value: plugin.config.infiniteQueryOptions,
+    });
+
+    plugin.config.mutationKeys = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}MutationKey',
+        tags: false,
+      },
+      mappers,
+      value: plugin.config.mutationKeys,
     });
 
     plugin.config.mutationOptions = context.valueToObject({
@@ -65,6 +86,16 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
       },
       mappers,
       value: plugin.config.queryOptions,
+    });
+
+    plugin.config.setQueryData = context.valueToObject({
+      defaultValue: {
+        case: plugin.config.case ?? 'camelCase',
+        enabled: false,
+        name: '{{name}}SetQueryData',
+      },
+      mappers,
+      value: plugin.config.setQueryData,
     });
   },
 };

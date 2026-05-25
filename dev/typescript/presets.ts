@@ -17,6 +17,7 @@ export const presets = {
       paramsStructure: 'flat',
     },
     {
+      dates: true,
       name: '@hey-api/transformers',
     },
     {
@@ -58,12 +59,22 @@ export const presets = {
       },
     },
   ],
+  transformed: () => [
+    /** SDK + transforms */
+    '@hey-api/typescript',
+    {
+      name: '@hey-api/sdk',
+      transformer: 'valibot',
+    },
+    'valibot',
+    'zod',
+  ],
   types: () => [
     /** Just types, nothing else */
     '@hey-api/typescript',
   ],
   validated: () => [
-    /** SDK + Zod validation */
+    /** SDK + validation */
     '@hey-api/typescript',
     {
       name: '@hey-api/sdk',

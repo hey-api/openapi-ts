@@ -1,5 +1,205 @@
 # @hey-api/openapi-ts
 
+## 0.97.3
+
+### Patch Changes
+
+- **plugin(@hey-api/client-axios)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/preact-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-ofetch)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/svelte-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/angular-query-experimental)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/react-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-fetch)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/react-query)**: add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-ky)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/solid-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-next)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/preact-query)**: add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-angular)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`58962a0`](https://github.com/hey-api/openapi-ts/commit/58962a055b19c61ea5721d01f7ba2589bbbcb1ad)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@hey-api/transformers)**: add support for Temporal API via [temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) in `dates` ([#3916](https://github.com/hey-api/openapi-ts/pull/3916)) ([`bfa457a`](https://github.com/hey-api/openapi-ts/commit/bfa457a3da2bebad46f6c621cfd8a0f22aa6b9d8)) by [@OptoCloud](https://github.com/OptoCloud)
+
+- **plugin(@tanstack/vue-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(zod)**: fix: avoid invalid `.extend()` on `z.record()` when a discriminated union member is an empty object ([#3915](https://github.com/hey-api/openapi-ts/pull/3915)) ([`8fa9f3a`](https://github.com/hey-api/openapi-ts/commit/8fa9f3ae0932401c097ccdd542d08b092f13873c)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.5
+- @hey-api/codegen-core@0.8.2
+
+## 0.97.2
+
+### Patch Changes
+
+- **plugin(zod)**: use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884)) ([`abc8ceb`](https://github.com/hey-api/openapi-ts/commit/abc8ceb43f37e7c9739fe010d3fcdb3be0bb5290)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-next)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/sdk)**: support `valibot` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847)) ([`6770f78`](https://github.com/hey-api/openapi-ts/commit/6770f78dec53b1bf8f37c361c7b9c2e2eb4157fa)) by [@SukkaW](https://github.com/SukkaW)
+
+- **plugin(@tanstack/vue-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **plugin(@hey-api/client-nuxt)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@tanstack/svelte-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **plugin(@hey-api/sdk)**: support `zod` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847)) ([`6770f78`](https://github.com/hey-api/openapi-ts/commit/6770f78dec53b1bf8f37c361c7b9c2e2eb4157fa)) by [@SukkaW](https://github.com/SukkaW)
+
+- **plugin(@hey-api/client-angular)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-fetch)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-axios)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(valibot)**: use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884)) ([`abc8ceb`](https://github.com/hey-api/openapi-ts/commit/abc8ceb43f37e7c9739fe010d3fcdb3be0bb5290)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/react-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **plugin(@tanstack/solid-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **plugin(@hey-api/client-ofetch)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-ky)**: fix: preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853)) ([`a6ee7eb`](https://github.com/hey-api/openapi-ts/commit/a6ee7eb11cc6e8f1d5093d2c211d77874f337bbe)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@tanstack/preact-query)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+- **dsl**: fix: cache lazy node result ([#3855](https://github.com/hey-api/openapi-ts/pull/3855)) ([`7dee3c2`](https://github.com/hey-api/openapi-ts/commit/7dee3c25d2d7150aa6cbc1e9d4dba0d9de1e64b2)) by [@awdr74100](https://github.com/awdr74100)
+
+- **plugin(@tanstack/angular-query-experimental)**: add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858)) ([`d86680a`](https://github.com/hey-api/openapi-ts/commit/d86680a8e94995032d315ac884d8de83ef8aa1a3)) by [@slmnsh](https://github.com/slmnsh)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.4
+
+## 0.97.1
+
+### Patch Changes
+
+- **plugin(@hey-api/transformers)**: fix: use symbols for `additionalProperties` key variables ([#3841](https://github.com/hey-api/openapi-ts/pull/3841)) ([`d880caa`](https://github.com/hey-api/openapi-ts/commit/d880caabb46a712b1fc0087615b8f9ee4b88c227)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.2
+- @hey-api/shared@0.4.3
+
+## 0.97.0
+
+### Minor Changes
+
+- **BREAKING** **plugin(@hey-api/client-ky)**: fix: pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **client**: resolve `runtimeConfigPath` relative to the output folder ([#3770](https://github.com/hey-api/openapi-ts/pull/3770)) ([`296da55`](https://github.com/hey-api/openapi-ts/commit/296da551f83c6d1ea2a24153b072a4a86617a9e0)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+### Changed `runtimeConfigPath` behavior
+
+This was a known, long-standing issue confusing first-time users. Before, defining client `runtimeConfigPath` value would paste it verbatim to the generated output. This release changes the behavior to resolve relative to the current working directory the same way output path works.
+
+- **BREAKING** **plugin(@hey-api/client-angular)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-angular)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-next)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-fetch)**: fix: pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-ky)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-fetch)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-ofetch)**: `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-ky)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-fetch)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-next)**: fix: pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-ky)**: respect ky instance defaults ([#3806](https://github.com/hey-api/openapi-ts/pull/3806)) ([`d16cf1c`](https://github.com/hey-api/openapi-ts/commit/d16cf1c1413849bc491a758b096222caa5a82d25)) by [@SukkaW](https://github.com/SukkaW)
+
+### Changed Ky client behavior
+
+The Ky client was updated to be more intuitive. Some Ky options now need to be passed via the `kyOptions` field and you need to pass `undefined` to unset an option.
+
+- **BREAKING** **plugin(@hey-api/client-ofetch)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+- **BREAKING** **plugin(@hey-api/client-next)**: fix: respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814)) ([`0d388de`](https://github.com/hey-api/openapi-ts/commit/0d388de3b85748a6827bcd6407e1e1400f39c3a3)) by [@SukkaW](https://github.com/SukkaW)
+
+### Patch Changes
+
+- **plugin(@tanstack/vue-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/react-query)**: add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **cli**: print file count and generator speed ([#3828](https://github.com/hey-api/openapi-ts/pull/3828)) ([`6e5249f`](https://github.com/hey-api/openapi-ts/commit/6e5249ff3bb10b142e5911697601ad7d2c7d9dbc)) by [@SukkaW](https://github.com/SukkaW)
+
+- **plugin(@tanstack/preact-query)**: add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/svelte-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(zod)**: fix: fallback `.discriminatedUnion` to `.union` if members contain intersection ([#3813](https://github.com/hey-api/openapi-ts/pull/3813)) ([`b88e8b5`](https://github.com/hey-api/openapi-ts/commit/b88e8b5139d62d8d3710aea9d86f15efa3612eb9)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **config**: fix: remove `--apply` flag from Biome post-processor commands ([#3812](https://github.com/hey-api/openapi-ts/pull/3812)) ([`084de63`](https://github.com/hey-api/openapi-ts/commit/084de63aa35b09df735e05eb739df3bda508a08f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@tanstack/react-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/solid-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/preact-query)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/angular-query-experimental)**: add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824)) ([`1ef4af0`](https://github.com/hey-api/openapi-ts/commit/1ef4af06d817506134b9077c7c3f034831f4457a)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.1
+- @hey-api/shared@0.4.2
+
+## 0.96.1
+
+### Patch Changes
+
+- **parser**: fix: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791)) ([`0d3cb9f`](https://github.com/hey-api/openapi-ts/commit/0d3cb9f49b9f1d9fa5b47b73a2c85141c0cd78b6)) by [@sbs44](https://github.com/sbs44)
+
+- **plugin(@hey-api/client-fetch)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`f69b192`](https://github.com/hey-api/openapi-ts/commit/f69b192eb1afc16c85c547a25287905f9f38b2cb)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(zod)**: add support for `.discriminatedUnion()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780)) ([`3d8db90`](https://github.com/hey-api/openapi-ts/commit/3d8db9030fcc5c4a3b26d9da19c79eb1dd96989f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **parser**: fix: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782)) ([`290c14f`](https://github.com/hey-api/openapi-ts/commit/290c14fba3c104a6e820eaa981b29c3b6a378e16)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-next)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`aa75345`](https://github.com/hey-api/openapi-ts/commit/aa753455f827f0a558de7f3bf5856e521b2df7bb)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(valibot)**: add support for `.variant()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780)) ([`3d8db90`](https://github.com/hey-api/openapi-ts/commit/3d8db9030fcc5c4a3b26d9da19c79eb1dd96989f)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(zod)**: support generating `z.input` and `z.output` types ([#3759](https://github.com/hey-api/openapi-ts/pull/3759)) ([`cda5297`](https://github.com/hey-api/openapi-ts/commit/cda5297d1e0ff0a603cb49f55d88668931aa4afe)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ky)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`ab2b315`](https://github.com/hey-api/openapi-ts/commit/ab2b315f4ab848d886b81cb374ea2e3490a39dff)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **output**: fix: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683)) ([`e69d79f`](https://github.com/hey-api/openapi-ts/commit/e69d79f0d7de8a0a2f955457a522b88f505ae80d)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
+- **plugin(@hey-api/client-angular)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`4ee9bd3`](https://github.com/hey-api/openapi-ts/commit/4ee9bd303855162ade829ba16d8259dea0e73514)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-ofetch)**: fix: narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757)) ([`4f5afb9`](https://github.com/hey-api/openapi-ts/commit/4f5afb98355784765a7dfc4d905d3893ea5799a0)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **config**: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753)) ([`e78ce75`](https://github.com/hey-api/openapi-ts/commit/e78ce75bcc63374cd9ec4178bfe18a2e09ca128d)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.1
+- @hey-api/json-schema-ref-parser@1.4.1
+
 ## 0.96.0
 
 ### Minor Changes
@@ -1675,7 +1875,7 @@ export default {
 
   ### Bundle `@hey-api/client-*` plugins
 
-  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm add @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
+  In previous releases, you had to install a separate client package to generate a fully working output, e.g. `npm install @hey-api/client-fetch`. This created a few challenges: getting started was slower, upgrading was sometimes painful, and bundling too. Beginning with v0.73.0, all Hey API clients are bundled by default and don't require installing any additional dependencies. You can remove any installed client packages and re-run `@hey-api/openapi-ts`.
 
   ```sh
   npm uninstall @hey-api/client-fetch

@@ -1,5 +1,5 @@
 import type { KyInstance } from 'ky';
-import { HTTPError } from 'ky';
+import ky, { HTTPError } from 'ky';
 
 import type { ResolvedRequestOptions } from '../bundle';
 import { createClient } from '../bundle/client';
@@ -308,8 +308,8 @@ describe('unserialized request body handling', () => {
       expect.any(Object),
     );
 
-    await expect(result.request.text()).resolves.toEqual(textValue);
-    expect(result.request.headers.get('Content-Type')).toEqual('text/plain');
+    await expect(result.request!.text()).resolves.toEqual(textValue);
+    expect(result.request!.headers.get('Content-Type')).toEqual('text/plain');
   });
 });
 
@@ -376,8 +376,8 @@ describe('serialized request body handling', () => {
         expect.any(Object),
       );
 
-      await expect(result.request.text()).resolves.toEqual(textValue);
-      expect(result.request.headers.get('Content-Type')).toEqual(
+      await expect(result.request!.text()).resolves.toEqual(textValue);
+      expect(result.request!.headers.get('Content-Type')).toEqual(
         expectContentHeader ? 'application/json' : null,
       );
     },
@@ -499,7 +499,7 @@ describe('error handling', () => {
     });
 
     expect(result.error).toEqual({ message: 'Not found' });
-    expect(result.response.status).toBe(404);
+    expect(result.response!.status).toBe(404);
   });
 
   it('throws HTTP errors with throwOnError: true', async () => {
@@ -543,7 +543,7 @@ describe('error handling', () => {
     });
 
     expect(result.error).toBe('Internal Server Error');
-    expect(result.response.status).toBe(500);
+    expect(result.response!.status).toBe(500);
   });
 });
 
@@ -666,5 +666,28 @@ describe('responseStyle configuration', () => {
     });
 
     expect(result).toBeUndefined();
+  });
+});
+
+describe('issue #3805: custom ky instance defaults should not be overridden by undefined values', () => {
+  it('custom ky instance option should not be overridden', async () => {
+    // Here we create a custom ky with "credentials" and underlying "fetch" being mocked
+    const mockFetch = vi.fn().mockResolvedValue(new Response());
+    const customKy = ky.create({
+      credentials: 'include',
+      fetch: mockFetch,
+    });
+
+    const client = createClient({ baseUrl: 'https://example.com', ky: customKy });
+
+    await client.get({
+      url: '/test',
+    });
+
+    // Verify that the Request object has credentials from ky.create
+    const mockFetchCall = mockFetch.mock.calls[0];
+    expect(mockFetchCall).toBeDefined();
+    expect(mockFetchCall![0]).toBeInstanceOf(Request);
+    expect(mockFetchCall![0].credentials).toBe('include');
   });
 });

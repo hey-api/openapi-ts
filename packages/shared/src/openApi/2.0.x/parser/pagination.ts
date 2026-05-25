@@ -87,7 +87,7 @@ export const paginationField = ({
       const property = schema.properties[name]!;
 
       if (typeof property !== 'boolean' && !('$ref' in property)) {
-        const schemaType = getSchemaType({ schema: property });
+        const schemaType = getSchemaType(property);
         // TODO: resolve deeper references
 
         if (isPaginationType(schemaType)) {

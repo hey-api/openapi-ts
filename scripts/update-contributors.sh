@@ -16,8 +16,7 @@ if [[ -n "${GITHUB_TOKEN:-}" ]]; then
   AUTH_HEADER=(-H "Authorization: token $GITHUB_TOKEN")
 fi
 
-EXCLUDED_FILE="./docs/.contributorsignore"
-SINCE_FILE="./docs/.contributorssince"
+# SINCE_FILE="./docs/.contributorssince"
 
 # disabled for now, we'd need to append to the list instead of write
 # if [[ -f "$SINCE_FILE" ]]; then
@@ -69,23 +68,30 @@ while :; do
   jq -r '.[].author | select(.login != null) | .login' "$TMP_JSON" | sort -u > "$TMP_LOGINS"
 
   while read -r login; do
-    if ! grep -Fxq "$login" "$EXCLUDED_FILE"; then
-      if ! printf '%s\n' "${USERS[@]}" | grep -qx "$login"; then
-        USERS+=("$login")
+    if [[ "$login" == *"[bot]" ]]; then
+      continue
+    fi
 
-        CACHE_FILE="$CACHE_DIR/$login.json"
-        if [ -f "$CACHE_FILE" ]; then
-          USER_JSON=$(<"$CACHE_FILE")
-        else
-          echo "Fetching user $login"
-          USER_JSON=$(curl -s "${AUTH_HEADER[@]}" "https://api.github.com/users/$login")
-          echo "$USER_JSON" > "$CACHE_FILE"
-        fi
-
-        SANITIZED_JSON=$(echo "$USER_JSON" | tr -d '\000-\037')
-        NAME=$(jq -r '.name // empty' <<< "$SANITIZED_JSON")
-        echo "$login|$NAME" >> "$TMP_USERS"
+    if ! printf '%s\n' "${USERS[@]}" | grep -qx "$login"; then
+      CACHE_FILE="$CACHE_DIR/$login.json"
+      if [ -f "$CACHE_FILE" ]; then
+        USER_JSON=$(<"$CACHE_FILE")
+      else
+        echo "Fetching user $login"
+        USER_JSON=$(curl -s "${AUTH_HEADER[@]}" "https://api.github.com/users/$login")
+        echo "$USER_JSON" > "$CACHE_FILE"
       fi
+
+      SANITIZED_JSON=$(echo "$USER_JSON" | tr -d '\000-\037')
+
+      USER_TYPE=$(jq -r '.type // "User"' <<< "$SANITIZED_JSON")
+      if [[ "$USER_TYPE" == "Bot" ]]; then
+        continue
+      fi
+
+      USERS+=("$login")
+      NAME=$(jq -r '.name // empty' <<< "$SANITIZED_JSON")
+      echo "$login|$NAME" >> "$TMP_USERS"
     fi
   done < "$TMP_LOGINS"
 
@@ -99,7 +105,7 @@ if [ "$MAX_COMMIT_EPOCH" -gt 0 ]; then
   BUFFER_SECONDS=$((BUFFER_DAYS * 86400))
   BUFFERED_EPOCH=$((MAX_COMMIT_EPOCH - BUFFER_SECONDS))
   BUFFERED_DATE=$(date -u -r "$BUFFERED_EPOCH" "+%Y-%m-%dT%H:%M:%SZ")
-  echo "$BUFFERED_DATE" > "$SINCE_FILE"
+  # echo "$BUFFERED_DATE" > "$SINCE_FILE"
   echo "Updated SINCE to $BUFFERED_DATE"
 fi
 
@@ -115,7 +121,7 @@ NO_NAMES_SORTED=$(awk -F'|' '$2 == ""' "$TMP_USERS" | sort -t'|' -k1,1)
   else
     echo "- [$login](https://github.com/$login)"
   fi
-done > ./docs/partials/contributors-list.md
+done > ./CONTRIBUTORS.md
 
 if [[ -f "$TMP_USERS" ]]; then
   rm "$TMP_USERS"

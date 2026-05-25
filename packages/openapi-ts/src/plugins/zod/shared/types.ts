@@ -13,6 +13,8 @@ export type ValidatorArgs = {
 export type TypeOptions = {
   types: {
     infer: NamingOptions & FeatureToggle;
+    input: NamingOptions & FeatureToggle;
+    output: NamingOptions & FeatureToggle;
   };
 };
 
@@ -26,6 +28,8 @@ export interface ZodMeta {
   format?: string;
   /** Whether this or any child contains a lazy reference. */
   hasLazy: boolean;
+  /** Whether this schema generates a ZodIntersection (e.g. via allOf). */
+  isIntersection: boolean;
   /** Whether this schema itself is emitted as lazy. */
   isLazy: boolean;
   /** Whether this schema resolves to an object shape. */
@@ -40,14 +44,14 @@ export interface ZodMeta {
  * Result from walking a schema node.
  */
 export interface ZodResult {
-  expression: Chain;
+  chain: Chain;
   meta: ZodMeta;
 }
 
 /**
  * Finalized result after applyModifiers.
  */
-export interface ZodFinal extends Pick<ZodResult, 'expression'> {
+export interface ZodFinal extends Pick<ZodResult, 'chain'> {
   /** Type annotation for schemas requiring explicit typing (e.g., lazy). */
   typeName?: string | ts.Identifier;
 }
@@ -55,6 +59,6 @@ export interface ZodFinal extends Pick<ZodResult, 'expression'> {
 /**
  * Result from composite handlers that walk children.
  */
-export interface CompositeHandlerResult extends Pick<ZodResult, 'expression'> {
+export interface CompositeHandlerResult extends Pick<ZodResult, 'chain'> {
   childResults: Array<ZodResult>;
 }

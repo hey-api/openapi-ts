@@ -36,10 +36,7 @@ export const createClient = (config: Config = {}): Client => {
     };
 
     if (opts.security) {
-      await setAuthParams({
-        ...opts,
-        security: opts.security,
-      });
+      await setAuthParams(opts);
     }
 
     if (opts.requestValidator) {
@@ -147,7 +144,7 @@ export const createClient = (config: Config = {}): Client => {
 
     for (const fn of interceptors.error.fns) {
       if (fn) {
-        finalError = (await fn(error, response, request, opts)) as string;
+        finalError = (await fn(finalError, response, request, opts)) as string;
       }
     }
 

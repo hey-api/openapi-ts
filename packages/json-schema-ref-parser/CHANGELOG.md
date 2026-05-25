@@ -1,5 +1,17 @@
 # @hey-api/json-schema-ref-parser
 
+## 1.4.2
+
+### Patch Changes
+
+- **yaml**: swap `yaml` back to `js-yaml` ([#3843](https://github.com/hey-api/openapi-ts/pull/3843)) ([`c1b6ac1`](https://github.com/hey-api/openapi-ts/commit/c1b6ac1d03e0d6010fc834cfeabf7abe491de9a2)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+## 1.4.1
+
+### Patch Changes
+
+- **parser**: fix: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782)) ([`290c14f`](https://github.com/hey-api/openapi-ts/commit/290c14fba3c104a6e820eaa981b29c3b6a378e16)) by [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)
+
 ## 1.4.0
 
 ### Minor Changes
