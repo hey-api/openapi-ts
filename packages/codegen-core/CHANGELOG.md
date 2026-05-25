@@ -1,5 +1,11 @@
 # @hey-api/codegen-core
 
+## 0.8.2
+
+### Patch Changes
+
+- **symbols**: fix: prefer recursive over top-level merging in registry ([#3917](https://github.com/hey-api/openapi-ts/pull/3917)) ([`ec2bdba`](https://github.com/hey-api/openapi-ts/commit/ec2bdba19e0afee59e9fb8bcbfeff837ee2535b1)) by [@SukkaW](https://github.com/SukkaW)
+
 ## 0.8.1
 
 ### Patch Changes

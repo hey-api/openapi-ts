@@ -1,5 +1,46 @@
 # @hey-api/openapi-ts
 
+## 0.97.3
+
+### Patch Changes
+
+- **plugin(@hey-api/client-axios)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/preact-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-ofetch)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/svelte-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/angular-query-experimental)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@tanstack/react-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-fetch)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/react-query)**: add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-ky)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/solid-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-next)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`a19b3a4`](https://github.com/hey-api/openapi-ts/commit/a19b3a472f2480592f3cbe518ea5e7f02fe4a550)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@tanstack/preact-query)**: add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(@hey-api/client-angular)**: fix: correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919)) ([`58962a0`](https://github.com/hey-api/openapi-ts/commit/58962a055b19c61ea5721d01f7ba2589bbbcb1ad)) by [@kitlangton](https://github.com/kitlangton)
+
+- **plugin(@hey-api/transformers)**: add support for Temporal API via [temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) in `dates` ([#3916](https://github.com/hey-api/openapi-ts/pull/3916)) ([`bfa457a`](https://github.com/hey-api/openapi-ts/commit/bfa457a3da2bebad46f6c621cfd8a0f22aa6b9d8)) by [@OptoCloud](https://github.com/OptoCloud)
+
+- **plugin(@tanstack/vue-query)**: add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827)) ([`1aa4785`](https://github.com/hey-api/openapi-ts/commit/1aa47851422dece48d103ad018759fea8151cb38)) by [@inas-sirhan](https://github.com/inas-sirhan)
+
+- **plugin(zod)**: fix: avoid invalid `.extend()` on `z.record()` when a discriminated union member is an empty object ([#3915](https://github.com/hey-api/openapi-ts/pull/3915)) ([`8fa9f3a`](https://github.com/hey-api/openapi-ts/commit/8fa9f3ae0932401c097ccdd542d08b092f13873c)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.5
+- @hey-api/codegen-core@0.8.2
+
 ## 0.97.2
 
 ### Patch Changes
