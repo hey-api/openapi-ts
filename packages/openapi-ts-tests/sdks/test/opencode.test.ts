@@ -59,6 +59,83 @@ describe(`SDK: ${namespace}`, () => {
       }),
       description: 'grouped',
     },
+    {
+      config: createConfig({
+        input: specPath,
+        output: 'metadata-by-tags',
+        plugins: [
+          'zod',
+          {
+            metadata: true,
+            name: '@hey-api/sdk',
+            operations: {
+              strategy: 'byTags',
+            },
+            paramsStructure: 'flat',
+            validator: true,
+          },
+        ],
+      }),
+      description: 'metadata by tags',
+    },
+    {
+      config: createConfig({
+        input: specPath,
+        output: 'metadata-flat',
+        plugins: [
+          'zod',
+          {
+            metadata: true,
+            name: '@hey-api/sdk',
+            paramsStructure: 'flat',
+            validator: true,
+          },
+        ],
+      }),
+      description: 'metadata flat',
+    },
+    {
+      config: createConfig({
+        input: specPath,
+        output: 'metadata-single',
+        plugins: [
+          'zod',
+          {
+            metadata: true,
+            name: '@hey-api/sdk',
+            operations: {
+              containerName: 'OpenCode',
+              strategy: 'single',
+            },
+            paramsStructure: 'flat',
+            validator: true,
+          },
+        ],
+      }),
+      description: 'metadata single',
+    },
+    {
+      config: createConfig({
+        input: specPath,
+        output: 'metadata-partial',
+        plugins: [
+          'zod',
+          {
+            metadata: {
+              id: true,
+              method: false,
+              responseSchema: false,
+              tags: true,
+              url: true,
+            },
+            name: '@hey-api/sdk',
+            paramsStructure: 'flat',
+            validator: true,
+          },
+        ],
+      }),
+      description: 'metadata partial',
+    },
   ];
 
   it.each(scenarios)(

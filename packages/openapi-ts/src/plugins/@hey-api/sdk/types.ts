@@ -4,6 +4,16 @@ import type { PluginClientNames, PluginTransformerNames, PluginValidatorNames } 
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
 
+export type UserMetadataConfig = {
+  id?: boolean;
+  method?: boolean;
+  responseSchema?: boolean;
+  tags?: boolean;
+  url?: boolean;
+};
+
+export type MetadataConfig = Required<UserMetadataConfig>;
+
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks &
   Plugin.UserComments &
@@ -29,6 +39,52 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      */
     client?: PluginClientNames | boolean;
     /**
+     * Customize the generated class names. The name variable is obtained from
+     * your OpenAPI specification tags or `instance` value.
+     *
+     * This option has no effect if `sdk.asClass` is `false`.
+     *
+     * @deprecated Use `operations: { containerName: "..." }` instead.
+     */
+    classNameBuilder?: NameTransformer;
+    /**
+     * How should we structure your SDK? By default, we try to infer the ideal
+     * structure using `operationId` keywords. If you prefer a flatter structure,
+     * you can set `classStructure` to `off` to disable this behavior.
+     *
+     * @deprecated Use `operations: { nesting: "operationId" }` or `operations: { nesting: "id" }` instead.
+     * @default 'auto'
+     */
+    classStructure?: 'auto' | 'off';
+    /**
+     * Transform response data before returning. This is useful if you want to
+     * convert for example ISO strings into Date objects. However, transformation
+     * adds runtime overhead, so it's not recommended to use unless necessary.
+     *
+     * You can customize the transformer output through its plugin. You can also
+     * set `transformer` to `true` to automatically choose the transformer from your
+     * defined plugins.
+     *
+     * Ensure you have declared the selected library as a dependency to avoid
+     * errors.
+     *
+     * @default false
+     */
+    transformer?:
+      | PluginTransformerNames
+      | boolean
+      | {
+          /**
+           * Transform response data before returning.
+           *
+           * Can be a transformer plugin name or boolean (true to auto-select, false
+           * to disable).
+           *
+           * @default false
+           */
+          response?: PluginTransformerNames | boolean;
+        };
+    /**
      * Generate code examples for SDK operations and attach them to the
      * input source (e.g., via `x-codeSamples`).
      *
@@ -38,6 +94,40 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @default false
      */
     examples?: boolean | UserExamplesConfig;
+    /**
+     * Set `instance` to create an instantiable SDK. Using `true` will use the
+     * default instance name; in practice, you want to define your own by passing
+     * a string value.
+     *
+     * @deprecated Use `operations: { strategy: "single", containerName: "Name", methods: "instance" }` instead.
+     * @default false
+     */
+    instance?: string | boolean;
+    /**
+     * Attach OpenAPI-derived metadata to generated SDK methods.
+     *
+     * When enabled, generated methods are wrapped with `Object.assign()` and
+     * expose static metadata such as operation id, HTTP method, path, tags,
+     * and validator schemas when available.
+     *
+     * @default false
+     */
+    metadata?: boolean | UserMetadataConfig;
+    /**
+     * Customise the name of methods within the service. By default,
+     * `operation.id` is used.
+     *
+     * @deprecated Use `operations: { methodName: "..." }` instead.
+     */
+    methodNameBuilder?: NameTransformer;
+
+    /**
+     * Use operation ID to generate operation names?
+     *
+     * @deprecated Use `operations: { nesting: "operationId" }` or `operations: { nesting: "id" }` instead.
+     * @default true
+     */
+    operationId?: boolean;
     /**
      * Define the structure of generated SDK operations.
      *
@@ -71,34 +161,6 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      * @default 'fields'
      */
     responseStyle?: 'data' | 'fields';
-    /**
-     * Transform response data before returning. This is useful if you want to
-     * convert for example ISO strings into Date objects. However, transformation
-     * adds runtime overhead, so it's not recommended to use unless necessary.
-     *
-     * You can customize the transformer output through its plugin. You can also
-     * set `transformer` to `true` to automatically choose the transformer from your
-     * defined plugins.
-     *
-     * Ensure you have declared the selected library as a dependency to avoid
-     * errors.
-     *
-     * @default false
-     */
-    transformer?:
-      | PluginTransformerNames
-      | boolean
-      | {
-          /**
-           * Transform response data before returning.
-           *
-           * Can be a transformer plugin name or boolean (true to auto-select, false
-           * to disable).
-           *
-           * @default false
-           */
-          response?: PluginTransformerNames | boolean;
-        };
     /**
      * Validate request and/or response data against schema before returning.
      * This is useful if you want to ensure the request and/or response conforms
@@ -140,9 +202,7 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
            */
           response?: PluginValidatorNames | boolean;
         };
-
     // DEPRECATED OPTIONS BELOW
-
     /**
      * Group operation methods into classes? When enabled, you can select which
      * classes to export with `sdk.include` and/or transform their names with
@@ -157,47 +217,6 @@ export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
      */
     // eslint-disable-next-line typescript-sort-keys/interface
     asClass?: boolean;
-    /**
-     * Customize the generated class names. The name variable is obtained from
-     * your OpenAPI specification tags or `instance` value.
-     *
-     * This option has no effect if `sdk.asClass` is `false`.
-     *
-     * @deprecated Use `operations: { containerName: "..." }` instead.
-     */
-    classNameBuilder?: NameTransformer;
-    /**
-     * How should we structure your SDK? By default, we try to infer the ideal
-     * structure using `operationId` keywords. If you prefer a flatter structure,
-     * you can set `classStructure` to `off` to disable this behavior.
-     *
-     * @deprecated Use `operations: { nesting: "operationId" }` or `operations: { nesting: "id" }` instead.
-     * @default 'auto'
-     */
-    classStructure?: 'auto' | 'off';
-    /**
-     * Set `instance` to create an instantiable SDK. Using `true` will use the
-     * default instance name; in practice, you want to define your own by passing
-     * a string value.
-     *
-     * @deprecated Use `operations: { strategy: "single", containerName: "Name", methods: "instance" }` instead.
-     * @default false
-     */
-    instance?: string | boolean;
-    /**
-     * Customise the name of methods within the service. By default,
-     * `operation.id` is used.
-     *
-     * @deprecated Use `operations: { methodName: "..." }` instead.
-     */
-    methodNameBuilder?: NameTransformer;
-    /**
-     * Use operation ID to generate operation names?
-     *
-     * @deprecated Use `operations: { nesting: "operationId" }` or `operations: { nesting: "id" }` instead.
-     * @default true
-     */
-    operationId?: boolean;
     /**
      * Define shape of returned value from service calls
      *
@@ -217,6 +236,8 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     client: PluginClientNames | false;
     /** Configuration for generating SDK code examples. */
     examples: ExamplesConfig;
+    /** Attach OpenAPI-derived metadata to generated SDK methods. */
+    metadata: MetadataConfig;
     /** Define the structure of generated SDK operations. */
     operations: OperationsConfig;
     /** Define how request parameters are structured in generated SDK methods. */

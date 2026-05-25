@@ -17,8 +17,12 @@ import {
 import { $, ctx } from '../../../../ts-dsl';
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
+import { withMetadata } from '../shared/metadata';
 import { operationParameters, operationStatements } from '../shared/operation';
 import type { HeyApiSdkPlugin } from '../types';
+
+type ArrowFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'arrow' }>;
+type ExprFunc = Extract<ReturnType<typeof $.func>, { '~mode': 'expr' }>;
 
 export interface OperationItem {
   operation: IR.OperationObject;
@@ -35,15 +39,17 @@ export function isInstance(plugin: HeyApiSdkPlugin['Instance']): boolean {
   );
 }
 
-function attachComment<T extends ReturnType<typeof $.var | typeof $.method>>(args: {
-  node: T;
-  operation: IR.OperationObject;
-  plugin: HeyApiSdkPlugin['Instance'];
-}): T {
+function attachComment<
+  T extends ReturnType<typeof $.field | typeof $.method | typeof $.var>,
+>(args: { node: T; operation: IR.OperationObject; plugin: HeyApiSdkPlugin['Instance'] }): T {
   const { node, operation, plugin } = args;
   return node.$if(plugin.config.comments && createOperationComment(operation), (n, v) =>
     n.doc(v),
   ) as T;
+}
+
+function isMetadataEnabled(plugin: HeyApiSdkPlugin['Instance']): boolean {
+  return Object.values(plugin.config.metadata).some(Boolean);
 }
 
 function createShellMeta(node: StructureNode): SymbolMeta {
@@ -228,7 +234,7 @@ function enrichRootClass(args: {
 }
 
 function exampleIntent(
-  node: ReturnType<typeof $.method | typeof $.var>,
+  node: ReturnType<typeof $.field | typeof $.method | typeof $.var>,
   operation: IR.OperationObject,
   plugin: HeyApiSdkPlugin['Instance'],
 ): void {
@@ -254,7 +260,7 @@ function exampleIntent(
   });
 }
 
-function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args: {
+function implementFn<T extends ReturnType<typeof $.method> | ArrowFunc | ExprFunc>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
@@ -320,15 +326,26 @@ export function toNode(
   if (model.virtual) {
     const nodes: Array<ReturnType<typeof $.var>> = [];
     for (const item of model.itemsFrom<OperationItem>(source)) {
-      const { operation } = item.data;
+      const { operation, tags } = item.data;
       let node = $.const(createFnSymbol(plugin, item))
         .export()
         .assign(
-          implementFn({
-            node: $.func(),
-            operation,
-            plugin,
-          }),
+          isMetadataEnabled(plugin)
+            ? withMetadata({
+                fn: implementFn({
+                  node: $.func(createFnSymbol(plugin, item)).expr() as ExprFunc,
+                  operation,
+                  plugin,
+                }),
+                operation,
+                plugin,
+                tags,
+              })
+            : implementFn({
+                node: $.func(),
+                operation,
+                plugin,
+              }),
         );
       node = attachComment({ node, operation, plugin });
       nodes.push(node);
@@ -351,26 +368,49 @@ export function toNode(
 
   let index = 0;
   for (const item of model.itemsFrom<OperationItem>(source)) {
-    const { operation } = item.data;
+    const { operation, tags } = item.data;
     if (node['~dsl'] === 'VarTsDsl') {
       // TODO: object
     } else {
       if (index > 0 || node.hasBody) node.newline();
-      const method = implementFn({
-        node: $.method(createFnSymbol(plugin, item), (m) =>
-          attachComment({
-            node: m,
-            operation,
-            plugin,
-          })
-            .public()
-            .static(!isAngularClient && !isInstance(plugin)),
-        ),
-        operation,
-        plugin,
-      });
-      node.do(method);
-      exampleIntent(method, operation, plugin);
+      if (isMetadataEnabled(plugin)) {
+        const field = attachComment({
+          node: $.field(createFnSymbol(plugin, item), (f) =>
+            f.public().static(!isAngularClient && !isInstance(plugin)),
+          ).assign(
+            withMetadata({
+              fn: implementFn({
+                node: $.func() as ArrowFunc,
+                operation,
+                plugin,
+              }),
+              operation,
+              plugin,
+              tags,
+            }),
+          ),
+          operation,
+          plugin,
+        });
+        node.do(field);
+        exampleIntent(field, operation, plugin);
+      } else {
+        const method = implementFn({
+          node: $.method(createFnSymbol(plugin, item), (m) =>
+            attachComment({
+              node: m,
+              operation,
+              plugin,
+            })
+              .public()
+              .static(!isAngularClient && !isInstance(plugin)),
+          ),
+          operation,
+          plugin,
+        });
+        node.do(method);
+        exampleIntent(method, operation, plugin);
+      }
     }
     index += 1;
   }
