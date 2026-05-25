@@ -23,7 +23,7 @@
     "@swc/core": "1.11.29",
     "eslint": "9.39.2",
     "oxfmt": "0.49.0",
-    "typescript": "6.0.2",
+    "typescript": "6.0.3",
     "unplugin-swc": "1.5.5",
     "vite": "8.0.8",
     "vitest": "4.1.0"
