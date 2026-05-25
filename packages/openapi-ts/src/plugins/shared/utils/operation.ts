@@ -49,7 +49,7 @@ export function isOperationOptionsRequired({
   const config = getTypedConfig(context);
   const client = getClientPlugin(config);
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
-  const plugin = config.plugins['@hey-api/sdk'];
+  const plugin = config.plugins['@hey-api/sdk'] as HeyApiSdkPlugin['Types'] | undefined;
   if (plugin) {
     if (!plugin.config.client && !isInstance(plugin as unknown as HeyApiSdkPlugin['Instance'])) {
       return true;

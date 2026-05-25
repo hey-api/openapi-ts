@@ -58,7 +58,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: { exportFromIndex: false },
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -82,7 +82,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '/absolute/path/plugin',
@@ -103,7 +103,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -124,7 +124,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -146,7 +146,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -168,7 +168,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -195,7 +195,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -218,7 +218,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -236,7 +236,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: { '~hooks': { events: { 'symbol:register:before': beforeHook } } },
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -257,7 +257,7 @@ describe('PluginInstance.symbol', () => {
     const instance = new PluginInstance({
       config: { '~hooks': { events: { 'symbol:register:after': afterHook } } },
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -285,7 +285,7 @@ describe('PluginInstance.symbolOnce', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -305,7 +305,7 @@ describe('PluginInstance.symbolOnce', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -322,7 +322,7 @@ describe('PluginInstance.symbolOnce', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
@@ -343,7 +343,7 @@ describe('PluginInstance.symbolOnce', () => {
     const instance = new PluginInstance({
       config: {},
       context,
-      dependencies: [],
+      dependencies: new Set(),
       gen: gen as any,
       handler: vi.fn(),
       name: '@hey-api/test',
