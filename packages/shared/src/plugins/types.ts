@@ -10,6 +10,7 @@ import type {
 import type { ValueToObject } from '../config/utils/config';
 import type { Dependency } from '../config/utils/dependencies';
 import type { Hooks as ParserHooks } from '../parser/hooks';
+import type { NormalizerTable } from './shared/utils/config';
 import type { PluginInstance } from './shared/utils/instance';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -46,12 +47,15 @@ type PluginBaseConfig = UserIndexExportOption & {
   '~hooks'?: ParserHooks;
 };
 
-/**
- * Public Plugin API.
- */
+/** Public Plugin API. */
 export namespace Plugin {
   export type Config<T extends Types> = Pick<T, 'api'> & {
-    config: Omit<T['config'], 'name'>;
+    config:
+      | NormalizerTable<T['resolvedConfig'], Omit<T['config'], 'name'>>
+      | ((
+          config: Omit<T['config'], 'name'>,
+          context: { valueToObject: ValueToObject },
+        ) => NormalizerTable<T['resolvedConfig'], Omit<T['config'], 'name'>>);
     /**
      * Dependency plugins will be always processed, regardless of whether user
      * explicitly defines them in their `plugins` config.
@@ -64,12 +68,7 @@ export namespace Plugin {
      * example, when `validator` is set to `true`, it figures out which plugin
      * should be used for validation.
      */
-    resolveConfig?: (
-      plugin: Omit<Plugin.Config<T>, 'dependencies'> & {
-        dependencies: Set<AnyPluginName>;
-      },
-      context: PluginContext,
-    ) => void;
+    resolveConfig?: (plugin: Plugin.Stored<T>, context: PluginContext) => void;
     /**
      * Tags can be used to help with deciding plugin order and resolving
      * plugin configuration options.
@@ -83,9 +82,7 @@ export namespace Plugin {
   export type Exports = IndexExportOption;
   export type UserExports = UserIndexExportOption;
 
-  /**
-   * Generic wrapper for plugin hooks.
-   */
+  /** Generic wrapper for plugin hooks. */
   export type Hooks = Pick<PluginBaseConfig, '~hooks'>;
 
   export interface Name<Name extends PluginNames> {
@@ -110,11 +107,15 @@ export namespace Plugin {
   };
 
   export interface ResolverNodes<T> {
-    /**
-     * Nodes used to build different parts of the result.
-     */
+    /** Nodes used to build different parts of the result. */
     nodes: T;
   }
+
+  /** Resolved plugin shape stored in Config['plugins'] after processing. */
+  export type Stored<T extends Types> = Omit<Plugin.Config<T>, 'config' | 'dependencies'> & {
+    config: T['resolvedConfig'];
+    dependencies: Set<AnyPluginName>;
+  };
 
   export type Types<
     Config extends PluginBaseConfig = PluginBaseConfig,

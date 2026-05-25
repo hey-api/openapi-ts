@@ -25,7 +25,7 @@ import type { ExampleIntent } from '../../../ir/intents';
 import type { IR } from '../../../ir/types';
 import type { Hooks } from '../../../parser/hooks';
 import { jsonPointerToPath } from '../../../utils/ref';
-import type { Plugin, PluginConfigMap } from '../../types';
+import type { AnyPluginName, Plugin, PluginConfigMap } from '../../types';
 import type { BaseEvent, WalkEvent } from '../types/instance';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -83,7 +83,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   api: T['api'];
   config: Omit<T['resolvedConfig'], 'name'>;
   context: Context;
-  dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
+  dependencies: Set<AnyPluginName> = new Set();
   private eventHooks: EventHooks;
   gen: IProject;
   private handler: Plugin.Config<T>['handler'];
@@ -96,14 +96,15 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    */
   package: Dependency;
 
-  constructor(
-    props: Pick<Required<Plugin.Config<T>>, 'config' | 'dependencies' | 'handler'> & {
-      api?: T['api'];
-      context: Context;
-      gen: IProject;
-      name: string;
-    },
-  ) {
+  constructor(props: {
+    api?: T['api'];
+    config: Omit<T['resolvedConfig'], 'name'>;
+    context: Context;
+    dependencies: Set<AnyPluginName>;
+    gen: IProject;
+    handler: Plugin.Config<T>['handler'];
+    name: string;
+  }) {
     this.api = props.api ?? {};
     this.config = props.config;
     this.context = props.context;

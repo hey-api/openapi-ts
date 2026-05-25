@@ -98,12 +98,14 @@ export class Context<Spec extends Record<string, any> = any, Config extends AnyC
   private registerPlugin<T extends PluginNames>(
     name: T,
   ): T extends keyof PluginConfigMap ? PluginInstance<PluginConfigMap[T]> : PluginInstance {
-    const plugin = (this.config.plugins as Record<string, Plugin.Config<Plugin.Types>>)[name]!;
+    const plugin = (this.config.plugins as unknown as Record<string, Plugin.Stored<Plugin.Types>>)[
+      name
+    ]!;
     const instance = new PluginInstance({
       api: plugin.api,
       config: plugin.config as any,
       context: this as any,
-      dependencies: plugin.dependencies ?? [],
+      dependencies: plugin.dependencies ?? new Set(),
       gen: this.gen,
       handler: plugin.handler,
       name: plugin.name,
