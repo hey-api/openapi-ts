@@ -6,9 +6,13 @@ import { parseWebhookOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
 
 export const parseWebhooks = ({
+  ambiguousSecurityKeys,
   context,
   securitySchemesMap,
-}: Pick<Parameters<typeof parseWebhookOperation>[0], 'securitySchemesMap'> & {
+}: Pick<
+  Parameters<typeof parseWebhookOperation>[0],
+  'ambiguousSecurityKeys' | 'securitySchemesMap'
+> & {
   context: Context<OpenAPIV3_1.Document>;
 }) => {
   const state: Parameters<typeof parseWebhookOperation>[0]['state'] = {
@@ -27,6 +31,7 @@ export const parseWebhooks = ({
         : webhook;
 
     const operationArgs: Omit<Parameters<typeof parseWebhookOperation>[0], 'method'> = {
+      ambiguousSecurityKeys,
       context,
       key,
       operation: {

@@ -76,6 +76,7 @@ const initIrOperation = ({
 };
 
 const operationToIrOperation = ({
+  ambiguousSecurityKeys,
   context,
   method,
   operation,
@@ -83,6 +84,7 @@ const operationToIrOperation = ({
   securitySchemesMap,
   state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
+  ambiguousSecurityKeys: ReadonlySet<string>;
   context: Context;
   operation: Operation;
   securitySchemesMap: Map<string, OpenAPIV3.SecuritySchemeObject>;
@@ -213,7 +215,10 @@ const operationToIrOperation = ({
           continue;
         }
 
-        securitySchemeObjects.set(name, securitySchemeObject);
+        const irSecurityObject: IR.SecurityObject = ambiguousSecurityKeys.has(name)
+          ? { ...securitySchemeObject, key: name }
+          : securitySchemeObject;
+        securitySchemeObjects.set(name, irSecurityObject);
       }
     }
 
@@ -229,6 +234,7 @@ const operationToIrOperation = ({
 };
 
 export const parsePathOperation = ({
+  ambiguousSecurityKeys,
   context,
   method,
   operation,
@@ -236,6 +242,7 @@ export const parsePathOperation = ({
   securitySchemesMap,
   state,
 }: {
+  ambiguousSecurityKeys: ReadonlySet<string>;
   context: Context;
   method: Extract<
     keyof OpenAPIV3.PathItemObject,
@@ -259,6 +266,7 @@ export const parsePathOperation = ({
   }
 
   context.ir.paths[path][method] = operationToIrOperation({
+    ambiguousSecurityKeys,
     context,
     method,
     operation,
