@@ -15,7 +15,7 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: '@hey-api/transformers',
-  resolveConfig: (plugin) => {
+  resolveConfig(plugin) {
     if (!plugin.config.transformers) {
       plugin.config.transformers = [];
     }

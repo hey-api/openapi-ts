@@ -27,7 +27,13 @@ export type {
   UserCommentsOption,
   UserIndexExportOption,
 } from './config/shared';
-export type { Coercer, ValueToObject } from './config/utils/config';
+export type {
+  CoerceMap,
+  Coercer,
+  InlineDirectives,
+  ValueToObject,
+  WithCoercers,
+} from './config/utils/config';
 export { coerce, valueToObject } from './config/utils/config';
 export type { Dependency } from './config/utils/dependencies';
 export { dependencyFactory, satisfies } from './config/utils/dependencies';

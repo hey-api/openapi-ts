@@ -13,7 +13,7 @@ export const defaultConfig: AngularCommonPlugin['Config'] = {
   dependencies: ['@hey-api/client-angular', '@hey-api/sdk'],
   handler,
   name: '@angular/common',
-  resolveConfig: (plugin, context) => {
+  resolveConfig(plugin, context) {
     plugin.config.httpRequests = resolveHttpRequests(plugin.config, context);
     plugin.config.httpResources = resolveHttpResources(plugin.config, context);
   },

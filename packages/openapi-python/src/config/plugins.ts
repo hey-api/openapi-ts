@@ -1,5 +1,6 @@
 import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared';
 import {
+  defineNormalizers,
   dependencyFactory,
   valueToObject,
   warnOnConflictingDuplicatePlugins,
@@ -26,7 +27,7 @@ function getPluginsConfig({
   const pluginOrder = new Set<AnyPluginName>();
   const plugins: Config['plugins'] = {};
 
-  const dfs = (name: AnyPluginName) => {
+  function dfs(name: AnyPluginName): void {
     if (circularReferenceTracker.has(name)) {
       throw new Error(`Circular reference detected at '${name}'`);
     }
@@ -46,13 +47,48 @@ function getPluginsConfig({
       );
     }
 
+    const context: PluginContext = {
+      package: dependencyFactory(dependencies),
+      pluginByTag: (tag, props = {}) => {
+        const { defaultPlugin, errorMessage } = props;
+
+        for (const userPlugin of userPlugins) {
+          const defaultConfig =
+            defaultPluginConfigs[userPlugin as PluginNames] ||
+            userPluginsConfig[userPlugin as PluginNames];
+          if (defaultConfig && defaultConfig.tags?.includes(tag) && userPlugin !== name) {
+            return userPlugin as any;
+          }
+        }
+
+        if (defaultPlugin) {
+          const defaultConfig =
+            defaultPluginConfigs[defaultPlugin as PluginNames] ||
+            userPluginsConfig[defaultPlugin as PluginNames];
+          if (defaultConfig && defaultConfig.tags?.includes(tag) && defaultPlugin !== name) {
+            return defaultPlugin;
+          }
+        }
+
+        throw new Error(errorMessage || `missing plugin - no plugin with tag "${tag}" found`);
+      },
+      valueToObject,
+    };
+
+    const effectiveDefaultConfig = defaultPlugin?.config ?? userPlugin?.config ?? {};
+    const userConfigValue =
+      defaultPlugin !== undefined &&
+      typeof userPlugin?.config === 'object' &&
+      userPlugin.config !== null
+        ? userPlugin.config
+        : {};
+
+    const mergedConfig = defineNormalizers(effectiveDefaultConfig as any)(userConfigValue, context);
+
     const plugin = {
       ...defaultPlugin,
       ...userPlugin,
-      config: {
-        ...defaultPlugin?.config,
-        ...userPlugin?.config,
-      },
+      config: mergedConfig,
       dependencies: new Set([
         ...(defaultPlugin?.dependencies || []),
         ...(userPlugin?.dependencies || []),
@@ -60,33 +96,6 @@ function getPluginsConfig({
     };
 
     if (plugin.resolveConfig) {
-      const context: PluginContext = {
-        package: dependencyFactory(dependencies),
-        pluginByTag: (tag, props = {}) => {
-          const { defaultPlugin, errorMessage } = props;
-
-          for (const userPlugin of userPlugins) {
-            const defaultConfig =
-              defaultPluginConfigs[userPlugin as PluginNames] ||
-              userPluginsConfig[userPlugin as PluginNames];
-            if (defaultConfig && defaultConfig.tags?.includes(tag) && userPlugin !== name) {
-              return userPlugin as any;
-            }
-          }
-
-          if (defaultPlugin) {
-            const defaultConfig =
-              defaultPluginConfigs[defaultPlugin as PluginNames] ||
-              userPluginsConfig[defaultPlugin as PluginNames];
-            if (defaultConfig && defaultConfig.tags?.includes(tag) && defaultPlugin !== name) {
-              return defaultPlugin;
-            }
-          }
-
-          throw new Error(errorMessage || `missing plugin - no plugin with tag "${tag}" found`);
-        },
-        valueToObject,
-      };
       // @ts-expect-error
       plugin.resolveConfig(plugin, context);
     }
@@ -100,7 +109,7 @@ function getPluginsConfig({
 
     // @ts-expect-error
     plugins[name] = plugin;
-  };
+  }
 
   for (const name of userPlugins) {
     dfs(name);
