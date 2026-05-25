@@ -1,3 +1,4 @@
+- [Abdullah Alaqeel](https://github.com/aqeelat)
 - [Ahmed Rowaihi](https://github.com/ahmedrowaihi)
 - [Alessandro](https://github.com/ale18V)
 - [Alex Sagal](https://github.com/spikesagal)
@@ -22,6 +23,7 @@
 - [David Ovčačík](https://github.com/dovca)
 - [Dmitriy Brolnickij](https://github.com/brolnickij)
 - [Dmitry](https://github.com/codercms)
+- [Eirik Bøe](https://github.com/OptoCloud)
 - [Erikwski](https://github.com/erikwski)
 - [Finn Poppinga](https://github.com/fpoppinga)
 - [Flo Edelmann](https://github.com/FloEdelmann)
