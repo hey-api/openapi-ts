@@ -1,4 +1,5 @@
 import type { PluginContext } from '@hey-api/shared';
+import { coerce } from '@hey-api/shared';
 
 import type { UserConfig } from '../types';
 import type { ContractsConfig } from './types';
@@ -19,14 +20,8 @@ function normalizeConfig(input: Config['contracts'], context: PluginContext): Co
   return context.valueToObject({
     defaultValue: {
       container: 'object',
-      nesting: 'operationId',
-      nestingDelimiters: /[./]/,
-      strategy,
-      strategyDefaultTag: 'default',
-    },
-    mappers: {
-      object(value) {
-        value.containerName = context.valueToObject({
+      containerName: coerce((value) =>
+        context.valueToObject({
           defaultValue:
             strategy === 'single'
               ? { casing: 'camelCase', name: 'contract' }
@@ -35,26 +30,33 @@ function normalizeConfig(input: Config['contracts'], context: PluginContext): Co
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.containerName,
-        });
-        value.contractName = context.valueToObject({
+          value,
+        }),
+      ),
+      contractName: coerce((value) =>
+        context.valueToObject({
           defaultValue: { casing: 'camelCase' },
           mappers: {
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.contractName,
-        });
-        value.segmentName = context.valueToObject({
+          value,
+        }),
+      ),
+      nesting: 'operationId',
+      nestingDelimiters: /[./]/,
+      segmentName: coerce((value) =>
+        context.valueToObject({
           defaultValue: { casing: 'camelCase' },
           mappers: {
             function: (name) => ({ name }),
             string: (name) => ({ name }),
           },
-          value: value.segmentName,
-        });
-        return value;
-      },
+          value,
+        }),
+      ),
+      strategy,
+      strategyDefaultTag: 'default',
     },
     value: input,
   }) as ContractsConfig;

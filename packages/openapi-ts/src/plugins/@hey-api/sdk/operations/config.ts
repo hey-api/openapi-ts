@@ -74,43 +74,21 @@ function normalizeConfig(
   return context.valueToObject({
     defaultValue: {
       container: 'class',
+      containerName:
+        strategy === 'single' ? { casing: 'PascalCase', name: 'Sdk' } : { casing: 'PascalCase' },
+      methodName: { casing: 'camelCase' },
       methods,
       nesting: 'operationId',
       nestingDelimiters: /[./]/,
+      segmentName: { casing: 'PascalCase' },
       strategy,
       strategyDefaultTag: 'default',
     },
     mappers: {
-      object(value) {
-        value.containerName = context.valueToObject({
-          defaultValue:
-            strategy === 'single'
-              ? { casing: 'PascalCase', name: 'Sdk' }
-              : { casing: 'PascalCase' },
-          mappers: {
-            function: (name) => ({ name }),
-            string: (name) => ({ name }),
-          },
-          value: value.containerName,
-        });
-        value.methodName = context.valueToObject({
-          defaultValue: { casing: 'camelCase' },
-          mappers: {
-            function: (name) => ({ name }),
-            string: (name) => ({ name }),
-          },
-          value: value.methodName,
-        });
-        value.segmentName = context.valueToObject({
-          defaultValue: { casing: 'PascalCase' },
-          mappers: {
-            function: (name) => ({ name }),
-            string: (name) => ({ name }),
-          },
-          value: value.segmentName,
-        });
-        return value;
-      },
+      // @ts-expect-error
+      function: (name) => ({ name }),
+      // @ts-expect-error
+      string: (name) => ({ name }),
     },
     value: {
       ...legacy,

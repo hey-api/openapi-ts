@@ -1,7 +1,66 @@
-import { definePluginConfig, mappers } from '@hey-api/shared';
+import { defineNormalizers, definePluginConfig } from '@hey-api/shared';
 
 import { handler } from '../../../plugins/@tanstack/query-core/plugin';
 import type { TanStackSolidQueryPlugin } from './types';
+
+const defaultMeta = (): Record<string, unknown> => ({});
+
+const normalizeConfig = defineNormalizers<
+  TanStackSolidQueryPlugin['Types']['resolvedConfig'],
+  TanStackSolidQueryPlugin['Config']['config']
+>((c) => {
+  const casing = c.case ?? 'camelCase';
+  return {
+    getQueryData: {
+      case: casing,
+      enabled: false,
+      name: '{{name}}GetQueryData',
+    },
+    infiniteQueryKeys: {
+      case: casing,
+      enabled: true,
+      name: '{{name}}InfiniteQueryKey',
+      tags: false,
+    },
+    infiniteQueryOptions: {
+      case: casing,
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}InfiniteOptions',
+    },
+    mutationKeys: {
+      case: casing,
+      enabled: false,
+      name: '{{name}}MutationKey',
+      tags: false,
+    },
+    mutationOptions: {
+      case: casing,
+      enabled: true,
+      exported: true,
+      meta: defaultMeta,
+      name: '{{name}}Mutation',
+    },
+    queryKeys: {
+      case: casing,
+      enabled: true,
+      name: '{{name}}QueryKey',
+      tags: false,
+    },
+    queryOptions: {
+      case: casing,
+      enabled: true,
+      exported: true,
+      meta: defaultMeta,
+      name: '{{name}}Options',
+    },
+    setQueryData: {
+      case: casing,
+      enabled: false,
+      name: '{{name}}SetQueryData',
+    },
+  };
+});
 
 export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
   config: {
@@ -13,90 +72,7 @@ export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
   handler: handler as TanStackSolidQueryPlugin['Handler'],
   name: '@tanstack/solid-query',
   resolveConfig: (plugin, context) => {
-    plugin.config.getQueryData = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: '{{name}}GetQueryData',
-      },
-      mappers,
-      value: plugin.config.getQueryData,
-    });
-
-    plugin.config.infiniteQueryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteQueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.infiniteQueryKeys,
-    });
-
-    plugin.config.infiniteQueryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteOptions',
-      },
-      mappers,
-      value: plugin.config.infiniteQueryOptions,
-    });
-
-    plugin.config.mutationKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: '{{name}}MutationKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.mutationKeys,
-    });
-
-    plugin.config.mutationOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Mutation',
-      },
-      mappers,
-      value: plugin.config.mutationOptions,
-    });
-
-    plugin.config.queryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}QueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.queryKeys,
-    });
-
-    plugin.config.queryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Options',
-      },
-      mappers,
-      value: plugin.config.queryOptions,
-    });
-
-    plugin.config.setQueryData = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: '{{name}}SetQueryData',
-      },
-      mappers,
-      value: plugin.config.setQueryData,
-    });
+    normalizeConfig(plugin.config, context);
   },
 };
 
