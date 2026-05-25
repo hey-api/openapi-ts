@@ -1,17 +1,16 @@
-import { defineNormalizers, definePluginConfig } from '@hey-api/shared';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { Api } from './api';
 import { handler } from './plugin';
 import type { HeyApiTypeScriptPlugin } from './types';
 
-const normalizeConfig = defineNormalizers<
-  HeyApiTypeScriptPlugin['Types']['resolvedConfig'],
-  HeyApiTypeScriptPlugin['Config']['config']
->((c) => {
-  const casing = c.case ?? 'PascalCase';
-  return {
+export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
+  api: new Api(),
+  config: (c) => ({
+    $cascade: ['case'],
+    case: 'PascalCase',
+    comments: true,
     definitions: {
-      case: casing,
       name: '{{name}}',
     },
     enums: {
@@ -21,40 +20,25 @@ const normalizeConfig = defineNormalizers<
       mode: typeof c.enums === 'string' ? c.enums : 'javascript',
     },
     errors: {
-      case: casing,
       error: '{{name}}Error',
       name: '{{name}}Errors',
     },
+    includeInEntry: true,
     requests: {
-      case: casing,
       name: '{{name}}Data',
     },
     responses: {
-      case: casing,
       name: '{{name}}Responses',
       response: '{{name}}Response',
     },
+    topType: 'unknown',
     webhooks: {
-      case: casing,
       name: '{{name}}WebhookRequest',
       payload: '{{name}}WebhookPayload',
     },
-  };
-});
-
-export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
-  api: new Api(),
-  config: {
-    case: 'PascalCase',
-    comments: true,
-    includeInEntry: true,
-    topType: 'unknown',
-  },
+  }),
   handler,
   name: '@hey-api/typescript',
-  resolveConfig: (plugin, context) => {
-    normalizeConfig(plugin.config, context);
-  },
 };
 
 /**
