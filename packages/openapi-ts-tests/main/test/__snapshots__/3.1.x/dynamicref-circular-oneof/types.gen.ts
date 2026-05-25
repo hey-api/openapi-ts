@@ -4,17 +4,13 @@ export type ClientOptions = {
     baseUrl: 'https://api.example.com' | (string & {});
 };
 
-export type TreeNodeTemplate<NodeType> = {
+export type TreeNodeTemplate<nodeType> = {
     id: string;
     label: string;
-    child?: NodeType;
+    child?: nodeType;
 };
 
-export type TreeNode = TreeNodeLeaf | {
-    id: string;
-    label: string;
-    child?: TreeNode;
-};
+export type TreeNode = TreeNodeLeaf | TreeNodeTemplate<TreeNode>;
 
 export type TreeNodeLeaf = {
     id: string;

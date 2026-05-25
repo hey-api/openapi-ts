@@ -648,10 +648,10 @@ describe('getTemplateParams', () => {
           },
         },
       }),
-    ).toEqual([{ anchor: 'itemType', paramName: 'ItemType' }]);
+    ).toEqual([{ anchor: 'itemType', paramName: 'itemType' }]);
   });
 
-  it('capitalizes anchor name to derive paramName', () => {
+  it('preserves anchor casing in paramName', () => {
     expect(
       getTemplateParams({
         $defs: {
@@ -661,7 +661,7 @@ describe('getTemplateParams', () => {
           },
         },
       }),
-    ).toEqual([{ anchor: 'folderType', paramName: 'FolderType' }]);
+    ).toEqual([{ anchor: 'folderType', paramName: 'folderType' }]);
   });
 
   it('skips entries that have $ref (those are bindings, not template params)', () => {
@@ -692,8 +692,8 @@ describe('getTemplateParams', () => {
         },
       }),
     ).toEqual([
-      { anchor: 'dataType', paramName: 'DataType' },
-      { anchor: 'itemType', paramName: 'ItemType' },
+      { anchor: 'dataType', paramName: 'dataType' },
+      { anchor: 'itemType', paramName: 'itemType' },
     ]);
   });
 
@@ -719,7 +719,7 @@ describe('getTemplateParams', () => {
           },
         },
       }),
-    ).toEqual([{ anchor: 't', paramName: 'T' }]);
+    ).toEqual([{ anchor: 't', paramName: 't' }]);
   });
 
   it('sanitizes anchors with separator characters', () => {
@@ -732,7 +732,7 @@ describe('getTemplateParams', () => {
           },
         },
       }),
-    ).toEqual([{ anchor: 'item-type', paramName: 'ItemType' }]);
+    ).toEqual([{ anchor: 'item-type', paramName: 'item_type' }]);
   });
 
   it('deduplicates paramName collisions with numeric suffix', () => {
@@ -750,8 +750,8 @@ describe('getTemplateParams', () => {
         },
       }),
     ).toEqual([
-      { anchor: 'item_type', paramName: 'ItemType' },
-      { anchor: 'item-type', paramName: 'ItemType2' },
+      { anchor: 'item_type', paramName: 'item_type' },
+      { anchor: 'item-type', paramName: 'item_type2' },
     ]);
   });
 });
@@ -762,7 +762,7 @@ describe('buildGenericRef', () => {
       bindings: [['itemType', '#/components/schemas/User']],
       schema: { $ref: '#/components/schemas/PaginatedTemplate' },
       targetRef: '#/components/schemas/PaginatedTemplate',
-      templateParams: [{ anchor: 'itemType', paramName: 'ItemType' }],
+      templateParams: [{ anchor: 'itemType', paramName: 'itemType' }],
     });
 
     expect(result.$ref).toBe('#/components/schemas/PaginatedTemplate');
@@ -774,7 +774,7 @@ describe('buildGenericRef', () => {
       bindings: [],
       schema: { $ref: '#/components/schemas/PaginatedTemplate' },
       targetRef: '#/components/schemas/PaginatedTemplate',
-      templateParams: [{ anchor: 'itemType', paramName: 'ItemType' }],
+      templateParams: [{ anchor: 'itemType', paramName: 'itemType' }],
     });
 
     expect(result.typeArgs).toEqual([{ type: 'unknown' }]);
@@ -789,8 +789,8 @@ describe('buildGenericRef', () => {
       schema: { $ref: '#/components/schemas/PairTemplate' },
       targetRef: '#/components/schemas/PairTemplate',
       templateParams: [
-        { anchor: 'itemType', paramName: 'ItemType' },
-        { anchor: 'dataType', paramName: 'DataType' },
+        { anchor: 'itemType', paramName: 'itemType' },
+        { anchor: 'dataType', paramName: 'dataType' },
       ],
     });
 
@@ -806,8 +806,8 @@ describe('buildGenericRef', () => {
       schema: { $ref: '#/components/schemas/PairTemplate' },
       targetRef: '#/components/schemas/PairTemplate',
       templateParams: [
-        { anchor: 'itemType', paramName: 'ItemType' },
-        { anchor: 'dataType', paramName: 'DataType' },
+        { anchor: 'itemType', paramName: 'itemType' },
+        { anchor: 'dataType', paramName: 'dataType' },
       ],
     });
 
@@ -835,7 +835,7 @@ describe('buildGenericRef', () => {
         title: 'Paginated',
       },
       targetRef: '#/components/schemas/Template',
-      templateParams: [{ anchor: 'itemType', paramName: 'ItemType' }],
+      templateParams: [{ anchor: 'itemType', paramName: 'itemType' }],
     });
 
     expect(result.deprecated).toBe(true);
@@ -851,7 +851,7 @@ describe('buildGenericRef', () => {
         type: ['object', 'null'],
       },
       targetRef: '#/components/schemas/Template',
-      templateParams: [{ anchor: 'itemType', paramName: 'ItemType' }],
+      templateParams: [{ anchor: 'itemType', paramName: 'itemType' }],
     });
 
     expect(result).toEqual({

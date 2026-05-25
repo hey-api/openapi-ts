@@ -19,7 +19,6 @@ import {
   buildCurrentDynamicScope,
   buildDynamicScope,
   buildGenericRef,
-  containsRefTo,
   getDynamicDefsBindings,
   getTemplateParams,
   materializeDynamicRefBinding,
@@ -1420,17 +1419,6 @@ export function schemaToIrSchema({
 
       if (templateParams.length > 0) {
         const bindings = getDynamicDefsBindings(schema);
-        const hasCircularBinding = bindings.some(([, ref]) => {
-          const bindingSchema = context.resolveRef<OpenAPIV3_1.SchemaObject>(ref);
-          return containsRefTo(bindingSchema, schema.$ref!);
-        });
-        if (hasCircularBinding) {
-          return schemaToIrSchema({
-            context,
-            schema: materializedSchema,
-            state: currentState,
-          });
-        }
         return buildGenericRef({
           bindings,
           schema,
