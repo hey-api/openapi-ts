@@ -77,6 +77,7 @@ const initIrOperation = ({
 };
 
 const operationToIrOperation = ({
+  ambiguousSecurityKeys,
   context,
   method,
   operation,
@@ -84,6 +85,7 @@ const operationToIrOperation = ({
   securitySchemesMap,
   state,
 }: Pick<IR.OperationObject, 'method' | 'path'> & {
+  ambiguousSecurityKeys: ReadonlySet<string>;
   context: Context;
   operation: Operation;
   securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
@@ -197,7 +199,10 @@ const operationToIrOperation = ({
           continue;
         }
 
-        securitySchemeObjects.set(name, securitySchemeObject);
+        const irSecurityObject: IR.SecurityObject = ambiguousSecurityKeys.has(name)
+          ? { ...securitySchemeObject, key: name }
+          : securitySchemeObject;
+        securitySchemeObjects.set(name, irSecurityObject);
       }
     }
 
@@ -213,6 +218,7 @@ const operationToIrOperation = ({
 };
 
 const parseOperationObject = ({
+  ambiguousSecurityKeys,
   context,
   method,
   operation,
@@ -220,6 +226,7 @@ const parseOperationObject = ({
   securitySchemesMap,
   state,
 }: {
+  ambiguousSecurityKeys: ReadonlySet<string>;
   context: Context;
   method: (typeof httpMethods)[number];
   operation: Operation;
@@ -232,6 +239,7 @@ const parseOperationObject = ({
   }
 
   const parsed = operationToIrOperation({
+    ambiguousSecurityKeys,
     context,
     method,
     operation,
@@ -249,6 +257,7 @@ export const parsePathOperation = ({
   path,
   ...options
 }: {
+  ambiguousSecurityKeys: ReadonlySet<string>;
   context: Context;
   method: (typeof httpMethods)[number];
   operation: Operation;
@@ -280,6 +289,7 @@ export const parseWebhookOperation = ({
   method,
   ...options
 }: {
+  ambiguousSecurityKeys: ReadonlySet<string>;
   context: Context;
   key: string;
   method: (typeof httpMethods)[number];

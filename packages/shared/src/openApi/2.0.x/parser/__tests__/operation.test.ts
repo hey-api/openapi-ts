@@ -71,6 +71,7 @@ describe('operation', () => {
     };
 
     parsePathOperation({
+      ambiguousSecurityKeys: new Set(),
       context,
       method,
       operation,
@@ -139,6 +140,7 @@ describe('operation', () => {
     };
 
     parsePathOperation({
+      ambiguousSecurityKeys: new Set(),
       context,
       method,
       operation,
@@ -190,6 +192,7 @@ describe('operation', () => {
     };
 
     parsePathOperation({
+      ambiguousSecurityKeys: new Set(),
       context,
       method,
       operation,
@@ -235,6 +238,7 @@ describe('operation', () => {
     };
 
     parsePathOperation({
+      ambiguousSecurityKeys: new Set(),
       context,
       method,
       operation,
