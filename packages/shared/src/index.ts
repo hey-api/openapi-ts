@@ -27,7 +27,13 @@ export type {
   UserCommentsOption,
   UserIndexExportOption,
 } from './config/shared';
-export type { Coercer, ValueToObject } from './config/utils/config';
+export type {
+  CoerceMap,
+  Coercer,
+  InlineDirectives,
+  ValueToObject,
+  WithCoercers,
+} from './config/utils/config';
 export { coerce, valueToObject } from './config/utils/config';
 export type { Dependency } from './config/utils/dependencies';
 export { dependencyFactory, satisfies } from './config/utils/dependencies';
@@ -102,7 +108,12 @@ export type { GetNameContext, Hooks } from './parser/hooks';
 export { warnOnConflictingDuplicatePlugins } from './plugins/duplicate';
 export type { SchemaWithType } from './plugins/shared/types/schema';
 export type { NormalizerTable } from './plugins/shared/utils/config';
-export { defineNormalizers, definePluginConfig, mappers } from './plugins/shared/utils/config';
+export {
+  defineNormalizers,
+  definePluginConfig,
+  mappers,
+  pluginUserConfigSymbol,
+} from './plugins/shared/utils/config';
 export type { PluginInstanceTypes } from './plugins/shared/utils/instance';
 export { PluginInstance } from './plugins/shared/utils/instance';
 export { buildSymbolIn } from './plugins/symbol';

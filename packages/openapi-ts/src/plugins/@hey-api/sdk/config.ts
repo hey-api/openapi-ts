@@ -1,8 +1,7 @@
 import { log } from '@hey-api/codegen-core';
-import type { PluginTag } from '@hey-api/shared';
+import type { AnyPluginName, PluginTag } from '@hey-api/shared';
 import { definePluginConfig } from '@hey-api/shared';
 
-import { resolveExamples } from './examples';
 import { resolveOperations } from './operations';
 import { handler } from './plugin';
 import type { HeyApiSdkPlugin } from './types';
@@ -15,13 +14,15 @@ const validatorInferWarn =
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     auth: true,
-    client: true,
     comments: true,
+    examples: {
+      $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
+      enabled: false,
+      language: 'JavaScript',
+    },
     includeInEntry: true,
     paramsStructure: 'grouped',
     responseStyle: 'fields',
-    transformer: false,
-    validator: false,
 
     // Deprecated - kept for backward compatibility
     // eslint-disable-next-line sort-keys-fix/sort-keys-fix
@@ -30,11 +31,11 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: '@hey-api/sdk',
-  resolveConfig: (plugin, context) => {
-    function resolvePlugin<T>(
+  resolveConfig(plugin, context) {
+    function resolvePlugin<T extends AnyPluginName | boolean = AnyPluginName>(
       value: boolean | T | undefined,
       tag: PluginTag,
-      options?: { defaultPlugin?: string; warn?: string },
+      options?: { defaultPlugin?: Exclude<T, boolean>; warn?: string },
     ): T | false {
       if (value === false) return false;
       if (typeof value === 'string') {
@@ -60,7 +61,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
 
     if (typeof plugin.config.transformer !== 'object') {
       plugin.config.transformer = {
-        response: plugin.config.transformer,
+        response: plugin.config.transformer ?? false,
       };
     }
 
@@ -72,8 +73,8 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
 
     if (typeof plugin.config.validator !== 'object') {
       plugin.config.validator = {
-        request: plugin.config.validator,
-        response: plugin.config.validator,
+        request: plugin.config.validator ?? false,
+        response: plugin.config.validator ?? false,
       };
     }
 
@@ -88,7 +89,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       },
     );
 
-    plugin.config.examples = resolveExamples(plugin.config, context);
     plugin.config.operations = resolveOperations(plugin.config, context);
   },
 };

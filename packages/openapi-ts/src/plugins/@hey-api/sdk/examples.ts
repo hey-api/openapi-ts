@@ -2,7 +2,7 @@ import type { FeatureToggle, IR } from '@hey-api/shared';
 import type { LinguistLanguages } from '@hey-api/spec-types';
 import type { MaybeFunc } from '@hey-api/types';
 
-import type { CallArgs, DollarPyDsl, ExampleOptions } from '../../../../py-dsl';
+import type { CallArgs, DollarTsDsl, ExampleOptions } from '../../../ts-dsl';
 
 export type UserExamplesConfig = Omit<ExampleOptions, 'payload'> & {
   /**
@@ -17,14 +17,14 @@ export type UserExamplesConfig = Omit<ExampleOptions, 'payload'> & {
    * This is used to display the language label in code blocks in
    * documentation UIs.
    *
-   * @default 'Python'
+   * @default 'JavaScript'
    */
   language?: LinguistLanguages;
   /**
    * Example request payload.
    */
   payload?: MaybeFunc<
-    (operation: IR.OperationObject, ctx: DollarPyDsl) => CallArgs | CallArgs[number]
+    (operation: IR.OperationObject, ctx: DollarTsDsl) => CallArgs | CallArgs[number]
   >;
   /**
    * Transform the generated example string.
@@ -49,7 +49,7 @@ export type ExamplesConfig = Omit<ExampleOptions, 'payload'> &
      * Example request payload.
      */
     payload?: MaybeFunc<
-      (operation: IR.OperationObject, ctx: DollarPyDsl) => CallArgs | CallArgs[number]
+      (operation: IR.OperationObject, ctx: DollarTsDsl) => CallArgs | CallArgs[number]
     >;
     /**
      * Transform the generated example string.
