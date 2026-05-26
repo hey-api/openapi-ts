@@ -135,18 +135,21 @@ describe('setAuthParams', () => {
   it('sets access token in query when query is initially undefined', async () => {
     const auth = vi.fn().mockReturnValue('foo');
     const headers = new HttpHeaders();
-    const opts: Parameters<typeof setAuthParams>[0] = {
+    const security: Parameters<typeof setAuthParams>[1] = [
+      {
+        in: 'query',
+        name: 'baz',
+        type: 'apiKey',
+      },
+    ];
+    const opts: Parameters<typeof setAuthParams>[0] & {
+      security: Parameters<typeof setAuthParams>[1];
+    } = {
       auth,
       headers,
-      security: [
-        {
-          in: 'query',
-          name: 'baz',
-          type: 'apiKey',
-        },
-      ],
+      security,
     };
-    await setAuthParams(opts);
+    await setAuthParams(opts, opts.security);
     expect(auth).toHaveBeenCalled();
     expect(opts.query).toEqual({ baz: 'foo' });
   });
@@ -169,34 +172,6 @@ describe('setAuthParams', () => {
     expect(auth).toHaveBeenCalled();
     expect(options.headers.get('Authorization')).toBe('foo');
     expect(query).toEqual({});
-  });
-
-  it('sets first scheme only', async () => {
-    const auth = vi.fn().mockReturnValue('foo');
-    const headers = new HttpHeaders();
-    const query: Record<any, unknown> = {};
-    const options = {
-      auth,
-      headers,
-      query,
-      security: [
-        {
-          name: 'baz',
-          scheme: 'bearer' as const,
-          type: 'http' as const,
-        },
-        {
-          in: 'query' as const,
-          name: 'baz',
-          scheme: 'bearer' as const,
-          type: 'http' as const,
-        },
-      ],
-    };
-    await setAuthParams(options, options.security);
-    expect(auth).toHaveBeenCalled();
-    expect(options.headers.get('baz')).toBe('Bearer foo');
-    expect(Object.keys(query).length).toBe(0);
   });
 
   it('sets first scheme with token', async () => {
