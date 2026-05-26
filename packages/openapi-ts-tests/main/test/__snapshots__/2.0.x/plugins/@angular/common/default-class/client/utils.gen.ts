@@ -186,7 +186,7 @@ export const setAuthParams = async (
   options: Pick<RequestOptions, 'auth' | 'query'> & {
     headers: HttpHeaders;
   },
-  security: Pick<Required<RequestOptions>, 'security'>['security']
+  security: Pick<Required<RequestOptions>, 'security'>['security'],
 ) => {
   for (const auth of security) {
     const token = await getAuthToken(auth, options.auth);
@@ -212,8 +212,6 @@ export const setAuthParams = async (
         options.headers = options.headers.set(name, token);
         break;
     }
-
-    return;
   }
 };
 
