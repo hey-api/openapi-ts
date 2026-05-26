@@ -1,5 +1,5 @@
 import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
-import { ref } from '@hey-api/codegen-core';
+import { fromRef, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import type { TypeTsDsl } from '../base';
@@ -25,6 +25,10 @@ export class TypeAndTsDsl extends Mixed {
     for (const type of this._types) {
       ctx.analyze(type);
     }
+  }
+
+  getTypes(): Array<Type> {
+    return this._types.map((t) => fromRef(t)) as Array<Type>;
   }
 
   types(...nodes: Array<Type>): this {

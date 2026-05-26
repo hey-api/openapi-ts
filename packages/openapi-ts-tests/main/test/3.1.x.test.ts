@@ -1071,6 +1071,20 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'detects circular $dynamicRef through oneOf',
     },
+    {
+      config: createConfig({
+        input: 'dynamicref-circular-allof.yaml',
+        output: 'dynamicref-circular-allof',
+      }),
+      description: 'emits interface extends for circular $dynamicRef through allOf',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-circular-naked.yaml',
+        output: 'dynamicref-circular-naked',
+      }),
+      description: 'handles circular $dynamicRef without allOf (falls back to type alias)',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

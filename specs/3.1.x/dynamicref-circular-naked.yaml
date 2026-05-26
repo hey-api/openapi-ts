@@ -1,0 +1,51 @@
+openapi: 3.1.0
+info:
+  title: DynamicRef Circular Naked Test
+  description: >
+    Edge case: circular generic ref WITHOUT allOf or extra properties.
+    Produces `type Node = NodeTemplate<Node>` which triggers TS2456.
+    This is a known limitation — only allOf-based circular refs can be
+    converted to `interface extends`.
+  version: 0.1.0
+servers:
+  - url: https://api.example.com
+security: []
+
+paths:
+  /nodes:
+    get:
+      summary: Get nodes
+      operationId: getNodes
+      tags: [Node]
+      responses:
+        '200':
+          description: Node list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Node'
+
+components:
+  schemas:
+    NodeTemplate:
+      $id: https://example.com/schemas/NodeTemplate
+      $defs:
+        nodeType:
+          $dynamicAnchor: nodeType
+          not: {}
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+        child:
+          $dynamicRef: '#nodeType'
+
+    Node:
+      $defs:
+        nodeType:
+          $dynamicAnchor: nodeType
+          $ref: '#/components/schemas/Node'
+      $ref: '#/components/schemas/NodeTemplate'

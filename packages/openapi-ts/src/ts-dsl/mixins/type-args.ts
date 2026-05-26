@@ -1,5 +1,5 @@
 import type { AnalysisContext, Node, NodeName, Ref } from '@hey-api/codegen-core';
-import { ref } from '@hey-api/codegen-core';
+import { fromRef, ref } from '@hey-api/codegen-core';
 import type ts from 'typescript';
 
 import type { MaybeTsDsl, TypeTsDsl } from '../base';
@@ -40,7 +40,11 @@ export function TypeArgsMixin<T extends ts.Node, TBase extends BaseCtor<T>>(Base
     protected $generics(): ReadonlyArray<ts.TypeNode> | undefined {
       return this.$type(this._generics);
     }
+
+    getTypeArgs(): Array<Arg> {
+      return this._generics.map((g) => fromRef(g)) as Array<Arg>;
+    }
   }
 
-  return TypeArgs as unknown as MixinCtor<TBase, TypeArgsMethods>;
+  return TypeArgs as unknown as MixinCtor<TBase, TypeArgsMethods & { getTypeArgs(): Array<Arg> }>;
 }

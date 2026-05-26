@@ -19,6 +19,7 @@ import {
   buildCurrentDynamicScope,
   buildDynamicScope,
   buildGenericRef,
+  containsRefTo,
   getDynamicDefsBindings,
   getTemplateParams,
   materializeDynamicRefBinding,
@@ -830,6 +831,10 @@ function parseAllOf({
     schema: irSchema,
   });
 
+  if (schemaItems.some((item) => item.circularTypeAlias)) {
+    irSchema.circularTypeAlias = true;
+  }
+
   if (schemaTypes.includes('null')) {
     // nest composition to avoid producing an intersection with null
     const nestedItems: Array<IR.SchemaObject> = [
@@ -1359,12 +1364,20 @@ export function schemaToIrSchema({
 
       if (templateParams.length > 0) {
         const bindings = getDynamicDefsBindings(schema);
-        return buildGenericRef({
+        const result = buildGenericRef({
           bindings,
           schema,
           targetRef: schema.$ref!,
           templateParams,
         });
+        const hasCircularBinding = bindings.some(([, ref]) => {
+          const bindingSchema = context.resolveRef<OpenAPIV3_1.SchemaObject>(ref);
+          return containsRefTo(bindingSchema, schema.$ref!);
+        });
+        if (hasCircularBinding) {
+          result.circularTypeAlias = true;
+        }
+        return result;
       }
     }
 
