@@ -11,57 +11,51 @@ export const defaultConfig: ValibotPlugin['Config'] = {
     case: 'camelCase',
     comments: true,
     definitions: {
-      $coerce: {
-        boolean: (v) => ({ enabled: v }),
-        function: (v) => ({ name: v }),
-        string: (v) => ({ name: v }),
-      },
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'v{{name}}',
     },
     includeInEntry: false,
     metadata: false,
     requests: {
-      $coerce: {
-        boolean: (v) => ({ enabled: v }),
-        function: (v) => ({ name: v }),
-        string: (v) => ({ name: v }),
-      },
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       body: {
-        $coerce: {
-          boolean: (v) => ({ enabled: v }),
-          function: (v) => ({ name: v }),
-          string: (v) => ({ name: v }),
-        },
+        $onCoerce: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'v{{name}}Body',
       },
       enabled: true,
       headers: {
-        $coerce: {
-          boolean: (v) => ({ enabled: v }),
-          function: (v) => ({ name: v }),
-          string: (v) => ({ name: v }),
-        },
+        $onCoerce: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'v{{name}}Headers',
       },
       name: 'v{{name}}Data',
       path: {
-        $coerce: {
-          boolean: (v) => ({ enabled: v }),
-          function: (v) => ({ name: v }),
-          string: (v) => ({ name: v }),
-        },
+        $onCoerce: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'v{{name}}Path',
       },
       query: {
-        $coerce: {
-          boolean: (v) => ({ enabled: v }),
-          function: (v) => ({ name: v }),
-          string: (v) => ({ name: v }),
-        },
+        $onCoerce: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'v{{name}}Query',
       },
@@ -70,20 +64,18 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       ),
     },
     responses: {
-      $coerce: {
-        boolean: (v) => ({ enabled: v }),
-        function: (v) => ({ name: v }),
-        string: (v) => ({ name: v }),
-      },
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'v{{name}}Response',
     },
     webhooks: {
-      $coerce: {
-        boolean: (v) => ({ enabled: v }),
-        function: (v) => ({ name: v }),
-        string: (v) => ({ name: v }),
-      },
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'v{{name}}WebhookRequest',
     },

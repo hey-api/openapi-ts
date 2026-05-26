@@ -2,7 +2,6 @@ import { log } from '@hey-api/codegen-core';
 import type { AnyPluginName, PluginTag } from '@hey-api/shared';
 import { definePluginConfig } from '@hey-api/shared';
 
-import { resolveExamples } from './examples';
 import { resolveOperations } from './operations';
 import { handler } from './plugin';
 import type { HeyApiSdkPlugin } from './types';
@@ -16,6 +15,11 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     auth: true,
     comments: true,
+    examples: {
+      $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
+      enabled: false,
+      language: 'JavaScript',
+    },
     includeInEntry: true,
     paramsStructure: 'grouped',
     responseStyle: 'fields',
@@ -85,7 +89,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       },
     );
 
-    plugin.config.examples = resolveExamples(plugin.config, context);
     plugin.config.operations = resolveOperations(plugin.config, context);
   },
 };

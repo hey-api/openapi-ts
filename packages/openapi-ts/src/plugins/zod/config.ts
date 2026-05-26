@@ -18,94 +18,273 @@ export const defaultConfig: ZodPlugin['Config'] = {
       offset: false,
     },
     definitions: {
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'z{{name}}',
       types: {
-        infer: { name: '{{name}}ZodType' },
-        input: { name: '{{name}}ZodInput' },
-        output: { name: '{{name}}ZodOutput' },
+        infer: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ZodType',
+        },
+        input: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ZodInput',
+        },
+        output: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ZodOutput',
+        },
       },
     },
     includeInEntry: false,
     metadata: false,
     requests: {
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       body: {
+        $onCoerce: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'z{{name}}Body',
         types: {
-          infer: { name: '{{name}}BodyZodType' },
-          input: { name: '{{name}}BodyZodInput' },
-          output: { name: '{{name}}BodyZodOutput' },
+          infer: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}BodyZodType',
+          },
+          input: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}BodyZodInput',
+          },
+          output: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}BodyZodOutput',
+          },
         },
       },
       enabled: true,
       headers: {
+        $onCoerce: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'z{{name}}Headers',
         types: {
-          infer: { name: '{{name}}HeadersZodType' },
-          input: { name: '{{name}}HeadersZodInput' },
-          output: { name: '{{name}}HeadersZodOutput' },
+          infer: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}HeadersZodType',
+          },
+          input: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}HeadersZodInput',
+          },
+          output: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}HeadersZodOutput',
+          },
         },
       },
       name: 'z{{name}}Data',
       path: {
+        $onCoerce: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'z{{name}}Path',
         types: {
-          infer: { name: '{{name}}PathZodType' },
-          input: { name: '{{name}}PathZodInput' },
-          output: { name: '{{name}}PathZodOutput' },
+          infer: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}PathZodType',
+          },
+          input: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}PathZodInput',
+          },
+          output: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}PathZodOutput',
+          },
         },
       },
       query: {
+        $onCoerce: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'z{{name}}Query',
         types: {
-          infer: { name: '{{name}}QueryZodType' },
-          input: { name: '{{name}}QueryZodInput' },
-          output: { name: '{{name}}QueryZodOutput' },
+          infer: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}QueryZodType',
+          },
+          input: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}QueryZodInput',
+          },
+          output: {
+            $onCoerce: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}QueryZodOutput',
+          },
         },
       },
       shouldExtract: coerce((value) =>
         typeof value === 'function' ? value : () => Boolean(value),
       ),
       types: {
-        infer: { name: '{{name}}DataZodType' },
-        input: { name: '{{name}}DataZodInput' },
-        output: { name: '{{name}}DataZodOutput' },
+        infer: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}DataZodType',
+        },
+        input: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}DataZodInput',
+        },
+        output: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}DataZodOutput',
+        },
       },
     },
     responses: {
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'z{{name}}Response',
       types: {
-        infer: { name: '{{name}}ResponseZodType' },
-        input: { name: '{{name}}ResponseZodInput' },
-        output: { name: '{{name}}ResponseZodOutput' },
+        infer: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ResponseZodType',
+        },
+        input: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ResponseZodInput',
+        },
+        output: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ResponseZodOutput',
+        },
       },
     },
     types: {
       infer: {
+        $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
       input: {
+        $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
       output: {
+        $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
     },
     webhooks: {
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'z{{name}}WebhookRequest',
       types: {
-        infer: { name: '{{name}}WebhookRequestZodType' },
-        input: { name: '{{name}}WebhookRequestZodInput' },
-        output: { name: '{{name}}WebhookRequestZodOutput' },
+        infer: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}WebhookRequestZodType',
+        },
+        input: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}WebhookRequestZodInput',
+        },
+        output: {
+          $onCoerce: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}WebhookRequestZodOutput',
+        },
       },
     },
   },
