@@ -2,23 +2,30 @@ import type { Coercer, InlineDirectives, ValueToObject } from '../../../config/u
 import { isPlainObject } from '../../../config/utils/config';
 import type { Plugin } from '../../types';
 
+export const pluginUserConfigSymbol = Symbol('pluginUserConfig');
+
 export function definePluginConfig<T extends Plugin.Types>(defaultConfig: Plugin.Config<T>) {
-  return (userConfig?: Omit<T['config'], 'name'>) => ({
-    ...defaultConfig,
-    config: (typeof defaultConfig.config === 'function'
-      ? (userConfig ?? {})
-      : { ...defaultConfig.config, ...(userConfig ?? {}) }) as NormalizerTable<
-      T['resolvedConfig'],
-      Omit<T['config'], 'name'>
-    >,
-    /**
-     * Cast name to `any` so it doesn't throw type error in `plugins` array.
-     * We could allow any `string` as plugin `name` in the object syntax, but
-     * that TypeScript trick would cause all string methods to appear as
-     * suggested auto completions, which is undesirable.
-     */
-    name: defaultConfig.name as any,
-  });
+  return (userConfig?: Omit<T['config'], 'name'>) => {
+    const config = {
+      ...defaultConfig,
+      config: (typeof defaultConfig.config === 'function'
+        ? defaultConfig.config
+        : { ...defaultConfig.config, ...(userConfig ?? {}) }) as Plugin.Config<T>['config'],
+      /**
+       * Cast name to `any` so it doesn't throw type error in `plugins` array.
+       * We could allow any `string` as plugin `name` in the object syntax, but
+       * that TypeScript trick would cause all string methods to appear as
+       * suggested auto completions, which is undesirable.
+       */
+      name: defaultConfig.name as any,
+    };
+
+    if (typeof defaultConfig.config === 'function') {
+      Object.defineProperty(config, pluginUserConfigSymbol, { value: userConfig ?? {} });
+    }
+
+    return config;
+  };
 }
 
 /**

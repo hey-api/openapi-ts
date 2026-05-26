@@ -2,6 +2,7 @@ import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared'
 import {
   defineNormalizers,
   dependencyFactory,
+  pluginUserConfigSymbol,
   valueToObject,
   warnOnConflictingDuplicatePlugins,
 } from '@hey-api/shared';
@@ -79,12 +80,16 @@ function getPluginsConfig({
     };
 
     const effectiveDefaultConfig = defaultPlugin?.config ?? userPlugin?.config ?? {};
+    const userPluginConfig = userPlugin as
+      | (typeof userPlugin & { [pluginUserConfigSymbol]?: Record<string, unknown> })
+      | undefined;
     const userConfigValue =
-      defaultPlugin !== undefined &&
+      userPluginConfig?.[pluginUserConfigSymbol] ??
+      (defaultPlugin !== undefined &&
       typeof userPlugin?.config === 'object' &&
       userPlugin.config !== null
-        ? userPlugin.config
-        : {};
+        ? (userPlugin.config as unknown as Record<string, unknown>)
+        : {});
 
     const mergedConfig = defineNormalizers(effectiveDefaultConfig as any)(userConfigValue, context);
 
