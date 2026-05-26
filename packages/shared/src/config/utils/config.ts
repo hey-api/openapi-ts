@@ -40,8 +40,41 @@ export type CoerceMap<TShape extends object = object> = {
   string?: (value: string) => Partial<TShape>;
 };
 
+type CoercionEvent =
+  | { type: 'boolean'; value: boolean }
+  | { type: 'function'; value: (...args: Array<any>) => any }
+  | { type: 'number'; value: number }
+  | { type: 'object'; value: Record<string, any> }
+  | { type: 'string'; value: string };
+
 export type InlineDirectives<TShape extends object = object> = {
+  /**
+   * Per-type coercers. Each handler receives the raw user input of the matching
+   * type and returns a partial object merged into the resolved config. Applied
+   * after `$onCoerce`.
+   *
+   * @example
+   * ```ts
+   * $coerce: {
+   *   string: (v) => ({ name: v }),
+   *   function: (v) => ({ name: v }),
+   * }
+   * ```
+   */
   $coerce?: CoerceMap<TShape>;
+  /**
+   * Fires for any non-`undefined` input before type-specific `$coerce` handlers.
+   * Use to declare baseline behavior shared across all coercion paths. Its result
+   * is merged first, so type-specific `$coerce` handlers and plain-object keys
+   * always win over it.
+   *
+   * @example
+   * ```ts
+   * // Enable the feature on any shorthand; disable only on explicit `false`
+   * $onCoerce: (v) => ({ enabled: v !== false })
+   * ```
+   */
+  $onCoerce?: (value: CoercionEvent) => Partial<TShape>;
 };
 
 export type WithCoercers<T> = [T] extends [(...args: Array<any>) => any]
@@ -103,11 +136,16 @@ export const valueToObject: ValueToObject = ({ defaultValue, mappers, value }) =
   const dv = defaultValue as Record<string, any> & InlineDirectives;
 
   for (const [key, defaultVal] of Object.entries(dv)) {
-    if (key === '$coerce') continue;
-    if (isCoercer(defaultVal)) result[key] = defaultVal[COERCER](undefined);
-    else if (isPlainObject(defaultVal))
+    if (key === '$coerce' || key === '$onCoerce') continue;
+    if (isCoercer(defaultVal)) {
+      result[key] = defaultVal[COERCER](undefined);
+    } else if (isPlainObject(defaultVal)) {
       result[key] = valueToObject({ defaultValue: defaultVal, mappers, value: undefined } as any);
-    else result[key] = defaultVal;
+    } else result[key] = defaultVal;
+  }
+
+  if (value !== undefined && value !== null && dv.$onCoerce) {
+    mergeResult(result, dv.$onCoerce({ type: typeof value, value } as CoercionEvent));
   }
 
   switch (typeof value) {
@@ -157,11 +195,15 @@ export const valueToObject: ValueToObject = ({ defaultValue, mappers, value }) =
         }
         for (const [key, v] of Object.entries(value)) {
           const defaultVal = dv[key];
-          if (isCoercer(defaultVal)) result[key] = defaultVal[COERCER](v);
-          else if (v === undefined || v === '') continue;
-          else if (isPlainObject(defaultVal))
+          if (isCoercer(defaultVal)) {
+            result[key] = defaultVal[COERCER](v);
+          } else if (v === undefined || v === '') {
+            continue;
+          } else if (isPlainObject(defaultVal)) {
             result[key] = valueToObject({ defaultValue: defaultVal, mappers, value: v } as any);
-          else result[key] = v;
+          } else {
+            result[key] = v;
+          }
         }
       }
       break;

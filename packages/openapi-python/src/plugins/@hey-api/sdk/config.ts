@@ -10,6 +10,11 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     // auth: true,
     comments: true,
+    examples: {
+      $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
+      enabled: false,
+      language: 'Python',
+    },
     includeInEntry: true,
     paramsStructure: 'grouped',
     // responseStyle: 'fields',
@@ -77,7 +82,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     // } else {
     //   plugin.config.validator.response = false;
     // }
-    // plugin.config.examples = resolveExamples(plugin.config, context);
     plugin.config.operations = resolveOperations(plugin.config, context);
   },
 };
