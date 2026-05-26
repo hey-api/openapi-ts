@@ -1,5 +1,5 @@
 import { log } from '@hey-api/codegen-core';
-import { definePluginConfig, type PluginTag } from '@hey-api/shared';
+import { type AnyPluginName, definePluginConfig, type PluginTag } from '@hey-api/shared';
 
 import { resolveContracts } from './contracts/config';
 import { handler } from './plugin';
@@ -14,11 +14,11 @@ export const defaultConfig: OrpcPlugin['Config'] = {
   },
   handler,
   name: 'orpc',
-  resolveConfig: (plugin, context) => {
-    function resolvePlugin<T>(
+  resolveConfig(plugin, context) {
+    function resolvePlugin<T extends AnyPluginName | boolean = AnyPluginName>(
       value: boolean | T | undefined,
       tag: PluginTag,
-      options?: { defaultPlugin?: string; warn?: string },
+      options?: { defaultPlugin?: Exclude<T, boolean>; warn?: string },
     ): T | false {
       if (value === false) return false;
       if (typeof value === 'string') {

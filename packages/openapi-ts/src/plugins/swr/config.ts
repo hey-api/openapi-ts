@@ -1,87 +1,54 @@
-import { definePluginConfig, mappers } from '@hey-api/shared';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { SwrPlugin } from './types';
 
+const defaultMeta = (): Record<string, unknown> => ({});
+
 export const defaultConfig: SwrPlugin['Config'] = {
   config: {
+    $cascade: ['case'],
     case: 'camelCase',
     comments: true,
     includeInEntry: false,
+    infiniteQueryKeys: {
+      enabled: true,
+      name: '{{name}}InfiniteQueryKey',
+      tags: false,
+    },
+    infiniteQueryOptions: {
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}InfiniteOptions',
+    },
+    mutationOptions: {
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}Mutation',
+    },
+    queryKeys: {
+      enabled: true,
+      name: '{{name}}QueryKey',
+      tags: false,
+    },
+    queryOptions: {
+      enabled: true,
+      exported: true,
+      meta: defaultMeta,
+      name: '{{name}}Options',
+    },
+    useSwr: {
+      enabled: true,
+      name: 'use{{name}}',
+    },
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler: handler as SwrPlugin['Handler'],
+  handler,
   name: 'swr',
-  resolveConfig: (plugin, context) => {
-    plugin.config.infiniteQueryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteQueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.infiniteQueryKeys,
-    });
-
-    plugin.config.infiniteQueryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteOptions',
-      },
-      mappers,
-      value: plugin.config.infiniteQueryOptions,
-    });
-
-    plugin.config.mutationOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}Mutation',
-      },
-      mappers,
-      value: plugin.config.mutationOptions,
-    });
-
-    plugin.config.queryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}QueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.queryKeys,
-    });
-
-    plugin.config.queryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Options',
-      },
-      mappers,
-      value: plugin.config.queryOptions,
-    });
-
-    plugin.config.useSwr = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: 'use{{name}}',
-      },
-      mappers,
-      value: plugin.config.useSwr,
-    });
-
-    if (plugin.config.useSwr.enabled) {
-      // useSwr hooks consume queryOptions
-      if (!plugin.config.queryOptions.enabled) {
-        plugin.config.queryOptions.enabled = true;
-        plugin.config.queryOptions.exported = false;
-      }
+  resolveConfig(plugin) {
+    if (plugin.config.useSwr.enabled && !plugin.config.queryOptions.enabled) {
+      plugin.config.queryOptions.enabled = true;
+      plugin.config.queryOptions.exported = false;
     }
   },
 };

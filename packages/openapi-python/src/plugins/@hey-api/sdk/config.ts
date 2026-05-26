@@ -1,3 +1,5 @@
+import { log } from '@hey-api/codegen-core';
+import type { AnyPluginName, PluginTag } from '@hey-api/shared';
 import { definePluginConfig } from '@hey-api/shared';
 
 import { resolveOperations } from './operations';
@@ -7,8 +9,12 @@ import type { HeyApiSdkPlugin } from './types';
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     // auth: true,
-    client: true,
     comments: true,
+    examples: {
+      $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
+      enabled: false,
+      language: 'Python',
+    },
     includeInEntry: true,
     paramsStructure: 'grouped',
     // responseStyle: 'fields',
@@ -18,17 +24,34 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   dependencies: ['pydantic'],
   handler,
   name: '@hey-api/python-sdk',
-  resolveConfig: (plugin, context) => {
-    if (plugin.config.client) {
-      if (typeof plugin.config.client === 'boolean') {
-        plugin.config.client = context.pluginByTag('client', {
-          defaultPlugin: '@hey-api/client-httpx',
-        });
+  resolveConfig(plugin, context) {
+    function resolvePlugin<T extends AnyPluginName | boolean = AnyPluginName>(
+      value: boolean | T | undefined,
+      tag: PluginTag,
+      options?: { defaultPlugin?: Exclude<T, boolean>; warn?: string },
+    ): T | false {
+      if (value === false) return false;
+      if (typeof value === 'string') {
+        plugin.dependencies.add(value);
+        return value;
       }
-      plugin.dependencies.add(plugin.config.client!);
-    } else {
-      plugin.config.client = false;
+      try {
+        const resolved = context.pluginByTag(
+          tag,
+          options?.defaultPlugin ? { defaultPlugin: options.defaultPlugin } : undefined,
+        );
+        if (resolved) plugin.dependencies.add(resolved);
+        return (resolved as T) ?? false;
+      } catch {
+        if (value !== undefined && options?.warn) log.warn(options.warn);
+        return false;
+      }
     }
+
+    plugin.config.client = resolvePlugin(plugin.config.client, 'client', {
+      defaultPlugin: '@hey-api/client-httpx',
+    });
+
     // if (plugin.config.transformer) {
     //   if (typeof plugin.config.transformer === 'boolean') {
     //     plugin.config.transformer = context.pluginByTag('transformer');
@@ -59,7 +82,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     // } else {
     //   plugin.config.validator.response = false;
     // }
-    // plugin.config.examples = resolveExamples(plugin.config, context);
     plugin.config.operations = resolveOperations(plugin.config, context);
   },
 };
