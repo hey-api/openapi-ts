@@ -3,17 +3,7 @@ import { isPlainObject } from '../../../config/utils/config';
 import type { Plugin } from '../../types';
 
 export function definePluginConfig<T extends Plugin.Types>(defaultConfig: Plugin.Config<T>) {
-  return (
-    userConfig?: Omit<Plugin.Config<T>, 'name'> & {
-      /**
-       * Cast name to `any` so it doesn't throw type error in `plugins` array.
-       * We could allow any `string` as plugin `name` in the object syntax, but
-       * that TypeScript trick would cause all string methods to appear as
-       * suggested auto completions, which is undesirable.
-       */
-      name: any;
-    },
-  ) => ({
+  return (userConfig?: Omit<T['config'], 'name'>) => ({
     ...defaultConfig,
     config: (typeof defaultConfig.config === 'function'
       ? (userConfig ?? {})
@@ -21,6 +11,13 @@ export function definePluginConfig<T extends Plugin.Types>(defaultConfig: Plugin
       T['resolvedConfig'],
       Omit<T['config'], 'name'>
     >,
+    /**
+     * Cast name to `any` so it doesn't throw type error in `plugins` array.
+     * We could allow any `string` as plugin `name` in the object syntax, but
+     * that TypeScript trick would cause all string methods to appear as
+     * suggested auto completions, which is undesirable.
+     */
+    name: defaultConfig.name as any,
   });
 }
 
