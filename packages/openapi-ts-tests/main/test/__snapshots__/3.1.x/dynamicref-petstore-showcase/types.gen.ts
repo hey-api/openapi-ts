@@ -75,9 +75,9 @@ export type ShelterFolderTemplate<folderType, resourceType> = {
     shortcuts?: Array<resourceType>;
 };
 
-export type ShelterFolder = ShelterFolderTemplate<ShelterFolder, ShelterResource> & {
+export interface ShelterFolder extends ShelterFolderTemplate<ShelterFolder, ShelterResource> {
     accessLevel: 'public' | 'staff' | 'admin';
-};
+}
 
 export type ShelterResource = Document | ShelterFolder;
 

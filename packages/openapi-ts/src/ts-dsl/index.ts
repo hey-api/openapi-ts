@@ -8,6 +8,7 @@ import { FieldTsDsl } from './decl/field';
 import { FuncTsDsl } from './decl/func';
 import { GetterTsDsl } from './decl/getter';
 import { InitTsDsl } from './decl/init';
+import { InterfaceTsDsl } from './decl/interface';
 import { EnumMemberTsDsl } from './decl/member';
 import { MethodTsDsl } from './decl/method';
 import { ParamTsDsl } from './decl/param';
@@ -160,6 +161,9 @@ const tsDsl = {
 
   /** Creates an initialization block or statement. */
   init: (...args: ConstructorParameters<typeof InitTsDsl>) => new InitTsDsl(...args),
+
+  /** Creates an interface declaration. */
+  interface: (...args: ConstructorParameters<typeof InterfaceTsDsl>) => new InterfaceTsDsl(...args),
 
   /** Creates a lazy, context-aware node with deferred evaluation. */
   lazy: <T extends ts.Node>(...args: ConstructorParameters<typeof LazyTsDsl<T>>) =>

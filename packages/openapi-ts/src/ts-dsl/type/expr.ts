@@ -1,5 +1,5 @@
 import type { AnalysisContext, NodeName, NodeScope, Ref } from '@hey-api/codegen-core';
-import { isNode, ref } from '@hey-api/codegen-core';
+import { fromRef, isNode, ref } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -50,6 +50,10 @@ export class TypeExprTsDsl extends Mixed {
       ? ref(right.base(this._exprInput))
       : ref(new TypeAttrTsDsl(this._exprInput!, right));
     return this;
+  }
+
+  getExprInput(): TypeExprExpr | undefined {
+    return this._exprInput ? (fromRef(this._exprInput) as TypeExprExpr) : undefined;
   }
 
   override toAst() {
