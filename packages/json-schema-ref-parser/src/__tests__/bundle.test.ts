@@ -221,6 +221,89 @@ describe('bundle', () => {
     }
   });
 
+  it('names whole-file $refs after the source filename, not "root"', async () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'json-schema-ref-parser-'));
+
+    try {
+      const agentTypePath = path.join(tempDir, 'AgentType.json');
+      const userTypePath = path.join(tempDir, 'UserType.json');
+      const rootPath = path.join(tempDir, 'root.json');
+
+      // Each external file IS the schema — no #/components/schemas/... fragment.
+      writeJsonFile(agentTypePath, {
+        properties: {
+          kind: { type: 'string' },
+        },
+        type: 'object',
+      });
+
+      writeJsonFile(userTypePath, {
+        properties: {
+          name: { type: 'string' },
+        },
+        type: 'object',
+      });
+
+      writeJsonFile(rootPath, {
+        info: { title: 'Test API', version: '1.0.0' },
+        openapi: '3.0.0',
+        paths: {
+          '/agents': {
+            get: {
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: { $ref: 'AgentType.json' },
+                    },
+                  },
+                  description: 'ok',
+                },
+              },
+            },
+          },
+          '/users': {
+            get: {
+              responses: {
+                '200': {
+                  content: {
+                    'application/json': {
+                      schema: { $ref: 'UserType.json' },
+                    },
+                  },
+                  description: 'ok',
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const refParser = new $RefParser();
+      const schema = (await refParser.bundle({ pathOrUrlOrSchema: rootPath })) as any;
+      const schemas = (schema.components?.schemas ?? {}) as Record<string, any>;
+      const schemaNames = Object.keys(schemas);
+
+      // The bug: whole-file refs are named "root", "AgentType_root", etc.
+      // (PascalCased downstream into "Root", "AgentTypeRoot".)
+      expect(schemaNames).not.toContain('root');
+      expect(schemaNames.every((name) => !/root/i.test(name))).toBe(true);
+
+      // Expected: schemas named after the source filenames.
+      expect(schemas.AgentType).toBeDefined();
+      expect(schemas.UserType).toBeDefined();
+
+      expect(
+        schema.paths['/agents'].get.responses['200'].content['application/json'].schema.$ref,
+      ).toBe('#/components/schemas/AgentType');
+      expect(
+        schema.paths['/users'].get.responses['200'].content['application/json'].schema.$ref,
+      ).toBe('#/components/schemas/UserType');
+    } finally {
+      fs.rmSync(tempDir, { force: true, recursive: true });
+    }
+  });
+
   it('bundles multiple references to the same file correctly', async () => {
     const refParser = new $RefParser();
     const pathOrUrlOrSchema = path.join(

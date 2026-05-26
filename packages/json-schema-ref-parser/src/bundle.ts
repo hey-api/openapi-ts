@@ -618,8 +618,10 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
         // Ignore errors
       }
 
-      // Try without prefix first (cleaner names)
-      const schemaName = lastToken(entry.hash);
+      // For whole-file $refs (no hash), the filename IS the schema identity —
+      // `lastToken` would return the placeholder "root", so prefer `proposedBase`.
+      const isWholeFileRef = !entry.hash || entry.hash === '#';
+      const schemaName = isWholeFileRef ? proposedBase : lastToken(entry.hash);
       let proposed = schemaName;
 
       // Check if this name would conflict with existing schemas from other files
@@ -630,7 +632,7 @@ function remap(parser: $RefParser, inventory: Array<InventoryEntry>) {
 
       // If the name is already used, add the file prefix
       if (used.has(proposed)) {
-        proposed = `${proposedBase}_${schemaName}`;
+        proposed = isWholeFileRef ? proposedBase : `${proposedBase}_${schemaName}`;
       }
 
       defName = uniqueName(container, proposed);
