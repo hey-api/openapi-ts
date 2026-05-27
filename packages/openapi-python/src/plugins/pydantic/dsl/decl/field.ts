@@ -11,7 +11,6 @@ import { safeRuntimeName } from '../../../../py-dsl/utils/name';
 import type { PydanticPlugin } from '../../types';
 import { ConstraintsMixin } from '../mixins/constraints';
 import { literalize } from '../utils/literal';
-import { BASE_MODEL_RESERVED } from '../utils/reserved';
 
 const Mixed = ConstraintsMixin(OptionalMixin(PyDsl<py.Statement>));
 
@@ -72,7 +71,7 @@ export class PydanticFieldDsl extends Mixed {
     const name = String(fromRef(this.name));
     const snake = toCase(name, 'snake_case');
     const safe = safeRuntimeName(snake);
-    const runtimeName = BASE_MODEL_RESERVED.has(safe) ? `${safe}_` : safe;
+    const runtimeName = safe;
     const needsAlias = runtimeName !== name;
     const alias = this._alias ?? (needsAlias ? name : undefined);
 
@@ -81,7 +80,7 @@ export class PydanticFieldDsl extends Mixed {
     let type = this._type;
     const needsOptional = this._optional || hasDefault;
     if (needsOptional && this._type) {
-      type = $(plugin.external('typing.Optional')).slice(this._type);
+      type = $(plugin.symbols.typing.Optional).slice(this._type);
     }
 
     const stmt = $.var(plugin.symbol(runtimeName)).$if(type, (v, t) => v.type(t));
@@ -111,7 +110,7 @@ export class PydanticFieldDsl extends Mixed {
         args.push($.kwarg(k, v));
       }
 
-      stmt.assign($(plugin.external('pydantic.Field')).call(...args));
+      stmt.assign($(plugin.symbols.Field).call(...args));
     } else if (hasDefault) {
       stmt.assign(literalize(this._default) as string | number);
     } else if (this._optional) {

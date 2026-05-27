@@ -25,7 +25,7 @@ export function undefinedToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'undefined'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: UndefinedResolverContext = {
     $,
     chain: {

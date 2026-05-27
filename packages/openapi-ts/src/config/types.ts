@@ -29,6 +29,6 @@ export type UserConfig = BaseUserConfig<UserOutput> & {
 export type Config = BaseConfig<UserConfig, Output> & {
   pluginOrder: ReadonlyArray<keyof PluginConfigMap>;
   plugins: {
-    [K in PluginNames]?: Plugin.Config<PluginConfigMap[K]>;
+    [K in PluginNames]?: Plugin.Stored<PluginConfigMap[K]>;
   };
 };

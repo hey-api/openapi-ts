@@ -63,7 +63,7 @@ export function tupleToAst({
 >): CompositeHandlerResult {
   const childResults: Array<ZodResult> = [];
 
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
 
   if (schema.items) {
     schema.items.forEach((item, index) => {

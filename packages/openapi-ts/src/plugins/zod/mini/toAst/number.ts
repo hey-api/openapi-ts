@@ -106,7 +106,7 @@ export function numberToNode({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: NumberResolverContext = {
     $,
     chain: {

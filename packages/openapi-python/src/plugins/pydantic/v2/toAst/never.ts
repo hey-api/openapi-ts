@@ -8,7 +8,7 @@ import type { PydanticPlugin } from '../../types';
 function baseNode(ctx: NeverResolverContext): PydanticType {
   const { plugin } = ctx;
   return {
-    type: plugin.external('typing.NoReturn'),
+    type: plugin.symbols.typing.NoReturn,
   };
 }
 

@@ -52,7 +52,7 @@ function baseNode(ctx: EnumResolverContext): PydanticType {
 
   if (!enumMembers.length) {
     return {
-      type: plugin.external('typing.Any'),
+      type: plugin.symbols.typing.Any,
     };
   }
 
@@ -61,11 +61,11 @@ function baseNode(ctx: EnumResolverContext): PydanticType {
   if (mode === 'literal') {
     if (!enumMembers.length) {
       return {
-        type: plugin.external('typing.Any'),
+        type: plugin.symbols.typing.Any,
       };
     }
 
-    const literal = plugin.external('typing.Literal');
+    const literal = plugin.symbols.typing.Literal;
     const values = enumMembers.map((m) =>
       // TODO: replace
       typeof m.value === 'string' ? `"<<<<${m.value}"` : `<<<${m.value}`,

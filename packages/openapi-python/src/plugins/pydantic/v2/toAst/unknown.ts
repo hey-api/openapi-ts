@@ -8,7 +8,7 @@ import type { PydanticPlugin } from '../../types';
 function baseNode(ctx: UnknownResolverContext): PydanticType {
   const { plugin } = ctx;
   return {
-    type: plugin.external('typing.Any'),
+    type: plugin.symbols.typing.Any,
   };
 }
 

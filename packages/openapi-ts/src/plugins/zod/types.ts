@@ -13,6 +13,7 @@ import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
 import type { ZodResolvers } from './resolvers';
 import type { TypeOptions } from './shared/types';
+import type { ZodSymbols } from './symbols';
 
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
@@ -1386,4 +1387,4 @@ export type Config = Plugin.Name<'zod'> &
     webhooks: NamingOptions & FeatureToggle & TypeOptions;
   };
 
-export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi, ZodSymbols>;

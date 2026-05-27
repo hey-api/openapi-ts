@@ -13,7 +13,7 @@ import type { SymbolKind } from '../symbols/types';
 import type { AnalysisContext } from './analyzer';
 import { Analyzer } from './analyzer';
 import type { AssignOptions, Scope } from './scope';
-import { createScope } from './scope';
+import { createScope, registerName } from './scope';
 
 const isTypeOnlyKind = (kind: SymbolKind) => kind === 'type' || kind === 'interface';
 
@@ -418,7 +418,13 @@ export class Planner {
     while (true) {
       const language = node?.language || symbol.node?.language || file.language;
 
-      const ok = this.nameIsAvailable({ kind: symbol.kind, language, name: finalName, scope });
+      const ok = this.nameIsAvailable({
+        kind: symbol.kind,
+        language,
+        name: finalName,
+        override: symbol.override,
+        scope,
+      });
       if (ok) break;
 
       const resolver =
@@ -440,7 +446,7 @@ export class Planner {
     this.cacheResolvedNames.add(symbol.id);
     const updateScopes = [scope, ...scopesToUpdate];
     for (const scope of updateScopes) {
-      this.updateScope(symbol, scope);
+      registerName(scope, symbol.finalName, symbol.kind);
     }
   }
 
@@ -455,37 +461,33 @@ export class Planner {
     kind,
     language,
     name,
+    override,
     scope,
   }: {
     kind: SymbolKind;
     language: string | undefined;
     name: string;
+    override?: boolean;
     scope: Scope;
   }): boolean {
-    let current: Scope | undefined = scope;
-    while (current) {
-      const kinds = current.localNames.get(name);
-      if (kinds) {
-        for (const existingKind of kinds) {
-          if (!canDeclarationsShareIdentifier(language, kind, existingKind)) {
-            return false;
-          }
+    function conflicts(kinds: Set<SymbolKind> | undefined): boolean {
+      if (!kinds) return false;
+      for (const existingKind of kinds) {
+        if (!canDeclarationsShareIdentifier(language, kind, existingKind)) {
+          return true;
         }
       }
+      return false;
+    }
+
+    let current: Scope | undefined = scope;
+    while (current) {
+      if (!override && conflicts(current.childNames.get(name))) {
+        return false;
+      }
+      if (conflicts(current.localNames.get(name))) return false;
       current = current.parent;
     }
     return true;
-  }
-
-  /**
-   * Updates the provided name scope with the symbol's final name and kind.
-   *
-   * Ensures the name scope tracks all kinds associated with a given name.
-   */
-  private updateScope(symbol: Symbol, scope: Scope): void {
-    const name = symbol.finalName;
-    const cache = scope.localNames.get(name) ?? new Set();
-    cache.add(symbol.kind);
-    scope.localNames.set(name, cache);
   }
 }

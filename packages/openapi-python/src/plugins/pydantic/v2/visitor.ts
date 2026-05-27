@@ -47,8 +47,8 @@ export function createVisitor(
       const fieldConstraints = { ...result.fieldConstraints };
 
       if (needsOptional || needsNullable) {
-        const optionalType = plugin.external('typing.Optional');
-        type = $(optionalType).slice(type ?? plugin.external('typing.Any'));
+        const optionalType = plugin.symbols.typing.Optional;
+        type = $(optionalType).slice(type ?? plugin.symbols.typing.Any);
         if (needsOptional) {
           fieldConstraints.default = needsDefault ? result.meta.default : null;
         }

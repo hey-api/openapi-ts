@@ -29,7 +29,11 @@ export type {
   NodeScope,
 } from './nodes/node';
 export type { IOutput as Output } from './output';
-export { simpleNameConflictResolver, underscoreNameConflictResolver } from './planner/resolvers';
+export {
+  pythonNameConflictResolver,
+  simpleNameConflictResolver,
+  underscoreNameConflictResolver,
+} from './planner/resolvers';
 export type { IAnalysisContext as AnalysisContext, NameConflictResolver } from './planner/types';
 export { Project } from './project/project';
 export type { IProject } from './project/types';
@@ -48,6 +52,9 @@ export type {
 export { Symbol } from './symbols/symbol';
 export type {
   BindingKind,
+  ISymbolChild as SymbolChild,
   ISymbolIdentifier as SymbolIdentifier,
   ISymbolIn as SymbolIn,
+  SymbolKind,
+  ISymbolRegistry as SymbolRegistry,
 } from './symbols/types';

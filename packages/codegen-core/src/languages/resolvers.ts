@@ -1,8 +1,8 @@
-import { underscoreNameConflictResolver } from '../planner/resolvers';
+import { pythonNameConflictResolver, underscoreNameConflictResolver } from '../planner/resolvers';
 import type { NameConflictResolvers } from './types';
 
 export const defaultNameConflictResolvers: NameConflictResolvers = {
   php: underscoreNameConflictResolver,
-  python: underscoreNameConflictResolver,
+  python: pythonNameConflictResolver,
   ruby: underscoreNameConflictResolver,
 };

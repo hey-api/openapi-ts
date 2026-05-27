@@ -8,6 +8,7 @@ import type {
 } from '@hey-api/shared';
 
 import type { PydanticResolvers } from './resolvers';
+import type { PydanticSymbols } from './symbols';
 
 export type UserConfig = Plugin.Name<'pydantic'> &
   Plugin.Hooks &
@@ -231,4 +232,4 @@ export type Config = Plugin.Name<'pydantic'> &
     webhooks: NamingOptions & FeatureToggle;
   };
 
-export type PydanticPlugin = DefinePlugin<UserConfig, Config>;
+export type PydanticPlugin = DefinePlugin<UserConfig, Config, never, PydanticSymbols>;

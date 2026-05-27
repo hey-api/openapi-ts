@@ -25,7 +25,7 @@ export function voidToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'void'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: VoidResolverContext = {
     $,
     chain: {

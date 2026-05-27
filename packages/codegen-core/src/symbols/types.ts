@@ -7,7 +7,34 @@ export type ISymbolIdentifier = number | ISymbolMeta;
 
 export type SymbolKind = 'class' | 'enum' | 'function' | 'interface' | 'namespace' | 'type' | 'var';
 
+export interface ISymbolChild {
+  /**
+   * Kind of symbol (class, type, alias, etc.).
+   *
+   * @default 'var'
+   */
+  kind: SymbolKind;
+  /**
+   * User-facing name.
+   *
+   * @example "UserModel"
+   */
+  name: string;
+  /**
+   * When true, subclasses may freely redeclare this name.
+   *
+   * @default false
+   */
+  overridable?: boolean;
+}
+
 export type ISymbolIn = {
+  /**
+   * Child symbol bindings scoped under this symbol.
+   *
+   * @default undefined
+   */
+  children?: Array<ISymbolChild>;
   /**
    * Whether this symbol is exported from its own file.
    *
@@ -59,6 +86,13 @@ export type ISymbolIn = {
    * @example "UserModel"
    */
   name: string;
+  /**
+   * When true, this symbol intentionally overrides another declaration with
+   * the same name in the same scope.
+   *
+   * @default false
+   */
+  override?: boolean;
 };
 
 export interface ISymbolRegistry {

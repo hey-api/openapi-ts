@@ -39,7 +39,7 @@ export function booleanToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'boolean'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: BooleanResolverContext = {
     $,
     chain: {

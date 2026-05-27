@@ -1,61 +1,55 @@
-import { definePluginConfig, mappers } from '@hey-api/shared';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
+import { pydanticSymbols } from './symbols';
 import type { PydanticPlugin } from './types';
 
 export const defaultConfig: PydanticPlugin['Config'] = {
   config: {
+    $cascade: ['case'],
     case: 'PascalCase',
     comments: true,
+    definitions: {
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: '{{name}}',
+    },
     enums: 'enum',
     fieldStyle: 'field',
     includeInEntry: false,
     modelType: 'BaseModel',
+    requests: {
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: '{{name}}Request',
+    },
+    responses: {
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: '{{name}}Response',
+    },
     strict: false,
+    webhooks: {
+      $onCoerce: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: '{{name}}Webhook',
+    },
   },
   handler,
   name: 'pydantic',
-  resolveConfig: (plugin, context) => {
-    plugin.config.definitions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'PascalCase',
-        enabled: true,
-        name: '{{name}}',
-      },
-      mappers,
-      value: plugin.config.definitions,
-    });
-
-    plugin.config.requests = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'PascalCase',
-        enabled: true,
-        name: '{{name}}Request',
-      },
-      mappers,
-      value: plugin.config.requests,
-    });
-
-    plugin.config.responses = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'PascalCase',
-        enabled: true,
-        name: '{{name}}Response',
-      },
-      mappers,
-      value: plugin.config.responses,
-    });
-
-    plugin.config.webhooks = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'PascalCase',
-        enabled: true,
-        name: '{{name}}Webhook',
-      },
-      mappers,
-      value: plugin.config.webhooks,
-    });
-  },
+  symbols: pydanticSymbols,
   tags: ['validator'],
 };
 

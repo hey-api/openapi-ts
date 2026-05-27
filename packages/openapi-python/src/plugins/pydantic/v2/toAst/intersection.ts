@@ -8,7 +8,7 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
 
   if (!childResults.length) {
     return {
-      type: plugin.external('typing.Any'),
+      type: plugin.symbols.typing.Any,
     };
   }
 
@@ -31,7 +31,7 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
       typeStr !== '' &&
       !typeStr.startsWith('dict[') &&
       !typeStr.startsWith('Dict[') &&
-      typeStr !== String(plugin.external('typing.Any'));
+      typeStr !== String(plugin.symbols.typing.Any);
 
     if (isReference) {
       const baseName = typeStr.replace(/^'|'$/g, '');
@@ -58,7 +58,7 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
     // TODO: replace
     type = '__INTERSECTION_PLACEHOLDER__';
   } else {
-    type = plugin.external('typing.Any');
+    type = plugin.symbols.typing.Any;
   }
 
   return {
@@ -122,7 +122,7 @@ export function intersectionToType({
       typeStr !== '' &&
       !typeStr.startsWith('dict[') &&
       !typeStr.startsWith('Dict[') &&
-      typeStr !== String(plugin.external('typing.Any'));
+      typeStr !== String(plugin.symbols.typing.Any);
 
     if (isReference) {
       const baseName = typeStr.replace(/^'|'$/g, '');
