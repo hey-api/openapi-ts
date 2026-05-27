@@ -40,7 +40,7 @@ export class PydanticEnumDsl extends Mixed {
     } else if (!hasStrings && hasNumbers) {
       cls.extends('int');
     }
-    cls.extends(plugin.external('enum.Enum'));
+    cls.extends(plugin.symbols.enum.Enum);
 
     for (const m of this.members) {
       cls.do($.var(m.name).assign($.literal(m.value)));

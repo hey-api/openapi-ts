@@ -95,16 +95,17 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * code generation.
    */
   package: Dependency;
+  /** Symbols declared in the plugin config. */
+  symbols: T['symbols'];
 
-  constructor(props: {
-    api?: T['api'];
-    config: Omit<T['resolvedConfig'], 'name'>;
-    context: Context;
-    dependencies: Set<AnyPluginName>;
-    gen: IProject;
-    handler: Plugin.Config<T>['handler'];
-    name: string;
-  }) {
+  constructor(
+    props: Pick<Plugin.Config<T>, 'api' | 'handler' | 'name' | 'symbols'> & {
+      config: Omit<T['resolvedConfig'], 'name'>;
+      context: Context;
+      dependencies: Set<AnyPluginName>;
+      gen: IProject;
+    },
+  ) {
     this.api = props.api ?? {};
     this.config = props.config;
     this.context = props.context;
@@ -114,6 +115,9 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.handler = props.handler;
     this.name = props.name;
     this.package = props.context.package;
+    // buildSymbols must run last — it calls this.symbol() which requires
+    // this.name, this.gen, this.context, and this.eventHooks to be set.
+    this.symbols = this.buildSymbols(props.symbols);
   }
 
   external(
@@ -399,7 +403,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     const symbolIn: SymbolIn = {
       ...symbol,
       meta: {
-        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
+        // only stamp non-external symbols
+        ...(symbol.external
+          ? {}
+          : { pluginName: path.isAbsolute(this.name) ? 'custom' : this.name }),
         ...meta,
       },
       name,
@@ -454,6 +461,12 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       }
     }
     return result;
+  }
+
+  private buildSymbols(
+    fn: ((plugin: PluginInstance<T>) => T['symbols']) | undefined,
+  ): T['symbols'] {
+    return fn ? fn(this) : ({} as T['symbols']);
   }
 
   private forEachError(error: unknown, event: WalkEvent) {
