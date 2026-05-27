@@ -12,7 +12,7 @@ const securitySchemeObjectToAuthObject = ({
   // `key` is set by the parser only when the spec defines two or more
   // security schemes whose normalized Auth shape would collide; forward it
   // so the runtime callback can disambiguate.
-  const keyField = securitySchemeObject.key ? { key: securitySchemeObject.key } : undefined;
+  const keyField = securitySchemeObject.key ? { key: securitySchemeObject.key } : {};
 
   if (securitySchemeObject.type === 'openIdConnect') {
     return {

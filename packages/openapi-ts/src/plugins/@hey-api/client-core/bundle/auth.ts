@@ -8,12 +8,10 @@ export interface Auth {
    */
   in?: 'header' | 'query' | 'cookie';
   /**
-   * The `components.securitySchemes` key from the OpenAPI spec.
+   * A unique identifier for the security scheme.
    *
-   * Set only when the spec defines two or more security schemes whose `Auth`
-   * shape would otherwise be identical (e.g. two `http`/`bearer` schemes used
-   * by different operations), so the auth callback can pick the right token.
-   * Undefined when no other scheme in the spec collides with this one.
+   * Defined only when there are multiple security schemes whose `Auth`
+   * shape would otherwise be identical.
    */
   key?: string;
   /**
