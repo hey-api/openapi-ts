@@ -90,7 +90,7 @@ jobs:
         run: pnpm test
 
       - name: Publish preview packages
-        if: matrix.is-primary && github.event_name == 'pull_request'
+        if: matrix.is-primary && github.event_name == 'pull_request' && github.repository == 'hey-api/openapi-ts'
         run: ./scripts/publish-preview-packages.sh
         env:
           TURBO_SCM_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
