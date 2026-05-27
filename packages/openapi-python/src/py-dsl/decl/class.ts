@@ -2,7 +2,8 @@ import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 
 import { py } from '../../py-compiler';
-import { type MaybePyDsl, PyDsl } from '../base';
+import type { MaybePyDsl } from '../base';
+import { PyDsl } from '../base';
 import { NewlinePyDsl } from '../layout/newline';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
@@ -37,6 +38,9 @@ export class ClassPyDsl extends Mixed {
     ctx.analyze(this.name);
     ctx.pushScope();
     try {
+      for (const baseClass of this.baseClasses) {
+        ctx.injectChildren(baseClass);
+      }
       for (const item of this.body) {
         ctx.analyze(item);
       }

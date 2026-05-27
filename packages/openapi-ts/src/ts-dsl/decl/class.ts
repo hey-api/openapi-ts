@@ -41,6 +41,9 @@ export class ClassTsDsl extends Mixed {
     ctx.analyze(this.name);
     ctx.pushScope();
     try {
+      if (this.baseClass) {
+        ctx.injectChildren(this.baseClass);
+      }
       for (const item of this.body) {
         ctx.analyze(item);
       }
