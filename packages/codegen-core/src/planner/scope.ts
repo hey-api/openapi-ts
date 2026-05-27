@@ -5,9 +5,11 @@ import type { SymbolKind } from '../symbols/types';
 export type NameScopes = Map<string, Set<SymbolKind>>;
 
 export type Scope = {
+  /** Soft conflicts, inherited names from children symbols. */
+  childNames: NameScopes;
   /** Child scopes. */
   children: Array<Scope>;
-  /** Resolved names in this scope. */
+  /** Hard conflicts, declared names in this scope. */
   localNames: NameScopes;
   /** Parent scope, if any. */
   parent?: Scope;
@@ -22,14 +24,26 @@ export type AssignOptions = {
   scopesToUpdate: ReadonlyArray<Scope>;
 };
 
-export const createScope = (
-  args: {
-    localNames?: NameScopes;
-    parent?: Scope;
-  } = {},
-): Scope => ({
-  children: [],
-  localNames: args.localNames || new Map(),
-  parent: args.parent,
-  symbols: [],
-});
+export function createScope(
+  args: Pick<Partial<Scope>, 'childNames' | 'localNames' | 'parent'> = {},
+): Scope {
+  return {
+    childNames: args.childNames || new Map(),
+    children: [],
+    localNames: args.localNames || new Map(),
+    parent: args.parent,
+    symbols: [],
+  };
+}
+
+export function registerName(scope: Scope, name: string, kind: SymbolKind): void {
+  const kinds = scope.localNames.get(name) ?? new Set();
+  kinds.add(kind);
+  scope.localNames.set(name, kinds);
+}
+
+export function registerChildName(scope: Scope, name: string, kind: SymbolKind): void {
+  const kinds = scope.childNames.get(name) ?? new Set();
+  kinds.add(kind);
+  scope.childNames.set(name, kinds);
+}

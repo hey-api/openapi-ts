@@ -11,7 +11,6 @@ import { safeRuntimeName } from '../../../../py-dsl/utils/name';
 import type { PydanticPlugin } from '../../types';
 import { ConstraintsMixin } from '../mixins/constraints';
 import { literalize } from '../utils/literal';
-import { BASE_MODEL_RESERVED } from '../utils/reserved';
 
 const Mixed = ConstraintsMixin(OptionalMixin(PyDsl<py.Statement>));
 
@@ -72,7 +71,7 @@ export class PydanticFieldDsl extends Mixed {
     const name = String(fromRef(this.name));
     const snake = toCase(name, 'snake_case');
     const safe = safeRuntimeName(snake);
-    const runtimeName = BASE_MODEL_RESERVED.has(safe) ? `${safe}_` : safe;
+    const runtimeName = safe;
     const needsAlias = runtimeName !== name;
     const alias = this._alias ?? (needsAlias ? name : undefined);
 
