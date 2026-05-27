@@ -148,7 +148,7 @@ export function numberToPipes({
     plugin,
     schema,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
     utils: {
       getIntegerLimit,

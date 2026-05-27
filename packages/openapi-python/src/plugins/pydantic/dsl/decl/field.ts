@@ -81,7 +81,7 @@ export class PydanticFieldDsl extends Mixed {
     let type = this._type;
     const needsOptional = this._optional || hasDefault;
     if (needsOptional && this._type) {
-      type = $(plugin.external('typing.Optional')).slice(this._type);
+      type = $(plugin.symbols.typing.Optional).slice(this._type);
     }
 
     const stmt = $.var(plugin.symbol(runtimeName)).$if(type, (v, t) => v.type(t));
@@ -111,7 +111,7 @@ export class PydanticFieldDsl extends Mixed {
         args.push($.kwarg(k, v));
       }
 
-      stmt.assign($(plugin.external('pydantic.Field')).call(...args));
+      stmt.assign($(plugin.symbols.Field).call(...args));
     } else if (hasDefault) {
       stmt.assign(literalize(this._default) as string | number);
     } else if (this._optional) {

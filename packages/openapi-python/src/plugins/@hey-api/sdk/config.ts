@@ -4,6 +4,7 @@ import { definePluginConfig } from '@hey-api/shared';
 
 import { resolveOperations } from './operations';
 import { handler } from './plugin';
+import { sdkSymbols } from './symbols';
 import type { HeyApiSdkPlugin } from './types';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
@@ -84,6 +85,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     // }
     plugin.config.operations = resolveOperations(plugin.config, context);
   },
+  symbols: sdkSymbols,
 };
 
 /**

@@ -4,45 +4,6 @@ import type { PydanticPlugin } from '../types';
 import { createProcessor } from './processor';
 
 export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
-  // enum
-  plugin.symbol('Enum', {
-    external: 'enum',
-  });
-
-  // typing
-  plugin.symbol('Any', {
-    external: 'typing',
-  });
-  plugin.symbol('Literal', {
-    external: 'typing',
-  });
-  plugin.symbol('NoReturn', {
-    external: 'typing',
-  });
-  plugin.symbol('Optional', {
-    external: 'typing',
-  });
-  plugin.symbol('TypeAlias', {
-    external: 'typing',
-  });
-  plugin.symbol('Union', {
-    external: 'typing',
-  });
-
-  // Pydantic
-  plugin.symbol('BaseModel', {
-    external: 'pydantic',
-  });
-  plugin.symbol('ConfigDict', {
-    external: 'pydantic',
-  });
-  plugin.symbol('Field', {
-    external: 'pydantic',
-  });
-  plugin.symbol('dataclass', {
-    external: 'pydantic.dataclasses',
-  });
-
   const processor = createProcessor(plugin);
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {

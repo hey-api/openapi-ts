@@ -1,6 +1,7 @@
 import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from '../../../plugins/@tanstack/query-core/plugin';
+import { tanStackQuerySymbols } from '../query-core/symbols';
 import type { TanStackReactQueryPlugin } from './types';
 
 const defaultMeta = (): Record<string, unknown> => ({});
@@ -82,6 +83,7 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
       plugin.config.queryOptions.exported = false;
     }
   },
+  symbols: tanStackQuerySymbols,
 };
 
 /**

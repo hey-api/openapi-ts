@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
+import type { Symbol } from '@hey-api/codegen-core';
 import type { AnyString } from '@hey-api/types';
 
 import type {
@@ -32,6 +33,10 @@ export type PluginContext = {
     },
   ) => Exclude<T, boolean> | undefined;
   valueToObject: ValueToObject;
+};
+
+export type PluginSymbols = {
+  [key: string]: Symbol | PluginSymbols;
 };
 
 type BaseApi = Record<string, unknown>;
@@ -69,6 +74,10 @@ export namespace Plugin {
      * should be used for validation.
      */
     resolveConfig?: (plugin: Plugin.Stored<T>, context: PluginContext) => void;
+    /**
+     * Symbols this plugin registers at construction time.
+     */
+    symbols?: (plugin: PluginInstance<T>) => T['symbols'];
     /**
      * Tags can be used to help with deciding plugin order and resolving
      * plugin configuration options.
@@ -121,9 +130,11 @@ export namespace Plugin {
     Config extends PluginBaseConfig = PluginBaseConfig,
     ResolvedConfig extends PluginBaseConfig = Config,
     Api extends BaseApi = never,
+    Symbols extends PluginSymbols = Record<never, never>,
   > = ([Api] extends [never] ? { api?: BaseApi } : { api: Api }) & {
     config: Config;
     resolvedConfig: ResolvedConfig;
+    symbols: Symbols;
   };
 }
 
@@ -131,10 +142,13 @@ export type DefinePlugin<
   Config extends PluginBaseConfig = PluginBaseConfig,
   ResolvedConfig extends PluginBaseConfig = Config,
   Api extends BaseApi = never,
+  Symbols extends PluginSymbols = Record<never, never>,
 > = {
-  Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api>>;
-  Handler: (args: { plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>> }) => void;
+  Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api, Symbols>>;
+  Handler: (args: {
+    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api, Symbols>>;
+  }) => void;
   /** The plugin instance. */
-  Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api>>;
-  Types: Plugin.Types<Config, ResolvedConfig, Api>;
+  Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api, Symbols>>;
+  Types: Plugin.Types<Config, ResolvedConfig, Api, Symbols>;
 };
