@@ -94,7 +94,9 @@ interface Params {
   query: Record<string, unknown>;
 }
 
-const stripEmptySlots = (params: Params) => {
+type ParamsSlotMap = Record<Slot, unknown>;
+
+const stripEmptySlots = (params: ParamsSlotMap) => {
   for (const [slot, value] of Object.entries(params)) {
     if (value && typeof value === 'object' && !Array.isArray(value) && !Object.keys(value).length) {
       delete params[slot as Slot];
@@ -103,7 +105,7 @@ const stripEmptySlots = (params: Params) => {
 };
 
 export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsConfig) => {
-  const params: Params = {
+  const params: ParamsSlotMap = {
     body: Object.create(null),
     headers: Object.create(null),
     path: Object.create(null),
@@ -165,5 +167,5 @@ export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsCo
 
   stripEmptySlots(params);
 
-  return params;
+  return params as Params;
 };
