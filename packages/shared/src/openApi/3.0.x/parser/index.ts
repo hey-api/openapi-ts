@@ -11,6 +11,7 @@ import {
 } from '../../../openApi/shared/utils/filter';
 import { buildGraph } from '../../../openApi/shared/utils/graph';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
+import { computeAmbiguousSecurityKeys } from '../../../openApi/shared/utils/security';
 import { handleValidatorResult } from '../../../openApi/shared/utils/validator';
 import { pathToJsonPointer } from '../../../utils/ref';
 import { filterSpec } from './filter';
@@ -105,6 +106,8 @@ export const parseV3_0_X = (context: Context<OpenAPIV3.Document>) => {
     }
   }
 
+  const ambiguousSecurityKeys = computeAmbiguousSecurityKeys(securitySchemesMap);
+
   parseServers({ context });
 
   for (const path in context.spec.paths) {
@@ -123,6 +126,7 @@ export const parseV3_0_X = (context: Context<OpenAPIV3.Document>) => {
     const operationArgs: Omit<Parameters<typeof parsePathOperation>[0], 'method' | 'operation'> & {
       operation: Omit<Parameters<typeof parsePathOperation>[0]['operation'], 'responses'>;
     } = {
+      ambiguousSecurityKeys,
       context,
       operation: {
         description: finalPathItem.description,
