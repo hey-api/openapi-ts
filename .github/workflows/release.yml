@@ -17,6 +17,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
     name: Release
+    if: github.repository == 'hey-api/openapi-ts'
     runs-on: ubuntu-latest
     env:
       CURRENT_BRANCH: ${{ github.ref_name }}
@@ -128,7 +129,7 @@ jobs:
     name: Snapshot Release
     runs-on: ubuntu-latest
     needs: release
-    if: github.ref == 'refs/heads/main'
+    if: github.repository == 'hey-api/openapi-ts' && github.ref == 'refs/heads/main'
     env:
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       TURBO_TELEMETRY_DISABLED: 1

@@ -56,7 +56,7 @@ export function intersectionToAst({
   chain: Chain;
   childResults: Array<ZodResult>;
 } {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
 
   const ctx: IntersectionResolverContext = {
     $,

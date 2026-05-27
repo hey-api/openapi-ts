@@ -1,49 +1,35 @@
-import { definePluginConfig, mappers } from '@hey-api/shared';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { PiniaColadaPlugin } from './types';
 
+const defaultMeta = (): Record<string, unknown> => ({});
+
 export const defaultConfig: PiniaColadaPlugin['Config'] = {
   config: {
+    $cascade: ['case'],
     case: 'camelCase',
     comments: true,
     includeInEntry: false,
+    mutationOptions: {
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}Mutation',
+    },
+    queryKeys: {
+      enabled: true,
+      name: '{{name}}QueryKey',
+      tags: false,
+    },
+    queryOptions: {
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}Query',
+    },
   },
   dependencies: ['@hey-api/typescript', '@hey-api/sdk'],
-  handler: handler as PiniaColadaPlugin['Handler'],
+  handler,
   name: '@pinia/colada',
-  resolveConfig: (plugin, context) => {
-    plugin.config.mutationOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}Mutation',
-      },
-      mappers,
-      value: plugin.config.mutationOptions,
-    });
-
-    plugin.config.queryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}QueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.queryKeys,
-    });
-
-    plugin.config.queryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}Query',
-      },
-      mappers,
-      value: plugin.config.queryOptions,
-    });
-  },
 };
 
 /**

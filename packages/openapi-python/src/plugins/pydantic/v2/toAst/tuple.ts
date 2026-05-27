@@ -8,8 +8,8 @@ import type { FieldConstraints } from '../constants';
 function baseNode(ctx: TupleResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
 
-  const tuple = plugin.external('typing.Tuple');
-  const any = plugin.external('typing.Any');
+  const tuple = plugin.symbols.typing.Tuple;
+  const any = plugin.symbols.typing.Any;
 
   if (!childResults.length) {
     return {

@@ -47,21 +47,19 @@ export class PydanticModelDsl extends Mixed {
 
     if (plugin.config.modelType === 'dataclass') {
       const cls = $.class(this.name)
-        .decorator(plugin.external('pydantic.dataclasses.dataclass'))
+        .decorator(plugin.symbols.dataclass)
         .do(...this._fields.map((f) => f._build()));
       this._dsl = cls;
       return cls;
     }
 
     const cls = $.class(this.name)
-      .extends(plugin.external('pydantic.BaseModel'), ...this._bases)
+      .extends(plugin.symbols.BaseModel, ...this._bases)
       .do(...this._fields.map((f) => f._build()))
       .$if(this._configKwargs.length, (c) =>
         c.do(
           $.var(identifiers.model_config).assign(
-            $(plugin.external('pydantic.ConfigDict')).call(
-              ...this._configKwargs.map(([k, v]) => $.kwarg(k, v)),
-            ),
+            $(plugin.symbols.ConfigDict).call(...this._configKwargs.map(([k, v]) => $.kwarg(k, v))),
           ),
         ),
       );

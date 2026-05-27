@@ -7,31 +7,29 @@ import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: ArrayResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
-  const any = plugin.external('typing.Any');
 
   if (!childResults.length) {
     return {
-      type: $('list').slice(any),
+      type: $('list').slice(plugin.symbols.typing.Any),
     };
   }
 
   if (childResults.length === 1) {
     const itemResult = applyModifiers(childResults[0]!);
     return {
-      type: $('list').slice(itemResult.type ?? any),
+      type: $('list').slice(itemResult.type ?? plugin.symbols.typing.Any),
     };
   }
 
   if (childResults.length > 1) {
-    const union = plugin.external('typing.Union');
-    const itemTypes = childResults.map((r) => applyModifiers(r).type ?? any);
+    const itemTypes = childResults.map((r) => applyModifiers(r).type ?? plugin.symbols.typing.Any);
     return {
-      type: $('list').slice($(union).slice(...itemTypes)),
+      type: $('list').slice($(plugin.symbols.typing.Union).slice(...itemTypes)),
     };
   }
 
   return {
-    type: $('list').slice(any),
+    type: $('list').slice(plugin.symbols.typing.Any),
   };
 }
 
@@ -80,7 +78,7 @@ export function arrayToType(
   ctx: Pick<ArrayResolverContext, 'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'>,
 ): ArrayToTypeResult {
   const { applyModifiers, path, plugin, schema, walk } = ctx;
-  const any = plugin.external('typing.Any');
+  const any = plugin.symbols.typing.Any;
 
   const childResults: Array<PydanticResult> = [];
 

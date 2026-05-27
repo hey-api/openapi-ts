@@ -456,11 +456,11 @@ class Part(BaseModel):
     command: Optional[Optional[str]]
 
 
-Part_2: TypeAlias = Union[TextPart, Part, ReasoningPart, FilePart, ToolPart, StepStartPart, StepFinishPart, SnapshotPart, PatchPart, AgentPart, RetryPart, CompactionPart]
+Part_: TypeAlias = Union[TextPart, Part, ReasoningPart, FilePart, ToolPart, StepStartPart, StepFinishPart, SnapshotPart, PatchPart, AgentPart, RetryPart, CompactionPart]
 
 
 class EventMessagePartUpdatedProperties(BaseModel):
-    part: Part_2
+    part: Part_
     delta: Optional[Optional[str]]
 
 
@@ -521,23 +521,23 @@ class SessionStatus(BaseModel):
     type_: Literal["idle"] = Field(..., alias="type")
 
 
-class SessionStatus_2(BaseModel):
+class SessionStatus_(BaseModel):
     type_: Literal["retry"] = Field(..., alias="type")
     attempt: float
     message: str
     next_: float = Field(..., alias="next")
 
 
-class SessionStatus_3(BaseModel):
+class SessionStatus_2(BaseModel):
     type_: Literal["busy"] = Field(..., alias="type")
 
 
-SessionStatus_4: TypeAlias = Union[SessionStatus, SessionStatus_2, SessionStatus_3]
+SessionStatus_3: TypeAlias = Union[SessionStatus, SessionStatus_, SessionStatus_2]
 
 
 class EventSessionStatusProperties(BaseModel):
     session_id: str = Field(..., alias="sessionID")
-    status: SessionStatus_4
+    status: SessionStatus_3
 
 
 class EventSessionStatus(BaseModel):
@@ -1003,7 +1003,7 @@ class PermissionConfig(BaseModel):
     doom_loop: Optional[Optional[PermissionActionConfig]]
 
 
-PermissionConfig_2: TypeAlias = Union[PermissionConfig, PermissionActionConfig]
+PermissionConfig_: TypeAlias = Union[PermissionConfig, PermissionActionConfig]
 
 
 AgentConfig: TypeAlias = dict[str, Any]
@@ -1254,7 +1254,7 @@ class Config(BaseModel):
     lsp: Optional[Optional[Union[Literal[False], dict[str, Any]]]]
     instructions: Optional[Optional[list[str]]] = Field(default=None, description="Additional instruction files or patterns to include")
     layout: Optional[Optional[LayoutConfig]]
-    permission: Optional[Optional[PermissionConfig_2]]
+    permission: Optional[Optional[PermissionConfig_]]
     tools: Optional[Optional[dict[str, Any]]]
     enterprise: Optional[Optional[ConfigEnterprise]]
     compaction: Optional[Optional[ConfigCompaction]]
