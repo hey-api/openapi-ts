@@ -124,7 +124,7 @@ export function arrayToPipes(
     plugin,
     schema,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
     walk,
   };

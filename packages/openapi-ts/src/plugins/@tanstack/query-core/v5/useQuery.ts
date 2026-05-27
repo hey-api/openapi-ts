@@ -25,7 +25,7 @@ export function createUseQuery({
 
   const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useQuery));
 
-  const symbolUseQuery = plugin.external(`${plugin.name}.useQuery`);
+  const symbolUseQuery = plugin.symbols.useQuery;
 
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,

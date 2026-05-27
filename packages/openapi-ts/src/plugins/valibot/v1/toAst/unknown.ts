@@ -39,7 +39,7 @@ export function unknownToPipes({
     plugin,
     schema: schema ?? { type: 'unknown' },
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
   };
 

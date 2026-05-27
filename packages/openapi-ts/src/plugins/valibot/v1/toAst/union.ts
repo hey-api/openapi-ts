@@ -81,7 +81,7 @@ export function unionToPipes({
     schema: parentSchema,
     schemas,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
   };
 

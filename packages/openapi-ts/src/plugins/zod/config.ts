@@ -3,6 +3,7 @@ import colors from 'ansi-colors';
 
 import { Api } from './api';
 import { handler } from './plugin';
+import { zodSymbols } from './symbols';
 import type { ZodPlugin } from './types';
 
 type CompatibilityVersion = NonNullable<ZodPlugin['Types']['config']['compatibilityVersion']>;
@@ -335,6 +336,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
       plugin.config.compatibilityVersion,
     );
   },
+  symbols: zodSymbols,
   tags: ['transformer', 'validator'],
 };
 

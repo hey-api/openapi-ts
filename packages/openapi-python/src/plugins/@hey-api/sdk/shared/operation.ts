@@ -39,7 +39,7 @@ function schemaToPythonType(
     const itemsSchema = schema.items?.[0];
     const itemType = itemsSchema
       ? schemaToPythonType(itemsSchema, plugin)
-      : plugin.external('typing.Any');
+      : plugin.symbols.typing.Any;
     return $('list').slice(itemType);
   }
 
@@ -48,7 +48,7 @@ function schemaToPythonType(
       const valueType = schemaToPythonType(schema.additionalProperties, plugin);
       return $('dict').slice('str', valueType);
     }
-    return $('dict').slice('str', plugin.external('typing.Any'));
+    return $('dict').slice('str', plugin.symbols.typing.Any);
   }
 
   if (schema.type === 'tuple') {
@@ -60,7 +60,7 @@ function schemaToPythonType(
   }
 
   const builtinType = schema.type ? PYTHON_BUILTIN_TYPES[schema.type] : undefined;
-  return $(builtinType ?? plugin.external('typing.Any'));
+  return $(builtinType ?? plugin.symbols.typing.Any);
 }
 
 export function operationParameters({
@@ -94,7 +94,7 @@ export function operationParameters({
       } else {
         result.parameters.push(
           $.param(paramName)
-            .type($(plugin.external('typing.Union')).slice(type, 'None'))
+            .type($(plugin.symbols.typing.Union).slice(type, 'None'))
             .default('None'),
         );
       }
