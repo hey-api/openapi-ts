@@ -796,7 +796,7 @@ class Tui(Client):
         return Control(client=self.client)
 
 
-class Auth_2(Client):
+class Auth_(Client):
     def set(self):
         """
         Set auth credentials
@@ -900,8 +900,8 @@ class Sdk(Client):
         return Tui(client=self.client)
 
     @cached_property
-    def auth(self) -> Auth_2:
-        return Auth_2(client=self.client)
+    def auth(self) -> Auth_:
+        return Auth_(client=self.client)
 
     @cached_property
     def event(self) -> Event:
