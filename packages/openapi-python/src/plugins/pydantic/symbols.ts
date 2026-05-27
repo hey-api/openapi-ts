@@ -4,8 +4,8 @@ import * as SYMBOLS from '../../symbols';
 
 export function pydanticSymbols(plugin: PluginInstance) {
   return {
+    ...SYMBOLS.PYDANTIC(plugin),
     enum: SYMBOLS.ENUM(plugin),
-    pydantic: SYMBOLS.PYDANTIC(plugin),
     typing: SYMBOLS.TYPING(plugin),
   };
 }

@@ -2,6 +2,8 @@ import type { Casing, FeatureToggle, NameTransformer, NamingOptions } from '@hey
 import type { IR } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
+import type { TanStackQuerySymbols } from '../query-core/symbols';
+
 export type UserConfig = Plugin.Name<'@tanstack/react-query'> &
   Plugin.Hooks &
   Plugin.UserComments &
@@ -616,4 +618,9 @@ export type Config = Plugin.Name<'@tanstack/react-query'> &
     useSetQueryData: NamingOptions & FeatureToggle;
   };
 
-export type TanStackReactQueryPlugin = DefinePlugin<UserConfig, Config>;
+export type TanStackReactQueryPlugin = DefinePlugin<
+  UserConfig,
+  Config,
+  never,
+  TanStackQuerySymbols
+>;

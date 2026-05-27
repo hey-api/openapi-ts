@@ -111,7 +111,7 @@ export class PydanticFieldDsl extends Mixed {
         args.push($.kwarg(k, v));
       }
 
-      stmt.assign($(plugin.symbols.pydantic.Field).call(...args));
+      stmt.assign($(plugin.symbols.Field).call(...args));
     } else if (hasDefault) {
       stmt.assign(literalize(this._default) as string | number);
     } else if (this._optional) {

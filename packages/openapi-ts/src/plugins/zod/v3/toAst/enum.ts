@@ -96,7 +96,7 @@ export function enumToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'enum'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
 
   const ctx: EnumResolverContext = {
     $,
