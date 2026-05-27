@@ -11,6 +11,7 @@ import {
 } from '../../../openApi/shared/utils/filter';
 import { buildGraph } from '../../../openApi/shared/utils/graph';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
+import { computeAmbiguousSecurityKeys } from '../../../openApi/shared/utils/security';
 import { handleValidatorResult } from '../../../openApi/shared/utils/validator';
 import { pathToJsonPointer } from '../../../utils/ref';
 import { filterSpec } from './filter';
@@ -106,6 +107,8 @@ export const parseV3_1_X = (context: Context<OpenAPIV3_1.Document>) => {
     }
   }
 
+  const ambiguousSecurityKeys = computeAmbiguousSecurityKeys(securitySchemesMap);
+
   parseServers({ context });
 
   for (const path in context.spec.paths) {
@@ -122,6 +125,7 @@ export const parseV3_1_X = (context: Context<OpenAPIV3_1.Document>) => {
       : pathItem;
 
     const operationArgs: Omit<Parameters<typeof parsePathOperation>[0], 'method'> = {
+      ambiguousSecurityKeys,
       context,
       operation: {
         description: finalPathItem.description,
@@ -283,5 +287,5 @@ export const parseV3_1_X = (context: Context<OpenAPIV3_1.Document>) => {
     }
   }
 
-  parseWebhooks({ context, securitySchemesMap });
+  parseWebhooks({ ambiguousSecurityKeys, context, securitySchemesMap });
 };

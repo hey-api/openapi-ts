@@ -800,6 +800,20 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'security-http-bearer-duplicate.json',
+        output: 'security-http-bearer-duplicate',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'exposes securitySchemes key on Auth when http schemes collide',
+    },
+    {
+      config: createConfig({
         input: 'security-oauth2.yaml',
         output: 'security-oauth2',
         plugins: [

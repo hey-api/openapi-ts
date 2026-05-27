@@ -212,7 +212,15 @@ export interface IRSchemaObject
     | 'void';
 }
 
-type IRSecurityObject = OpenAPIV3_1.SecuritySchemeObject;
+type IRSecurityObject = OpenAPIV3_1.SecuritySchemeObject & {
+  /**
+   * Name of the entry under `components.securitySchemes` that this security
+   * object came from. Populated only when the spec defines two or more
+   * security schemes whose canonical `Auth` shape would otherwise collide,
+   * so consumers can disambiguate which token to return at runtime.
+   */
+  key?: string;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- Interface rather than type alias avoids TS4023 errors when bundled dist is consumed by tsgo/TypeScript 7
 export interface IRServerObject extends OpenAPIV3_1.ServerObject {}
