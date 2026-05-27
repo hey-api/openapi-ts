@@ -4,7 +4,7 @@ import { fromRef, isRef, ref } from '../refs/refs';
 import type { Ref } from '../refs/types';
 import type { Symbol } from '../symbols/symbol';
 import type { NameScopes, Scope } from './scope';
-import { createScope } from './scope';
+import { createScope, registerChildName } from './scope';
 import type { IAnalysisContext, Input } from './types';
 
 export class AnalysisContext implements IAnalysisContext {
@@ -71,6 +71,18 @@ export class AnalysisContext implements IAnalysisContext {
       this.pushParent(node);
       node.analyze(this);
       this.popParent();
+    }
+  }
+
+  injectChildren(input: Input): void {
+    const value = isRef(input) ? input : ref(input);
+    const symbol = isSymbolRef(value) ? fromRef(value) : undefined;
+    if (!symbol) return;
+
+    for (const child of symbol.children) {
+      if (!child.overridable) {
+        registerChildName(this.scope, child.name, child.kind);
+      }
     }
   }
 

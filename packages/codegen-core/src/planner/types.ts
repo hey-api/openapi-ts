@@ -4,13 +4,20 @@ import type { NameScopes, Scope } from './scope';
 
 export type Input = Ref<object> | object | string | number | undefined;
 
-export type NameConflictResolver = (args: { attempt: number; baseName: string }) => string | null;
+export type NameConflictResolver = (args: {
+  /** The current attempt number for generating a unique name. Starts at 1. */
+  attempt: number;
+  /** The base name to resolve conflicts for. */
+  baseName: string;
+}) => string | null;
 
 export interface IAnalysisContext {
   /** Register a dependency on another symbol. */
   addDependency(symbol: Ref<Symbol>): void;
   /** Register a dependency on another symbol or analyze further. */
   analyze(input: Input): void;
+  /** Inject children symbols into the current scope. */
+  injectChildren(input: Input): void;
   /** Get local names in the current scope. */
   localNames(scope: Scope): NameScopes;
   /** Pop the current local scope. */

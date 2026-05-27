@@ -3,7 +3,7 @@ import type { ISymbolMeta } from '../extensions';
 import type { File } from '../files/file';
 import { log } from '../log';
 import type { INode } from '../nodes/node';
-import type { BindingKind, ISymbolIn, SymbolKind } from './types';
+import type { BindingKind, ISymbolChild, ISymbolIn, SymbolKind } from './types';
 
 export class Symbol<Node extends INode = INode> {
   /**
@@ -14,6 +14,12 @@ export class Symbol<Node extends INode = INode> {
    * should defer to the canonical symbol.
    */
   private _canonical?: Symbol;
+  /**
+   * Child symbol bindings scoped under this symbol.
+   *
+   * @default []
+   */
+  private _children: Array<ISymbolChild>;
   /**
    * True if this symbol is exported from its defining file.
    *
@@ -77,6 +83,12 @@ export class Symbol<Node extends INode = INode> {
    * Node that defines this symbol.
    */
   private _node?: Node;
+  /**
+   * Indicates whether this symbol overrides another declaration.
+   *
+   * @default false
+   */
+  private _override: boolean;
 
   /** Brand used for identifying symbols. */
   readonly '~brand' = symbolBrand;
@@ -84,6 +96,7 @@ export class Symbol<Node extends INode = INode> {
   readonly id: number;
 
   constructor(input: ISymbolIn, id: number) {
+    this._children = input.children ?? [];
     this._exported = input.exported ?? false;
     this._external = input.external;
     this._getExportFromFilePath = input.getExportFromFilePath;
@@ -93,6 +106,7 @@ export class Symbol<Node extends INode = INode> {
     this._kind = input.kind ?? 'var';
     this._meta = input.meta;
     this._name = input.name;
+    this._override = input.override ?? false;
   }
 
   /**
@@ -104,6 +118,13 @@ export class Symbol<Node extends INode = INode> {
    */
   get canonical(): Symbol {
     return this._canonical ?? this;
+  }
+
+  /**
+   * Read-only accessor for child symbol bindings.
+   */
+  get children(): ReadonlyArray<ISymbolChild> {
+    return this.canonical._children;
   }
 
   /**
@@ -198,6 +219,13 @@ export class Symbol<Node extends INode = INode> {
   }
 
   /**
+   * Indicates whether this symbol is marked as an override.
+   */
+  get override(): boolean {
+    return this.canonical._override;
+  }
+
+  /**
    * Marks this symbol as a stub and assigns its canonical symbol.
    *
    * After calling this, all semantic queries (name, kind, file,
@@ -207,6 +235,16 @@ export class Symbol<Node extends INode = INode> {
    */
   setCanonical(symbol: Symbol): void {
     this._canonical = symbol;
+  }
+
+  /**
+   * Assigns the child symbol bindings associated with this symbol.
+   *
+   * @param children — Child bindings to associate with the symbol.
+   */
+  setChildren(children: Array<ISymbolChild>): void {
+    this.assertCanonical();
+    this._children = children;
   }
 
   /**
@@ -295,6 +333,16 @@ export class Symbol<Node extends INode = INode> {
     }
     this._node = node;
     node.symbol = this;
+  }
+
+  /**
+   * Marks whether this symbol should be treated as an override.
+   *
+   * @param override — Override marker value.
+   */
+  setOverride(override: boolean): void {
+    this.assertCanonical();
+    this._override = override;
   }
 
   /**
