@@ -10,7 +10,7 @@ function constNode(ctx: StringResolverContext): PydanticType | undefined {
   const { plugin, schema } = ctx;
 
   if (typeof schema.const === 'string') {
-    const literal = plugin.external('typing.Literal');
+    const literal = plugin.symbols.typing.Literal;
     return {
       type: $(literal).slice($.literal(schema.const)),
     };

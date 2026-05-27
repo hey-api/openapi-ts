@@ -28,8 +28,8 @@ export class PydTypeAliasPyDsl extends Mixed {
     const { plugin } = this;
 
     this._dsl = $.var(this.name)
-      .type(plugin.external('typing.TypeAlias'))
-      .assign(this.aliased ?? plugin.external('typing.Any'));
+      .type(plugin.symbols.typing.TypeAlias)
+      .assign(this.aliased ?? plugin.symbols.typing.Any);
 
     return this._dsl;
   }
