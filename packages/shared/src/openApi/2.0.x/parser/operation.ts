@@ -13,13 +13,13 @@ interface Operation
   requestBody?: OpenAPIV2.OperationObject['parameters'];
 }
 
-const parseOperationJsDoc = ({
+function parseOperationJsDoc({
   irOperation,
   operation,
 }: {
   irOperation: IR.OperationObject;
   operation: Operation;
-}) => {
+}) {
   if (operation.deprecated !== undefined) {
     irOperation.deprecated = operation.deprecated;
   }
@@ -35,9 +35,9 @@ const parseOperationJsDoc = ({
   if (operation.tags?.length) {
     irOperation.tags = operation.tags;
   }
-};
+}
 
-const initIrOperation = ({
+function initIrOperation({
   context,
   method,
   operation,
@@ -47,7 +47,7 @@ const initIrOperation = ({
   context: Context;
   operation: Operation;
   state: State;
-}): IR.OperationObject => {
+}): IR.OperationObject {
   const irOperation: IR.OperationObject = {
     id: operationToId({
       context,
@@ -75,9 +75,9 @@ const initIrOperation = ({
   });
 
   return irOperation;
-};
+}
 
-const operationToIrOperation = ({
+function operationToIrOperation({
   ambiguousSecurityKeys,
   context,
   method,
@@ -91,7 +91,7 @@ const operationToIrOperation = ({
   operation: Operation;
   securitySchemesMap: Map<string, OpenAPIV2.SecuritySchemeObject>;
   state: State;
-}): IR.OperationObject => {
+}): IR.OperationObject {
   const irOperation = initIrOperation({
     context,
     method,
@@ -338,7 +338,7 @@ const operationToIrOperation = ({
         }
 
         if (ambiguousSecurityKeys.has(name)) {
-          irSecuritySchemeObject = { ...irSecuritySchemeObject, key: name };
+          irSecuritySchemeObject.key = name;
         }
 
         securitySchemeObjects.set(name, irSecuritySchemeObject);
@@ -354,9 +354,9 @@ const operationToIrOperation = ({
   // qux: operation.servers
 
   return irOperation;
-};
+}
 
-export const parsePathOperation = ({
+export function parsePathOperation({
   ambiguousSecurityKeys,
   context,
   method,
@@ -375,7 +375,7 @@ export const parsePathOperation = ({
   path: keyof IR.PathsObject;
   securitySchemesMap: Map<string, OpenAPIV2.SecuritySchemeObject>;
   state: State;
-}) => {
+}) {
   if (!context.ir.paths) {
     context.ir.paths = {};
   }
@@ -393,4 +393,4 @@ export const parsePathOperation = ({
     securitySchemesMap,
     state,
   });
-};
+}

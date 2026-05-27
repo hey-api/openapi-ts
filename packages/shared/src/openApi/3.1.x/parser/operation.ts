@@ -12,13 +12,13 @@ import { parseExtensions, schemaToIrSchema } from './schema';
 export interface Operation
   extends Omit<OpenAPIV3_1.OperationObject, 'parameters'>, Pick<IR.OperationObject, 'parameters'> {}
 
-const parseOperationJsDoc = ({
+function parseOperationJsDoc({
   irOperation,
   operation,
 }: {
   irOperation: IR.OperationObject;
   operation: Operation;
-}) => {
+}) {
   if (operation.deprecated !== undefined) {
     irOperation.deprecated = operation.deprecated;
   }
@@ -34,9 +34,9 @@ const parseOperationJsDoc = ({
   if (operation.tags?.length) {
     irOperation.tags = operation.tags;
   }
-};
+}
 
-const initIrOperation = ({
+function initIrOperation({
   context,
   method,
   operation,
@@ -46,7 +46,7 @@ const initIrOperation = ({
   context: Context;
   operation: Operation;
   state: State;
-}): IR.OperationObject => {
+}): IR.OperationObject {
   const irOperation: IR.OperationObject = {
     id: operationToId({
       context,
@@ -74,9 +74,9 @@ const initIrOperation = ({
   });
 
   return irOperation;
-};
+}
 
-const operationToIrOperation = ({
+function operationToIrOperation({
   ambiguousSecurityKeys,
   context,
   method,
@@ -90,7 +90,7 @@ const operationToIrOperation = ({
   operation: Operation;
   securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
   state: State;
-}): IR.OperationObject => {
+}): IR.OperationObject {
   const irOperation = initIrOperation({
     context,
     method,
@@ -199,10 +199,10 @@ const operationToIrOperation = ({
           continue;
         }
 
-        const irSecurityObject: IR.SecurityObject = ambiguousSecurityKeys.has(name)
-          ? { ...securitySchemeObject, key: name }
-          : securitySchemeObject;
-        securitySchemeObjects.set(name, irSecurityObject);
+        if (ambiguousSecurityKeys.has(name)) {
+          (securitySchemeObject as IR.SecurityObject).key = name;
+        }
+        securitySchemeObjects.set(name, securitySchemeObject);
       }
     }
 
@@ -215,9 +215,9 @@ const operationToIrOperation = ({
   // qux: operation.servers
 
   return irOperation;
-};
+}
 
-const parseOperationObject = ({
+function parseOperationObject({
   ambiguousSecurityKeys,
   context,
   method,
@@ -233,7 +233,7 @@ const parseOperationObject = ({
   path: keyof IR.PathsObject;
   securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
   state: State;
-}) => {
+}) {
   if (operation.servers) {
     context.ir.servers = [...(context.ir.servers ?? []), ...operation.servers];
   }
@@ -249,9 +249,9 @@ const parseOperationObject = ({
   });
 
   return { parsed };
-};
+}
 
-export const parsePathOperation = ({
+export function parsePathOperation({
   context,
   method,
   path,
@@ -264,7 +264,7 @@ export const parsePathOperation = ({
   path: keyof IR.PathsObject;
   securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
   state: State;
-}) => {
+}) {
   if (!context.ir.paths) {
     context.ir.paths = {};
   }
@@ -281,9 +281,9 @@ export const parsePathOperation = ({
   });
 
   context.ir.paths[path][method] = parsed;
-};
+}
 
-export const parseWebhookOperation = ({
+export function parseWebhookOperation({
   context,
   key,
   method,
@@ -296,7 +296,7 @@ export const parseWebhookOperation = ({
   operation: Operation;
   securitySchemesMap: Map<string, OpenAPIV3_1.SecuritySchemeObject>;
   state: State;
-}) => {
+}) {
   if (!context.ir.webhooks) {
     context.ir.webhooks = {};
   }
@@ -313,4 +313,4 @@ export const parseWebhookOperation = ({
   });
 
   context.ir.webhooks[key][method] = parsed;
-};
+}
