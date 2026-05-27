@@ -4,6 +4,7 @@ import type { PluginClientNames } from '../../types';
 // import type { PluginClientNames, PluginValidatorNames } from '../../types';
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
+import type { SdkSymbols } from './symbols';
 
 export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
   Plugin.Hooks &
@@ -211,4 +212,4 @@ export type Config = Plugin.Name<'@hey-api/python-sdk'> &
     // };
   };
 
-export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config>;
+export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config, never, SdkSymbols>;

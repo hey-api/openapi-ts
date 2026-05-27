@@ -125,7 +125,7 @@ export function arrayToAst({
   const childResults: Array<ZodResult> = [];
   let schemaCopy = schema;
 
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
 
   if (schemaCopy.items) {
     schemaCopy = deduplicateSchema({ schema: schemaCopy });

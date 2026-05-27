@@ -26,7 +26,7 @@ export function createUseSetQueryData({
     operation,
   });
 
-  const symbolUseQueryClient = plugin.external(`${plugin.name}.useQueryClient`);
+  const symbolUseQueryClient = plugin.symbols.useQueryClient;
   const symbolQueryOptionsFn = plugin.referenceSymbol({
     category: 'hook',
     resource: 'operation',

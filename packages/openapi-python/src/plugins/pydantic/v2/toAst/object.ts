@@ -58,7 +58,7 @@ function baseNode(ctx: ObjectResolverContext): PydanticType & { fields?: Array<P
   }
 
   if (additional) {
-    const any = ctx.plugin.external('typing.Any');
+    const any = ctx.plugin.symbols.typing.Any;
     if (!ctx.schema.properties) {
       return { type: $('dict').slice('str', any) };
     }
@@ -71,7 +71,7 @@ function baseNode(ctx: ObjectResolverContext): PydanticType & { fields?: Array<P
     return { fields };
   }
 
-  const any = ctx.plugin.external('typing.Any');
+  const any = ctx.plugin.symbols.typing.Any;
   return { type: $('dict').slice('str', any) };
 }
 

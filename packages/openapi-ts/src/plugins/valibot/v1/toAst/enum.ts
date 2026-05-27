@@ -77,7 +77,7 @@ export function enumToPipes({
 }: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'enum'>;
 }): Pipe {
-  const v = plugin.external('valibot.v');
+  const v = plugin.symbols.v;
 
   const resolverCtx: EnumResolverContext = {
     $,

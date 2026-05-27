@@ -30,17 +30,14 @@ function baseNode(ctx: UnionResolverContext): PydanticType {
     return finalResult;
   }
 
-  const union = plugin.external('typing.Union');
-  const itemTypes = nonNullResults.map(
-    (r) => applyModifiers(r).type ?? plugin.external('typing.Any'),
-  );
+  const itemTypes = nonNullResults.map((r) => applyModifiers(r).type ?? plugin.symbols.typing.Any);
 
   if (isNullable) {
     itemTypes.push('None');
   }
 
   return {
-    type: $(union).slice(...itemTypes),
+    type: $(plugin.symbols.typing.Union).slice(...itemTypes),
   };
 }
 

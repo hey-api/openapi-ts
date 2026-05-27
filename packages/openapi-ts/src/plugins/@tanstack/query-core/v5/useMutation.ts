@@ -19,11 +19,11 @@ export function createUseMutation({
 
   const symbolUseMutationFn = plugin.symbol(applyNaming(operation.id, plugin.config.useMutation));
 
-  const symbolUseMutation = plugin.external(`${plugin.name}.useMutation`);
+  const symbolUseMutation = plugin.symbols.useMutation;
 
   const typeData = useTypeData({ operation, plugin });
 
-  const symbolMutationOptionsType = plugin.external(`${plugin.name}.MutationOptions`);
+  const symbolMutationOptionsType = plugin.symbols.MutationOptions;
   const mutationType = $.type(symbolMutationOptionsType)
     .generic(useTypeResponse({ operation, plugin }))
     .generic(useTypeError({ operation, plugin }))
