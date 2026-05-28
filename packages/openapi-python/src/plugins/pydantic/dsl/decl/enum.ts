@@ -43,7 +43,7 @@ export class PydanticEnumDsl extends Mixed {
     cls.extends(plugin.symbols.enum.Enum);
 
     for (const m of this.members) {
-      cls.do($.var(m.name).assign($.literal(m.value)));
+      cls.do($.field(m.name).assign($.literal(m.value)));
     }
 
     this._dsl = cls;
