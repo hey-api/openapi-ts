@@ -10,7 +10,7 @@ class EventInstallationUpdatedProperties(BaseModel):
 
 
 class EventInstallationUpdated(BaseModel):
-    type_: Literal["installation.updated"] = Field(..., alias="type")
+    type: Literal["installation.updated"]
     properties: EventInstallationUpdatedProperties
 
 
@@ -19,7 +19,7 @@ class EventInstallationUpdateAvailableProperties(BaseModel):
 
 
 class EventInstallationUpdateAvailable(BaseModel):
-    type_: Literal["installation.update-available"] = Field(..., alias="type")
+    type: Literal["installation.update-available"]
     properties: EventInstallationUpdateAvailableProperties
 
 
@@ -35,7 +35,7 @@ class ProjectTime(BaseModel):
 
 
 class Project(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     worktree: str
     vcs: Optional[Optional[Literal["git"]]]
     name: Optional[Optional[str]]
@@ -44,7 +44,7 @@ class Project(BaseModel):
 
 
 class EventProjectUpdated(BaseModel):
-    type_: Literal["project.updated"] = Field(..., alias="type")
+    type: Literal["project.updated"]
     properties: Project
 
 
@@ -53,7 +53,7 @@ class EventServerInstanceDisposedProperties(BaseModel):
 
 
 class EventServerInstanceDisposed(BaseModel):
-    type_: Literal["server.instance.disposed"] = Field(..., alias="type")
+    type: Literal["server.instance.disposed"]
     properties: EventServerInstanceDisposedProperties
 
 
@@ -63,12 +63,12 @@ class EventLspClientDiagnosticsProperties(BaseModel):
 
 
 class EventLspClientDiagnostics(BaseModel):
-    type_: Literal["lsp.client.diagnostics"] = Field(..., alias="type")
+    type: Literal["lsp.client.diagnostics"]
     properties: EventLspClientDiagnosticsProperties
 
 
 class EventLspUpdated(BaseModel):
-    type_: Literal["lsp.updated"] = Field(..., alias="type")
+    type: Literal["lsp.updated"]
     properties: dict[str, Any]
 
 
@@ -96,7 +96,7 @@ class UserMessageModel(BaseModel):
 
 
 class UserMessage(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     role: Literal["user"]
     time: UserMessageTime
@@ -171,14 +171,14 @@ class AssistantMessageTokensCache(BaseModel):
 
 
 class AssistantMessageTokens(BaseModel):
-    input_: float = Field(..., alias="input")
+    input: float
     output: float
     reasoning: float
     cache: AssistantMessageTokensCache
 
 
 class AssistantMessage(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     role: Literal["assistant"]
     time: AssistantMessageTime
@@ -203,7 +203,7 @@ class EventMessageUpdatedProperties(BaseModel):
 
 
 class EventMessageUpdated(BaseModel):
-    type_: Literal["message.updated"] = Field(..., alias="type")
+    type: Literal["message.updated"]
     properties: EventMessageUpdatedProperties
 
 
@@ -213,7 +213,7 @@ class EventMessageRemovedProperties(BaseModel):
 
 
 class EventMessageRemoved(BaseModel):
-    type_: Literal["message.removed"] = Field(..., alias="type")
+    type: Literal["message.removed"]
     properties: EventMessageRemovedProperties
 
 
@@ -223,10 +223,10 @@ class TextPartTime(BaseModel):
 
 
 class TextPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["text"] = Field(..., alias="type")
+    type: Literal["text"]
     text: str
     synthetic: Optional[Optional[bool]]
     ignored: Optional[Optional[bool]]
@@ -240,10 +240,10 @@ class ReasoningPartTime(BaseModel):
 
 
 class ReasoningPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["reasoning"] = Field(..., alias="type")
+    type: Literal["reasoning"]
     text: str
     metadata: Optional[Optional[dict[str, Any]]]
     time: ReasoningPartTime
@@ -257,7 +257,7 @@ class FilePartSourceText(BaseModel):
 
 class FileSource(BaseModel):
     text: FilePartSourceText
-    type_: Literal["file"] = Field(..., alias="type")
+    type: Literal["file"]
     path: str
 
 
@@ -278,9 +278,9 @@ class Range(BaseModel):
 
 class SymbolSource(BaseModel):
     text: FilePartSourceText
-    type_: Literal["symbol"] = Field(..., alias="type")
+    type: Literal["symbol"]
     path: str
-    range_: Range = Field(..., alias="range")
+    range: Range
     name: str
     kind: int = Field(..., ge=-9007199254740991, le=9007199254740991)
 
@@ -289,10 +289,10 @@ FilePartSource: TypeAlias = Union[FileSource, SymbolSource]
 
 
 class FilePart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["file"] = Field(..., alias="type")
+    type: Literal["file"]
     mime: str
     filename: Optional[Optional[str]]
     url: str
@@ -301,7 +301,7 @@ class FilePart(BaseModel):
 
 class ToolStatePending(BaseModel):
     status: Literal["pending"]
-    input_: dict[str, Any] = Field(..., alias="input")
+    input: dict[str, Any]
     raw: str
 
 
@@ -311,7 +311,7 @@ class ToolStateRunningTime(BaseModel):
 
 class ToolStateRunning(BaseModel):
     status: Literal["running"]
-    input_: dict[str, Any] = Field(..., alias="input")
+    input: dict[str, Any]
     title: Optional[Optional[str]]
     metadata: Optional[Optional[dict[str, Any]]]
     time: ToolStateRunningTime
@@ -325,7 +325,7 @@ class ToolStateCompletedTime(BaseModel):
 
 class ToolStateCompleted(BaseModel):
     status: Literal["completed"]
-    input_: dict[str, Any] = Field(..., alias="input")
+    input: dict[str, Any]
     output: str
     title: str
     metadata: dict[str, Any]
@@ -340,7 +340,7 @@ class ToolStateErrorTime(BaseModel):
 
 class ToolStateError(BaseModel):
     status: Literal["error"]
-    input_: dict[str, Any] = Field(..., alias="input")
+    input: dict[str, Any]
     error: str
     metadata: Optional[Optional[dict[str, Any]]]
     time: ToolStateErrorTime
@@ -350,10 +350,10 @@ ToolState: TypeAlias = Union[ToolStatePending, ToolStateRunning, ToolStateComple
 
 
 class ToolPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["tool"] = Field(..., alias="type")
+    type: Literal["tool"]
     call_id: str = Field(..., alias="callID")
     tool: str
     state: ToolState
@@ -361,10 +361,10 @@ class ToolPart(BaseModel):
 
 
 class StepStartPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["step-start"] = Field(..., alias="type")
+    type: Literal["step-start"]
     snapshot: Optional[Optional[str]]
 
 
@@ -374,17 +374,17 @@ class StepFinishPartTokensCache(BaseModel):
 
 
 class StepFinishPartTokens(BaseModel):
-    input_: float = Field(..., alias="input")
+    input: float
     output: float
     reasoning: float
     cache: StepFinishPartTokensCache
 
 
 class StepFinishPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["step-finish"] = Field(..., alias="type")
+    type: Literal["step-finish"]
     reason: str
     snapshot: Optional[Optional[str]]
     cost: float
@@ -392,19 +392,19 @@ class StepFinishPart(BaseModel):
 
 
 class SnapshotPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["snapshot"] = Field(..., alias="type")
+    type: Literal["snapshot"]
     snapshot: str
 
 
 class PatchPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["patch"] = Field(..., alias="type")
-    hash_: str = Field(..., alias="hash")
+    type: Literal["patch"]
+    hash: str
     files: list[str]
 
 
@@ -415,10 +415,10 @@ class AgentPartSource(BaseModel):
 
 
 class AgentPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["agent"] = Field(..., alias="type")
+    type: Literal["agent"]
     name: str
     source: Optional[Optional[AgentPartSource]]
 
@@ -428,28 +428,28 @@ class RetryPartTime(BaseModel):
 
 
 class RetryPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["retry"] = Field(..., alias="type")
+    type: Literal["retry"]
     attempt: float
     error: ApiError
     time: RetryPartTime
 
 
 class CompactionPart(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["compaction"] = Field(..., alias="type")
+    type: Literal["compaction"]
     auto: bool
 
 
 class Part(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     session_id: str = Field(..., alias="sessionID")
     message_id: str = Field(..., alias="messageID")
-    type_: Literal["subtask"] = Field(..., alias="type")
+    type: Literal["subtask"]
     prompt: str
     description: str
     agent: str
@@ -465,7 +465,7 @@ class EventMessagePartUpdatedProperties(BaseModel):
 
 
 class EventMessagePartUpdated(BaseModel):
-    type_: Literal["message.part.updated"] = Field(..., alias="type")
+    type: Literal["message.part.updated"]
     properties: EventMessagePartUpdatedProperties
 
 
@@ -476,7 +476,7 @@ class EventMessagePartRemovedProperties(BaseModel):
 
 
 class EventMessagePartRemoved(BaseModel):
-    type_: Literal["message.part.removed"] = Field(..., alias="type")
+    type: Literal["message.part.removed"]
     properties: EventMessagePartRemovedProperties
 
 
@@ -486,7 +486,7 @@ class PermissionRequestTool(BaseModel):
 
 
 class PermissionRequest(BaseModel):
-    id_: str = Field(..., alias="id", pattern="^per.*")
+    id: str = Field(..., pattern="^per.*")
     session_id: str = Field(..., alias="sessionID", pattern="^ses.*")
     permission: str
     patterns: list[str]
@@ -496,7 +496,7 @@ class PermissionRequest(BaseModel):
 
 
 class EventPermissionAsked(BaseModel):
-    type_: Literal["permission.asked"] = Field(..., alias="type")
+    type: Literal["permission.asked"]
     properties: PermissionRequest
 
 
@@ -513,23 +513,23 @@ class EventPermissionRepliedProperties(BaseModel):
 
 
 class EventPermissionReplied(BaseModel):
-    type_: Literal["permission.replied"] = Field(..., alias="type")
+    type: Literal["permission.replied"]
     properties: EventPermissionRepliedProperties
 
 
 class SessionStatus(BaseModel):
-    type_: Literal["idle"] = Field(..., alias="type")
+    type: Literal["idle"]
 
 
 class SessionStatus_(BaseModel):
-    type_: Literal["retry"] = Field(..., alias="type")
+    type: Literal["retry"]
     attempt: float
     message: str
-    next_: float = Field(..., alias="next")
+    next: float
 
 
 class SessionStatus_2(BaseModel):
-    type_: Literal["busy"] = Field(..., alias="type")
+    type: Literal["busy"]
 
 
 SessionStatus_3: TypeAlias = Union[SessionStatus, SessionStatus_, SessionStatus_2]
@@ -541,7 +541,7 @@ class EventSessionStatusProperties(BaseModel):
 
 
 class EventSessionStatus(BaseModel):
-    type_: Literal["session.status"] = Field(..., alias="type")
+    type: Literal["session.status"]
     properties: EventSessionStatusProperties
 
 
@@ -550,7 +550,7 @@ class EventSessionIdleProperties(BaseModel):
 
 
 class EventSessionIdle(BaseModel):
-    type_: Literal["session.idle"] = Field(..., alias="type")
+    type: Literal["session.idle"]
     properties: EventSessionIdleProperties
 
 
@@ -559,7 +559,7 @@ class EventSessionCompactedProperties(BaseModel):
 
 
 class EventSessionCompacted(BaseModel):
-    type_: Literal["session.compacted"] = Field(..., alias="type")
+    type: Literal["session.compacted"]
     properties: EventSessionCompactedProperties
 
 
@@ -568,7 +568,7 @@ class EventFileEditedProperties(BaseModel):
 
 
 class EventFileEdited(BaseModel):
-    type_: Literal["file.edited"] = Field(..., alias="type")
+    type: Literal["file.edited"]
     properties: EventFileEditedProperties
 
 
@@ -576,7 +576,7 @@ class Todo(BaseModel):
     content: str = Field(..., description="Brief description of the task")
     status: str = Field(..., description="Current status of the task: pending, in_progress, completed, cancelled")
     priority: str = Field(..., description="Priority level of the task: high, medium, low")
-    id_: str = Field(..., alias="id", description="Unique identifier for the todo item")
+    id: str = Field(..., description="Unique identifier for the todo item")
 
 
 class EventTodoUpdatedProperties(BaseModel):
@@ -585,7 +585,7 @@ class EventTodoUpdatedProperties(BaseModel):
 
 
 class EventTodoUpdated(BaseModel):
-    type_: Literal["todo.updated"] = Field(..., alias="type")
+    type: Literal["todo.updated"]
     properties: EventTodoUpdatedProperties
 
 
@@ -594,7 +594,7 @@ class EventTuiPromptAppendProperties(BaseModel):
 
 
 class EventTuiPromptAppend(BaseModel):
-    type_: Literal["tui.prompt.append"] = Field(..., alias="type")
+    type: Literal["tui.prompt.append"]
     properties: EventTuiPromptAppendProperties
 
 
@@ -620,7 +620,7 @@ class EventTuiCommandExecuteProperties(BaseModel):
 
 
 class EventTuiCommandExecute(BaseModel):
-    type_: Literal["tui.command.execute"] = Field(..., alias="type")
+    type: Literal["tui.command.execute"]
     properties: EventTuiCommandExecuteProperties
 
 
@@ -639,7 +639,7 @@ class EventTuiToastShowProperties(BaseModel):
 
 
 class EventTuiToastShow(BaseModel):
-    type_: Literal["tui.toast.show"] = Field(..., alias="type")
+    type: Literal["tui.toast.show"]
     properties: EventTuiToastShowProperties
 
 
@@ -648,7 +648,7 @@ class EventMcpToolsChangedProperties(BaseModel):
 
 
 class EventMcpToolsChanged(BaseModel):
-    type_: Literal["mcp.tools.changed"] = Field(..., alias="type")
+    type: Literal["mcp.tools.changed"]
     properties: EventMcpToolsChangedProperties
 
 
@@ -660,7 +660,7 @@ class EventCommandExecutedProperties(BaseModel):
 
 
 class EventCommandExecuted(BaseModel):
-    type_: Literal["command.executed"] = Field(..., alias="type")
+    type: Literal["command.executed"]
     properties: EventCommandExecutedProperties
 
 
@@ -705,7 +705,7 @@ class SessionRevert(BaseModel):
 
 
 class Session(BaseModel):
-    id_: str = Field(..., alias="id", pattern="^ses.*")
+    id: str = Field(..., pattern="^ses.*")
     project_id: str = Field(..., alias="projectID")
     directory: str
     parent_id: Optional[Optional[str]] = Field(default=None, alias="parentID", pattern="^ses.*")
@@ -723,7 +723,7 @@ class EventSessionCreatedProperties(BaseModel):
 
 
 class EventSessionCreated(BaseModel):
-    type_: Literal["session.created"] = Field(..., alias="type")
+    type: Literal["session.created"]
     properties: EventSessionCreatedProperties
 
 
@@ -732,7 +732,7 @@ class EventSessionUpdatedProperties(BaseModel):
 
 
 class EventSessionUpdated(BaseModel):
-    type_: Literal["session.updated"] = Field(..., alias="type")
+    type: Literal["session.updated"]
     properties: EventSessionUpdatedProperties
 
 
@@ -741,7 +741,7 @@ class EventSessionDeletedProperties(BaseModel):
 
 
 class EventSessionDeleted(BaseModel):
-    type_: Literal["session.deleted"] = Field(..., alias="type")
+    type: Literal["session.deleted"]
     properties: EventSessionDeletedProperties
 
 
@@ -751,7 +751,7 @@ class EventSessionDiffProperties(BaseModel):
 
 
 class EventSessionDiff(BaseModel):
-    type_: Literal["session.diff"] = Field(..., alias="type")
+    type: Literal["session.diff"]
     properties: EventSessionDiffProperties
 
 
@@ -761,7 +761,7 @@ class EventSessionErrorProperties(BaseModel):
 
 
 class EventSessionError(BaseModel):
-    type_: Literal["session.error"] = Field(..., alias="type")
+    type: Literal["session.error"]
     properties: EventSessionErrorProperties
 
 
@@ -771,7 +771,7 @@ class EventFileWatcherUpdatedProperties(BaseModel):
 
 
 class EventFileWatcherUpdated(BaseModel):
-    type_: Literal["file.watcher.updated"] = Field(..., alias="type")
+    type: Literal["file.watcher.updated"]
     properties: EventFileWatcherUpdatedProperties
 
 
@@ -780,7 +780,7 @@ class EventVcsBranchUpdatedProperties(BaseModel):
 
 
 class EventVcsBranchUpdated(BaseModel):
-    type_: Literal["vcs.branch.updated"] = Field(..., alias="type")
+    type: Literal["vcs.branch.updated"]
     properties: EventVcsBranchUpdatedProperties
 
 
@@ -790,7 +790,7 @@ class PtyStatus(str, Enum):
 
 
 class Pty(BaseModel):
-    id_: str = Field(..., alias="id", pattern="^pty.*")
+    id: str = Field(..., pattern="^pty.*")
     title: str
     command: str
     args: list[str]
@@ -804,7 +804,7 @@ class EventPtyCreatedProperties(BaseModel):
 
 
 class EventPtyCreated(BaseModel):
-    type_: Literal["pty.created"] = Field(..., alias="type")
+    type: Literal["pty.created"]
     properties: EventPtyCreatedProperties
 
 
@@ -813,36 +813,36 @@ class EventPtyUpdatedProperties(BaseModel):
 
 
 class EventPtyUpdated(BaseModel):
-    type_: Literal["pty.updated"] = Field(..., alias="type")
+    type: Literal["pty.updated"]
     properties: EventPtyUpdatedProperties
 
 
 class EventPtyExitedProperties(BaseModel):
-    id_: str = Field(..., alias="id", pattern="^pty.*")
+    id: str = Field(..., pattern="^pty.*")
     exit_code: float = Field(..., alias="exitCode")
 
 
 class EventPtyExited(BaseModel):
-    type_: Literal["pty.exited"] = Field(..., alias="type")
+    type: Literal["pty.exited"]
     properties: EventPtyExitedProperties
 
 
 class EventPtyDeletedProperties(BaseModel):
-    id_: str = Field(..., alias="id", pattern="^pty.*")
+    id: str = Field(..., pattern="^pty.*")
 
 
 class EventPtyDeleted(BaseModel):
-    type_: Literal["pty.deleted"] = Field(..., alias="type")
+    type: Literal["pty.deleted"]
     properties: EventPtyDeletedProperties
 
 
 class EventServerConnected(BaseModel):
-    type_: Literal["server.connected"] = Field(..., alias="type")
+    type: Literal["server.connected"]
     properties: dict[str, Any]
 
 
 class EventGlobalDisposed(BaseModel):
-    type_: Literal["global.disposed"] = Field(..., alias="type")
+    type: Literal["global.disposed"]
     properties: dict[str, Any]
 
 
@@ -990,7 +990,7 @@ class PermissionConfig(BaseModel):
     edit: Optional[Optional[PermissionRuleConfig]]
     glob: Optional[Optional[PermissionRuleConfig]]
     grep: Optional[Optional[PermissionRuleConfig]]
-    list_: Optional[Optional[PermissionRuleConfig]] = Field(default=None, alias="list")
+    list: Optional[Optional[PermissionRuleConfig]]
     bash: Optional[Optional[PermissionRuleConfig]]
     task: Optional[Optional[PermissionRuleConfig]]
     external_directory: Optional[Optional[PermissionRuleConfig]]
@@ -1019,14 +1019,14 @@ class ProviderConfigModelsValueInterleaved(BaseModel):
 
 
 class ProviderConfigModelsValueCostContextOver200k(BaseModel):
-    input_: float = Field(..., alias="input")
+    input: float
     output: float
     cache_read: Optional[Optional[float]]
     cache_write: Optional[Optional[float]]
 
 
 class ProviderConfigModelsValueCost(BaseModel):
-    input_: float = Field(..., alias="input")
+    input: float
     output: float
     cache_read: Optional[Optional[float]]
     cache_write: Optional[Optional[float]]
@@ -1055,7 +1055,7 @@ class ProviderConfigModelsValueModalitiesOutput(str, Enum):
 
 
 class ProviderConfigModelsValueModalities(BaseModel):
-    input_: list[ProviderConfigModelsValueModalitiesInput] = Field(..., alias="input")
+    input: list[ProviderConfigModelsValueModalitiesInput]
     output: list[ProviderConfigModelsValueModalitiesOutput]
 
 
@@ -1073,7 +1073,7 @@ ProviderConfigModelsValueVariantsValue: TypeAlias = dict[str, Any]
 
 
 class ProviderConfigModelsValue(BaseModel):
-    id_: Optional[Optional[str]] = Field(default=None, alias="id")
+    id: Optional[Optional[str]]
     name: Optional[Optional[str]]
     family: Optional[Optional[str]]
     release_date: Optional[Optional[str]]
@@ -1100,7 +1100,7 @@ class ProviderConfig(BaseModel):
     api: Optional[Optional[str]]
     name: Optional[Optional[str]]
     env: Optional[Optional[list[str]]]
-    id_: Optional[Optional[str]] = Field(default=None, alias="id")
+    id: Optional[Optional[str]]
     npm: Optional[Optional[str]]
     models: Optional[Optional[dict[str, Any]]]
     whitelist: Optional[Optional[list[str]]]
@@ -1109,7 +1109,7 @@ class ProviderConfig(BaseModel):
 
 
 class McpLocalConfig(BaseModel):
-    type_: Literal["local"] = Field(..., alias="type")
+    type: Literal["local"]
     command: list[str] = Field(..., description="Command and arguments to run the MCP server")
     environment: Optional[Optional[dict[str, Any]]]
     enabled: Optional[Optional[bool]]
@@ -1123,7 +1123,7 @@ class McpOAuthConfig(BaseModel):
 
 
 class McpRemoteConfig(BaseModel):
-    type_: Literal["remote"] = Field(..., alias="type")
+    type: Literal["remote"]
     url: str = Field(..., description="URL of the remote MCP server")
     enabled: Optional[Optional[bool]]
     headers: Optional[Optional[dict[str, Any]]]
@@ -1265,7 +1265,7 @@ ToolIds: TypeAlias = list[str]
 
 
 class ToolListItem(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     description: str
     parameters: Any
 
@@ -1291,8 +1291,8 @@ class TextPartInputTime(BaseModel):
 
 
 class TextPartInput(BaseModel):
-    id_: Optional[Optional[str]] = Field(default=None, alias="id")
-    type_: Literal["text"] = Field(..., alias="type")
+    id: Optional[Optional[str]]
+    type: Literal["text"]
     text: str
     synthetic: Optional[Optional[bool]]
     ignored: Optional[Optional[bool]]
@@ -1301,8 +1301,8 @@ class TextPartInput(BaseModel):
 
 
 class FilePartInput(BaseModel):
-    id_: Optional[Optional[str]] = Field(default=None, alias="id")
-    type_: Literal["file"] = Field(..., alias="type")
+    id: Optional[Optional[str]]
+    type: Literal["file"]
     mime: str
     filename: Optional[Optional[str]]
     url: str
@@ -1316,15 +1316,15 @@ class AgentPartInputSource(BaseModel):
 
 
 class AgentPartInput(BaseModel):
-    id_: Optional[Optional[str]] = Field(default=None, alias="id")
-    type_: Literal["agent"] = Field(..., alias="type")
+    id: Optional[Optional[str]]
+    type: Literal["agent"]
     name: str
     source: Optional[Optional[AgentPartInputSource]]
 
 
 class SubtaskPartInput(BaseModel):
-    id_: Optional[Optional[str]] = Field(default=None, alias="id")
-    type_: Literal["subtask"] = Field(..., alias="type")
+    id: Optional[Optional[str]]
+    type: Literal["subtask"]
     prompt: str
     description: str
     agent: str
@@ -1343,7 +1343,7 @@ class Command(BaseModel):
 
 
 class ModelApi(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     url: str
     npm: str
 
@@ -1378,7 +1378,7 @@ class ModelCapabilities(BaseModel):
     reasoning: bool
     attachment: bool
     toolcall: bool
-    input_: ModelCapabilitiesInput = Field(..., alias="input")
+    input: ModelCapabilitiesInput
     output: ModelCapabilitiesOutput
     interleaved: Union[bool, ModelCapabilitiesInterleaved]
 
@@ -1394,13 +1394,13 @@ class ModelCostExperimentalOver200kCache(BaseModel):
 
 
 class ModelCostExperimentalOver200k(BaseModel):
-    input_: float = Field(..., alias="input")
+    input: float
     output: float
     cache: ModelCostExperimentalOver200kCache
 
 
 class ModelCost(BaseModel):
-    input_: float = Field(..., alias="input")
+    input: float
     output: float
     cache: ModelCostCache
     experimental_over200k: Optional[Optional[ModelCostExperimentalOver200k]] = Field(default=None, alias="experimentalOver200K")
@@ -1419,7 +1419,7 @@ class ModelStatus(str, Enum):
 
 
 class Model(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     provider_id: str = Field(..., alias="providerID")
     api: ModelApi
     name: str
@@ -1442,7 +1442,7 @@ class ProviderSource(str, Enum):
 
 
 class Provider(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     name: str
     source: ProviderSource
     env: list[str]
@@ -1452,7 +1452,7 @@ class Provider(BaseModel):
 
 
 class ProviderAuthMethod(BaseModel):
-    type_: Union[Literal["oauth"], Literal["api"]] = Field(..., alias="type")
+    type: Union[Literal["oauth"], Literal["api"]]
     label: str
 
 
@@ -1464,7 +1464,7 @@ class ProviderAuthAuthorization(BaseModel):
 
 class SymbolLocation(BaseModel):
     uri: str
-    range_: Range = Field(..., alias="range")
+    range: Range
 
 
 class Symbol(BaseModel):
@@ -1482,7 +1482,7 @@ class FileNode(BaseModel):
     name: str
     path: str
     absolute: str
-    type_: FileNodeType = Field(..., alias="type")
+    type: FileNodeType
     ignored: bool
 
 
@@ -1504,7 +1504,7 @@ class FileContentPatch(BaseModel):
 
 
 class FileContent(BaseModel):
-    type_: Literal["text"] = Field(..., alias="type")
+    type: Literal["text"]
     content: str
     diff: Optional[Optional[str]]
     patch: Optional[Optional[FileContentPatch]]
@@ -1578,7 +1578,7 @@ McpStatus: TypeAlias = Union[McpStatusConnected, McpStatusDisabled, McpStatusFai
 
 
 class LspStatus(BaseModel):
-    id_: str = Field(..., alias="id")
+    id: str
     name: str
     root: str
     status: Union[Literal["connected"], Literal["error"]]
@@ -1591,7 +1591,7 @@ class FormatterStatus(BaseModel):
 
 
 class OAuth(BaseModel):
-    type_: Literal["oauth"] = Field(..., alias="type")
+    type: Literal["oauth"]
     refresh: str
     access: str
     expires: float
@@ -1599,12 +1599,12 @@ class OAuth(BaseModel):
 
 
 class ApiAuth(BaseModel):
-    type_: Literal["api"] = Field(..., alias="type")
+    type: Literal["api"]
     key: str
 
 
 class WellKnownAuth(BaseModel):
-    type_: Literal["wellknown"] = Field(..., alias="type")
+    type: Literal["wellknown"]
     key: str
     token: str
 

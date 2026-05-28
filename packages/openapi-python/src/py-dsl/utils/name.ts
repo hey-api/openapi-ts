@@ -2,7 +2,7 @@ import { regexp } from './regexp';
 import type { ReservedList } from './reserved';
 import { reserved } from './reserved';
 
-export const safeAccessorName = (name: string): string => {
+export function safeAccessorName(name: string): string {
   regexp.number.lastIndex = 0;
   if (regexp.number.test(name)) {
     return name.startsWith('-') ? `'${name}'` : name;
@@ -13,11 +13,11 @@ export const safeAccessorName = (name: string): string => {
     return name;
   }
   return `'${name}'`;
-};
+}
 
 const validPythonChar = /^[a-zA-Z0-9_]$/;
 
-const safeName = (name: string, reserved: ReservedList): string => {
+function safeName(name: string, reserved: ReservedList): string {
   let sanitized = '';
   let index: number;
 
@@ -48,8 +48,12 @@ const safeName = (name: string, reserved: ReservedList): string => {
   }
 
   return sanitized || '_';
-};
+}
 
-export const safeRuntimeName = (name: string): string => safeName(name, reserved.runtime);
+export function safeRuntimeName(name: string): string {
+  return safeName(name, reserved.runtime);
+}
 
-export const safeKeywordName = (name: string): string => safeName(name, reserved.keywords);
+export function safeKeywordName(name: string): string {
+  return safeName(name, reserved.keywords);
+}
