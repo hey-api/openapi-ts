@@ -1,8 +1,32 @@
 import type { PyNode } from './nodes/base';
 import { PyNodeKind } from './nodes/kinds';
 
+export type QuoteStyle = 'single' | 'double';
+export type QuoteFallback = 'avoid-escape' | 'escape';
+
 export interface PyPrinterOptions {
+  /**
+   * Number of spaces per indentation level.
+   *
+   * @default 4
+   */
   indentSize?: number;
+  /**
+   * How to handle strings that contain the preferred quote character.
+   * - `'avoid-escape'`: switch to the alternative quote style to avoid
+   *   escaping, unless the string contains both quote characters
+   * - `'escape'`: always use the preferred quote style, escaping conflicts
+   *   with a backslash
+   *
+   * @default 'avoid-escape'
+   */
+  quoteConflict?: QuoteFallback;
+  /**
+   * Preferred string quote character.
+   *
+   * @default 'double'
+   */
+  quoteStyle?: QuoteStyle;
 }
 
 const DEFAULT_INDENT_SIZE = 4;
@@ -10,6 +34,26 @@ const PARAMS_MULTILINE_THRESHOLD = 3;
 
 export function createPrinter(options?: PyPrinterOptions) {
   const indentSize = options?.indentSize ?? DEFAULT_INDENT_SIZE;
+  const quoteStyle = options?.quoteStyle ?? 'double';
+  const quoteConflict = options?.quoteConflict ?? 'avoid-escape';
+
+  function createStringLiteral(value: string): string {
+    const preferred = quoteStyle === 'double' ? '"' : "'";
+    const alternative = quoteStyle === 'double' ? "'" : '"';
+
+    const hasPreferred = value.includes(preferred);
+    const hasAlternative = value.includes(alternative);
+
+    if (quoteConflict === 'escape' || (hasPreferred && hasAlternative)) {
+      return `${preferred}${value.replaceAll(preferred, `\\${preferred}`)}${preferred}`;
+    }
+
+    if (hasPreferred && !hasAlternative) {
+      return `${alternative}${value}${alternative}`;
+    }
+
+    return `${preferred}${value}${preferred}`;
+  }
 
   let indentLevel = 0;
 
@@ -171,7 +215,7 @@ export function createPrinter(options?: PyPrinterOptions) {
         const children = node.parts.map((part) =>
           typeof part === 'string' ? part : `{${printNode(part)}}`,
         );
-        parts.push(`f"${children.join('')}"`);
+        parts.push(`f${createStringLiteral(children.join(''))}`);
         break;
       }
 
@@ -301,7 +345,7 @@ export function createPrinter(options?: PyPrinterOptions) {
 
       case PyNodeKind.Literal:
         if (typeof node.value === 'string') {
-          parts.push(`"${node.value}"`);
+          parts.push(createStringLiteral(node.value));
         } else if (typeof node.value === 'boolean') {
           parts.push(node.value ? 'True' : 'False');
         } else if (node.value === null) {

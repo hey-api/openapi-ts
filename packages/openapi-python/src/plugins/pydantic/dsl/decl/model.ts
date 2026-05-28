@@ -58,7 +58,7 @@ export class PydanticModelDsl extends Mixed {
       .do(...this._fields.map((f) => f._build()))
       .$if(this._configKwargs.length, (c) =>
         c.do(
-          $.var(identifiers.model_config).assign(
+          $.field(identifiers.model_config).assign(
             $(plugin.symbols.ConfigDict).call(...this._configKwargs.map(([k, v]) => $.kwarg(k, v))),
           ),
         ),

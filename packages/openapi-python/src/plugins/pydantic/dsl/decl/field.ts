@@ -7,7 +7,7 @@ import type { VarType } from '../../../../py-dsl';
 import { $, PyDsl } from '../../../../py-dsl';
 import type { CallCallee } from '../../../../py-dsl/expr/call';
 import { OptionalMixin } from '../../../../py-dsl/mixins/optional';
-import { safeRuntimeName } from '../../../../py-dsl/utils/name';
+import { safeKeywordName } from '../../../../py-dsl/utils/name';
 import type { PydanticPlugin } from '../../types';
 import { ConstraintsMixin } from '../mixins/constraints';
 import { literalize } from '../utils/literal';
@@ -23,7 +23,7 @@ export class PydanticFieldDsl extends Mixed {
   private _default: unknown;
   private _defaultFactory?: string;
   private _description?: string;
-  private _dsl?: ReturnType<typeof $.var>;
+  private _dsl?: ReturnType<typeof $.field>;
   private _title?: string;
   private _type?: VarType;
 
@@ -63,14 +63,14 @@ export class PydanticFieldDsl extends Mixed {
     return this;
   }
 
-  _build(): ReturnType<typeof $.var> {
+  _build(): ReturnType<typeof $.field> {
     if (this._dsl) return this._dsl;
 
     const { plugin } = this;
 
     const name = String(fromRef(this.name));
     const snake = toCase(name, 'snake_case');
-    const safe = safeRuntimeName(snake);
+    const safe = safeKeywordName(snake);
     const runtimeName = safe;
     const needsAlias = runtimeName !== name;
     const alias = this._alias ?? (needsAlias ? name : undefined);
@@ -83,7 +83,7 @@ export class PydanticFieldDsl extends Mixed {
       type = $(plugin.symbols.typing.Optional).slice(this._type);
     }
 
-    const stmt = $.var(plugin.symbol(runtimeName)).$if(type, (v, t) => v.type(t));
+    const stmt = $.field(plugin.symbol(runtimeName)).$if(type, (v, t) => v.type(t));
 
     if (
       this._defaultFactory !== undefined ||

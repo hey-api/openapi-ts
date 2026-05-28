@@ -7,24 +7,22 @@ import { DecoratorMixin } from '../mixins/decorator';
 import { DoMixin } from '../mixins/do';
 import { DocMixin } from '../mixins/doc';
 import { LayoutMixin } from '../mixins/layout';
-import { AsyncMixin, ExportMixin } from '../mixins/modifiers';
+import { AsyncMixin } from '../mixins/modifiers';
 import { ParamMixin } from '../mixins/param';
 import { ReturnsMixin } from '../mixins/returns';
-import { safeRuntimeName } from '../utils/name';
+import { safeKeywordName } from '../utils/name';
 
 const Mixed = AsyncMixin(
   DecoratorMixin(
-    DocMixin(
-      DoMixin(ExportMixin(LayoutMixin(ParamMixin(ReturnsMixin(PyDsl<py.FunctionDeclaration>))))),
-    ),
+    DocMixin(DoMixin(LayoutMixin(ParamMixin(ReturnsMixin(PyDsl<py.FunctionDeclaration>))))),
   ),
 );
 
-export class FuncPyDsl extends Mixed {
-  readonly '~dsl' = 'FuncPyDsl';
-  override readonly nameSanitizer = safeRuntimeName;
+export class MethodPyDsl extends Mixed {
+  readonly '~dsl' = 'MethodPyDsl';
+  override readonly nameSanitizer = safeKeywordName;
 
-  constructor(name: NodeName, fn?: (f: FuncPyDsl) => void) {
+  constructor(name: NodeName, fn?: (f: MethodPyDsl) => void) {
     super();
     this.name.set(name);
     if (isSymbol(name)) {
@@ -64,7 +62,7 @@ export class FuncPyDsl extends Mixed {
   $validate(): asserts this {
     const missing = this.missingRequiredCalls();
     if (!missing.length) return;
-    throw new Error(`Function declaration missing ${missing.join(' and ')}`);
+    throw new Error(`Method declaration missing ${missing.join(' and ')}`);
   }
 
   private missingRequiredCalls(): ReadonlyArray<string> {
