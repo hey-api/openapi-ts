@@ -25,7 +25,7 @@ export function neverToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'never'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: NeverResolverContext = {
     $,
     chain: {

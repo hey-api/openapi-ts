@@ -25,7 +25,7 @@ export function unknownToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'unknown'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: UnknownResolverContext = {
     $,
     chain: {

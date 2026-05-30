@@ -1,4 +1,6 @@
 ---
+import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
+
 export interface Feature {
   description: string;
   icon: string;
@@ -26,7 +28,7 @@ const { description, icon, index, link, linkText, rotation, title } = Astro.prop
   <div class="card-content">
     <h3 class="feature-title">{title}</h3>
     <p class="feature-desc">{description}</p>
-    <a href={link} class="feature-link">{linkText} →</a>
+    <a href={link} class="feature-link">{linkText} <span class="icon" set:html={arrowRightSvg} aria-hidden="true" /></a>
   </div>
 </div>
 
@@ -178,6 +180,20 @@ const { description, icon, index, link, linkText, rotation, title } = Astro.prop
 
   .feature-link:hover {
     opacity: 0.75;
+  }
+
+  .feature-link .icon {
+    display: inline-block;
+    height: 1em;
+    margin-right: -0.2em;
+    width: 1em;
+  }
+
+  .feature-link .icon :global(svg) {
+    display: inline-block;
+    height: auto;
+    margin-bottom: -2px;
+    max-width: 100%;
   }
 
   @media (prefers-reduced-motion: reduce) {

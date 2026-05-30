@@ -18,15 +18,11 @@ export function buildSymbolIn({
         parser: Pick<PluginInstance['context']['config']['parser'], 'hooks'>;
       };
     };
+    getHooks: PluginInstance['getHooks'];
   };
 }): SymbolIn {
-  const hooks = [
-    plugin.config['~hooks']?.symbols?.getName,
-    plugin.context.config.parser.hooks.symbols?.getName,
-  ];
+  const hooks = plugin.getHooks((hooks) => hooks.symbols?.getName);
   for (const hook of hooks) {
-    if (!hook) continue;
-
     const result = hook(ctx);
     if (typeof result === 'function') {
       const name = result(ctx);

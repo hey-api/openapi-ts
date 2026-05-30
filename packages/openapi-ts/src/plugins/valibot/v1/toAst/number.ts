@@ -132,7 +132,7 @@ export function numberToPipes({
 }: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Pipe {
-  const ctx: NumberResolverContext = {
+  const resolverCtx: NumberResolverContext = {
     $,
     nodes: {
       base: baseNode,
@@ -148,7 +148,7 @@ export function numberToPipes({
     plugin,
     schema,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
     utils: {
       getIntegerLimit,
@@ -158,6 +158,6 @@ export function numberToPipes({
   };
 
   const resolver = plugin.config['~resolvers']?.number;
-  const node = resolver?.(ctx) ?? numberResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? numberResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

@@ -1,5 +1,202 @@
 # Changelog
 
+# 2026-05-25
+
+## @hey-api/openapi-ts 0.97.3
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-axios
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-fetch
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-ky
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-next
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/client-ofetch
+
+- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+
+#### @hey-api/transformers
+
+- add support for Temporal API via [temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) in `dates` ([#3916](https://github.com/hey-api/openapi-ts/pull/3916))
+
+#### @tanstack/angular-query-experimental
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/preact-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/react-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/solid-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/svelte-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### @tanstack/vue-query
+
+- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+#### zod
+
+- avoid invalid `.extend()` on `z.record()` when a discriminated union member is an empty object ([#3915](https://github.com/hey-api/openapi-ts/pull/3915))
+
+---
+
+## @hey-api/codegen-core 0.8.2
+
+### Updates
+
+- symbols: prefer recursive over top-level merging in registry ([#3917](https://github.com/hey-api/openapi-ts/pull/3917))
+
+---
+
+## @hey-api/shared 0.4.5
+
+### Updates
+
+- parser: encode special characters in JSON Pointer ([#3903](https://github.com/hey-api/openapi-ts/pull/3903))
+- fix: various performance improvements ([#3917](https://github.com/hey-api/openapi-ts/pull/3917))
+- plugin: expose getHooks method ([#3913](https://github.com/hey-api/openapi-ts/pull/3913))
+- types: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/openapi-ts/pull/3907))
+- utils: turn on `enabled` flag in `mappers` ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+
+---
+
+# 2026-05-17
+
+## @hey-api/openapi-ts 0.97.2
+
+### Updates
+
+- dsl: cache lazy node result ([#3855](https://github.com/hey-api/openapi-ts/pull/3855))
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-axios
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-fetch
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-ky
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-next
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-nuxt
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/client-ofetch
+
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+
+#### @hey-api/sdk
+
+- support `valibot` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847))
+- support `zod` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847))
+
+#### @tanstack/angular-query-experimental
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/preact-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/react-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/solid-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/svelte-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### @tanstack/vue-query
+
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+
+#### valibot
+
+- use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+#### zod
+
+- use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+---
+
+## @hey-api/shared 0.4.4
+
+### Updates
+
+- plugin: add `querySymbols()` function ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+
+---
+
+# 2026-04-30
+
+## @hey-api/openapi-ts 0.97.1
+
+### Plugins
+
+#### @hey-api/transformers
+
+- use symbols for `additionalProperties` key variables ([#3841](https://github.com/hey-api/openapi-ts/pull/3841))
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.2
+
+### Updates
+
+- yaml: swap `yaml` back to `js-yaml` ([#3843](https://github.com/hey-api/openapi-ts/pull/3843))
+
+---
+
+## @hey-api/shared 0.4.3
+
+No user-facing changes.
+
+---
+
 # 2026-04-28
 
 ## @hey-api/openapi-ts 0.97.0

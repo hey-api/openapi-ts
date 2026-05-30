@@ -16,11 +16,9 @@ import {
 } from '../../../openApi/shared/utils/discriminator';
 import { isTopLevelComponent, refToName } from '../../../utils/ref';
 
-export function getSchemaTypes({
-  schema,
-}: {
-  schema: OpenAPIV3_1.SchemaObject;
-}): ReadonlyArray<SchemaType<OpenAPIV3_1.SchemaObject>> {
+export function getSchemaTypes(
+  schema: OpenAPIV3_1.SchemaObject,
+): ReadonlyArray<SchemaType<OpenAPIV3_1.SchemaObject>> {
   if (typeof schema.type === 'string') {
     return [schema.type];
   }
@@ -156,7 +154,8 @@ function getAllDiscriminatorValues({
   const values: Array<string> = [];
 
   // Check each entry in the discriminator mapping
-  for (const [value, mappedSchemaRef] of Object.entries(discriminator.mapping || {})) {
+  for (const value in discriminator.mapping) {
+    const mappedSchemaRef = discriminator.mapping[value]!;
     if (mappedSchemaRef === schemaRef) {
       // This is the current schema's own value
       values.push(value);
@@ -320,16 +319,9 @@ function parseArray({
       schemaItems = Array(schema.maxItems).fill(irItemsSchema);
     } else {
       const ofArray = schema.items.allOf || schema.items.anyOf || schema.items.oneOf;
-      if (
-        ofArray &&
-        ofArray.length > 1 &&
-        !getSchemaTypes({ schema: schema.items }).includes('null')
-      ) {
+      if (ofArray && ofArray.length > 1 && !getSchemaTypes(schema.items).includes('null')) {
         // bring composition up to avoid incorrectly nested arrays
-        irSchema = {
-          ...irSchema,
-          ...irItemsSchema,
-        };
+        Object.assign(irSchema, irItemsSchema);
       } else {
         schemaItems.push(irItemsSchema);
       }
@@ -396,24 +388,51 @@ function parseObject({
 }): IR.SchemaObject {
   irSchema.type = 'object';
 
-  const schemaProperties: Record<string, IR.SchemaObject> = {};
+  let isSchemaPropertiesEmpty = true;
 
-  for (const name in schema.properties) {
-    const property = schema.properties[name]!;
-    if (typeof property === 'boolean') {
-      // TODO: parser - handle boolean properties
-    } else {
-      const irPropertySchema = schemaToIrSchema({
-        context,
-        schema: property,
-        state,
-      });
-      schemaProperties[name] = irPropertySchema;
+  if (schema.properties) {
+    const schemaProperties: Record<string, IR.SchemaObject> = {};
+
+    for (const name in schema.properties) {
+      isSchemaPropertiesEmpty = false;
+
+      const property = schema.properties[name]!;
+      if (typeof property === 'boolean') {
+        // TODO: parser - handle boolean properties
+      } else {
+        const irPropertySchema = schemaToIrSchema({
+          context,
+          schema: property,
+          state,
+        });
+        schemaProperties[name] = irPropertySchema;
+      }
+    }
+
+    if (!isSchemaPropertiesEmpty) {
+      irSchema.properties = schemaProperties;
     }
   }
 
-  if (Object.keys(schemaProperties).length) {
-    irSchema.properties = schemaProperties;
+  let isPatternPropertiesEmpty = true;
+
+  if (schema.patternProperties) {
+    const patternProperties: Record<string, IR.SchemaObject> = {};
+
+    for (const pattern in schema.patternProperties) {
+      const patternSchema = schema.patternProperties[pattern]!;
+      const irPatternSchema = schemaToIrSchema({
+        context,
+        schema: patternSchema,
+        state,
+      });
+      patternProperties[pattern] = irPatternSchema;
+      isPatternPropertiesEmpty = false;
+    }
+
+    if (!isPatternPropertiesEmpty) {
+      irSchema.patternProperties = patternProperties;
+    }
   }
 
   if (schema.additionalProperties === undefined) {
@@ -428,8 +447,8 @@ function parseObject({
     const isEmptyObjectInAllOf =
       state.inAllOf &&
       schema.additionalProperties === false &&
-      (!schema.properties || !Object.keys(schema.properties).length) &&
-      (!schema.patternProperties || !Object.keys(schema.patternProperties).length);
+      (!schema.properties || isSchemaPropertiesEmpty) &&
+      (!schema.patternProperties || isPatternPropertiesEmpty);
 
     if (!isEmptyObjectInAllOf) {
       irSchema.additionalProperties = {
@@ -443,24 +462,6 @@ function parseObject({
       state,
     });
     irSchema.additionalProperties = irAdditionalPropertiesSchema;
-  }
-
-  if (schema.patternProperties) {
-    const patternProperties: Record<string, IR.SchemaObject> = {};
-
-    for (const pattern in schema.patternProperties) {
-      const patternSchema = schema.patternProperties[pattern]!;
-      const irPatternSchema = schemaToIrSchema({
-        context,
-        schema: patternSchema,
-        state,
-      });
-      patternProperties[pattern] = irPatternSchema;
-    }
-
-    if (Object.keys(patternProperties).length) {
-      irSchema.patternProperties = patternProperties;
-    }
   }
 
   if (schema.propertyNames) {
@@ -557,7 +558,7 @@ function parseAllOf({
   parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
 
   const compositionSchemas = schema.allOf;
 
@@ -582,13 +583,10 @@ function parseAllOf({
       state,
     });
     state.inAllOf = originalInAllOf;
-    if (state.inAllOf === undefined) {
-      delete state.inAllOf;
-    }
 
     if (schema.required) {
       if (irCompositionSchema.required) {
-        irCompositionSchema.required = [...irCompositionSchema.required, ...schema.required];
+        irCompositionSchema.required.push(...schema.required);
       } else {
         irCompositionSchema.required = schema.required;
       }
@@ -754,7 +752,7 @@ function parseAllOf({
           inlineSchema.required = [];
         }
         if (!inlineSchema.required.includes(discriminator.propertyName)) {
-          inlineSchema.required = [...inlineSchema.required, discriminator.propertyName];
+          inlineSchema.required.push(discriminator.propertyName);
         }
       }
     } else {
@@ -792,7 +790,7 @@ function parseAllOf({
               ? context.resolveRef<OpenAPIV3_1.SchemaObject>(compositionSchema.$ref)
               : compositionSchema;
 
-            if (getSchemaTypes({ schema: finalCompositionSchema }).includes('object')) {
+            if (getSchemaTypes(finalCompositionSchema).includes('object')) {
               const irCompositionSchema = parseOneType({
                 context,
                 schema: {
@@ -856,7 +854,7 @@ function parseAnyOf({
   parseSchemaMeta({ irSchema, schema });
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
 
   const compositionSchemas = schema.anyOf;
 
@@ -955,9 +953,13 @@ function parseEnum({
   irSchema.type = 'enum';
 
   const schemaItems: Array<IR.SchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
+  const xEnumDescriptions = schema['x-enum-descriptions'];
+  const xEnumVarnames = schema['x-enum-varnames'];
+  const xEnumNames = schema['x-enumNames'];
 
-  for (const [index, enumValue] of schema.enum.entries()) {
+  for (let index = 0, len = schema.enum.length; index < len; index++) {
+    const enumValue = schema.enum[index];
     const typeOfEnumValue = typeof enumValue;
     let enumType: SchemaType<OpenAPIV3_1.SchemaObject> | undefined;
 
@@ -990,8 +992,8 @@ function parseEnum({
       context,
       schema: {
         const: enumValue,
-        description: schema['x-enum-descriptions']?.[index],
-        title: schema['x-enum-varnames']?.[index] ?? schema['x-enumNames']?.[index],
+        description: xEnumDescriptions?.[index],
+        title: xEnumVarnames?.[index] ?? xEnumNames?.[index],
         type: enumType,
       },
       state,
@@ -1021,7 +1023,7 @@ function parseOneOf({
   parseSchemaMeta({ irSchema, schema });
 
   let schemaItems: Array<IR.SchemaObject> = [];
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
 
   const compositionSchemas = schema.oneOf;
 
@@ -1313,7 +1315,7 @@ function parseType({
 
   parseSchemaMeta({ irSchema, schema });
 
-  const schemaTypes = getSchemaTypes({ schema });
+  const schemaTypes = getSchemaTypes(schema);
 
   if (schemaTypes.length === 1) {
     return parseOneType({

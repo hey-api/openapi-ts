@@ -11,7 +11,9 @@ import {
 } from '../../../openApi/shared/utils/filter';
 import { buildGraph } from '../../../openApi/shared/utils/graph';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
+import { computeAmbiguousSecurityKeys } from '../../../openApi/shared/utils/security';
 import { handleValidatorResult } from '../../../openApi/shared/utils/validator';
+import { pathToJsonPointer } from '../../../utils/ref';
 import { filterSpec } from './filter';
 import { parsePathOperation } from './operation';
 import { parametersArrayToObject } from './parameter';
@@ -58,9 +60,11 @@ export const parseV2_0_X = (context: Context<OpenAPIV2.Document>) => {
     securitySchemesMap.set(name, securitySchemeObject);
   }
 
+  const ambiguousSecurityKeys = computeAmbiguousSecurityKeys(securitySchemesMap);
+
   if (context.spec.definitions) {
     for (const name in context.spec.definitions) {
-      const $ref = `#/definitions/${name}`;
+      const $ref = pathToJsonPointer(['definitions', name]);
       const schema = context.spec.definitions[name]!;
 
       parseSchema({
@@ -91,6 +95,7 @@ export const parseV2_0_X = (context: Context<OpenAPIV2.Document>) => {
       security: context.spec.security,
     };
     const operationArgs: Omit<Parameters<typeof parsePathOperation>[0], 'method'> = {
+      ambiguousSecurityKeys,
       context,
       operation: {
         ...commonOperation,

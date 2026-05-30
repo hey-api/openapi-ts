@@ -1,19 +1,11 @@
 import { pathToJsonPointer } from '@hey-api/shared';
 
-import { getZodModule } from '../shared/module';
 import { irOperationToAst } from '../shared/operation';
 import { irWebhookToAst } from '../shared/webhook';
 import type { ZodPlugin } from '../types';
 import { createProcessor } from './processor';
 
 export const handlerV3: ZodPlugin['Handler'] = ({ plugin }) => {
-  plugin.symbol('z', {
-    external: getZodModule({ plugin }),
-    meta: {
-      resource: 'zod.z',
-    },
-  });
-
   const processor = createProcessor(plugin);
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {

@@ -16,21 +16,26 @@ export function hasInput(operation: IR.OperationObject): boolean {
 
 export function getSuccessResponse(
   operation: IR.OperationObject,
-): { hasOutput: true; statusCode: number } | { hasOutput: false; statusCode?: undefined } {
+): { hasOutput: boolean; statusCode: number } | { hasOutput: false; statusCode?: undefined } {
+  let fallback: { hasOutput: boolean; statusCode: number } | undefined;
+
   if (operation.responses) {
     for (const [statusCode, response] of Object.entries(operation.responses)) {
       const statusCodeNumber = Number.parseInt(statusCode, 10);
-      if (
-        statusCodeNumber >= 200 &&
-        statusCodeNumber <= 399 &&
-        response?.mediaType &&
-        response?.schema
-      ) {
-        return { hasOutput: true, statusCode: statusCodeNumber };
+      if (statusCodeNumber >= 200 && statusCodeNumber <= 399 && response) {
+        const successResponse = {
+          hasOutput: Boolean(response.schema),
+          statusCode: statusCodeNumber,
+        };
+        fallback ??= successResponse;
+        if (response.mediaType) {
+          return successResponse;
+        }
       }
     }
   }
-  return { hasOutput: false, statusCode: undefined };
+
+  return fallback ?? { hasOutput: false, statusCode: undefined };
 }
 
 export function getTags(operation: IR.OperationObject, defaultTag: string): ReadonlyArray<string> {

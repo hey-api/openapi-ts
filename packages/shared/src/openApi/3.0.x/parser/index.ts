@@ -11,7 +11,9 @@ import {
 } from '../../../openApi/shared/utils/filter';
 import { buildGraph } from '../../../openApi/shared/utils/graph';
 import { mergeParametersObjects } from '../../../openApi/shared/utils/parameter';
+import { computeAmbiguousSecurityKeys } from '../../../openApi/shared/utils/security';
 import { handleValidatorResult } from '../../../openApi/shared/utils/validator';
+import { pathToJsonPointer } from '../../../utils/ref';
 import { filterSpec } from './filter';
 import { parsePathOperation } from './operation';
 import { parametersArrayToObject, parseParameter } from './parameter';
@@ -63,7 +65,7 @@ export const parseV3_0_X = (context: Context<OpenAPIV3.Document>) => {
     }
 
     for (const name in context.spec.components.parameters) {
-      const $ref = `#/components/parameters/${name}`;
+      const $ref = pathToJsonPointer(['components', 'parameters', name]);
       const parameterOrReference = context.spec.components.parameters[name]!;
       const parameter =
         '$ref' in parameterOrReference
@@ -78,7 +80,7 @@ export const parseV3_0_X = (context: Context<OpenAPIV3.Document>) => {
     }
 
     for (const name in context.spec.components.requestBodies) {
-      const $ref = `#/components/requestBodies/${name}`;
+      const $ref = pathToJsonPointer(['components', 'requestBodies', name]);
       const requestBodyOrReference = context.spec.components.requestBodies[name]!;
       const requestBody =
         '$ref' in requestBodyOrReference
@@ -93,7 +95,7 @@ export const parseV3_0_X = (context: Context<OpenAPIV3.Document>) => {
     }
 
     for (const name in context.spec.components.schemas) {
-      const $ref = `#/components/schemas/${name}`;
+      const $ref = pathToJsonPointer(['components', 'schemas', name]);
       const schema = context.spec.components.schemas[name]!;
 
       parseSchema({
@@ -103,6 +105,8 @@ export const parseV3_0_X = (context: Context<OpenAPIV3.Document>) => {
       });
     }
   }
+
+  const ambiguousSecurityKeys = computeAmbiguousSecurityKeys(securitySchemesMap);
 
   parseServers({ context });
 
@@ -122,6 +126,7 @@ export const parseV3_0_X = (context: Context<OpenAPIV3.Document>) => {
     const operationArgs: Omit<Parameters<typeof parsePathOperation>[0], 'method' | 'operation'> & {
       operation: Omit<Parameters<typeof parsePathOperation>[0]['operation'], 'responses'>;
     } = {
+      ambiguousSecurityKeys,
       context,
       operation: {
         description: finalPathItem.description,

@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import type { BooleanResolverContext } from '../../resolvers';
@@ -9,7 +9,7 @@ function constNode(ctx: BooleanResolverContext): PydanticType | undefined {
   const { plugin, schema } = ctx;
 
   if (typeof schema.const === 'boolean') {
-    const literal = plugin.external('typing.Literal');
+    const literal = plugin.symbols.typing.Literal;
     return {
       type: $(literal).slice($.literal(schema.const)),
     };
@@ -31,10 +31,10 @@ function booleanResolver(ctx: BooleanResolverContext): PydanticType {
 }
 
 export function booleanToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'boolean'>;
 }): PydanticType {
   const ctx: BooleanResolverContext = {
@@ -43,6 +43,7 @@ export function booleanToType({
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
   };

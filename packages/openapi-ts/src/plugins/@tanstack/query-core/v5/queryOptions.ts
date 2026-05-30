@@ -40,7 +40,7 @@ export function createQueryOptions({
     createQueryKeyFunction({ plugin });
   }
 
-  const symbolQueryOptions = plugin.external(`${plugin.name}.queryOptions`);
+  const symbolQueryOptions = plugin.symbols.queryOptions;
 
   const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
   const node = queryKeyStatement({

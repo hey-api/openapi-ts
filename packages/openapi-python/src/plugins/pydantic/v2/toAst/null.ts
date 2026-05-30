@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import type { NullResolverContext } from '../../resolvers';
@@ -17,10 +17,10 @@ function nullResolver(ctx: NullResolverContext): PydanticType {
 }
 
 export function nullToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'null'>;
 }): PydanticType {
   const ctx: NullResolverContext = {
@@ -28,6 +28,7 @@ export function nullToType({
     nodes: {
       base: baseNode,
     },
+    path,
     plugin,
     schema,
   };

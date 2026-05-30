@@ -6,11 +6,6 @@ import type { ValibotPlugin } from '../types';
 import { createProcessor } from './processor';
 
 export const handlerV1: ValibotPlugin['Handler'] = ({ plugin }) => {
-  plugin.symbol('v', {
-    external: 'valibot',
-    importKind: 'namespace',
-  });
-
   const processor = createProcessor(plugin);
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {

@@ -1,98 +1,94 @@
-import { definePluginConfig, mappers } from '@hey-api/shared';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from '../../../plugins/@tanstack/query-core/plugin';
+import { tanStackQuerySymbols } from '../query-core/symbols';
 import type { TanStackAngularQueryPlugin } from './types';
+
+const defaultMeta = (): Record<string, unknown> => ({});
 
 export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
   config: {
+    $cascade: ['case'],
     case: 'camelCase',
     comments: true,
+    getQueryData: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: false,
+      name: '{{name}}GetQueryData',
+    },
     includeInEntry: false,
+    infiniteQueryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: '{{name}}InfiniteQueryKey',
+      tags: false,
+    },
+    infiniteQueryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}InfiniteOptions',
+    },
+    mutationKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: false,
+      name: '{{name}}MutationKey',
+      tags: false,
+    },
+    mutationOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      exported: true,
+      meta: defaultMeta,
+      name: '{{name}}Mutation',
+    },
+    queryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: '{{name}}QueryKey',
+      tags: false,
+    },
+    queryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      exported: true,
+      meta: defaultMeta,
+      name: '{{name}}Options',
+    },
+    setQueryData: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: false,
+      name: '{{name}}SetQueryData',
+    },
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler: handler as TanStackAngularQueryPlugin['Handler'],
+  handler,
   name: '@tanstack/angular-query-experimental',
-  resolveConfig: (plugin, context) => {
-    plugin.config.infiniteQueryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteQueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.infiniteQueryKeys,
-    });
-
-    plugin.config.infiniteQueryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteOptions',
-      },
-      mappers,
-      value: plugin.config.infiniteQueryOptions,
-    });
-
-    plugin.config.mutationKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: '{{name}}MutationKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.mutationKeys,
-    });
-
-    plugin.config.mutationOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Mutation',
-      },
-      mappers,
-      value: plugin.config.mutationOptions,
-    });
-
-    plugin.config.queryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}QueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.queryKeys,
-    });
-
-    plugin.config.queryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Options',
-      },
-      mappers,
-      value: plugin.config.queryOptions,
-    });
-
-    plugin.config.setQueryData = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: false,
-        name: '{{name}}SetQueryData',
-      },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
-      value: plugin.config.setQueryData,
-    });
-  },
+  symbols: tanStackQuerySymbols,
 };
 
 /**

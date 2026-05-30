@@ -50,7 +50,9 @@
     "tb": "turbo run build --filter",
     "ty": "turbo run typecheck --filter",
     "dev:ts": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false --include='./typescript/**/*.ts' --include='./inputs.ts' --include='./hey-api.ts' --include='*.config.ts' ../packages/openapi-ts/src/run.ts",
-    "dev:py": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false --include='./python/**/*.ts' --include='./inputs.ts' --include='./hey-api.ts' --include='*.config.ts' ../packages/openapi-python/src/run.ts"
+    "dev:py": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false --include='./python/**/*.ts' --include='./inputs.ts' --include='./hey-api.ts' --include='*.config.ts' ../packages/openapi-python/src/run.ts",
+    "play:ts": "turbo run dev --filter @test/playground",
+    "play:py": "python ./dev/playground.py"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "0.18.2",
@@ -61,9 +63,9 @@
     "@eslint/js": "9.39.2",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "@types/node": "24.12.2",
+    "@types/node": "24.12.4",
     "@typescript-eslint/eslint-plugin": "8.54.0",
-    "@typescript/native-preview": "7.0.0-dev.20260507.1",
+    "@typescript/native-preview": "7.0.0-dev.20260522.1",
     "@vitest/coverage-v8": "4.1.0",
     "eslint": "9.39.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
@@ -79,12 +81,12 @@
     "tsdown": "0.21.8",
     "tsx": "4.21.0",
     "turbo": "2.9.14",
-    "typescript": "6.0.2",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.54.0",
     "vitest": "4.1.0"
   },
   "engines": {
     "node": ">=22.13.0"
   },
-  "packageManager": "pnpm@11.1.1"
+  "packageManager": "pnpm@11.2.2"
 }

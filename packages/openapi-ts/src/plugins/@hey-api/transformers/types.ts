@@ -33,11 +33,18 @@ export type UserConfig = Plugin.Name<'@hey-api/transformers'> &
      */
     bigInt?: boolean;
     /**
-     * Convert date strings into Date objects?
+     * Convert date strings into date objects?
+     *
+     * - `true` (default): use the built-in `Date` object.
+     * - `'date'`: explicit alias for the default `Date` behavior.
+     * - `'temporal'`: use the [Temporal API](https://tc39.es/proposal-temporal/docs/),
+     *   imported from `temporal-polyfill`. `date-time` formats become
+     *   `Temporal.Instant` and `date` formats become `Temporal.PlainDate`.
+     * - `false`: do not transform date strings.
      *
      * @default true
      */
-    dates?: boolean;
+    dates?: boolean | 'date' | 'temporal';
     /**
      * Custom transforms to apply to the generated code.
      */
@@ -58,11 +65,18 @@ export type Config = Plugin.Name<'@hey-api/transformers'> &
      */
     bigInt: boolean;
     /**
-     * Convert date strings into Date objects?
+     * Convert date strings into date objects?
+     *
+     * - `true` (default): use the built-in `Date` object.
+     * - `'date'`: explicit alias for the default `Date` behavior.
+     * - `'temporal'`: use the [Temporal API](https://tc39.es/proposal-temporal/docs/),
+     *   imported from `temporal-polyfill`. `date-time` formats become
+     *   `Temporal.Instant` and `date` formats become `Temporal.PlainDate`.
+     * - `false`: do not transform date strings.
      *
      * @default true
      */
-    dates: boolean;
+    dates: boolean | 'date' | 'temporal';
     /**
      * Custom transforms to apply to the generated code.
      */

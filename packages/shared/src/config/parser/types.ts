@@ -4,7 +4,7 @@ import type { FeatureToggle, NamingOptions } from '../shared';
 import type { Filters } from './filters';
 import type { Patch } from './patch';
 
-type EnumsMode = 'inline' | 'root';
+export type EnumsMode = 'inline' | 'root';
 
 export type UserParser = {
   /**

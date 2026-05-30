@@ -25,7 +25,7 @@ export function nullToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'null'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: NullResolverContext = {
     $,
     chain: {

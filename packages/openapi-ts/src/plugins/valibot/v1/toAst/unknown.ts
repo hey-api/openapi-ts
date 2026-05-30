@@ -26,7 +26,7 @@ export function unknownToPipes({
 }: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema?: SchemaWithType<'unknown'>;
 }): Pipe {
-  const ctx: UnknownResolverContext = {
+  const resolverCtx: UnknownResolverContext = {
     $,
     nodes: {
       base: baseNode,
@@ -39,11 +39,11 @@ export function unknownToPipes({
     plugin,
     schema: schema ?? { type: 'unknown' },
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
   };
 
   const resolver = plugin.config['~resolvers']?.unknown;
-  const node = resolver?.(ctx) ?? unknownResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? unknownResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

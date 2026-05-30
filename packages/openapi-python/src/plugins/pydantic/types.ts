@@ -8,6 +8,7 @@ import type {
 } from '@hey-api/shared';
 
 import type { PydanticResolvers } from './resolvers';
+import type { PydanticSymbols } from './symbols';
 
 export type UserConfig = Plugin.Name<'pydantic'> &
   Plugin.Hooks &
@@ -65,6 +66,24 @@ export type UserConfig = Plugin.Name<'pydantic'> &
      * @default 'enum'
      */
     enums?: 'enum' | 'literal';
+    /**
+     * How to render field constraints.
+     *
+     * - `'field'`: `foo: Optional[int] = Field(default=None, ge=0, le=100)`
+     * - `'annotated'`: `foo: Annotated[Optional[int], Field(ge=0, le=100)] = None`
+     *
+     * @default 'field'
+     */
+    fieldStyle?: 'annotated' | 'field';
+    /**
+     * Model type to generate.
+     *
+     * - `'BaseModel'`: Pydantic `BaseModel` subclass.
+     * - `'dataclass'`: Pydantic `@dataclass` decorator.
+     *
+     * @default 'BaseModel'
+     */
+    modelType?: 'BaseModel' | 'dataclass';
     /**
      * Configuration for request-specific Pydantic models.
      *
@@ -145,6 +164,9 @@ export type UserConfig = Plugin.Name<'pydantic'> &
      * This adds `model_config = ConfigDict(extra='forbid')`
      * to generated models.
      *
+     * Note: {@link strict} has no effect when `modelType` is `'dataclass'`
+     * as `ConfigDict` is not supported for dataclasses.
+     *
      * @default false
      */
     strict?: boolean;
@@ -196,6 +218,10 @@ export type Config = Plugin.Name<'pydantic'> &
     definitions: NamingOptions & FeatureToggle;
     /** How to generate enum types. */
     enums: 'enum' | 'literal';
+    /** How to render field constraints. */
+    fieldStyle: 'annotated' | 'field';
+    /** Model type to generate. */
+    modelType: 'BaseModel' | 'dataclass';
     /** Configuration for request-specific Pydantic models. */
     requests: NamingOptions & FeatureToggle;
     /** Configuration for response-specific Pydantic models. */
@@ -206,4 +232,4 @@ export type Config = Plugin.Name<'pydantic'> &
     webhooks: NamingOptions & FeatureToggle;
   };
 
-export type PydanticPlugin = DefinePlugin<UserConfig, Config>;
+export type PydanticPlugin = DefinePlugin<UserConfig, Config, never, PydanticSymbols>;

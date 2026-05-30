@@ -1,46 +1,11 @@
 import { StructureModel } from '@hey-api/codegen-core';
 
-import { getTypedConfig } from '../../../../config/utils';
-import { clientFolderAbsolutePath } from '../../../../generate/client';
 import type { $ } from '../../../../py-dsl';
-import { getClientPlugin } from '../../client-core/utils';
 import { resolveStrategy } from '../operations';
 import type { HeyApiSdkPlugin } from '../types';
 import { createShell, type OperationItem, source, toNode } from './node';
 
 export const handlerV1: HeyApiSdkPlugin['Handler'] = ({ plugin }) => {
-  const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
-  const client = getClientPlugin(getTypedConfig(plugin));
-
-  // client
-  plugin.symbol('build_client_params', {
-    external: clientModule,
-    meta: {
-      resource: 'client.build_client_params',
-      tool: client.name,
-    },
-  });
-  plugin.symbol('Client', {
-    external: clientModule,
-    meta: {
-      resource: 'client.Client',
-      tool: client.name,
-    },
-  });
-
-  // functools
-  plugin.symbol('cached_property', {
-    external: 'functools',
-  });
-
-  // typing
-  plugin.symbol('Any', {
-    external: 'typing',
-  });
-  plugin.symbol('Union', {
-    external: 'typing',
-  });
-
   const structure = new StructureModel();
   const shell = createShell(plugin);
   const strategy = resolveStrategy(plugin);

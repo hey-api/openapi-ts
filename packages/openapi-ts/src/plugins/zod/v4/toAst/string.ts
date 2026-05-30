@@ -115,7 +115,7 @@ export function stringToNode({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: StringResolverContext = {
     $,
     chain: {

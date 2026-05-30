@@ -21,7 +21,7 @@ export interface OperationItem {
 
 export const source = globalThis.Symbol('@hey-api/python-sdk');
 
-function attachComment<T extends ReturnType<typeof $.func>>(args: {
+function attachComment<T extends ReturnType<typeof $.method>>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
@@ -62,14 +62,14 @@ function createFnSymbol(
 function childToNode(
   resource: StructureNode,
   plugin: HeyApiSdkPlugin['Instance'],
-): ReadonlyArray<ReturnType<typeof $.func>> {
+): ReadonlyArray<ReturnType<typeof $.method>> {
   const refChild = plugin.referenceSymbol(createShellMeta(resource));
   const memberNameStr = toCase(
     refChild.name,
     plugin.config.operations.methodName.casing ?? 'camelCase',
   );
   const memberName = plugin.symbol(memberNameStr);
-  const cachedProp = plugin.external('functools.cached_property');
+  const cachedProp = plugin.symbols.funcTools.cachedProperty;
 
   return [
     $.method(memberName)
@@ -99,7 +99,7 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
         },
       );
 
-      const symbolClient = plugin.external('client.Client');
+      const symbolClient = plugin.symbols.Client;
 
       const c = $.class(symbol).export().extends(symbolClient);
 
@@ -110,7 +110,7 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
   };
 }
 
-function implementFn<T extends ReturnType<typeof $.func>>(args: {
+function implementFn<T extends ReturnType<typeof $.method>>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
@@ -139,7 +139,7 @@ function implementFn<T extends ReturnType<typeof $.func>>(args: {
         // TODO: extract operation statements into a separate function
         .do(
           $.var('params').assign(
-            $(plugin.external('client.build_client_params')).call(
+            $(plugin.symbols.buildClientParams).call(
               fieldsList,
               ...paramNames.map((name) => $.kwarg(name, name)),
             ),

@@ -26,7 +26,7 @@ export function neverToPipes({
 }: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'never'>;
 }): Pipe {
-  const ctx: NeverResolverContext = {
+  const resolverCtx: NeverResolverContext = {
     $,
     nodes: {
       base: baseNode,
@@ -39,11 +39,11 @@ export function neverToPipes({
     plugin,
     schema,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
   };
 
   const resolver = plugin.config['~resolvers']?.never;
-  const node = resolver?.(ctx) ?? neverResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? neverResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }
