@@ -1,4 +1,4 @@
-import type { SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
 import type { StringResolverContext } from '../../resolvers';
@@ -10,7 +10,7 @@ function constNode(ctx: StringResolverContext): PydanticType | undefined {
   const { plugin, schema } = ctx;
 
   if (typeof schema.const === 'string') {
-    const literal = plugin.external('typing.Literal');
+    const literal = plugin.symbols.typing.Literal;
     return {
       type: $(literal).slice($.literal(schema.const)),
     };
@@ -52,10 +52,10 @@ function stringResolver(ctx: StringResolverContext): PydanticType {
 }
 
 export function stringToType({
+  path,
   plugin,
   schema,
-}: {
-  plugin: PydanticPlugin['Instance'];
+}: SchemaVisitorContext<PydanticPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): PydanticType {
   const ctx: StringResolverContext = {
@@ -64,6 +64,7 @@ export function stringToType({
       base: baseNode,
       const: constNode,
     },
+    path,
     plugin,
     schema,
   };

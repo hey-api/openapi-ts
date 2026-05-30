@@ -1,14 +1,6 @@
-import type { IR } from '@hey-api/shared';
-
 import { $, type VarType } from '../../../../py-dsl';
 import type { IntersectionResolverContext } from '../../resolvers';
-import type {
-  PydanticField,
-  PydanticFinal,
-  PydanticResult,
-  PydanticType,
-} from '../../shared/types';
-import type { PydanticPlugin } from '../../types';
+import type { PydanticField, PydanticResult, PydanticType } from '../../shared/types';
 import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: IntersectionResolverContext): PydanticType {
@@ -16,7 +8,7 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
 
   if (!childResults.length) {
     return {
-      type: plugin.external('typing.Any'),
+      type: plugin.symbols.typing.Any,
     };
   }
 
@@ -39,7 +31,7 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
       typeStr !== '' &&
       !typeStr.startsWith('dict[') &&
       !typeStr.startsWith('Dict[') &&
-      typeStr !== String(plugin.external('typing.Any'));
+      typeStr !== String(plugin.symbols.typing.Any);
 
     if (isReference) {
       const baseName = typeStr.replace(/^'|'$/g, '');
@@ -66,7 +58,7 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
     // TODO: replace
     type = '__INTERSECTION_PLACEHOLDER__';
   } else {
-    type = plugin.external('typing.Any');
+    type = plugin.symbols.typing.Any;
   }
 
   return {
@@ -88,13 +80,12 @@ export function intersectionToType({
   applyModifiers,
   childResults,
   parentSchema,
+  path,
   plugin,
-}: {
-  applyModifiers: (result: PydanticResult, options?: { optional?: boolean }) => PydanticFinal;
-  childResults: Array<PydanticResult>;
-  parentSchema: IR.SchemaObject;
-  plugin: PydanticPlugin['Instance'];
-}): IntersectionToTypeResult {
+}: Pick<
+  IntersectionResolverContext,
+  'applyModifiers' | 'childResults' | 'parentSchema' | 'path' | 'plugin'
+>): IntersectionToTypeResult {
   const constraints: FieldConstraints = {};
 
   if (parentSchema.description !== undefined) {
@@ -109,6 +100,7 @@ export function intersectionToType({
       base: baseNode,
     },
     parentSchema,
+    path,
     plugin,
     schema: parentSchema,
   };
@@ -130,7 +122,7 @@ export function intersectionToType({
       typeStr !== '' &&
       !typeStr.startsWith('dict[') &&
       !typeStr.startsWith('Dict[') &&
-      typeStr !== String(plugin.external('typing.Any'));
+      typeStr !== String(plugin.symbols.typing.Any);
 
     if (isReference) {
       const baseName = typeStr.replace(/^'|'$/g, '');

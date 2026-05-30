@@ -17,7 +17,7 @@ function baseNode(ctx: TupleResolverContext): Chain {
   }
 
   const tupleElements = childResults.map(
-    (result) => applyModifiers(result, { optional: false }).expression,
+    (result) => applyModifiers(result, { optional: false }).chain,
   );
 
   return tupleFn.call($.array(...tupleElements));
@@ -63,7 +63,7 @@ export function tupleToAst({
 >): CompositeHandlerResult {
   const childResults: Array<ZodResult> = [];
 
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
 
   if (schema.items) {
     schema.items.forEach((item, index) => {
@@ -103,10 +103,10 @@ export function tupleToAst({
   };
 
   const resolver = plugin.config['~resolvers']?.tuple;
-  const expression = resolver?.(ctx) ?? tupleResolver(ctx);
+  const chain = resolver?.(ctx) ?? tupleResolver(ctx);
 
   return {
+    chain,
     childResults,
-    expression,
   };
 }

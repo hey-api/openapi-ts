@@ -26,7 +26,7 @@ export function voidToPipes({
 }: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'void'>;
 }): Pipe {
-  const ctx: VoidResolverContext = {
+  const resolverCtx: VoidResolverContext = {
     $,
     nodes: {
       base: baseNode,
@@ -39,11 +39,11 @@ export function voidToPipes({
     plugin,
     schema,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
   };
 
   const resolver = plugin.config['~resolvers']?.void;
-  const node = resolver?.(ctx) ?? voidResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? voidResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

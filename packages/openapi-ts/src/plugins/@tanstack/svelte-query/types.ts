@@ -8,6 +8,8 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
+import type { TanStackQuerySymbols } from '../query-core/symbols';
+
 export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> &
   Plugin.Hooks &
   Plugin.UserComments &
@@ -18,6 +20,43 @@ export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> &
      * @default 'camelCase'
      */
     case?: Casing;
+    /**
+     * Configuration for generated `getQueryData` helpers.
+     *
+     * When enabled, generates a helper per query operation that wraps
+     * `queryClient.getQueryData()` with the correct query key and response
+     * type already wired up.
+     *
+     * Can be:
+     * - `boolean`: Shorthand for `{ enabled: boolean }`
+     * - `string` or `function`: Shorthand for `{ name: string | function }`
+     * - `object`: Full configuration object
+     *
+     * @default false
+     */
+    getQueryData?:
+      | boolean
+      | NameTransformer
+      | {
+          /**
+           * Casing convention for generated names.
+           *
+           * @default 'camelCase'
+           */
+          case?: Casing;
+          /**
+           * Whether this feature is enabled.
+           *
+           * @default true
+           */
+          enabled?: boolean;
+          /**
+           * Naming pattern for generated names.
+           *
+           * @default '{{name}}GetQueryData'
+           */
+          name?: NameTransformer;
+        };
     /**
      * Configuration for generated infinite query key helpers.
      *
@@ -377,6 +416,8 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> &
   Plugin.Exports & {
     /** Casing convention for generated names. */
     case: Casing;
+    /** Resolved configuration for generated `getQueryData` helpers. */
+    getQueryData: NamingOptions & FeatureToggle;
     /** Resolved configuration for generated infinite query key helpers. */
     infiniteQueryKeys: NamingOptions &
       FeatureToggle & {
@@ -421,4 +462,9 @@ export type Config = Plugin.Name<'@tanstack/svelte-query'> &
     setQueryData: NamingOptions & FeatureToggle;
   };
 
-export type TanStackSvelteQueryPlugin = DefinePlugin<UserConfig, Config>;
+export type TanStackSvelteQueryPlugin = DefinePlugin<
+  UserConfig,
+  Config,
+  never,
+  TanStackQuerySymbols
+>;

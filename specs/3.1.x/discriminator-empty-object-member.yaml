@@ -1,0 +1,24 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 discriminator empty object member example
+  version: 1
+components:
+  schemas:
+    Empty:
+      type: object
+    WithValue:
+      type: object
+      required:
+        - value
+      properties:
+        value:
+          type: string
+    TestResponse:
+      oneOf:
+        - $ref: '#/components/schemas/Empty'
+        - $ref: '#/components/schemas/WithValue'
+      discriminator:
+        propertyName: type
+        mapping:
+          Empty: '#/components/schemas/Empty'
+          WithValue: '#/components/schemas/WithValue'

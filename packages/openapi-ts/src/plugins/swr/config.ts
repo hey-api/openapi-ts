@@ -1,94 +1,80 @@
-import { definePluginConfig, mappers } from '@hey-api/shared';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
 import type { SwrPlugin } from './types';
 
+const defaultMeta = (): Record<string, unknown> => ({});
+
 export const defaultConfig: SwrPlugin['Config'] = {
   config: {
+    $cascade: ['case'],
+    $finalize(config) {
+      if (config.useSwr.enabled && !config.queryOptions.enabled) {
+        config.queryOptions.enabled = true;
+        config.queryOptions.exported = false;
+      }
+    },
     case: 'camelCase',
     comments: true,
     includeInEntry: false,
+    infiniteQueryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: '{{name}}InfiniteQueryKey',
+      tags: false,
+    },
+    infiniteQueryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}InfiniteOptions',
+    },
+    mutationOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      meta: defaultMeta,
+      name: '{{name}}Mutation',
+    },
+    queryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: '{{name}}QueryKey',
+      tags: false,
+    },
+    queryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      exported: true,
+      meta: defaultMeta,
+      name: '{{name}}Options',
+    },
+    useSwr: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
+      enabled: true,
+      name: 'use{{name}}',
+    },
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler: handler as SwrPlugin['Handler'],
+  handler,
   name: 'swr',
-  resolveConfig: (plugin, context) => {
-    plugin.config.infiniteQueryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteQueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.infiniteQueryKeys,
-    });
-
-    plugin.config.infiniteQueryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}InfiniteOptions',
-      },
-      mappers,
-      value: plugin.config.infiniteQueryOptions,
-    });
-
-    plugin.config.mutationOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}Mutation',
-      },
-      mappers,
-      value: plugin.config.mutationOptions,
-    });
-
-    plugin.config.queryKeys = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: '{{name}}QueryKey',
-        tags: false,
-      },
-      mappers,
-      value: plugin.config.queryKeys,
-    });
-
-    plugin.config.queryOptions = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        exported: true,
-        name: '{{name}}Options',
-      },
-      mappers,
-      value: plugin.config.queryOptions,
-    });
-
-    plugin.config.useSwr = context.valueToObject({
-      defaultValue: {
-        case: plugin.config.case ?? 'camelCase',
-        enabled: true,
-        name: 'use{{name}}',
-      },
-      mappers: {
-        boolean: (enabled) => ({ enabled }),
-        function: (name) => ({ enabled: true, name }),
-        object: (fields) => ({ enabled: true, ...fields }),
-        string: (name) => ({ enabled: true, name }),
-      },
-      value: plugin.config.useSwr,
-    });
-
-    if (plugin.config.useSwr.enabled) {
-      // useSwr hooks consume queryOptions
-      if (!plugin.config.queryOptions.enabled) {
-        plugin.config.queryOptions.enabled = true;
-        plugin.config.queryOptions.exported = false;
-      }
-    }
-  },
 };
 
 /**

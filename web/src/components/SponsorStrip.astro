@@ -1,4 +1,5 @@
 ---
+import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
 import { sponsors } from '@/data/sponsors';
 import { getVisibleSponsorTiers } from '@/utils/sponsors';
 
@@ -25,7 +26,9 @@ const featured = sponsors.filter((s) => activeTiers.includes(s.tier));
       ))}
     </ul>
   </div>
-  <a class="sponsor-strip__cta" href="/sponsors">Become a sponsor →</a>
+  <a class="sponsor-strip__cta" href="/sponsors">
+    Become a sponsor <span class="icon" set:html={arrowRightSvg} aria-hidden="true" />
+  </a>
 </div>
 
 <script define:vars={{ DURATION_MS, SESSION_KEY }}>
@@ -169,5 +172,19 @@ const featured = sponsors.filter((s) => activeTiers.includes(s.tier));
 
   .sponsor-strip__cta:hover {
     color: var(--sl-color-text);
+  }
+
+  .sponsor-strip__cta .icon {
+    display: inline-block;
+    height: 1em;
+    margin-right: -0.2em;
+    width: 1em;
+  }
+
+  .sponsor-strip__cta .icon :global(svg) {
+    display: inline-block;
+    height: auto;
+    margin-bottom: -2px;
+    max-width: 100%;
   }
 </style>

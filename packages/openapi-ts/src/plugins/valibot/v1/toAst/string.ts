@@ -114,7 +114,7 @@ export function stringToPipes({
     });
   }
 
-  const ctx: StringResolverContext = {
+  const resolverCtx: StringResolverContext = {
     $,
     nodes: {
       base: baseNode,
@@ -133,11 +133,11 @@ export function stringToPipes({
     plugin,
     schema,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
   };
 
   const resolver = plugin.config['~resolvers']?.string;
-  const node = resolver?.(ctx) ?? stringResolver(ctx);
-  return ctx.pipes.toNode(node, plugin);
+  const node = resolver?.(resolverCtx) ?? stringResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
 }

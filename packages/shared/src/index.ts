@@ -6,7 +6,7 @@ export type { Input, UserInput, UserWatch, Watch } from './config/input/types';
 export { getLogs } from './config/logs';
 export type { PostProcessor, UserPostProcessor } from './config/output/postprocess';
 export { postprocessOutput } from './config/output/postprocess';
-export { resolveSource } from './config/output/source/config';
+export { sourceConfig } from './config/output/source/config';
 export type { SourceConfig, UserSourceConfig } from './config/output/source/types';
 export type { OutputHeader } from './config/output/types';
 export { defaultPaginationKeywords, getParser } from './config/parser/config';
@@ -27,8 +27,6 @@ export type {
   UserCommentsOption,
   UserIndexExportOption,
 } from './config/shared';
-export type { ValueToObject } from './config/utils/config';
-export { valueToObject } from './config/utils/config';
 export type { Dependency } from './config/utils/dependencies';
 export { dependencyFactory, satisfies } from './config/utils/dependencies';
 export { debugTools } from './debug';
@@ -80,6 +78,12 @@ export type {
   IRServerObject,
 } from './ir/types';
 export { addItemsToSchema } from './ir/utils';
+export type { Coercer } from './normalize/coerce';
+export { coerce, COERCER, isCoercer } from './normalize/coerce';
+export type { ConfigNormalizer, ConfigTable } from './normalize/config';
+export { defineConfig } from './normalize/config';
+export type { CoercerMap, TableDirectives, WithCoercers } from './normalize/value';
+export { collectDeps } from './normalize/value';
 export { parseOpenApiSpec } from './openApi';
 export { parseV2_0_X } from './openApi/2.0.x';
 export { parseV3_0_X } from './openApi/3.0.x';
@@ -101,7 +105,7 @@ export type {
 export type { GetNameContext, Hooks } from './parser/hooks';
 export { warnOnConflictingDuplicatePlugins } from './plugins/duplicate';
 export type { SchemaWithType } from './plugins/shared/types/schema';
-export { definePluginConfig, mappers } from './plugins/shared/utils/config';
+export { definePluginConfig } from './plugins/shared/utils/config';
 export type { PluginInstanceTypes } from './plugins/shared/utils/instance';
 export { PluginInstance } from './plugins/shared/utils/instance';
 export { buildSymbolIn } from './plugins/symbol';
@@ -112,6 +116,8 @@ export type {
   PluginConfigMap,
   PluginContext,
   PluginNames,
+  PluginSymbols,
+  PluginTag,
 } from './plugins/types';
 export type {
   DefaultRequestValidatorLayers,
@@ -134,6 +140,7 @@ export { heyApiRegistryBaseUrl } from './utils/input/heyApi';
 export { MinHeap } from './utils/minHeap';
 export { applyNaming, resolveNaming, toCase } from './utils/naming/naming';
 export type { Casing, NameTransformer, NamingConfig, NamingRule } from './utils/naming/types';
+export { isPlainObject } from './utils/object';
 export { pathToName } from './utils/path';
 export {
   encodeJsonPointerSegment,

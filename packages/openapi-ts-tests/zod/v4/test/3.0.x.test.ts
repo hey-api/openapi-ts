@@ -44,6 +44,14 @@ for (const zodVersion of zodVersions) {
       },
       {
         config: createConfig({
+          input: 'discriminator-empty-object-member.yaml',
+          output: 'discriminator-empty-object-member',
+        }),
+        description:
+          'falls back to z.union() when a discriminated union member is an empty object (z.record cannot be extended)',
+      },
+      {
+        config: createConfig({
           input: 'enum-null.json',
           output: 'enum-null',
         }),

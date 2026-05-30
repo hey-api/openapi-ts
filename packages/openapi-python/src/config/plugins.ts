@@ -1,7 +1,9 @@
+import { log } from '@hey-api/codegen-core';
 import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared';
 import {
+  collectDeps,
+  defineConfig,
   dependencyFactory,
-  valueToObject,
   warnOnConflictingDuplicatePlugins,
 } from '@hey-api/shared';
 
@@ -26,7 +28,7 @@ function getPluginsConfig({
   const pluginOrder = new Set<AnyPluginName>();
   const plugins: Config['plugins'] = {};
 
-  const dfs = (name: AnyPluginName) => {
+  function dfs(name: AnyPluginName): void {
     if (circularReferenceTracker.has(name)) {
       throw new Error(`Circular reference detected at '${name}'`);
     }
@@ -46,50 +48,62 @@ function getPluginsConfig({
       );
     }
 
+    const effectiveDefaultConfig = defaultPlugin?.config ?? userPlugin?.config ?? {};
+    const userConfigValue =
+      defaultPlugin !== undefined &&
+      typeof userPlugin?.config === 'object' &&
+      userPlugin.config !== null
+        ? (userPlugin.config as unknown as Record<string, unknown>)
+        : {};
+
+    const warnedMessages = new Set<string>();
+    const pluginContext: PluginContext = {
+      package: dependencyFactory(dependencies),
+      resolveTag(tag, options = {}) {
+        const { defaultPlugin, fallback = false, warn } = options;
+
+        for (const userPlugin of userPlugins) {
+          const defaultConfig =
+            defaultPluginConfigs[userPlugin as PluginNames] || userPluginsConfig[userPlugin];
+          if (defaultConfig && defaultConfig.tags?.includes(tag) && userPlugin !== name) {
+            return userPlugin as any;
+          }
+        }
+
+        if (defaultPlugin) {
+          const defaultConfig =
+            defaultPluginConfigs[defaultPlugin as PluginNames] || userPluginsConfig[defaultPlugin];
+          if (defaultConfig && defaultConfig.tags?.includes(tag) && defaultPlugin !== name) {
+            return defaultPlugin;
+          }
+        }
+
+        if (warn && !warnedMessages.has(warn)) {
+          warnedMessages.add(warn);
+          log.warn(warn);
+        }
+
+        return fallback;
+      },
+    };
+    const mergedConfig = defineConfig(effectiveDefaultConfig as any)(
+      userConfigValue,
+      pluginContext,
+    );
+
+    const deps = new Set([
+      ...(defaultPlugin?.dependencies || []),
+      ...(userPlugin?.dependencies || []),
+    ]);
+
     const plugin = {
       ...defaultPlugin,
       ...userPlugin,
-      config: {
-        ...defaultPlugin?.config,
-        ...userPlugin?.config,
-      },
-      dependencies: new Set([
-        ...(defaultPlugin?.dependencies || []),
-        ...(userPlugin?.dependencies || []),
-      ]),
+      config: mergedConfig,
+      dependencies: deps,
     };
 
-    if (plugin.resolveConfig) {
-      const context: PluginContext = {
-        package: dependencyFactory(dependencies),
-        pluginByTag: (tag, props = {}) => {
-          const { defaultPlugin, errorMessage } = props;
-
-          for (const userPlugin of userPlugins) {
-            const defaultConfig =
-              defaultPluginConfigs[userPlugin as PluginNames] ||
-              userPluginsConfig[userPlugin as PluginNames];
-            if (defaultConfig && defaultConfig.tags?.includes(tag) && userPlugin !== name) {
-              return userPlugin as any;
-            }
-          }
-
-          if (defaultPlugin) {
-            const defaultConfig =
-              defaultPluginConfigs[defaultPlugin as PluginNames] ||
-              userPluginsConfig[defaultPlugin as PluginNames];
-            if (defaultConfig && defaultConfig.tags?.includes(tag) && defaultPlugin !== name) {
-              return defaultPlugin;
-            }
-          }
-
-          throw new Error(errorMessage || `missing plugin - no plugin with tag "${tag}" found`);
-        },
-        valueToObject,
-      };
-      // @ts-expect-error
-      plugin.resolveConfig(plugin, context);
-    }
+    collectDeps(effectiveDefaultConfig, mergedConfig, deps);
 
     for (const dependency of plugin.dependencies) {
       dfs(dependency);
@@ -100,7 +114,7 @@ function getPluginsConfig({
 
     // @ts-expect-error
     plugins[name] = plugin;
-  };
+  }
 
   for (const name of userPlugins) {
     dfs(name);

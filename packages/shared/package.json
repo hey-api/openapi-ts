@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/shared",
-  "version": "0.4.3",
+  "version": "0.4.5",
   "description": "Temporary home for cross-package utilities. Contents will migrate to proper packages as architecture stabilizes.",
   "homepage": "https://heyapi.dev/",
   "bugs": {
@@ -53,8 +53,8 @@
     "@types/cross-spawn": "6.0.6",
     "@types/semver": "7.7.1",
     "eslint": "9.39.2",
-    "typescript": "6.0.2",
-    "yaml": "2.8.3"
+    "typescript": "6.0.3",
+    "yaml": "2.9.0"
   },
   "engines": {
     "node": ">=22.13.0"

@@ -1,11 +1,21 @@
 import { definePluginConfig } from '@hey-api/shared';
 
-import { bigIntExpressions, dateExpressions } from './expressions';
+import { bigIntExpressions, dateExpressions, temporalExpressions } from './expressions';
 import { handler } from './plugin';
 import type { HeyApiTransformersPlugin } from './types';
 
 export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   config: {
+    $finalize(config) {
+      if (config.dates) {
+        const dateTransformer = config.dates === 'temporal' ? temporalExpressions : dateExpressions;
+        config.transformers = [...config.transformers, dateTransformer];
+      }
+
+      if (config.bigInt) {
+        config.transformers = [...config.transformers, bigIntExpressions];
+      }
+    },
     bigInt: true,
     dates: true,
     includeInEntry: false,
@@ -15,19 +25,6 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: '@hey-api/transformers',
-  resolveConfig: (plugin) => {
-    if (!plugin.config.transformers) {
-      plugin.config.transformers = [];
-    }
-
-    if (plugin.config.dates) {
-      plugin.config.transformers = [...plugin.config.transformers, dateExpressions];
-    }
-
-    if (plugin.config.bigInt) {
-      plugin.config.transformers = [...plugin.config.transformers, bigIntExpressions];
-    }
-  },
   tags: ['transformer'],
 };
 

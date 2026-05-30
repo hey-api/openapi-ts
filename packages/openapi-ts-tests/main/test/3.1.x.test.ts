@@ -800,6 +800,20 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'security-http-bearer-duplicate.json',
+        output: 'security-http-bearer-duplicate',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            auth: true,
+            name: '@hey-api/sdk',
+          },
+        ],
+      }),
+      description: 'exposes securitySchemes key on Auth when http schemes collide',
+    },
+    {
+      config: createConfig({
         input: 'security-oauth2.yaml',
         output: 'security-oauth2',
         plugins: [
@@ -903,6 +917,20 @@ describe(`OpenAPI ${version}`, () => {
         plugins: ['@hey-api/client-fetch', '@hey-api/transformers'],
       }),
       description: 'transforms discriminated oneOf without warning',
+    },
+    {
+      config: createConfig({
+        input: 'transformers-temporal.json',
+        output: 'transformers-temporal',
+        plugins: [
+          '@hey-api/client-fetch',
+          {
+            dates: 'temporal',
+            name: '@hey-api/transformers',
+          },
+        ],
+      }),
+      description: 'transforms dates using the Temporal API',
     },
     {
       config: createConfig({

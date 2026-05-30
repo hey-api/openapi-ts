@@ -1,4 +1,5 @@
 ---
+import arrowRightSvg from '@/assets/icons/arrow-right.svg?raw';
 import { sponsors } from '@/data/sponsors';
 import SponsorTierComponent from '@/components/SponsorTier.astro';
 import { getVisibleSponsorTiers } from '@/utils/sponsors';
@@ -26,7 +27,7 @@ const visibleSponsors = sponsors.filter((s) => activeTiers.includes(s.tier));
     </div>
 
     <div class="sponsors-footer not-content">
-      <a href="/sponsors" class="sponsors-cta">Become a sponsor →</a>
+      <a href="/sponsors" class="sponsors-cta">Become a sponsor <span class="icon" set:html={arrowRightSvg} aria-hidden="true" /></a>
     </div>
   </div>
 </div>
@@ -92,5 +93,19 @@ const visibleSponsors = sponsors.filter((s) => activeTiers.includes(s.tier));
 
   .sponsors-cta:hover {
     opacity: 0.75;
+  }
+
+  .sponsors-cta .icon {
+    display: inline-block;
+    height: 1em;
+    margin-right: -0.2em;
+    width: 1em;
+  }
+
+  .sponsors-cta .icon :global(svg) {
+    display: inline-block;
+    height: auto;
+    margin-bottom: -2px;
+    max-width: 100%;
   }
 </style>

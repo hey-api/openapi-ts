@@ -87,6 +87,10 @@ export { defaultPlugins } from './config/plugins';
 export type { UserConfig } from './config/types';
 export { Logger } from '@hey-api/codegen-core';
 export type {
+  AnyPluginName,
+  Coercer,
+  CoercerMap,
+  ConfigTable,
   DefinePlugin,
   IR,
   OpenApi,
@@ -97,12 +101,19 @@ export type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
   Plugin,
+  PluginContext,
+  PluginInstance,
+  TableDirectives,
 } from '@hey-api/shared';
 export {
+  applyNaming,
+  coerce,
   defaultPaginationKeywords,
+  defineConfig as defineConfigTable,
   definePluginConfig,
   OperationPath,
   OperationStrategy,
+  toCase,
   utils,
 } from '@hey-api/shared';
 

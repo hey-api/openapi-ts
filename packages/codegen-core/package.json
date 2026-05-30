@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/codegen-core",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "🧱 TypeScript framework for generating files.",
   "keywords": [
     "codegen",
@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "eslint": "9.39.2",
-    "typescript": "6.0.2"
+    "typescript": "6.0.3"
   },
   "engines": {
     "node": ">=22.13.0"

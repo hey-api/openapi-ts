@@ -1,38 +1,38 @@
 import type { MaybeArray } from '@hey-api/types';
 
+import { coerce } from '../../normalize/coerce';
+import { defineConfig } from '../../normalize/config';
+import { opaque } from '../../normalize/opaque';
 import { inputToApiRegistry } from '../../utils/input';
 import { heyApiRegistryBaseUrl } from '../../utils/input/heyApi';
 import type { Input, UserInput, UserWatch, Watch } from './types';
 
-const defaultWatch: Watch = {
+const watchConfig = defineConfig<UserWatch | undefined, Watch>({
+  $coerce: {
+    boolean: (v) => ({ enabled: v }),
+    number: (v) => ({ enabled: true, interval: v }),
+  },
   enabled: false,
   interval: 1_000,
   timeout: 60_000,
-};
+});
 
-// watch only remote files
-function getWatch(input: Pick<Input, 'path' | 'watch'>): Watch {
-  let watch = { ...defaultWatch };
-
-  // we cannot watch spec passed as an object
-  if (typeof input.path !== 'string') {
-    return watch;
-  }
-
-  if (typeof input.watch === 'boolean') {
-    watch.enabled = input.watch;
-  } else if (typeof input.watch === 'number') {
-    watch.enabled = true;
-    watch.interval = input.watch;
-  } else if (input.watch) {
-    watch = {
-      ...watch,
-      ...input.watch,
-    };
-  }
-
-  return watch;
-}
+const inputConfig = defineConfig<UserInput | string, Input>({
+  $coerce: {
+    string: (path) => ({ path }),
+  },
+  $finalize(config, input) {
+    if (input && typeof input === 'object' && 'organization' in input && config.path === '') {
+      config.path = heyApiRegistryBaseUrl;
+    }
+  },
+  path: opaque<string | object>('', (input) =>
+    input && typeof input === 'object' && !('path' in input) && !('organization' in input)
+      ? input
+      : undefined,
+  ),
+  watch: coerce((value) => watchConfig(value)),
+});
 
 export function getInput(userConfig: {
   input: MaybeArray<UserInput | Required<UserInput>['path']>;
@@ -43,54 +43,25 @@ export function getInput(userConfig: {
   const inputs: Array<Input> = [];
 
   for (const userInput of userInputs) {
-    let input: Input = {
-      path: '',
-      watch: defaultWatch,
-    };
+    const input = inputConfig(userInput);
 
-    if (typeof userInput === 'string') {
-      input.path = userInput;
-    } else if (
-      userInput &&
-      (userInput.path !== undefined || userInput.organization !== undefined)
-    ) {
-      // @ts-expect-error
-      input = {
-        ...input,
-        path: heyApiRegistryBaseUrl,
-        ...userInput,
-      };
-
-      if (input.watch !== undefined) {
-        input.watch = getWatch(input);
-      }
-    } else {
-      input = {
-        ...input,
-        path: userInput,
-      };
-    }
+    if (!input.path) continue;
 
     if (typeof input.path === 'string') {
       inputToApiRegistry(input as Input & { path: string });
     }
 
+    // deprecated top-level `watch` — only applies when input hasn't set its own
     if (
       userConfig.watch !== undefined &&
-      input.watch.enabled === defaultWatch.enabled &&
-      input.watch.interval === defaultWatch.interval &&
-      input.watch.timeout === defaultWatch.timeout
+      input.watch.enabled === false &&
+      input.watch.interval === 1_000 &&
+      input.watch.timeout === 60_000
     ) {
-      input.watch = getWatch({
-        path: input.path,
-        // @ts-expect-error
-        watch: userConfig.watch,
-      });
+      input.watch = watchConfig(userConfig.watch);
     }
 
-    if (input.path) {
-      inputs.push(input);
-    }
+    inputs.push(input);
   }
 
   return inputs;
