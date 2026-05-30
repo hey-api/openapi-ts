@@ -1,9 +1,9 @@
+import { log } from '@hey-api/codegen-core';
 import type { AnyPluginName, PluginContext, PluginNames } from '@hey-api/shared';
 import {
-  defineNormalizers,
+  collectDeps,
+  defineConfig,
   dependencyFactory,
-  pluginUserConfigSymbol,
-  valueToObject,
   warnOnConflictingDuplicatePlugins,
 } from '@hey-api/shared';
 
@@ -51,15 +51,23 @@ function getPluginsConfig({
       );
     }
 
-    const context: PluginContext = {
+    const effectiveDefaultConfig = defaultPlugin?.config ?? userPlugin?.config ?? {};
+    const userConfigValue =
+      defaultPlugin !== undefined &&
+      typeof userPlugin?.config === 'object' &&
+      userPlugin.config !== null
+        ? (userPlugin.config as unknown as Record<string, unknown>)
+        : {};
+
+    const warnedMessages = new Set<string>();
+    const pluginContext: PluginContext = {
       package: dependencyFactory(dependencies),
-      pluginByTag: (tag, props = {}) => {
-        const { defaultPlugin, errorMessage } = props;
+      resolveTag(tag, options = {}) {
+        const { defaultPlugin, fallback = false, warn } = options;
 
         for (const userPlugin of userPlugins) {
           const defaultConfig =
-            defaultPluginConfigs[userPlugin as PluginNames] ||
-            userPluginsConfig[userPlugin as PluginNames];
+            defaultPluginConfigs[userPlugin as PluginNames] || userPluginsConfig[userPlugin];
           if (defaultConfig && defaultConfig.tags?.includes(tag) && userPlugin !== name) {
             return userPlugin as any;
           }
@@ -67,46 +75,38 @@ function getPluginsConfig({
 
         if (defaultPlugin) {
           const defaultConfig =
-            defaultPluginConfigs[defaultPlugin as PluginNames] ||
-            userPluginsConfig[defaultPlugin as PluginNames];
+            defaultPluginConfigs[defaultPlugin as PluginNames] || userPluginsConfig[defaultPlugin];
           if (defaultConfig && defaultConfig.tags?.includes(tag) && defaultPlugin !== name) {
             return defaultPlugin;
           }
         }
 
-        throw new Error(errorMessage || `missing plugin - no plugin with tag "${tag}" found`);
+        if (warn && !warnedMessages.has(warn)) {
+          warnedMessages.add(warn);
+          log.warn(warn);
+        }
+
+        return fallback;
       },
-      valueToObject,
     };
+    const mergedConfig = defineConfig(effectiveDefaultConfig as any)(
+      userConfigValue,
+      pluginContext,
+    );
 
-    const effectiveDefaultConfig = defaultPlugin?.config ?? userPlugin?.config ?? {};
-    const userPluginConfig = userPlugin as
-      | (typeof userPlugin & { [pluginUserConfigSymbol]?: Record<string, unknown> })
-      | undefined;
-    const userConfigValue =
-      userPluginConfig?.[pluginUserConfigSymbol] ??
-      (defaultPlugin !== undefined &&
-      typeof userPlugin?.config === 'object' &&
-      userPlugin.config !== null
-        ? (userPlugin.config as unknown as Record<string, unknown>)
-        : {});
-
-    const mergedConfig = defineNormalizers(effectiveDefaultConfig as any)(userConfigValue, context);
+    const deps = new Set([
+      ...(defaultPlugin?.dependencies || []),
+      ...(userPlugin?.dependencies || []),
+    ]);
 
     const plugin = {
       ...defaultPlugin,
       ...userPlugin,
       config: mergedConfig,
-      dependencies: new Set([
-        ...(defaultPlugin?.dependencies || []),
-        ...(userPlugin?.dependencies || []),
-      ]),
+      dependencies: deps,
     };
 
-    if (plugin.resolveConfig) {
-      // @ts-expect-error
-      plugin.resolveConfig(plugin, context);
-    }
+    collectDeps(effectiveDefaultConfig, mergedConfig, deps);
 
     for (const dependency of plugin.dependencies) {
       dfs(dependency);

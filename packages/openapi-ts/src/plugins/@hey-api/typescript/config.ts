@@ -2,41 +2,60 @@ import { definePluginConfig } from '@hey-api/shared';
 
 import { Api } from './api';
 import { handler } from './plugin';
-import type { HeyApiTypeScriptPlugin } from './types';
+import type { EnumsType, HeyApiTypeScriptPlugin } from './types';
 
 export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   api: new Api(),
-  config: (c) => ({
+  config: {
     $cascade: ['case'],
     case: 'PascalCase',
     comments: true,
     definitions: {
+      $coerceAny: ({ type, value }) => ({
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       name: '{{name}}',
     },
     enums: {
+      $coerce: {
+        string: (v) => ({ mode: v as EnumsType }),
+      },
+      $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
       case: 'SCREAMING_SNAKE_CASE',
       constantsIgnoreNull: false,
-      enabled: Boolean(c.enums),
-      mode: typeof c.enums === 'string' ? c.enums : 'javascript',
+      enabled: false,
+      mode: 'javascript',
     },
     errors: {
+      $coerceAny: ({ type, value }) => ({
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       error: '{{name}}Error',
       name: '{{name}}Errors',
     },
     includeInEntry: true,
     requests: {
+      $coerceAny: ({ type, value }) => ({
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       name: '{{name}}Data',
     },
     responses: {
+      $coerceAny: ({ type, value }) => ({
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       name: '{{name}}Responses',
       response: '{{name}}Response',
     },
     topType: 'unknown',
     webhooks: {
+      $coerceAny: ({ type, value }) => ({
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       name: '{{name}}WebhookRequest',
       payload: '{{name}}WebhookPayload',
     },
-  }),
+  },
   handler,
   name: '@hey-api/typescript',
 };
