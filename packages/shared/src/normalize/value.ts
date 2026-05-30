@@ -73,14 +73,14 @@ export type TableDirectives<TShape extends object = object, TInput = unknown> = 
    *
    * @example
    * ```ts
-   * $finalize(resolved) {
-   *   if (resolved.output === 'cjs' && resolved.format === undefined) {
-   *     resolved.format = 'commonjs';
+   * $finalize(config) {
+   *   if (config.output === 'cjs' && config.format === undefined) {
+   *     config.format = 'commonjs';
    *   }
    * }
    * ```
    */
-  $finalize?: (resolved: TShape, input: TInput) => void;
+  $finalize?: (config: TShape, input: TInput) => void;
 };
 
 export type WithCoercers<T> = [T] extends [(...args: Array<any>) => any]

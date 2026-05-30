@@ -15,7 +15,7 @@ const validatorInferWarn =
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
     $dependencies: ['client'],
-    $finalize(resolved, input) {
+    $finalize(config, input) {
       if (input.asClass !== undefined) {
         log.warnDeprecated({
           context: '@hey-api/sdk',
@@ -68,7 +68,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       for (const key of Object.keys(legacy)) {
         const value = legacy[key as keyof typeof legacy];
         if (value !== undefined) {
-          (resolved.operations as unknown as Record<string, unknown>)[key] = value;
+          (config.operations as unknown as Record<string, unknown>)[key] = value;
         }
       }
     },
