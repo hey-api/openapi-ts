@@ -9,7 +9,8 @@ export type NodeTemplate<nodeType> = {
     child?: nodeType;
 };
 
-export type Node = NodeTemplate<Node>;
+export interface Node extends NodeTemplate<Node> {
+}
 
 export type GetNodesData = {
     body?: never;
