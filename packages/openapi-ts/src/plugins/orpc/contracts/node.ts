@@ -66,11 +66,8 @@ function createContractExpression(
         .prop('method', $.literal(operation.method.toUpperCase()))
         .$if(operation.operationId, (o, v) => o.prop('operationId', $.literal(v)))
         .prop('path', $.literal(operation.path))
-        .$if(
-          successResponse.hasOutput &&
-            successResponse.statusCode !== 200 &&
-            successResponse.statusCode,
-          (o, v) => o.prop('successStatus', $.literal(v)),
+        .$if(successResponse.statusCode !== 200 && successResponse.statusCode, (o, v) =>
+          o.prop('successStatus', $.literal(v)),
         )
         .$if(operation.summary, (o, v) => o.prop('summary', $.literal(v)))
         .$if(Boolean(tags.length) && tags, (o, v) => o.prop('tags', $.fromValue(v))),

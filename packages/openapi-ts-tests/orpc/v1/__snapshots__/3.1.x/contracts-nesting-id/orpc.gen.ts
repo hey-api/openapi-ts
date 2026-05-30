@@ -3,7 +3,7 @@
 import { oc } from '@orpc/contract';
 import * as z from 'zod';
 
-import { zCreatePostBody, zCreatePostHeaders, zCreatePostResponse, zCreateUserBody, zCreateUserResponse, zDeleteUserHeaders, zDeleteUserPath, zGetPostByIdPath, zGetPostByIdQuery, zGetPostByIdResponse, zGetPostsQuery, zGetPostsResponse, zGetUserByIdPath, zGetUserByIdResponse, zGetUsersQuery, zGetUsersResponse, zUpdateUserBody, zUpdateUserPath, zUpdateUserResponse } from './zod.gen';
+import { zCreatePostBody, zCreatePostHeaders, zCreatePostResponse, zCreateUserBody, zCreateUserResponse, zDeleteUserHeaders, zDeleteUserPath, zDeleteUserResponse, zGetPostByIdPath, zGetPostByIdQuery, zGetPostByIdResponse, zGetPostsQuery, zGetPostsResponse, zGetUserByIdPath, zGetUserByIdResponse, zGetUsersQuery, zGetUsersResponse, zUpdateUserBody, zUpdateUserPath, zUpdateUserResponse } from './zod.gen';
 
 /**
  * Get all users
@@ -38,9 +38,10 @@ export const deleteUser = oc.route({
     method: 'DELETE',
     operationId: 'deleteUser',
     path: '/users/{userId}',
+    successStatus: 204,
     summary: 'Delete a user',
     tags: ['users']
-}).input(z.object({ headers: zDeleteUserHeaders.optional(), params: zDeleteUserPath }));
+}).input(z.object({ headers: zDeleteUserHeaders.optional(), params: zDeleteUserPath })).output(zDeleteUserResponse);
 
 /**
  * Get a user by ID
