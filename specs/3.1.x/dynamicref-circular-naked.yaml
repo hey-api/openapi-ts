@@ -3,9 +3,7 @@ info:
   title: DynamicRef Circular Naked Test
   description: >
     Edge case: circular generic ref WITHOUT allOf or extra properties.
-    Produces `type Node = NodeTemplate<Node>` which triggers TS2456.
-    This is a known limitation — only allOf-based circular refs can be
-    converted to `interface extends`.
+    Produces `interface Node extends NodeTemplate<Node> {}` to avoid TS2456.
   version: 0.1.0
 servers:
   - url: https://api.example.com

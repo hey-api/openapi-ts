@@ -59,15 +59,31 @@ export function exportAst({
     }),
   );
 
-  if (schema.circularTypeAlias && final.type instanceof TypeAndTsDsl) {
-    const comment = plugin.config.comments && createSchemaComment(schema);
-    const iface = exportCircularInterfaceAst({
-      comment,
-      final,
-      symbol,
-    });
-    plugin.node(iface);
-    return;
+  if (schema.circularTypeAlias) {
+    if (final.type instanceof TypeAndTsDsl) {
+      const comment = plugin.config.comments && createSchemaComment(schema);
+      const iface = exportCircularInterfaceAst({
+        comment,
+        final,
+        symbol,
+      });
+      plugin.node(iface);
+      return;
+    }
+
+    if (final.type instanceof TypeExprTsDsl) {
+      const expr = final.type;
+      const input = expr.getExprInput();
+      if (input !== undefined && !(input instanceof TypeAttrTsDsl)) {
+        const comment = plugin.config.comments && createSchemaComment(schema);
+        const iface = $.interface(symbol)
+          .export()
+          .$if(comment, (t, v) => t.doc(v))
+          .extends(input as NodeName, expr.getTypeArgs());
+        plugin.node(iface);
+        return;
+      }
+    }
   }
 
   const node = $.type

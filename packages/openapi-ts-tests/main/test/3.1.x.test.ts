@@ -1083,7 +1083,7 @@ describe(`OpenAPI ${version}`, () => {
         input: 'dynamicref-circular-naked.yaml',
         output: 'dynamicref-circular-naked',
       }),
-      description: 'handles circular $dynamicRef without allOf (falls back to type alias)',
+      description: 'emits interface extends for circular $dynamicRef without allOf',
     },
   ];
 
