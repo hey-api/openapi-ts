@@ -37,3 +37,18 @@ export type Arrays = [
 ] | [
     'baz'
 ];
+
+export enum DecimalVarnames {
+    /**
+     * 101.147
+     */
+    '_101.147' = 'FM',
+    /**
+     * 90.20
+     */
+    '_90.20' = 'PS',
+    /**
+     * 90.35
+     */
+    '_90.35' = 'B/ILT'
+}

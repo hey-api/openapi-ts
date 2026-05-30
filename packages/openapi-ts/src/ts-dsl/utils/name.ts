@@ -10,7 +10,15 @@ import { reserved } from './reserved';
 export const safeAccessorName = (name: string): string => {
   regexp.number.lastIndex = 0;
   if (regexp.number.test(name)) {
-    return name.startsWith('-') ? `'${name}'` : name;
+    if (name.startsWith('-')) {
+      return `'${name}'`;
+    }
+    // If Number() conversion loses precision (e.g. trailing zeros),
+    // quote the name to preserve the original string
+    if (String(Number(name)) !== name) {
+      return `'${name}'`;
+    }
+    return name;
   }
 
   regexp.typeScriptIdentifier.lastIndex = 0;
@@ -33,9 +41,16 @@ export const safePropName = (
 ): TsDsl<ts.StringLiteral | ts.NumericLiteral> | IdTsDsl => {
   regexp.number.lastIndex = 0;
   if (regexp.number.test(name)) {
-    return name.startsWith('-')
-      ? (new LiteralTsDsl(name) as TsDsl<ts.StringLiteral>)
-      : (new LiteralTsDsl(Number(name)) as TsDsl<ts.NumericLiteral>);
+    if (name.startsWith('-')) {
+      return new LiteralTsDsl(name) as TsDsl<ts.StringLiteral>;
+    }
+    const num = Number(name);
+    // If Number() conversion loses precision (e.g. trailing zeros),
+    // preserve the original string as a quoted property key
+    if (String(num) !== name) {
+      return new LiteralTsDsl(name) as TsDsl<ts.StringLiteral>;
+    }
+    return new LiteralTsDsl(num) as TsDsl<ts.NumericLiteral>;
   }
 
   regexp.typeScriptIdentifier.lastIndex = 0;

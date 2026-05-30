@@ -21,3 +21,5 @@ export type Arrays = [
 ] | [
     'baz'
 ];
+
+export type DecimalVarnames = 'FM' | 'PS' | 'B/ILT';
