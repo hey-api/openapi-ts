@@ -61,14 +61,6 @@ export type UserOutput = BaseUserOutput<'.js' | '.ts'> & {
 
 export type Output = BaseOutput<'.js' | '.ts'> & {
   /**
-   * Which formatter to use to process output folder?
-   */
-  format: Formatters | null;
-  /**
-   * Which linter to use to process output folder?
-   */
-  lint: Linters | null;
-  /**
    * Whether `export * from 'module'` should be used when possible
    * instead of named exports.
    */

@@ -1,10 +1,11 @@
 import { log } from '@hey-api/codegen-core';
-import type { AnyPluginName, PluginTag } from '@hey-api/shared';
-import { definePluginConfig } from '@hey-api/shared';
+import type { PluginContext } from '@hey-api/shared';
+import { coerce, definePluginConfig } from '@hey-api/shared';
 
-import { resolveOperations } from './operations';
+import type { UserOperationsConfig } from './operations';
+import { mapLegacyToConfig } from './operations/config';
 import { handler } from './plugin';
-import type { HeyApiSdkPlugin } from './types';
+import type { Config, HeyApiSdkPlugin } from './types';
 
 const transformerInferWarn =
   'You set `transformer: true` but no transformer plugin was found in your plugins. Add a transformer plugin like `@hey-api/transformers` to enable this feature. The transformer option has been disabled.';
@@ -13,16 +14,171 @@ const validatorInferWarn =
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   config: {
+    $dependencies: ['client'],
+    $finalize(resolved, input) {
+      if (input.asClass !== undefined) {
+        log.warnDeprecated({
+          context: '@hey-api/sdk',
+          field: 'asClass',
+          replacement: ['operations: { strategy: "byTags" }', 'operations: { strategy: "single" }'],
+        });
+      }
+
+      if (input.classNameBuilder !== undefined) {
+        log.warnDeprecated({
+          context: '@hey-api/sdk',
+          field: 'classNameBuilder',
+          replacement: 'operations: { containerName: "..." }',
+        });
+      }
+
+      if (input.classStructure !== undefined) {
+        log.warnDeprecated({
+          context: '@hey-api/sdk',
+          field: 'classStructure',
+          replacement: ['operations: { nesting: "operationId" }', 'operations: { nesting: "id" }'],
+        });
+      }
+
+      if (input.instance !== undefined) {
+        log.warnDeprecated({
+          context: '@hey-api/sdk',
+          field: 'instance',
+          replacement: `operations: { strategy: "single", containerName: "${input.instance || 'Name'}", methods: "instance" }`,
+        });
+      }
+
+      if (input.methodNameBuilder !== undefined) {
+        log.warnDeprecated({
+          context: '@hey-api/sdk',
+          field: 'methodNameBuilder',
+          replacement: 'operations: { methodName: "..." }',
+        });
+      }
+
+      if (input.operationId !== undefined) {
+        log.warnDeprecated({
+          context: '@hey-api/sdk',
+          field: 'operationId',
+          replacement: ['operations: { nesting: "operationId" }', 'operations: { nesting: "id" }'],
+        });
+      }
+
+      const legacy = mapLegacyToConfig(input);
+      for (const key of Object.keys(legacy)) {
+        const value = legacy[key as keyof typeof legacy];
+        if (value !== undefined) {
+          (resolved.operations as unknown as Record<string, unknown>)[key] = value;
+        }
+      }
+    },
     auth: true,
+    client: coerce((value, context) => {
+      if (value === true || value === undefined) {
+        return (context as PluginContext).resolveTag('client', {
+          defaultPlugin: '@hey-api/client-fetch',
+        });
+      }
+      return value;
+    }),
     comments: true,
     examples: {
-      $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
+      $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
       enabled: false,
       language: 'JavaScript',
     },
     includeInEntry: true,
+    operations: {
+      $cascade: ['strategy'],
+      $coerceAny: ({ type, value }) => ({
+        ...(type === 'string' || type === 'function'
+          ? { strategy: value as UserOperationsConfig['strategy'] }
+          : {}),
+      }),
+      container: 'class',
+      containerName: {
+        $coerce: {
+          function: (v) => ({ name: v }),
+          string: (v) => ({ name: v }),
+        },
+        casing: 'PascalCase',
+        name: coerce((value, context) =>
+          value !== undefined
+            ? value
+            : (context as UserOperationsConfig).strategy === 'single'
+              ? 'Sdk'
+              : '',
+        ),
+      },
+      methodName: {
+        $coerce: {
+          function: (v) => ({ name: v }),
+          string: (v) => ({ name: v }),
+        },
+        casing: 'camelCase',
+        name: '',
+      },
+      methods: coerce((value, context) =>
+        value !== undefined
+          ? value
+          : (context as UserOperationsConfig).strategy === 'single'
+            ? 'instance'
+            : 'static',
+      ),
+      nesting: 'operationId',
+      nestingDelimiters: /[./]/,
+      segmentName: {
+        $coerce: {
+          function: (v) => ({ name: v }),
+          string: (v) => ({ name: v }),
+        },
+        casing: 'PascalCase',
+        name: '',
+      },
+      strategy: 'flat',
+      strategyDefaultTag: 'default',
+    },
     paramsStructure: 'grouped',
     responseStyle: 'fields',
+    transformer: {
+      $coerceAny: ({ type, value }) => ({
+        ...(type === 'boolean' || type === 'string'
+          ? { response: value as Config['transformer']['response'] }
+          : {}),
+      }),
+      $dependencies: ['response'],
+      response: coerce((value, context) => {
+        if (value === true) {
+          return (context as PluginContext).resolveTag('transformer', {
+            warn: transformerInferWarn,
+          });
+        }
+        return value ?? false;
+      }),
+    },
+    validator: {
+      $coerceAny: ({ type, value }) => ({
+        ...(type === 'boolean' || type === 'string'
+          ? {
+              request: value as Config['validator']['request'],
+              response: value as Config['validator']['response'],
+            }
+          : {}),
+      }),
+      $dependencies: ['request', 'response'],
+      request: coerce((value, context) => {
+        if (value === true) {
+          return (context as PluginContext).resolveTag('validator', { warn: validatorInferWarn });
+        }
+        return value ?? false;
+      }),
+      response: coerce((value, context) => {
+        if (value === true) {
+          return (context as PluginContext).resolveTag('validator', { warn: validatorInferWarn });
+        }
+        return value ?? false;
+      }),
+    },
 
     // Deprecated - kept for backward compatibility
     // eslint-disable-next-line sort-keys-fix/sort-keys-fix
@@ -31,66 +187,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: '@hey-api/sdk',
-  resolveConfig(plugin, context) {
-    function resolvePlugin<T extends AnyPluginName | boolean = AnyPluginName>(
-      value: boolean | T | undefined,
-      tag: PluginTag,
-      options?: { defaultPlugin?: Exclude<T, boolean>; warn?: string },
-    ): T | false {
-      if (value === false) return false;
-      if (typeof value === 'string') {
-        plugin.dependencies.add(value);
-        return value;
-      }
-      try {
-        const resolved = context.pluginByTag(
-          tag,
-          options?.defaultPlugin ? { defaultPlugin: options.defaultPlugin } : undefined,
-        );
-        if (resolved) plugin.dependencies.add(resolved);
-        return (resolved as T) ?? false;
-      } catch {
-        if (value !== undefined && options?.warn) log.warn(options.warn);
-        return false;
-      }
-    }
-
-    plugin.config.client = resolvePlugin(plugin.config.client, 'client', {
-      defaultPlugin: '@hey-api/client-fetch',
-    });
-
-    if (typeof plugin.config.transformer !== 'object') {
-      plugin.config.transformer = {
-        response: plugin.config.transformer ?? false,
-      };
-    }
-
-    plugin.config.transformer.response = resolvePlugin(
-      plugin.config.transformer.response,
-      'transformer',
-      { warn: transformerInferWarn },
-    );
-
-    if (typeof plugin.config.validator !== 'object') {
-      plugin.config.validator = {
-        request: plugin.config.validator ?? false,
-        response: plugin.config.validator ?? false,
-      };
-    }
-
-    plugin.config.validator.request = resolvePlugin(plugin.config.validator.request, 'validator', {
-      warn: validatorInferWarn,
-    });
-    plugin.config.validator.response = resolvePlugin(
-      plugin.config.validator.response,
-      'validator',
-      {
-        warn: validatorInferWarn,
-      },
-    );
-
-    plugin.config.operations = resolveOperations(plugin.config, context);
-  },
 };
 
 /**

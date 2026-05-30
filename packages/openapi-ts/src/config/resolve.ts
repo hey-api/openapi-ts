@@ -1,5 +1,3 @@
-import path from 'node:path';
-
 import { detectInteractiveSession } from '@hey-api/codegen-core';
 import { ConfigError, getInput, getLogs, getParser } from '@hey-api/shared';
 import colors from 'ansi-colors';
@@ -23,8 +21,6 @@ export function resolveConfig(
   const input = getInput(validated.job.config);
   const output = getOutput(validated.job.config);
   const parser = getParser(validated.job.config);
-
-  output.path = path.resolve(process.cwd(), output.path);
 
   let plugins: Pick<Config, 'plugins' | 'pluginOrder'>;
 
