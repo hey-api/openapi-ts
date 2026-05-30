@@ -3,7 +3,7 @@
 import { oc } from '@orpc/contract';
 import * as v from 'valibot';
 
-import { vCreatePostBody, vCreatePostHeaders, vCreatePostResponse, vCreateUserBody, vCreateUserResponse, vDeleteUserHeaders, vDeleteUserPath, vGetPostByIdPath, vGetPostByIdQuery, vGetPostByIdResponse, vGetPostsQuery, vGetPostsResponse, vGetUserByIdPath, vGetUserByIdResponse, vGetUsersQuery, vGetUsersResponse, vUpdateUserBody, vUpdateUserPath, vUpdateUserResponse } from './valibot.gen';
+import { vCreatePostBody, vCreatePostHeaders, vCreatePostResponse, vCreateUserBody, vCreateUserResponse, vDeleteUserHeaders, vDeleteUserPath, vDeleteUserResponse, vGetPostByIdPath, vGetPostByIdQuery, vGetPostByIdResponse, vGetPostsQuery, vGetPostsResponse, vGetUserByIdPath, vGetUserByIdResponse, vGetUsersQuery, vGetUsersResponse, vUpdateUserBody, vUpdateUserPath, vUpdateUserResponse } from './valibot.gen';
 
 /**
  * Get all users
@@ -38,9 +38,10 @@ export const deleteUserRpc = oc.route({
     method: 'DELETE',
     operationId: 'deleteUser',
     path: '/users/{userId}',
+    successStatus: 204,
     summary: 'Delete a user',
     tags: ['users']
-}).input(v.object({ headers: v.optional(vDeleteUserHeaders), params: vDeleteUserPath }));
+}).input(v.object({ headers: v.optional(vDeleteUserHeaders), params: vDeleteUserPath })).output(vDeleteUserResponse);
 
 /**
  * Get a user by ID
