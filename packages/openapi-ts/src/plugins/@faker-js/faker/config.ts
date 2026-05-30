@@ -10,6 +10,10 @@ export const defaultConfig: FakerJsFakerPlugin['Config'] = {
     $cascade: ['case'],
     case: 'camelCase',
     definitions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'v{{name}}',
     },
