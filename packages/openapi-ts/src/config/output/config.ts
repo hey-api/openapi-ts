@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { log } from '@hey-api/codegen-core';
 import type { PostProcessor, UserPostProcessor } from '@hey-api/shared';
-import { coerce, findTsConfigPath, resolveSource, valueToObject } from '@hey-api/shared';
+import { coerce, defineConfig, findTsConfigPath, sourceConfig } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 import type { TsConfigJsonResolved } from 'get-tsconfig';
 import { parseTsconfig } from 'get-tsconfig';
@@ -14,77 +14,14 @@ import type { Output, UserOutput } from './types';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> }): Output {
-  if (userConfig.output instanceof Array) {
-    throw new Error(
-      'Unexpected array of outputs in user configuration. This should have been expanded already.',
-    );
-  }
-
-  const userOutput =
-    typeof userConfig.output === 'string' ? { path: userConfig.output } : (userConfig.output ?? {});
-
-  const legacyPostProcess = resolveLegacyPostProcess(userOutput);
-
-  const output = valueToObject({
-    defaultValue: {
-      clean: true,
-      entryFile: true,
-      fileName: coerce((value) =>
-        valueToObject({
-          defaultValue: {
-            case: 'preserve',
-            name: '{{name}}',
-            suffix: '.gen',
-          },
-          mappers: {
-            function: (name) => ({ name }),
-            string: (name) => ({ name }),
-          },
-          value,
-        }),
-      ),
-      format: null,
-      lint: null,
-      module: {},
-      path: '',
-      postProcess: [],
-      preferExportAll: false,
-    },
-    value: userOutput,
-  }) as Output;
-  output.module.extension = userOutput.importFileExtension ?? output.module.extension;
-  output.module.resolve = userOutput.resolveModuleName ?? output.module.resolve;
-  output.tsConfig = loadTsConfig(findTsConfigPath(__dirname, output.tsConfigPath));
-  if (
-    output.module.extension === undefined &&
-    (output.tsConfig?.compilerOptions?.moduleResolution === 'nodenext' ||
-      output.tsConfig?.compilerOptions?.moduleResolution === 'NodeNext' ||
-      output.tsConfig?.compilerOptions?.moduleResolution === 'node16' ||
-      output.tsConfig?.compilerOptions?.moduleResolution === 'Node16' ||
-      output.tsConfig?.compilerOptions?.module === 'nodenext' ||
-      output.tsConfig?.compilerOptions?.module === 'NodeNext' ||
-      output.tsConfig?.compilerOptions?.module === 'node16' ||
-      output.tsConfig?.compilerOptions?.module === 'Node16')
-  ) {
-    output.module.extension = '.js';
-  }
-  if (output.module.extension && !output.module.extension.startsWith('.')) {
-    output.module.extension = `.${output.module.extension}`;
-  }
-  output.postProcess = normalizePostProcess(userOutput.postProcess ?? legacyPostProcess);
-  output.source = resolveSource(output);
-  return output;
-}
-
-function resolveLegacyPostProcess(config: Partial<UserOutput>): ReadonlyArray<UserPostProcessor> {
+function resolveLegacyPostProcess(input: UserOutput): ReadonlyArray<UserPostProcessor> {
   const result: Array<UserPostProcessor> = [];
 
-  if (config.lint !== undefined) {
+  if (input.lint !== undefined) {
     let processor: PostProcessor | undefined;
     let preset: keyof typeof postProcessors | undefined;
-    if (config.lint) {
-      preset = config.lint === 'biome' ? 'biome:lint' : config.lint;
+    if (input.lint) {
+      preset = input.lint === 'biome' ? 'biome:lint' : input.lint;
       processor = postProcessors[preset];
       if (processor) result.push(processor);
     }
@@ -96,11 +33,11 @@ function resolveLegacyPostProcess(config: Partial<UserOutput>): ReadonlyArray<Us
     });
   }
 
-  if (config.format !== undefined) {
+  if (input.format !== undefined) {
     let processor: PostProcessor | undefined;
     let preset: keyof typeof postProcessors | undefined;
-    if (config.format) {
-      preset = config.format === 'biome' ? 'biome:format' : config.format;
+    if (input.format) {
+      preset = input.format === 'biome' ? 'biome:format' : input.format;
       processor = postProcessors[preset];
       if (processor) result.push(processor);
     }
@@ -115,32 +52,97 @@ function resolveLegacyPostProcess(config: Partial<UserOutput>): ReadonlyArray<Us
   return result;
 }
 
-function normalizePostProcess(input: UserOutput['postProcess']): ReadonlyArray<PostProcessor> {
-  if (!input) return [];
-
-  return input.map((item) => {
-    if (typeof item === 'string') {
-      const preset = postProcessors[item];
-      if (!preset) {
-        throw new Error(`Unknown post-processor preset: "${item}"`);
-      }
-      return preset;
+function normalizePostProcessItem(
+  item: NonNullable<UserOutput['postProcess']>[number],
+): PostProcessor {
+  if (typeof item === 'string') {
+    const preset = postProcessors[item];
+    if (!preset) {
+      throw new Error(`Unknown post-processor preset: "${item}"`);
     }
-    return {
-      name: item.name ?? item.command,
-      ...item,
-    };
-  });
+    return preset;
+  }
+  return {
+    name: item.name ?? item.command,
+    ...item,
+  };
 }
 
 function loadTsConfig(configPath: string | null): TsConfigJsonResolved | null {
   if (!configPath) {
     return null;
   }
-
   try {
     return parseTsconfig(configPath);
   } catch {
     throw new Error(`Couldn't read tsconfig from path: ${configPath}`);
   }
+}
+
+export const outputConfig = defineConfig<UserOutput, Output>({
+  $finalize(config, input) {
+    if (input.importFileExtension !== undefined) {
+      config.module.extension = input.importFileExtension;
+    }
+    if (input.resolveModuleName !== undefined) {
+      config.module.resolve = input.resolveModuleName;
+    }
+
+    if (!config.postProcess.length) {
+      const legacyPostProcess = resolveLegacyPostProcess(input);
+      if (legacyPostProcess.length) {
+        config.postProcess = legacyPostProcess.map(normalizePostProcessItem);
+      }
+    }
+
+    config.tsConfig = loadTsConfig(findTsConfigPath(__dirname, config.tsConfigPath));
+    if (
+      config.module.extension === undefined &&
+      (config.tsConfig?.compilerOptions?.moduleResolution === 'nodenext' ||
+        config.tsConfig?.compilerOptions?.moduleResolution === 'NodeNext' ||
+        config.tsConfig?.compilerOptions?.moduleResolution === 'node16' ||
+        config.tsConfig?.compilerOptions?.moduleResolution === 'Node16' ||
+        config.tsConfig?.compilerOptions?.module === 'nodenext' ||
+        config.tsConfig?.compilerOptions?.module === 'NodeNext' ||
+        config.tsConfig?.compilerOptions?.module === 'node16' ||
+        config.tsConfig?.compilerOptions?.module === 'Node16')
+    ) {
+      config.module.extension = '.js';
+    }
+
+    if (config.module.extension && !config.module.extension.startsWith('.')) {
+      config.module.extension = `.${config.module.extension}`;
+    }
+
+    config.path = path.resolve(process.cwd(), config.path);
+  },
+  clean: true,
+  entryFile: true,
+  fileName: {
+    $coerce: {
+      function: (name) => ({ name }),
+      string: (name) => ({ name }),
+    },
+    case: 'preserve',
+    name: '{{name}}',
+    suffix: '.gen',
+  },
+  module: {},
+  path: '',
+  postProcess: coerce((value) => (Array.isArray(value) ? value.map(normalizePostProcessItem) : [])),
+  preferExportAll: false,
+  source: sourceConfig,
+});
+
+export function getOutput(input: { output: MaybeArray<string | UserOutput> }): Output {
+  if (Array.isArray(input.output)) {
+    throw new Error(
+      'Unexpected array of outputs in user configuration. This should have been expanded already.',
+    );
+  }
+
+  const output = input.output as string | UserOutput;
+  const userOutput = typeof output === 'string' ? { path: output } : output;
+
+  return outputConfig(userOutput);
 }

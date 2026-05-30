@@ -4,13 +4,13 @@ import type { py } from '../py-compiler';
 import { ClassPyDsl } from './decl/class';
 // import { DecoratorPyDsl } from './decl/decorator';
 // import { EnumPyDsl } from './decl/enum';
-// import { FieldPyDsl } from './decl/field';
+import { FieldPyDsl } from './decl/field';
 import { FuncPyDsl } from './decl/func';
-import { ParamPyDsl } from './decl/param';
 // import { GetterPyDsl } from './decl/getter';
 // import { InitPyDsl } from './decl/init';
 // import { EnumMemberPyDsl } from './decl/member';
-// import { MethodPyDsl } from './decl/method';
+import { MethodPyDsl } from './decl/method';
+import { ParamPyDsl } from './decl/param';
 // import { PatternPyDsl } from './decl/pattern';
 // import { SetterPyDsl } from './decl/setter';
 // import { ArrayPyDsl } from './expr/array';
@@ -71,7 +71,6 @@ import { WithPyDsl } from './stmt/with';
 // import { TypeTemplatePyDsl } from './type/template';
 // import { TypeTuplePyDsl } from './type/tuple';
 import { LazyPyDsl } from './utils/lazy';
-import { safeKeywordName } from './utils/name';
 
 const pyDsl = {
   /** Creates an array literal expression (e.g., `[1, 2, 3]`). */
@@ -118,8 +117,8 @@ const pyDsl = {
   /** Creates a general expression node. */
   expr: (...args: ConstructorParameters<typeof ExprPyDsl>) => new ExprPyDsl(...args),
 
-  /** Creates a field declaration in a class or object. */
-  // field: (...args: ConstructorParameters<typeof FieldTsDsl>) => new FieldTsDsl(...args),
+  /** Creates a field declaration in a class body. */
+  field: (...args: ConstructorParameters<typeof FieldPyDsl>) => new FieldPyDsl(...args),
 
   /** Creates a for statement (e.g., `for x in items:`). */
   for: (...args: ConstructorParameters<typeof ForPyDsl>) => new ForPyDsl(...args),
@@ -167,11 +166,10 @@ const pyDsl = {
   /** Creates an enum member declaration. */
   // member: (...args: ConstructorParameters<typeof EnumMemberTsDsl>) => new EnumMemberTsDsl(...args),
 
-  /** Creates a class method declaration. */
-  method: ((name: NodeName, fn?: (f: FuncPyDsl) => void) =>
-    new FuncPyDsl(name, fn, { nameSanitizer: safeKeywordName })) as {
-    (name: NodeName): FuncPyDsl;
-    (name: NodeName, fn: (f: FuncPyDsl) => void): FuncPyDsl;
+  /** Creates a method declaration in a class body. */
+  method: ((name: NodeName, fn?: (f: MethodPyDsl) => void) => new MethodPyDsl(name, fn)) as {
+    (name: NodeName): MethodPyDsl;
+    (name: NodeName, fn: (f: MethodPyDsl) => void): MethodPyDsl;
   },
 
   /** Creates a negation expression (`-x`). */

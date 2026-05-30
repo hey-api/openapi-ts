@@ -67,6 +67,7 @@
 - [Marek Lukáš](https://github.com/tajnymag)
 - [Martín Fernández](https://github.com/bilby91)
 - [Matsu](https://github.com/Matsuuu)
+- [Matt Adam](https://github.com/matthewjamesadam)
 - [Maurici Abad Gutierrez](https://github.com/mauriciabad)
 - [Max Scopp](https://github.com/max-scopp)
 - [Maximilian Dewald](https://github.com/maxdewald)

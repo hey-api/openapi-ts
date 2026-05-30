@@ -21,7 +21,7 @@ export interface OperationItem {
 
 export const source = globalThis.Symbol('@hey-api/python-sdk');
 
-function attachComment<T extends ReturnType<typeof $.func>>(args: {
+function attachComment<T extends ReturnType<typeof $.method>>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
@@ -62,7 +62,7 @@ function createFnSymbol(
 function childToNode(
   resource: StructureNode,
   plugin: HeyApiSdkPlugin['Instance'],
-): ReadonlyArray<ReturnType<typeof $.func>> {
+): ReadonlyArray<ReturnType<typeof $.method>> {
   const refChild = plugin.referenceSymbol(createShellMeta(resource));
   const memberNameStr = toCase(
     refChild.name,
@@ -110,7 +110,7 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
   };
 }
 
-function implementFn<T extends ReturnType<typeof $.func>>(args: {
+function implementFn<T extends ReturnType<typeof $.method>>(args: {
   node: T;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
