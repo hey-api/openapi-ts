@@ -9,62 +9,121 @@ const defaultMeta = (): Record<string, unknown> => ({});
 export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
   config: {
     $cascade: ['case'],
+    $finalize(config) {
+      if (config.useMutation.enabled && !config.mutationOptions.enabled) {
+        config.mutationOptions.enabled = true;
+        config.mutationOptions.exported = false;
+      }
+
+      if (config.useQuery.enabled && !config.queryOptions.enabled) {
+        config.queryOptions.enabled = true;
+        config.queryOptions.exported = false;
+      }
+    },
     case: 'camelCase',
     comments: true,
     getQueryData: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}GetQueryData',
     },
     includeInEntry: false,
     infiniteQueryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}InfiniteQueryKey',
       tags: false,
     },
     infiniteQueryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       meta: defaultMeta,
       name: '{{name}}InfiniteOptions',
     },
     mutationKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}MutationKey',
       tags: false,
     },
     mutationOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       exported: true,
       meta: defaultMeta,
       name: '{{name}}Mutation',
     },
     queryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}QueryKey',
       tags: false,
     },
     queryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       exported: true,
       meta: defaultMeta,
       name: '{{name}}Options',
     },
     setQueryData: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}SetQueryData',
     },
     useGetQueryData: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: 'use{{name}}GetQueryData',
     },
     useMutation: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: 'use{{name}}Mutation',
     },
     useQuery: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: 'use{{name}}Query',
     },
     useSetQueryData: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: 'use{{name}}SetQueryData',
     },
@@ -72,17 +131,6 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: '@tanstack/preact-query',
-  resolveConfig(plugin) {
-    if (plugin.config.useMutation.enabled && !plugin.config.mutationOptions.enabled) {
-      plugin.config.mutationOptions.enabled = true;
-      plugin.config.mutationOptions.exported = false;
-    }
-
-    if (plugin.config.useQuery.enabled && !plugin.config.queryOptions.enabled) {
-      plugin.config.queryOptions.enabled = true;
-      plugin.config.queryOptions.exported = false;
-    }
-  },
   symbols: tanStackQuerySymbols,
 };
 

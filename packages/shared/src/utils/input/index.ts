@@ -7,7 +7,7 @@ export function inputToApiRegistry(
   input: Input & {
     path: string;
   },
-) {
+): void {
   if (input.path.startsWith('readme:')) {
     Object.assign(input, inputToReadmePath(input.path));
     return;
