@@ -12,16 +12,28 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
     comments: true,
     includeInEntry: false,
     mutationOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       meta: defaultMeta,
       name: '{{name}}Mutation',
     },
     queryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}QueryKey',
       tags: false,
     },
     queryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       meta: defaultMeta,
       name: '{{name}}Query',

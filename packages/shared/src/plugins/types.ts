@@ -8,10 +8,9 @@ import type {
   UserCommentsOption,
   UserIndexExportOption,
 } from '../config/shared';
-import type { ValueToObject } from '../config/utils/config';
 import type { Dependency } from '../config/utils/dependencies';
+import type { ConfigTable } from '../normalize/config';
 import type { Hooks as ParserHooks } from '../parser/hooks';
-import type { NormalizerTable } from './shared/utils/config';
 import type { PluginInstance } from './shared/utils/instance';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -23,16 +22,46 @@ export type AnyPluginName = PluginNames | AnyString;
 
 export type PluginTag = 'client' | 'mocker' | 'sdk' | 'transformer' | 'validator';
 
+type ResolveTagOptions<T extends AnyPluginName = AnyPluginName> = {
+  /**
+   * Plugin to use if no plugin with the given tag is found in the user's
+   * plugin list. Must itself carry the requested tag. If it does not exist
+   * in the registry, resolution falls through to `fallback`.
+   */
+  defaultPlugin?: T;
+  /**
+   * Value returned when no matching plugin is found and `defaultPlugin` is
+   * absent or also unresolvable. Defaults to `false`.
+   */
+  fallback?: T | false;
+  /**
+   * Warning message emitted when resolution falls back.
+   */
+  warn?: string;
+};
+
 export type PluginContext = {
   package: Dependency;
-  pluginByTag: <T extends AnyPluginName | boolean = AnyPluginName>(
+  /**
+   * Resolves the first plugin in the user's plugin list that carries `tag`.
+   * Falls back to `options.defaultPlugin` if provided and registered, then
+   * to `options.fallback` (default: `false`).
+   *
+   * @example
+   * ```ts
+   * client: coerce((value, context) => {
+   *   if (value === false) return false;
+   *   if (typeof value === 'string') return value;
+   *   return (context as PluginContext).resolveTag('client', {
+   *     defaultPlugin: '@hey-api/client-httpx',
+   *   });
+   * }),
+   * ```
+   */
+  resolveTag: <T extends AnyPluginName = AnyPluginName>(
     tag: PluginTag,
-    props?: {
-      defaultPlugin?: Exclude<T, boolean>;
-      errorMessage?: string;
-    },
-  ) => Exclude<T, boolean> | undefined;
-  valueToObject: ValueToObject;
+    options?: ResolveTagOptions<T>,
+  ) => T | false;
 };
 
 export type PluginSymbols = {
@@ -55,12 +84,7 @@ type PluginBaseConfig = UserIndexExportOption & {
 /** Public Plugin API. */
 export namespace Plugin {
   export type Config<T extends Types> = Pick<T, 'api'> & {
-    config:
-      | NormalizerTable<T['resolvedConfig'], Omit<T['config'], 'name'>>
-      | ((
-          config: Omit<T['config'], 'name'>,
-          context: { valueToObject: ValueToObject },
-        ) => NormalizerTable<T['resolvedConfig'], Omit<T['config'], 'name'>>);
+    config: ConfigTable<Omit<T['config'], 'name'>, T['resolvedConfig']>;
     /**
      * Dependency plugins will be always processed, regardless of whether user
      * explicitly defines them in their `plugins` config.
@@ -68,12 +92,6 @@ export namespace Plugin {
     dependencies?: ReadonlyArray<AnyPluginName>;
     handler: (args: { plugin: PluginInstance<T> }) => void;
     name: T['config']['name'];
-    /**
-     * Resolves static configuration values into their runtime equivalents. For
-     * example, when `validator` is set to `true`, it figures out which plugin
-     * should be used for validation.
-     */
-    resolveConfig?: (plugin: Plugin.Stored<T>, context: PluginContext) => void;
     /**
      * Symbols this plugin registers at construction time.
      */
