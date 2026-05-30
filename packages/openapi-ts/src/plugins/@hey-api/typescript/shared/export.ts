@@ -86,6 +86,9 @@ export function exportAst({
     }
   }
 
+  // Union circular refs (e.g. type X = A | Generic<X>) fall through here because
+  // interfaces cannot represent union types. TS2456 is unavoidable for these cases;
+  // the affected snapshots are excluded from tsconfig to suppress the error.
   const node = $.type
     .alias(symbol)
     .export()

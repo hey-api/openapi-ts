@@ -1041,7 +1041,8 @@ describe(`OpenAPI ${version}`, () => {
         input: 'dynamicref-circular-oneof.yaml',
         output: 'dynamicref-circular-oneof',
       }),
-      description: 'detects circular $dynamicRef through oneOf',
+      description:
+        'detects circular $dynamicRef through oneOf (emits type alias — TS2456, unfixable)',
     },
     {
       config: createConfig({

@@ -2,8 +2,10 @@ openapi: 3.1.0
 info:
   title: DynamicRef Circular oneOf Test
   description: >
-    Tests that hasCircularBinding detects cycles routed through oneOf,
-    not just direct $ref and single-level allOf.
+    Tests that hasCircularBinding detects cycles routed through oneOf.
+    Produces `type TreeNode = TreeNodeLeaf | TreeNodeTemplate<TreeNode>` which
+    triggers TS2456 — this is a known limitation because interfaces cannot
+    represent union types. Excluded from tsconfig to avoid the error.
   version: 0.1.0
 servers:
   - url: https://api.example.com
