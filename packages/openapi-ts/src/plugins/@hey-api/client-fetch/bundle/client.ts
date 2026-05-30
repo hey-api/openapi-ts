@@ -259,6 +259,26 @@ export const createClient = (config: Config = {}): Client => {
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
     const opts = await beforeRequest(options);
 
+    // Build preliminary URL for creating the initial Request object
+    const preliminaryUrl = buildUrl(opts);
+
+    // Create initial Request object for interceptors
+    const preliminaryRequest = new Request(preliminaryUrl, {
+      body: getValidRequestBody(opts) as BodyInit | null,
+      method,
+    });
+
+    // Run request interceptors - they can modify both the Request and opts
+    let interceptedRequest = preliminaryRequest;
+    for (const fn of interceptors.request.fns) {
+      if (fn) {
+        interceptedRequest = await fn(interceptedRequest, opts);
+      }
+    }
+
+    // Re-build URL after interceptor mutations to opts.baseUrl, opts.url, opts.path, or opts.query
+    const url = buildUrl(opts);
+
     return createSseClient({
       ...opts,
 
@@ -278,7 +298,7 @@ export const createClient = (config: Config = {}): Client => {
         return req;
       },
 
-      url: buildUrl(opts),
+      url,
     });
   };
 

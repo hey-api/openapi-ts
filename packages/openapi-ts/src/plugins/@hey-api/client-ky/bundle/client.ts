@@ -70,9 +70,8 @@ export const createClient = (config: Config = {}): Client => {
 
     const resolvedOpts = opts as typeof opts &
       ResolvedRequestOptions<TResponseStyle, ThrowOnError, Url>;
-    const url = buildUrl(resolvedOpts);
 
-    return { opts: resolvedOpts, url };
+    return { opts: resolvedOpts };
   };
 
   const parseErrorResponse = async (
@@ -127,7 +126,10 @@ export const createClient = (config: Config = {}): Client => {
     let errorInterceptorsInvoked = false;
 
     try {
-      const { opts, url } = await beforeRequest(options);
+      const { opts } = await beforeRequest(options);
+
+      // Build preliminary URL for creating the initial Request object
+      const preliminaryUrl = buildUrl(opts);
 
       const kyInstance = opts.ky!;
 
@@ -152,17 +154,30 @@ export const createClient = (config: Config = {}): Client => {
         retry: opts.retry ?? opts.kyOptions?.retry ?? 2,
       };
 
-      request = new Request(url, {
+      // Create initial Request object for interceptors
+      request = new Request(preliminaryUrl, {
         body: kyOptions.body,
         headers: kyOptions.headers as HeadersInit,
         method: kyOptions.method,
       });
 
+      // Run request interceptors - they can modify both the Request and opts
       for (const fn of interceptors.request.fns) {
         if (fn) {
           request = await fn(request, opts);
         }
       }
+
+      // Re-build URL after interceptor mutations to opts.baseUrl, opts.url, opts.path, or opts.query
+      const url = buildUrl(opts);
+
+      // Create final Request with the potentially updated URL
+      request = new Request(url, {
+        body: request.body,
+        headers: request.headers,
+        method: request.method,
+        redirect: 'follow',
+      });
 
       try {
         response = await kyInstance(request, kyOptions);
@@ -311,7 +326,28 @@ export const createClient = (config: Config = {}): Client => {
     request({ ...options, method });
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
-    const { opts, url } = await beforeRequest(options);
+    const { opts } = await beforeRequest(options);
+
+    // Build preliminary URL for creating the initial Request object
+    const preliminaryUrl = buildUrl(opts);
+
+    // Create initial Request object for interceptors
+    const preliminaryRequest = new Request(preliminaryUrl, {
+      body: getValidRequestBody(opts) as BodyInit | null | undefined,
+      method,
+    });
+
+    // Run request interceptors - they can modify both the Request and opts
+    let interceptedRequest = preliminaryRequest;
+    for (const fn of interceptors.request.fns) {
+      if (fn) {
+        interceptedRequest = await fn(interceptedRequest, opts);
+      }
+    }
+
+    // Re-build URL after interceptor mutations to opts.baseUrl, opts.url, opts.path, or opts.query
+    const url = buildUrl(opts);
+
     return createSseClient({
       ...opts,
       body: opts.body as BodyInit | null | undefined,
