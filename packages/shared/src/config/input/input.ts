@@ -21,9 +21,9 @@ const inputConfig = defineConfig<UserInput | string, Input>({
   $coerce: {
     string: (path) => ({ path }),
   },
-  $finalize(resolved, raw) {
-    if (raw && typeof raw === 'object' && 'organization' in raw && resolved.path === '') {
-      resolved.path = heyApiRegistryBaseUrl;
+  $finalize(config, input) {
+    if (input && typeof input === 'object' && 'organization' in input && config.path === '') {
+      config.path = heyApiRegistryBaseUrl;
     }
   },
   path: opaque<string | object>('', (input) =>
