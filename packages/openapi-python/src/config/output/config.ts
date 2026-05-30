@@ -1,67 +1,63 @@
+import path from 'node:path';
+
 import type { PostProcessor } from '@hey-api/shared';
-import { coerce, resolveSource, valueToObject } from '@hey-api/shared';
+import { coerce, defineConfig, sourceConfig } from '@hey-api/shared';
 import type { MaybeArray } from '@hey-api/types';
 
 import { postProcessors } from './postprocess';
 import type { Output, UserOutput } from './types';
 
-export function getOutput(userConfig: { output: MaybeArray<string | UserOutput> }): Output {
-  if (userConfig.output instanceof Array) {
+function normalizePostProcessItem(
+  item: NonNullable<UserOutput['postProcess']>[number],
+): PostProcessor {
+  if (typeof item === 'string') {
+    const preset = postProcessors[item];
+    if (!preset) {
+      throw new Error(`Unknown post-processor preset: "${item}"`);
+    }
+    return preset;
+  }
+  return {
+    name: item.name ?? item.command,
+    ...item,
+  };
+}
+
+export const outputConfig = defineConfig<UserOutput, Output>({
+  $finalize(config) {
+    if (config.module.extension && !config.module.extension.startsWith('.')) {
+      config.module.extension = `.${config.module.extension}`;
+    }
+    config.path = path.resolve(process.cwd(), config.path);
+  },
+  clean: true,
+  entryFile: true,
+  fileName: {
+    $coerce: {
+      function: (name) => ({ name }),
+      string: (name) => ({ name }),
+    },
+    case: 'preserve',
+    name: '{{name}}',
+    suffix: '_gen',
+  },
+  module: {},
+  path: '',
+  postProcess: coerce((value) => (Array.isArray(value) ? value.map(normalizePostProcessItem) : [])),
+  preferExportAll: false,
+  pythonVersion: '3.9',
+  source: sourceConfig,
+});
+
+export function getOutput(input: { output: MaybeArray<string | UserOutput> }): Output {
+  if (Array.isArray(input.output)) {
     throw new Error(
       'Unexpected array of outputs in user configuration. This should have been expanded already.',
     );
   }
 
-  const userOutput =
-    typeof userConfig.output === 'string' ? { path: userConfig.output } : (userConfig.output ?? {});
+  const output = input.output as string | UserOutput;
+  const userOutput = typeof output === 'string' ? { path: output } : output;
 
-  const output = valueToObject({
-    defaultValue: {
-      clean: true,
-      entryFile: true,
-      fileName: coerce((value) =>
-        valueToObject({
-          defaultValue: {
-            case: 'preserve',
-            name: '{{name}}',
-            suffix: '_gen',
-          },
-          mappers: {
-            function: (name) => ({ name }),
-            string: (name) => ({ name }),
-          },
-          value,
-        }),
-      ),
-      module: {},
-      path: '',
-      postProcess: [],
-      preferExportAll: false,
-    },
-    value: userOutput,
-  }) as Output;
-  if (output.module.extension && !output.module.extension.startsWith('.')) {
-    output.module.extension = `.${output.module.extension}`;
-  }
-  output.postProcess = normalizePostProcess(userOutput.postProcess);
-  output.source = resolveSource(output);
-  return output;
-}
-
-function normalizePostProcess(input: UserOutput['postProcess']): ReadonlyArray<PostProcessor> {
-  if (!input) return [];
-
-  return input.map((item) => {
-    if (typeof item === 'string') {
-      const preset = postProcessors[item];
-      if (!preset) {
-        throw new Error(`Unknown post-processor preset: "${item}"`);
-      }
-      return preset;
-    }
-    return {
-      name: item.name ?? item.command,
-      ...item,
-    };
-  });
+  return outputConfig(userOutput);
 }

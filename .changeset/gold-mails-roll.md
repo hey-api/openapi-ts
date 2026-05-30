@@ -2,4 +2,4 @@
 "@hey-api/shared": patch
 ---
 
-**plugin**: export `coerce`, `defineNormalizers`, `CoerceMap`, `Coercer`, `InlineDirectives`, `NormalizerTable`, `PluginSymbols`, `PluginTag`, and `WithCoercers`
+**plugin**: export `coerce`, `defineConfig`, `Coercer`, `CoercerMap`, `ConfigTable`, `PluginSymbols`, `PluginTag`, `TableDirectives`, and `WithCoercers`

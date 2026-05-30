@@ -10,7 +10,7 @@ export const defaultConfig: PydanticPlugin['Config'] = {
     case: 'PascalCase',
     comments: true,
     definitions: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
@@ -22,7 +22,7 @@ export const defaultConfig: PydanticPlugin['Config'] = {
     includeInEntry: false,
     modelType: 'BaseModel',
     requests: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
@@ -30,7 +30,7 @@ export const defaultConfig: PydanticPlugin['Config'] = {
       name: '{{name}}Request',
     },
     responses: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
@@ -39,7 +39,7 @@ export const defaultConfig: PydanticPlugin['Config'] = {
     },
     strict: false,
     webhooks: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),

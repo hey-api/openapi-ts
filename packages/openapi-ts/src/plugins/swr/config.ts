@@ -8,36 +8,66 @@ const defaultMeta = (): Record<string, unknown> => ({});
 export const defaultConfig: SwrPlugin['Config'] = {
   config: {
     $cascade: ['case'],
+    $finalize(config) {
+      if (config.useSwr.enabled && !config.queryOptions.enabled) {
+        config.queryOptions.enabled = true;
+        config.queryOptions.exported = false;
+      }
+    },
     case: 'camelCase',
     comments: true,
     includeInEntry: false,
     infiniteQueryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}InfiniteQueryKey',
       tags: false,
     },
     infiniteQueryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       meta: defaultMeta,
       name: '{{name}}InfiniteOptions',
     },
     mutationOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       meta: defaultMeta,
       name: '{{name}}Mutation',
     },
     queryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}QueryKey',
       tags: false,
     },
     queryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       exported: true,
       meta: defaultMeta,
       name: '{{name}}Options',
     },
     useSwr: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'use{{name}}',
     },
@@ -45,12 +75,6 @@ export const defaultConfig: SwrPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: 'swr',
-  resolveConfig(plugin) {
-    if (plugin.config.useSwr.enabled && !plugin.config.queryOptions.enabled) {
-      plugin.config.queryOptions.enabled = true;
-      plugin.config.queryOptions.exported = false;
-    }
-  },
 };
 
 /**

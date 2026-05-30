@@ -1,23 +1,18 @@
-import { valueToObject } from '../../utils/config';
+import { coerce } from '../../../normalize/coerce';
+import { defineConfig } from '../../../normalize/config';
 import type { SourceConfig, UserSourceConfig } from './types';
 
-export function resolveSource(config: { source?: boolean | UserSourceConfig }): SourceConfig {
-  const source = valueToObject({
-    defaultValue: {
-      enabled: Boolean(config.source),
-      extension: 'json',
-      fileName: 'source',
-      serialize: (input) => JSON.stringify(input, null, 2),
-    },
-    mappers: {
-      boolean: (enabled) => ({ enabled }),
-    },
-    value: config.source,
-  });
-  if (source.path === undefined || source.path === true) {
-    source.path = '';
-  } else if (source.path === false) {
-    source.path = null;
-  }
-  return source as SourceConfig;
-}
+export const sourceConfig = defineConfig<boolean | UserSourceConfig, SourceConfig>({
+  $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
+  enabled: false,
+  extension: 'json',
+  fileName: 'source',
+  path: coerce((value: UserSourceConfig['path']): string | null => {
+    if (value === true || value === undefined || value === '') return '';
+    if (value === false || value === null) return null;
+    return value;
+  }),
+  serialize: coerce((value) =>
+    typeof value === 'function' ? value : (input) => JSON.stringify(input, null, 2),
+  ),
+});

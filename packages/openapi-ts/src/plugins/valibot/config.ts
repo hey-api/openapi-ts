@@ -12,7 +12,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
     case: 'camelCase',
     comments: true,
     definitions: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
@@ -22,12 +22,12 @@ export const defaultConfig: ValibotPlugin['Config'] = {
     includeInEntry: false,
     metadata: false,
     requests: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
       body: {
-        $onCoerce: ({ type, value }) => ({
+        $coerceAny: ({ type, value }) => ({
           enabled: Boolean(value),
           ...(type === 'string' || type === 'function' ? { name: value } : {}),
         }),
@@ -36,7 +36,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       },
       enabled: true,
       headers: {
-        $onCoerce: ({ type, value }) => ({
+        $coerceAny: ({ type, value }) => ({
           enabled: Boolean(value),
           ...(type === 'string' || type === 'function' ? { name: value } : {}),
         }),
@@ -45,7 +45,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       },
       name: 'v{{name}}Data',
       path: {
-        $onCoerce: ({ type, value }) => ({
+        $coerceAny: ({ type, value }) => ({
           enabled: Boolean(value),
           ...(type === 'string' || type === 'function' ? { name: value } : {}),
         }),
@@ -53,7 +53,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
         name: 'v{{name}}Path',
       },
       query: {
-        $onCoerce: ({ type, value }) => ({
+        $coerceAny: ({ type, value }) => ({
           enabled: Boolean(value),
           ...(type === 'string' || type === 'function' ? { name: value } : {}),
         }),
@@ -65,7 +65,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       ),
     },
     responses: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
@@ -73,7 +73,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       name: 'v{{name}}Response',
     },
     webhooks: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
