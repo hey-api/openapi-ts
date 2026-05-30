@@ -1,4 +1,4 @@
-import { coerce, definePluginConfig } from '@hey-api/shared';
+import { coerce, definePluginConfig, type PluginContext } from '@hey-api/shared';
 import colors from 'ansi-colors';
 
 import { Api } from './api';
@@ -14,12 +14,44 @@ export const defaultConfig: ZodPlugin['Config'] = {
     $cascade: ['case', 'types'],
     case: 'camelCase',
     comments: true,
+    compatibilityVersion: coerce((value, context) => {
+      const packageName = 'zod';
+      const version = (context as PluginContext).package.getVersion(packageName);
+
+      function inferCompatibleVersion(): CompatibilityVersion {
+        if (version && (version.major === 4 || version.major === 3)) {
+          return version.major;
+        }
+        // default compatibility version
+        return 4;
+      }
+
+      if (!value) {
+        return inferCompatibleVersion();
+      }
+
+      if (!version) {
+        return value;
+      }
+
+      if (value === 4 || value === 3 || value === 'mini') {
+        if (!(context as PluginContext).package.satisfies(version, '>=3.25.0 <5.0.0')) {
+          const compatibleVersion = inferCompatibleVersion();
+          console.warn(
+            `🔌 ${colors.yellow('Warning:')} Installed ${colors.cyan(packageName)} ${colors.cyan(`v${version.version}`)} does not support compatibility version ${colors.yellow(String(value))}, using ${colors.yellow(String(compatibleVersion))}.`,
+          );
+          return compatibleVersion;
+        }
+      }
+
+      return value;
+    }),
     dates: {
       local: false,
       offset: false,
     },
     definitions: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
@@ -27,21 +59,21 @@ export const defaultConfig: ZodPlugin['Config'] = {
       name: 'z{{name}}',
       types: {
         infer: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
           name: '{{name}}ZodType',
         },
         input: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
           name: '{{name}}ZodInput',
         },
         output: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
@@ -52,12 +84,12 @@ export const defaultConfig: ZodPlugin['Config'] = {
     includeInEntry: false,
     metadata: false,
     requests: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
       body: {
-        $onCoerce: ({ type, value }) => ({
+        $coerceAny: ({ type, value }) => ({
           enabled: Boolean(value),
           ...(type === 'string' || type === 'function' ? { name: value } : {}),
         }),
@@ -65,21 +97,21 @@ export const defaultConfig: ZodPlugin['Config'] = {
         name: 'z{{name}}Body',
         types: {
           infer: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
             name: '{{name}}BodyZodType',
           },
           input: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
             name: '{{name}}BodyZodInput',
           },
           output: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
@@ -89,7 +121,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
       },
       enabled: true,
       headers: {
-        $onCoerce: ({ type, value }) => ({
+        $coerceAny: ({ type, value }) => ({
           enabled: Boolean(value),
           ...(type === 'string' || type === 'function' ? { name: value } : {}),
         }),
@@ -97,21 +129,21 @@ export const defaultConfig: ZodPlugin['Config'] = {
         name: 'z{{name}}Headers',
         types: {
           infer: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
             name: '{{name}}HeadersZodType',
           },
           input: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
             name: '{{name}}HeadersZodInput',
           },
           output: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
@@ -121,7 +153,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
       },
       name: 'z{{name}}Data',
       path: {
-        $onCoerce: ({ type, value }) => ({
+        $coerceAny: ({ type, value }) => ({
           enabled: Boolean(value),
           ...(type === 'string' || type === 'function' ? { name: value } : {}),
         }),
@@ -129,21 +161,21 @@ export const defaultConfig: ZodPlugin['Config'] = {
         name: 'z{{name}}Path',
         types: {
           infer: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
             name: '{{name}}PathZodType',
           },
           input: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
             name: '{{name}}PathZodInput',
           },
           output: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
@@ -152,7 +184,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
         },
       },
       query: {
-        $onCoerce: ({ type, value }) => ({
+        $coerceAny: ({ type, value }) => ({
           enabled: Boolean(value),
           ...(type === 'string' || type === 'function' ? { name: value } : {}),
         }),
@@ -160,21 +192,21 @@ export const defaultConfig: ZodPlugin['Config'] = {
         name: 'z{{name}}Query',
         types: {
           infer: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
             name: '{{name}}QueryZodType',
           },
           input: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
             name: '{{name}}QueryZodInput',
           },
           output: {
-            $onCoerce: ({ type, value }) => ({
+            $coerceAny: ({ type, value }) => ({
               enabled: Boolean(value),
               ...(type === 'string' || type === 'function' ? { name: value } : {}),
             }),
@@ -187,21 +219,21 @@ export const defaultConfig: ZodPlugin['Config'] = {
       ),
       types: {
         infer: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
           name: '{{name}}DataZodType',
         },
         input: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
           name: '{{name}}DataZodInput',
         },
         output: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
@@ -210,7 +242,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
       },
     },
     responses: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
@@ -218,21 +250,21 @@ export const defaultConfig: ZodPlugin['Config'] = {
       name: 'z{{name}}Response',
       types: {
         infer: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
           name: '{{name}}ResponseZodType',
         },
         input: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
           name: '{{name}}ResponseZodInput',
         },
         output: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
@@ -242,23 +274,23 @@ export const defaultConfig: ZodPlugin['Config'] = {
     },
     types: {
       infer: {
-        $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
+        $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
       input: {
-        $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
+        $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
       output: {
-        $onCoerce: ({ value }) => ({ enabled: Boolean(value) }),
+        $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
     },
     webhooks: {
-      $onCoerce: ({ type, value }) => ({
+      $coerceAny: ({ type, value }) => ({
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
@@ -266,21 +298,21 @@ export const defaultConfig: ZodPlugin['Config'] = {
       name: 'z{{name}}WebhookRequest',
       types: {
         infer: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
           name: '{{name}}WebhookRequestZodType',
         },
         input: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
           name: '{{name}}WebhookRequestZodInput',
         },
         output: {
-          $onCoerce: ({ type, value }) => ({
+          $coerceAny: ({ type, value }) => ({
             enabled: Boolean(value),
             ...(type === 'string' || type === 'function' ? { name: value } : {}),
           }),
@@ -291,51 +323,6 @@ export const defaultConfig: ZodPlugin['Config'] = {
   },
   handler,
   name: 'zod',
-  resolveConfig(plugin, context) {
-    const packageName = 'zod';
-    const version = context.package.getVersion(packageName);
-
-    function inferCompatibleVersion(): CompatibilityVersion {
-      if (version && (version.major === 4 || version.major === 3)) {
-        return version.major;
-      }
-
-      // default compatibility version
-      return 4;
-    }
-
-    function ensureCompatibleVersion(
-      compatibilityVersion: CompatibilityVersion | undefined,
-    ): CompatibilityVersion {
-      if (!compatibilityVersion) {
-        return inferCompatibleVersion();
-      }
-
-      if (!version) {
-        return compatibilityVersion;
-      }
-
-      if (
-        compatibilityVersion === 4 ||
-        compatibilityVersion === 3 ||
-        compatibilityVersion === 'mini'
-      ) {
-        if (!context.package.satisfies(version, '>=3.25.0 <5.0.0')) {
-          const compatibleVersion = inferCompatibleVersion();
-          console.warn(
-            `🔌 ${colors.yellow('Warning:')} Installed ${colors.cyan(packageName)} ${colors.cyan(`v${version.version}`)} does not support compatibility version ${colors.yellow(String(compatibilityVersion))}, using ${colors.yellow(String(compatibleVersion))}.`,
-          );
-          return compatibleVersion;
-        }
-      }
-
-      return compatibilityVersion;
-    }
-
-    plugin.config.compatibilityVersion = ensureCompatibleVersion(
-      plugin.config.compatibilityVersion,
-    );
-  },
   symbols: zodSymbols,
   tags: ['transformer', 'validator'],
 };

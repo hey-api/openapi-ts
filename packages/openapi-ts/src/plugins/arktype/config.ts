@@ -11,39 +11,83 @@ export const defaultConfig: ArktypePlugin['Config'] = {
     case: 'PascalCase',
     comments: true,
     definitions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}',
       types: {
-        infer: { name: '{{name}}' },
+        infer: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}',
+        },
       },
     },
     includeInEntry: false,
     metadata: false,
     requests: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}Data',
       types: {
-        infer: { name: '{{name}}Data' },
+        infer: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}Data',
+        },
       },
     },
     responses: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}Response',
       types: {
-        infer: { name: '{{name}}Response' },
+        infer: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}Response',
+        },
       },
     },
     types: {
       infer: {
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         case: 'PascalCase',
         enabled: false,
       },
     },
     webhooks: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}WebhookRequest',
       types: {
-        infer: { name: '{{name}}WebhookRequest' },
+        infer: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}WebhookRequest',
+        },
       },
     },
   },

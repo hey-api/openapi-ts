@@ -12,43 +12,75 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
     case: 'camelCase',
     comments: true,
     getQueryData: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}GetQueryData',
     },
     includeInEntry: false,
     infiniteQueryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}InfiniteQueryKey',
       tags: false,
     },
     infiniteQueryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       meta: defaultMeta,
       name: '{{name}}InfiniteOptions',
     },
     mutationKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}MutationKey',
       tags: false,
     },
     mutationOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       exported: true,
       meta: defaultMeta,
       name: '{{name}}Mutation',
     },
     queryKeys: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}QueryKey',
       tags: false,
     },
     queryOptions: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       exported: true,
       meta: defaultMeta,
       name: '{{name}}Options',
     },
     setQueryData: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}SetQueryData',
     },
