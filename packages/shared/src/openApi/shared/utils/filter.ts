@@ -390,8 +390,9 @@ function collectOperations({
     ? filters.operations.include
     : new Set(resourceMetadata.operations.keys());
   const stack = [...initialSet];
-  while (stack.length) {
-    const key = stack.pop()!;
+  let index = 0;
+  while (index < stack.length) {
+    const key = stack[index++]!;
 
     if (filters.operations.exclude.has(key) || finalSet.has(key)) {
       continue;
@@ -475,8 +476,9 @@ function collectParameters({
     ? filters.parameters.include
     : new Set(resourceMetadata.parameters.keys());
   const stack = [...initialSet];
-  while (stack.length) {
-    const key = stack.pop()!;
+  let index = 0;
+  while (index < stack.length) {
+    const key = stack[index++]!;
 
     if (filters.parameters.exclude.has(key) || finalSet.has(key)) {
       continue;
@@ -542,8 +544,9 @@ function collectRequestBodies({
     ? filters.requestBodies.include
     : new Set(resourceMetadata.requestBodies.keys());
   const stack = [...initialSet];
-  while (stack.length) {
-    const key = stack.pop()!;
+  let index = 0;
+  while (index < stack.length) {
+    const key = stack[index++]!;
 
     if (filters.requestBodies.exclude.has(key) || finalSet.has(key)) {
       continue;
@@ -609,8 +612,9 @@ function collectResponses({
     ? filters.responses.include
     : new Set(resourceMetadata.responses.keys());
   const stack = [...initialSet];
-  while (stack.length) {
-    const key = stack.pop()!;
+  let index = 0;
+  while (index < stack.length) {
+    const key = stack[index++]!;
 
     if (filters.responses.exclude.has(key) || finalSet.has(key)) {
       continue;
@@ -674,8 +678,9 @@ function collectSchemas({
     ? filters.schemas.include
     : new Set(resourceMetadata.schemas.keys());
   const stack = [...initialSet];
-  while (stack.length) {
-    const key = stack.pop()!;
+  let index = 0;
+  while (index < stack.length) {
+    const key = stack[index++]!;
 
     if (filters.schemas.exclude.has(key) || finalSet.has(key)) {
       continue;
@@ -978,8 +983,9 @@ function collectOperationDependencies({
     ]),
   );
   const stack = [...initialSet];
-  while (stack.length) {
-    const key = stack.pop()!;
+  let index = 0;
+  while (index < stack.length) {
+    const key = stack[index++]!;
 
     if (finalSet.has(key)) {
       continue;
