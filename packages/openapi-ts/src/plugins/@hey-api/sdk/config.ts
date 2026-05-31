@@ -5,6 +5,7 @@ import { coerce, definePluginConfig } from '@hey-api/shared';
 import type { UserOperationsConfig } from './operations';
 import { mapLegacyToConfig } from './operations/config';
 import { handler } from './plugin';
+import { sdkSymbols } from './symbols';
 import type { Config, HeyApiSdkPlugin } from './types';
 
 const transformerInferWarn =
@@ -187,6 +188,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: '@hey-api/sdk',
+  symbols: sdkSymbols,
 };
 
 /**

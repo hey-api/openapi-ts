@@ -3,6 +3,7 @@ import type { DefinePlugin, NameTransformer, OperationsStrategy, Plugin } from '
 import type { PluginClientNames, PluginTransformerNames, PluginValidatorNames } from '../../types';
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
+import type { SdkSymbols } from './symbols';
 
 export type UserConfig = Plugin.Name<'@hey-api/sdk'> &
   Plugin.Hooks &
@@ -254,4 +255,4 @@ export type Config = Plugin.Name<'@hey-api/sdk'> &
     response: 'body' | 'response';
   };
 
-export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config>;
+export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config, never, SdkSymbols>;
