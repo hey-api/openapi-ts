@@ -8,8 +8,8 @@ import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
 import { unknownToAst } from './unknown';
 
 function baseNode(ctx: ArrayResolverContext): Chain {
-  const { applyModifiers, childResults, path, plugin, schema, symbols } = ctx;
-  const { z } = symbols;
+  const { applyModifiers, childResults, path, plugin, schema } = ctx;
+  const { z } = plugin.symbols;
 
   const arrayFn = $(z).attr(identifiers.array);
 
@@ -19,15 +19,7 @@ function baseNode(ctx: ArrayResolverContext): Chain {
   }
 
   if (!normalizedSchema.items) {
-    return arrayFn.call(
-      unknownToAst({
-        path,
-        plugin,
-        schema: {
-          type: 'unknown',
-        },
-      }),
-    );
+    return arrayFn.call(unknownToAst({ path, plugin }));
   }
 
   if (childResults.length === 1) {
@@ -55,15 +47,7 @@ function baseNode(ctx: ArrayResolverContext): Chain {
     }
   }
 
-  return arrayFn.call(
-    unknownToAst({
-      path,
-      plugin,
-      schema: {
-        type: 'unknown',
-      },
-    }),
-  );
+  return arrayFn.call(unknownToAst({ path, plugin }));
 }
 
 function lengthNode(ctx: ArrayResolverContext): ChainResult {
@@ -74,15 +58,15 @@ function lengthNode(ctx: ArrayResolverContext): ChainResult {
 }
 
 function maxLengthNode(ctx: ArrayResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (schema.maxItems === undefined) return;
   return $(z).attr(identifiers.maxLength).call($.fromValue(schema.maxItems));
 }
 
 function minLengthNode(ctx: ArrayResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (schema.minItems === undefined) return;
   return $(z).attr(identifiers.minLength).call($.fromValue(schema.minItems));
 }

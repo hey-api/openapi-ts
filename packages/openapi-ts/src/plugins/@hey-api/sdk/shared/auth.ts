@@ -4,11 +4,11 @@ import type { Auth } from '../../client-core/bundle/auth';
 import type { HeyApiSdkPlugin } from '../types';
 
 // TODO: parser - handle more security types
-const securitySchemeObjectToAuthObject = ({
+function securitySchemeObjectToAuthObject({
   securitySchemeObject,
 }: {
   securitySchemeObject: IR.SecurityObject;
-}): Auth | undefined => {
+}): Auth | undefined {
   // `key` is set by the parser only when the spec defines two or more
   // security schemes whose normalized Auth shape would collide; forward it
   // so the runtime callback can disambiguate.
@@ -74,16 +74,16 @@ const securitySchemeObjectToAuthObject = ({
   }
 
   return;
-};
+}
 
-export const operationAuth = ({
+export function operationAuth({
   operation,
   plugin,
 }: {
   context: Context;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
-}): Array<Auth> => {
+}): Array<Auth> {
   if (!operation.security || !plugin.config.auth) {
     return [];
   }
@@ -104,4 +104,4 @@ export const operationAuth = ({
   }
 
   return auth;
-};
+}

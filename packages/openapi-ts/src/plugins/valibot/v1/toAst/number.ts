@@ -10,8 +10,8 @@ import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: NumberResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
 
   if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
     return [
@@ -41,8 +41,8 @@ function baseNode(ctx: NumberResolverContext): PipeResult {
 }
 
 function constNode(ctx: NumberResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
 
   if (schema.const === undefined) {
     return;
@@ -54,8 +54,8 @@ function constNode(ctx: NumberResolverContext): PipeResult {
 }
 
 function maxNode(ctx: NumberResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
 
   if (schema.exclusiveMaximum !== undefined) {
     return $(v)
@@ -78,8 +78,8 @@ function maxNode(ctx: NumberResolverContext): PipeResult {
 }
 
 function minNode(ctx: NumberResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
 
   if (schema.exclusiveMinimum !== undefined) {
     return $(v)

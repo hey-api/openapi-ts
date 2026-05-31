@@ -5,8 +5,8 @@ import type { Chain } from '../../shared/chain';
 import type { ZodResult } from '../../shared/types';
 
 function baseNode(ctx: IntersectionResolverContext): Chain {
-  const { childResults, schemas, symbols } = ctx;
-  const { z } = symbols;
+  const { childResults, schemas } = ctx;
+  const { z } = ctx.plugin.symbols;
 
   if (!childResults.length) {
     return $(z).attr(identifiers.never).call();

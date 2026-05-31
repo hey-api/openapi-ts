@@ -9,13 +9,13 @@ import { identifiers } from '../constants';
 import { unknownToPipes } from './unknown';
 
 function baseNode(ctx: TupleResolverContext): PipeResult {
-  const { applyModifiers, path, pipes, plugin, schema, symbols, walk } = ctx;
+  const { applyModifiers, path, pipes, plugin, schema, walk } = ctx;
 
   if (!schema.items) {
     return unknownToPipes({ path, plugin });
   }
 
-  const { v } = symbols;
+  const { v } = plugin.symbols;
   const childResults: Array<ValibotResult> = [];
 
   for (let i = 0; i < schema.items.length; i++) {
@@ -35,8 +35,8 @@ function baseNode(ctx: TupleResolverContext): PipeResult {
 }
 
 function constNode(ctx: TupleResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
 
   if (!schema.const || !Array.isArray(schema.const)) return;
 
