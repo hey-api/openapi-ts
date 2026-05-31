@@ -60,31 +60,31 @@ export const createClient = (config: Config = {}): Client => {
       opts.headers.delete('Content-Type');
     }
 
-    return {
-      opts: opts as typeof opts & ResolvedRequestOptions<ThrowOnError, Url>,
-    };
+    const resolvedOpts = opts as typeof opts & ResolvedRequestOptions<ThrowOnError, Url>;
+
+    return { opts: resolvedOpts };
   };
 
   const request: Client['request'] = async (options) => {
     const throwOnError = options.throwOnError ?? _config.throwOnError;
-
     let response: Response | undefined;
 
     try {
       const { opts } = await beforeRequest(options);
 
-      // request interceptors
       for (const fn of interceptors.request.fns) {
         if (fn) await fn(opts);
       }
 
+      // Build URL after interceptor mutations
+
       const url = buildUrl(opts);
 
       const _fetch = opts.fetch!;
-      const requestInit: ReqInit = {
-        ...opts,
-        body: getValidRequestBody(opts),
-      };
+
+      const requestInit: ReqInit = { ...opts, body: undefined };
+      delete (requestInit as any).body;
+      requestInit.body = getValidRequestBody(opts);
 
       response = await _fetch(url, requestInit);
 
@@ -102,7 +102,7 @@ export const createClient = (config: Config = {}): Client => {
             : opts.parseAs) ?? 'json';
 
         if (response.status === 204 || response.headers.get('Content-Length') === '0') {
-          let emptyData: any = {};
+          let emptyData: any;
 
           switch (parseAs) {
             case 'arrayBuffer':
@@ -110,11 +110,18 @@ export const createClient = (config: Config = {}): Client => {
             case 'text':
               emptyData = await response[parseAs]();
               break;
+
             case 'formData':
               emptyData = new FormData();
               break;
+
             case 'stream':
               emptyData = response.body;
+              break;
+
+            case 'json':
+            default:
+              emptyData = {};
               break;
           }
 
@@ -156,6 +163,8 @@ export const createClient = (config: Config = {}): Client => {
         jsonError = JSON.parse(textError);
       } catch {
         // ignore JSON parse error
+        // fallback
+        jsonError = textError;
       }
 
       throw jsonError ?? textError;
@@ -179,6 +188,13 @@ export const createClient = (config: Config = {}): Client => {
 
   const makeSseFn = (method: Uppercase<HttpMethod>) => async (options: RequestOptions) => {
     const { opts } = await beforeRequest(options);
+
+    // Run request interceptors BEFORE building URL
+    for (const fn of interceptors.request.fns) {
+      if (fn) {
+        await fn(opts);
+      }
+    }
 
     return createSseClient({
       ...opts,
@@ -216,6 +232,7 @@ export const createClient = (config: Config = {}): Client => {
     put: makeMethodFn('PUT'),
     request,
     setConfig,
+
     sse: {
       connect: makeSseFn('CONNECT'),
       delete: makeMethodFn('DELETE'),
@@ -227,6 +244,7 @@ export const createClient = (config: Config = {}): Client => {
       put: makeMethodFn('PUT'),
       trace: makeMethodFn('TRACE'),
     },
+
     trace: makeMethodFn('TRACE'),
   } as unknown as Client;
 };
