@@ -22,7 +22,7 @@
     "mdast-util-mdx-jsx": "3.2.0",
     "resend": "6.12.4",
     "starlight-theme-flexoki": "0.2.2",
-    "vite": "8.0.8"
+    "vite": "8.0.14"
   },
   "devDependencies": {
     "@types/hast": "3.0.4",
