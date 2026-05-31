@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { getPetById } from '@/src/client/sdk.gen';
 import type { Pet } from '@/src/client/types.gen';
 
-export default function Home() {
+export default function Home(): React.ReactNode {
   const [pet, setPet] = useState<Pet>();
   const [petId, setPetId] = useState(8);
 
