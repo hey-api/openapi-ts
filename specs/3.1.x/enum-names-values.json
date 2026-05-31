@@ -1,7 +1,7 @@
 {
-  "openapi": "3.0.2",
+  "openapi": "3.1.1",
   "info": {
-    "title": "OpenAPI 3.0.2 enum names values example",
+    "title": "OpenAPI 3.1.1 enum names values example",
     "version": "1"
   },
   "components": {
@@ -21,8 +21,7 @@
       },
       "Foo": {
         "enum": ["foo", "bar", null, "", true, false],
-        "nullable": true,
-        "type": "string"
+        "type": ["string", "null"]
       },
       "Numbers": {
         "default": 100,
@@ -32,6 +31,17 @@
       "Arrays": {
         "enum": [["foo"], ["bar"], ["baz"]],
         "type": "array"
+      },
+      "MyFooRef": {
+        "type": "object",
+        "properties": {
+          "foo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MyFoo"
+            }
+          }
+        }
       }
     }
   }

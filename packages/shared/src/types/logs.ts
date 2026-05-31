@@ -1,3 +1,5 @@
+export type LogLevel = 'debug' | 'error' | 'fatal' | 'info' | 'silent' | 'trace' | 'warn';
+
 export type Logs = {
   /**
    * Whether or not error logs should be written to a file or not
@@ -22,7 +24,7 @@ export type Logs = {
    *
    * @default 'info'
    */
-  level?: 'debug' | 'error' | 'fatal' | 'info' | 'silent' | 'trace' | 'warn';
+  level?: LogLevel;
   /**
    * The relative location of the logs folder
    *
