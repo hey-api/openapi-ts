@@ -3,7 +3,7 @@ import type { Symbol } from '@hey-api/codegen-core';
 import { $ } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
 
-export const createRegistryClass = ({
+export function createRegistryClass({
   plugin,
   sdkSymbol,
   symbol,
@@ -11,7 +11,7 @@ export const createRegistryClass = ({
   plugin: HeyApiSdkPlugin['Instance'];
   sdkSymbol: Symbol;
   symbol: Symbol;
-}): ReturnType<typeof $.class> => {
+}): ReturnType<typeof $.class> {
   const symbolDefaultKey = plugin.symbol('defaultKey');
   const symbolInstances = plugin.symbol('instances');
   return $.class(symbol)
@@ -56,18 +56,18 @@ export const createRegistryClass = ({
             .call($('key').coalesce($('this').attr(symbolDefaultKey)), 'value'),
         ),
     );
-};
+}
 
-export const createClientClass = ({
+export function createClientClass({
   plugin,
   symbol,
 }: {
   plugin: HeyApiSdkPlugin['Instance'];
   symbol: Symbol;
-}): ReturnType<typeof $.class> => {
+}): ReturnType<typeof $.class> {
   const symClient = plugin.querySymbol({ category: 'client' });
   const optionalClient = Boolean(plugin.config.client && symClient);
-  const symbolClient = plugin.external('client.Client');
+  const symbolClient = plugin.symbols.Client;
   return $.class(symbol)
     .field('client', (f) => f.protected().type(symbolClient))
     .newline()
@@ -91,4 +91,4 @@ export const createClientClass = ({
             ),
         ),
     );
-};
+}

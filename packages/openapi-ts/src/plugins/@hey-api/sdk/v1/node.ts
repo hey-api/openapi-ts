@@ -141,7 +141,7 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
         )
         .$if(isAngularClient && node.isRoot, (c) =>
           c.decorator(
-            plugin.external('@angular/core.Injectable'),
+            plugin.symbols.angular.Injectable,
             $.object().prop('providedIn', $.literal('root')),
           ),
         );
@@ -215,9 +215,7 @@ function enrichRootClass(args: {
           p.required(isClientRequired).type(
             $.type
               .object()
-              .prop('client', (p) =>
-                p.required(isClientRequired).type(plugin.external('client.Client')),
-              )
+              .prop('client', (p) => p.required(isClientRequired).type(plugin.symbols.Client))
               .prop('key', (p) => p.optional().type('string')),
           ),
         )
@@ -290,7 +288,7 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
       (m) =>
         m
           .generic(nuxtTypeComposable, (t) =>
-            t.extends(plugin.external('client.Composable')).default($.type.literal('$fetch')),
+            t.extends(plugin.symbols.Composable).default($.type.literal('$fetch')),
           )
           .generic(nuxtTypeDefault, (t) =>
             t.$if(

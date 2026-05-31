@@ -253,7 +253,7 @@ export function operationStatements({
 
     switch (operation.body.type) {
       case 'form-data': {
-        const symbol = plugin.external('client.formDataBodySerializer');
+        const symbol = plugin.symbols.formDataBodySerializer;
         reqOptions.spread(symbol);
         break;
       }
@@ -270,7 +270,7 @@ export function operationStatements({
         reqOptions.prop('bodySerializer', $.literal(null));
         break;
       case 'url-search-params': {
-        const symbol = plugin.external('client.urlSearchParamsBodySerializer');
+        const symbol = plugin.symbols.urlSearchParamsBodySerializer;
         reqOptions.spread(symbol);
         break;
       }
@@ -406,7 +406,7 @@ export function operationStatements({
       }
       config.push(shape);
     }
-    const symbol = plugin.external('client.buildClientParams');
+    const symbol = plugin.symbols.buildClientParams;
     statements.push(
       $.const('params').assign(
         $(symbol).call($.array(...args), $.array($.object().prop('args', $.array(...config)))),
@@ -503,8 +503,8 @@ export function operationReturnType({
       role,
     }) ?? 'unknown';
 
-  const requestResult = $.type(plugin.external('client.RequestResult'));
-  const sseResult = $.type(plugin.external('client.ServerSentEventsResult'));
+  const requestResult = $.type(plugin.symbols.RequestResult);
+  const sseResult = $.type(plugin.symbols.ServerSentEventsResult);
 
   if (isNuxt) {
     const inner = requestResult

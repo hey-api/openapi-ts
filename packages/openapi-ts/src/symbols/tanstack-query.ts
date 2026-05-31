@@ -26,9 +26,6 @@ export function TANSTACK_QUERY(plugin: PluginInstance) {
     QueryClient: plugin.symbol('QueryClient', {
       external: plugin.name,
       kind: 'type',
-      meta: {
-        resource: `${plugin.name}.QueryClient`,
-      },
     }),
     infiniteQueryOptions: plugin.symbol('infiniteQueryOptions', {
       external: plugin.name,
