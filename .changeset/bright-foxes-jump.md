@@ -1,5 +1,6 @@
 ---
+"@hey-api/openapi-ts": patch
 "@hey-api/shared": patch
 ---
 
-fix: preserve sort order when parser.filters.tags.exclude is set
+**parser**: fix: preserve sort order when filtering input
