@@ -16,7 +16,7 @@
     "nuxt": "3.14.1592",
     "vue": "3.5.13",
     "vue-router": "4.5.0",
-    "zod": "4.3.6"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "vite": "8.0.14"

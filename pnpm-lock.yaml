@@ -168,8 +168,8 @@ importers:
         specifier: 3.5.25
         version: 3.5.25(typescript@6.0.3)
       zod:
-        specifier: 4.3.6
-        version: 4.3.6
+        specifier: 4.4.3
+        version: 4.4.3
 
   examples/openapi-ts-angular:
     dependencies:
@@ -695,8 +695,8 @@ importers:
         specifier: 4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.9.3))
       zod:
-        specifier: 4.3.6
-        version: 4.3.6
+        specifier: 4.4.3
+        version: 4.4.3
     devDependencies:
       vite:
         specifier: 8.0.14
@@ -1563,8 +1563,8 @@ importers:
         specifier: 3.5.25
         version: 3.5.25(typescript@6.0.3)
       zod:
-        specifier: 4.3.6
-        version: 4.3.6
+        specifier: 4.4.3
+        version: 4.4.3
 
   packages/openapi-ts-tests/nestjs/v11:
     devDependencies:
@@ -1590,8 +1590,8 @@ importers:
         specifier: 1.4.1
         version: 1.4.1(typescript@6.0.3)
       zod:
-        specifier: 4.3.6
-        version: 4.3.6
+        specifier: 4.4.3
+        version: 4.4.3
 
   packages/openapi-ts-tests/sdks:
     devDependencies:
@@ -1665,8 +1665,8 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
       zod:
-        specifier: 4.3.6
-        version: 4.3.6
+        specifier: 4.4.3
+        version: 4.4.3
 
   packages/shared:
     dependencies:
@@ -16835,6 +16835,9 @@ packages:
 
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
   zone.js@0.16.0:
     resolution: {integrity: sha512-LqLPpIQANebrlxY6jKcYKdgN5DTXyyHAKnnWWjE5pPfEQ4n7j5zn7mOEEpwNZVKGqx3kKKmvplEmoBrvpgROTA==}
@@ -35518,6 +35521,8 @@ snapshots:
   zod@3.25.3: {}
 
   zod@4.3.6: {}
+
+  zod@4.4.3: {}
 
   zone.js@0.16.0: {}
 
