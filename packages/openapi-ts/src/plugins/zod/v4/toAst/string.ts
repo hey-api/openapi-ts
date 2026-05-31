@@ -12,15 +12,15 @@ function baseNode(ctx: StringResolverContext): Chain {
 }
 
 function constNode(ctx: StringResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (typeof schema.const !== 'string') return;
   return $(z).attr(identifiers.literal).call($.literal(schema.const));
 }
 
 function formatNode(ctx: StringResolverContext): ChainResult {
-  const { plugin, schema, symbols } = ctx;
-  const { z } = symbols;
+  const { plugin, schema } = ctx;
+  const { z } = plugin.symbols;
 
   switch (schema.format) {
     case 'date':

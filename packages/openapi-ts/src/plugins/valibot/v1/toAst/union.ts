@@ -7,8 +7,8 @@ import type { CompositeHandlerResult, ValibotResult } from '../../shared/types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: UnionResolverContext): PipeResult {
-  const { childResults, parentSchema, plugin, schemas, symbols } = ctx;
-  const { v } = symbols;
+  const { childResults, parentSchema, plugin, schemas } = ctx;
+  const { v } = ctx.plugin.symbols;
 
   const nonNullItems: Array<ValibotResult> = [];
   childResults.forEach((item, index) => {

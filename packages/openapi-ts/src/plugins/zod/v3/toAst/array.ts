@@ -8,8 +8,8 @@ import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
 import { unknownToAst } from './unknown';
 
 function baseNode(ctx: ArrayResolverContext): Chain {
-  const { applyModifiers, childResults, path, plugin, schema, symbols } = ctx;
-  const { z } = symbols;
+  const { applyModifiers, childResults, path, plugin, schema } = ctx;
+  const { z } = plugin.symbols;
 
   const arrayFn = $(z).attr(identifiers.array);
 
@@ -19,15 +19,7 @@ function baseNode(ctx: ArrayResolverContext): Chain {
   }
 
   if (!normalizedSchema.items) {
-    return arrayFn.call(
-      unknownToAst({
-        path,
-        plugin,
-        schema: {
-          type: 'unknown',
-        },
-      }),
-    );
+    return arrayFn.call(unknownToAst({ path, plugin }));
   }
 
   if (childResults.length === 1) {
@@ -69,15 +61,7 @@ function baseNode(ctx: ArrayResolverContext): Chain {
     }
   }
 
-  return arrayFn.call(
-    unknownToAst({
-      path,
-      plugin,
-      schema: {
-        type: 'unknown',
-      },
-    }),
-  );
+  return arrayFn.call(unknownToAst({ path, plugin }));
 }
 
 function lengthNode(ctx: ArrayResolverContext): ChainResult {

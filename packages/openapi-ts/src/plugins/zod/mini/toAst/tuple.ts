@@ -7,8 +7,8 @@ import type { Chain, ChainResult } from '../../shared/chain';
 import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
 
 function baseNode(ctx: TupleResolverContext): Chain {
-  const { applyModifiers, childResults, symbols } = ctx;
-  const { z } = symbols;
+  const { applyModifiers, childResults } = ctx;
+  const { z } = ctx.plugin.symbols;
 
   const tupleFn = $(z).attr(identifiers.tuple);
 
@@ -24,8 +24,8 @@ function baseNode(ctx: TupleResolverContext): Chain {
 }
 
 function constNode(ctx: TupleResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
 
   if (!schema.const || !Array.isArray(schema.const)) return;
 

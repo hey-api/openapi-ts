@@ -2,110 +2,142 @@
 
 from enum import Enum
 from pydantic import BaseModel, Field
-from typing import Any, Literal, Optional, TypeAlias, Union
+from typing import Any, Optional, Tuple, TypeAlias, Union
 
 
-class EventInstallationUpdatedProperties(BaseModel):
-    version: str
+class QuestionRejected(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    request_id: str = Field(..., alias="requestID", pattern="^que")
 
 
-class EventInstallationUpdated(BaseModel):
-    type: Literal["installation.updated"]
-    properties: EventInstallationUpdatedProperties
+class OAuthType(str, Enum):
+    OAUTH = "oauth"
 
 
-class EventInstallationUpdateAvailableProperties(BaseModel):
-    version: str
+class OAuth(BaseModel):
+    type: OAuthType
+    refresh: str
+    access: str
+    expires: int = Field(..., ge=0)
+    account_id: Optional[Optional[str]] = Field(default=None, alias="accountId")
+    enterprise_url: Optional[Optional[str]] = Field(default=None, alias="enterpriseUrl")
 
 
-class EventInstallationUpdateAvailable(BaseModel):
-    type: Literal["installation.update-available"]
-    properties: EventInstallationUpdateAvailableProperties
+class ApiAuthType(str, Enum):
+    API = "api"
 
 
-class ProjectIcon(BaseModel):
-    url: Optional[Optional[str]]
-    color: Optional[Optional[str]]
+class ApiAuth(BaseModel):
+    type: ApiAuthType
+    key: str
+    metadata: Optional[Optional[dict[str, Any]]]
 
 
-class ProjectTime(BaseModel):
-    created: float
-    updated: float
-    initialized: Optional[Optional[float]]
+class WellKnownAuthType(str, Enum):
+    WELLKNOWN = "wellknown"
 
 
-class Project(BaseModel):
-    id: str
-    worktree: str
-    vcs: Optional[Optional[Literal["git"]]]
-    name: Optional[Optional[str]]
-    icon: Optional[Optional[ProjectIcon]]
-    time: ProjectTime
+class WellKnownAuth(BaseModel):
+    type: WellKnownAuthType
+    key: str
+    token: str
 
 
-class EventProjectUpdated(BaseModel):
-    type: Literal["project.updated"]
-    properties: Project
+Auth: TypeAlias = Union[OAuth, ApiAuth, WellKnownAuth]
 
 
-class EventServerInstanceDisposedProperties(BaseModel):
-    directory: str
+class EffectHttpApiErrorBadRequestTag(str, Enum):
+    BAD_REQUEST = "BadRequest"
 
 
-class EventServerInstanceDisposed(BaseModel):
-    type: Literal["server.instance.disposed"]
-    properties: EventServerInstanceDisposedProperties
+class EffectHttpApiErrorBadRequest(BaseModel):
+    tag: EffectHttpApiErrorBadRequestTag = Field(..., alias="_tag")
 
 
-class EventLspClientDiagnosticsProperties(BaseModel):
-    server_id: str = Field(..., alias="serverID")
-    path: str
+class InvalidRequestErrorTag(str, Enum):
+    INVALID_REQUEST_ERROR = "InvalidRequestError"
 
 
-class EventLspClientDiagnostics(BaseModel):
-    type: Literal["lsp.client.diagnostics"]
-    properties: EventLspClientDiagnosticsProperties
+class InvalidRequestError(BaseModel):
+    tag: InvalidRequestErrorTag = Field(..., alias="_tag")
+    message: str
+    kind: Optional[Optional[str]]
+    field: Optional[Optional[str]]
 
 
-class EventLspUpdated(BaseModel):
-    type: Literal["lsp.updated"]
-    properties: dict[str, Any]
+class SnapshotFileDiffStatus(str, Enum):
+    ADDED = "added"
+    DELETED = "deleted"
+    MODIFIED = "modified"
 
 
-class FileDiff(BaseModel):
-    file: str
-    before: str
-    after: str
+class SnapshotFileDiff(BaseModel):
+    file: Optional[Optional[str]]
+    patch: Optional[Optional[str]]
     additions: float
     deletions: float
+    status: Optional[Optional[SnapshotFileDiffStatus]]
+
+
+class OutputFormatTextType(str, Enum):
+    TEXT = "text"
+
+
+class OutputFormatText(BaseModel):
+    type: OutputFormatTextType
+
+
+JsonSchema: TypeAlias = dict[str, Any]
+
+
+class OutputFormatJsonSchemaType(str, Enum):
+    JSON_SCHEMA = "json_schema"
+
+
+class OutputFormatJsonSchema(BaseModel):
+    type: OutputFormatJsonSchemaType
+    schema_: JsonSchema
+    retry_count: Optional[Optional[int]] = Field(default=None, alias="retryCount", ge=0)
+
+
+OutputFormat: TypeAlias = Union[OutputFormatText, OutputFormatJsonSchema]
+
+
+class UserMessageRole(str, Enum):
+    USER = "user"
 
 
 class UserMessageTime(BaseModel):
-    created: float
+    created: int = Field(..., ge=0)
 
 
 class UserMessageSummary(BaseModel):
     title: Optional[Optional[str]]
     body: Optional[Optional[str]]
-    diffs: list[FileDiff]
+    diffs: list[SnapshotFileDiff]
 
 
 class UserMessageModel(BaseModel):
     provider_id: str = Field(..., alias="providerID")
     model_id: str = Field(..., alias="modelID")
+    variant: Optional[Optional[str]]
 
 
 class UserMessage(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    role: Literal["user"]
+    id: str = Field(..., pattern="^msg")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    role: UserMessageRole
     time: UserMessageTime
+    format: Optional[Optional[OutputFormat]]
     summary: Optional[Optional[UserMessageSummary]]
     agent: str
     model: UserMessageModel
     system: Optional[Optional[str]]
     tools: Optional[Optional[dict[str, Any]]]
-    variant: Optional[Optional[str]]
+
+
+class ProviderAuthErrorName(str, Enum):
+    PROVIDER_AUTH_ERROR = "ProviderAuthError"
 
 
 class ProviderAuthErrorData(BaseModel):
@@ -114,22 +146,35 @@ class ProviderAuthErrorData(BaseModel):
 
 
 class ProviderAuthError(BaseModel):
-    name: Literal["ProviderAuthError"]
+    name: ProviderAuthErrorName
     data: ProviderAuthErrorData
+
+
+class UnknownErrorName(str, Enum):
+    UNKNOWN_ERROR = "UnknownError"
 
 
 class UnknownErrorData(BaseModel):
     message: str
+    ref: Optional[Optional[str]]
 
 
 class UnknownError(BaseModel):
-    name: Literal["UnknownError"]
+    name: UnknownErrorName
     data: UnknownErrorData
 
 
+class MessageOutputLengthErrorName(str, Enum):
+    MESSAGE_OUTPUT_LENGTH_ERROR = "MessageOutputLengthError"
+
+
 class MessageOutputLengthError(BaseModel):
-    name: Literal["MessageOutputLengthError"]
+    name: MessageOutputLengthErrorName
     data: dict[str, Any]
+
+
+class MessageAbortedErrorName(str, Enum):
+    MESSAGE_ABORTED_ERROR = "MessageAbortedError"
 
 
 class MessageAbortedErrorData(BaseModel):
@@ -137,13 +182,45 @@ class MessageAbortedErrorData(BaseModel):
 
 
 class MessageAbortedError(BaseModel):
-    name: Literal["MessageAbortedError"]
+    name: MessageAbortedErrorName
     data: MessageAbortedErrorData
+
+
+class StructuredOutputErrorName(str, Enum):
+    STRUCTURED_OUTPUT_ERROR = "StructuredOutputError"
+
+
+class StructuredOutputErrorData(BaseModel):
+    message: str
+    retries: int = Field(..., ge=0)
+
+
+class StructuredOutputError(BaseModel):
+    name: StructuredOutputErrorName
+    data: StructuredOutputErrorData
+
+
+class ContextOverflowErrorName(str, Enum):
+    CONTEXT_OVERFLOW_ERROR = "ContextOverflowError"
+
+
+class ContextOverflowErrorData(BaseModel):
+    message: str
+    response_body: Optional[Optional[str]] = Field(default=None, alias="responseBody")
+
+
+class ContextOverflowError(BaseModel):
+    name: ContextOverflowErrorName
+    data: ContextOverflowErrorData
+
+
+class ApiErrorName(str, Enum):
+    API_ERROR = "APIError"
 
 
 class ApiErrorData(BaseModel):
     message: str
-    status_code: Optional[Optional[float]] = Field(default=None, alias="statusCode")
+    status_code: Optional[Optional[int]] = Field(default=None, alias="statusCode", ge=0)
     is_retryable: bool = Field(..., alias="isRetryable")
     response_headers: Optional[Optional[dict[str, Any]]] = Field(default=None, alias="responseHeaders")
     response_body: Optional[Optional[str]] = Field(default=None, alias="responseBody")
@@ -151,13 +228,17 @@ class ApiErrorData(BaseModel):
 
 
 class ApiError(BaseModel):
-    name: Literal["APIError"]
+    name: ApiErrorName
     data: ApiErrorData
 
 
+class AssistantMessageRole(str, Enum):
+    ASSISTANT = "assistant"
+
+
 class AssistantMessageTime(BaseModel):
-    created: float
-    completed: Optional[Optional[float]]
+    created: int = Field(..., ge=0)
+    completed: Optional[Optional[int]] = Field(default=None, ge=0)
 
 
 class AssistantMessagePath(BaseModel):
@@ -171,6 +252,7 @@ class AssistantMessageTokensCache(BaseModel):
 
 
 class AssistantMessageTokens(BaseModel):
+    total: Optional[Optional[float]]
     input: float
     output: float
     reasoning: float
@@ -178,12 +260,12 @@ class AssistantMessageTokens(BaseModel):
 
 
 class AssistantMessage(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    role: Literal["assistant"]
+    id: str = Field(..., pattern="^msg")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    role: AssistantMessageRole
     time: AssistantMessageTime
-    error: Optional[Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, ApiError]]]
-    parent_id: str = Field(..., alias="parentID")
+    error: Optional[Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError]]]
+    parent_id: str = Field(..., alias="parentID", pattern="^msg")
     model_id: str = Field(..., alias="modelID")
     provider_id: str = Field(..., alias="providerID")
     mode: str
@@ -192,41 +274,28 @@ class AssistantMessage(BaseModel):
     summary: Optional[Optional[bool]]
     cost: float
     tokens: AssistantMessageTokens
+    structured: Optional[Optional[Any]]
+    variant: Optional[Optional[str]]
     finish: Optional[Optional[str]]
 
 
 Message: TypeAlias = Union[UserMessage, AssistantMessage]
 
 
-class EventMessageUpdatedProperties(BaseModel):
-    info: Message
-
-
-class EventMessageUpdated(BaseModel):
-    type: Literal["message.updated"]
-    properties: EventMessageUpdatedProperties
-
-
-class EventMessageRemovedProperties(BaseModel):
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-
-
-class EventMessageRemoved(BaseModel):
-    type: Literal["message.removed"]
-    properties: EventMessageRemovedProperties
+class TextPartType(str, Enum):
+    TEXT = "text"
 
 
 class TextPartTime(BaseModel):
-    start: float
-    end: Optional[Optional[float]]
+    start: int = Field(..., ge=0)
+    end: Optional[Optional[int]] = Field(default=None, ge=0)
 
 
 class TextPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["text"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: TextPartType
     text: str
     synthetic: Optional[Optional[bool]]
     ignored: Optional[Optional[bool]]
@@ -234,16 +303,41 @@ class TextPart(BaseModel):
     metadata: Optional[Optional[dict[str, Any]]]
 
 
+class SubtaskPartType(str, Enum):
+    SUBTASK = "subtask"
+
+
+class SubtaskPartModel(BaseModel):
+    provider_id: str = Field(..., alias="providerID")
+    model_id: str = Field(..., alias="modelID")
+
+
+class SubtaskPart(BaseModel):
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: SubtaskPartType
+    prompt: str
+    description: str
+    agent: str
+    model: Optional[Optional[SubtaskPartModel]]
+    command: Optional[Optional[str]]
+
+
+class ReasoningPartType(str, Enum):
+    REASONING = "reasoning"
+
+
 class ReasoningPartTime(BaseModel):
-    start: float
-    end: Optional[Optional[float]]
+    start: int = Field(..., ge=0)
+    end: Optional[Optional[int]] = Field(default=None, ge=0)
 
 
 class ReasoningPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["reasoning"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: ReasoningPartType
     text: str
     metadata: Optional[Optional[dict[str, Any]]]
     time: ReasoningPartTime
@@ -251,24 +345,28 @@ class ReasoningPart(BaseModel):
 
 class FilePartSourceText(BaseModel):
     value: str
-    start: int = Field(..., ge=-9007199254740991, le=9007199254740991)
-    end: int = Field(..., ge=-9007199254740991, le=9007199254740991)
+    start: float
+    end: float
+
+
+class FileSourceType(str, Enum):
+    FILE = "file"
 
 
 class FileSource(BaseModel):
     text: FilePartSourceText
-    type: Literal["file"]
+    type: FileSourceType
     path: str
 
 
 class RangeStart(BaseModel):
-    line: float
-    character: float
+    line: int = Field(..., ge=0)
+    character: int = Field(..., ge=0)
 
 
 class RangeEnd(BaseModel):
-    line: float
-    character: float
+    line: int = Field(..., ge=0)
+    character: int = Field(..., ge=0)
 
 
 class Range(BaseModel):
@@ -276,55 +374,86 @@ class Range(BaseModel):
     end: RangeEnd
 
 
+class SymbolSourceType(str, Enum):
+    SYMBOL = "symbol"
+
+
 class SymbolSource(BaseModel):
     text: FilePartSourceText
-    type: Literal["symbol"]
+    type: SymbolSourceType
     path: str
     range: Range
     name: str
-    kind: int = Field(..., ge=-9007199254740991, le=9007199254740991)
+    kind: int = Field(..., ge=0)
 
 
-FilePartSource: TypeAlias = Union[FileSource, SymbolSource]
+class ResourceSourceType(str, Enum):
+    RESOURCE = "resource"
+
+
+class ResourceSource(BaseModel):
+    text: FilePartSourceText
+    type: ResourceSourceType
+    client_name: str = Field(..., alias="clientName")
+    uri: str
+
+
+FilePartSource: TypeAlias = Union[FileSource, SymbolSource, ResourceSource]
+
+
+class FilePartType(str, Enum):
+    FILE = "file"
 
 
 class FilePart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["file"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: FilePartType
     mime: str
     filename: Optional[Optional[str]]
     url: str
     source: Optional[Optional[FilePartSource]]
 
 
+class ToolStatePendingStatus(str, Enum):
+    PENDING = "pending"
+
+
 class ToolStatePending(BaseModel):
-    status: Literal["pending"]
+    status: ToolStatePendingStatus
     input: dict[str, Any]
     raw: str
 
 
+class ToolStateRunningStatus(str, Enum):
+    RUNNING = "running"
+
+
 class ToolStateRunningTime(BaseModel):
-    start: float
+    start: int = Field(..., ge=0)
 
 
 class ToolStateRunning(BaseModel):
-    status: Literal["running"]
+    status: ToolStateRunningStatus
     input: dict[str, Any]
     title: Optional[Optional[str]]
     metadata: Optional[Optional[dict[str, Any]]]
     time: ToolStateRunningTime
 
 
+class ToolStateCompletedStatus(str, Enum):
+    COMPLETED = "completed"
+
+
 class ToolStateCompletedTime(BaseModel):
-    start: float
-    end: float
-    compacted: Optional[Optional[float]]
+    start: int = Field(..., ge=0)
+    end: int = Field(..., ge=0)
+    compacted: Optional[Optional[int]] = Field(default=None, ge=0)
 
 
 class ToolStateCompleted(BaseModel):
-    status: Literal["completed"]
+    status: ToolStateCompletedStatus
     input: dict[str, Any]
     output: str
     title: str
@@ -333,13 +462,17 @@ class ToolStateCompleted(BaseModel):
     attachments: Optional[Optional[list[FilePart]]]
 
 
+class ToolStateErrorStatus(str, Enum):
+    ERROR = "error"
+
+
 class ToolStateErrorTime(BaseModel):
-    start: float
-    end: float
+    start: int = Field(..., ge=0)
+    end: int = Field(..., ge=0)
 
 
 class ToolStateError(BaseModel):
-    status: Literal["error"]
+    status: ToolStateErrorStatus
     input: dict[str, Any]
     error: str
     metadata: Optional[Optional[dict[str, Any]]]
@@ -349,23 +482,35 @@ class ToolStateError(BaseModel):
 ToolState: TypeAlias = Union[ToolStatePending, ToolStateRunning, ToolStateCompleted, ToolStateError]
 
 
+class ToolPartType(str, Enum):
+    TOOL = "tool"
+
+
 class ToolPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["tool"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: ToolPartType
     call_id: str = Field(..., alias="callID")
     tool: str
     state: ToolState
     metadata: Optional[Optional[dict[str, Any]]]
 
 
+class StepStartPartType(str, Enum):
+    STEP_START = "step-start"
+
+
 class StepStartPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["step-start"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: StepStartPartType
     snapshot: Optional[Optional[str]]
+
+
+class StepFinishPartType(str, Enum):
+    STEP_FINISH = "step-finish"
 
 
 class StepFinishPartTokensCache(BaseModel):
@@ -374,6 +519,7 @@ class StepFinishPartTokensCache(BaseModel):
 
 
 class StepFinishPartTokens(BaseModel):
+    total: Optional[Optional[float]]
     input: float
     output: float
     reasoning: float
@@ -381,407 +527,166 @@ class StepFinishPartTokens(BaseModel):
 
 
 class StepFinishPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["step-finish"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: StepFinishPartType
     reason: str
     snapshot: Optional[Optional[str]]
     cost: float
     tokens: StepFinishPartTokens
 
 
+class SnapshotPartType(str, Enum):
+    SNAPSHOT = "snapshot"
+
+
 class SnapshotPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["snapshot"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: SnapshotPartType
     snapshot: str
 
 
+class PatchPartType(str, Enum):
+    PATCH = "patch"
+
+
 class PatchPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["patch"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: PatchPartType
     hash: str
     files: list[str]
 
 
+class AgentPartType(str, Enum):
+    AGENT = "agent"
+
+
 class AgentPartSource(BaseModel):
     value: str
-    start: int = Field(..., ge=-9007199254740991, le=9007199254740991)
-    end: int = Field(..., ge=-9007199254740991, le=9007199254740991)
+    start: int = Field(..., ge=0)
+    end: int = Field(..., ge=0)
 
 
 class AgentPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["agent"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: AgentPartType
     name: str
     source: Optional[Optional[AgentPartSource]]
 
 
+class RetryPartType(str, Enum):
+    RETRY = "retry"
+
+
 class RetryPartTime(BaseModel):
-    created: float
+    created: int = Field(..., ge=0)
 
 
 class RetryPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["retry"]
-    attempt: float
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: RetryPartType
+    attempt: int = Field(..., ge=0)
     error: ApiError
     time: RetryPartTime
 
 
+class CompactionPartType(str, Enum):
+    COMPACTION = "compaction"
+
+
 class CompactionPart(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["compaction"]
+    id: str = Field(..., pattern="^prt")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    type: CompactionPartType
     auto: bool
+    overflow: Optional[Optional[bool]]
+    tail_start_id: Optional[Optional[str]] = Field(default=None, pattern="^msg")
 
 
-class Part(BaseModel):
-    id: str
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    type: Literal["subtask"]
-    prompt: str
-    description: str
-    agent: str
-    command: Optional[Optional[str]]
+Part: TypeAlias = Union[TextPart, SubtaskPart, ReasoningPart, FilePart, ToolPart, StepStartPart, StepFinishPart, SnapshotPart, PatchPart, AgentPart, RetryPart, CompactionPart]
 
 
-Part_: TypeAlias = Union[TextPart, Part, ReasoningPart, FilePart, ToolPart, StepStartPart, StepFinishPart, SnapshotPart, PatchPart, AgentPart, RetryPart, CompactionPart]
+class QuestionOption(BaseModel):
+    label: str = Field(..., description="Display text (1-5 words, concise)")
+    description: str = Field(..., description="Explanation of choice")
 
 
-class EventMessagePartUpdatedProperties(BaseModel):
-    part: Part_
-    delta: Optional[Optional[str]]
+class QuestionInfo(BaseModel):
+    question: str = Field(..., description="Complete question")
+    header: str = Field(..., description="Very short label (max 30 chars)")
+    options: list[QuestionOption] = Field(..., description="Available choices")
+    multiple: Optional[Optional[bool]]
+    custom: Optional[Optional[bool]]
 
 
-class EventMessagePartUpdated(BaseModel):
-    type: Literal["message.part.updated"]
-    properties: EventMessagePartUpdatedProperties
-
-
-class EventMessagePartRemovedProperties(BaseModel):
-    session_id: str = Field(..., alias="sessionID")
-    message_id: str = Field(..., alias="messageID")
-    part_id: str = Field(..., alias="partID")
-
-
-class EventMessagePartRemoved(BaseModel):
-    type: Literal["message.part.removed"]
-    properties: EventMessagePartRemovedProperties
-
-
-class PermissionRequestTool(BaseModel):
-    message_id: str = Field(..., alias="messageID")
+class QuestionTool(BaseModel):
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
     call_id: str = Field(..., alias="callID")
 
 
-class PermissionRequest(BaseModel):
-    id: str = Field(..., pattern="^per.*")
-    session_id: str = Field(..., alias="sessionID", pattern="^ses.*")
-    permission: str
-    patterns: list[str]
-    metadata: dict[str, Any]
-    always: list[str]
-    tool: Optional[Optional[PermissionRequestTool]]
+QuestionAnswer: TypeAlias = list[str]
 
 
-class EventPermissionAsked(BaseModel):
-    type: Literal["permission.asked"]
-    properties: PermissionRequest
-
-
-class EventPermissionRepliedPropertiesReply(str, Enum):
-    ONCE = "once"
-    ALWAYS = "always"
-    REJECT = "reject"
-
-
-class EventPermissionRepliedProperties(BaseModel):
-    session_id: str = Field(..., alias="sessionID")
-    request_id: str = Field(..., alias="requestID")
-    reply: EventPermissionRepliedPropertiesReply
-
-
-class EventPermissionReplied(BaseModel):
-    type: Literal["permission.replied"]
-    properties: EventPermissionRepliedProperties
-
-
-class SessionStatus(BaseModel):
-    type: Literal["idle"]
-
-
-class SessionStatus_(BaseModel):
-    type: Literal["retry"]
-    attempt: float
-    message: str
-    next: float
-
-
-class SessionStatus_2(BaseModel):
-    type: Literal["busy"]
-
-
-SessionStatus_3: TypeAlias = Union[SessionStatus, SessionStatus_, SessionStatus_2]
-
-
-class EventSessionStatusProperties(BaseModel):
-    session_id: str = Field(..., alias="sessionID")
-    status: SessionStatus_3
-
-
-class EventSessionStatus(BaseModel):
-    type: Literal["session.status"]
-    properties: EventSessionStatusProperties
-
-
-class EventSessionIdleProperties(BaseModel):
-    session_id: str = Field(..., alias="sessionID")
-
-
-class EventSessionIdle(BaseModel):
-    type: Literal["session.idle"]
-    properties: EventSessionIdleProperties
-
-
-class EventSessionCompactedProperties(BaseModel):
-    session_id: str = Field(..., alias="sessionID")
-
-
-class EventSessionCompacted(BaseModel):
-    type: Literal["session.compacted"]
-    properties: EventSessionCompactedProperties
-
-
-class EventFileEditedProperties(BaseModel):
-    file: str
-
-
-class EventFileEdited(BaseModel):
-    type: Literal["file.edited"]
-    properties: EventFileEditedProperties
+class QuestionReplied(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    request_id: str = Field(..., alias="requestID", pattern="^que")
+    answers: list[QuestionAnswer]
 
 
 class Todo(BaseModel):
     content: str = Field(..., description="Brief description of the task")
     status: str = Field(..., description="Current status of the task: pending, in_progress, completed, cancelled")
     priority: str = Field(..., description="Priority level of the task: high, medium, low")
-    id: str = Field(..., description="Unique identifier for the todo item")
 
 
-class EventTodoUpdatedProperties(BaseModel):
-    session_id: str = Field(..., alias="sessionID")
-    todos: list[Todo]
+class SessionStatusType(str, Enum):
+    IDLE = "idle"
 
 
-class EventTodoUpdated(BaseModel):
-    type: Literal["todo.updated"]
-    properties: EventTodoUpdatedProperties
+class SessionStatus(BaseModel):
+    type: SessionStatusType
 
 
-class EventTuiPromptAppendProperties(BaseModel):
-    text: str
+class SessionStatusType_(str, Enum):
+    RETRY = "retry"
 
 
-class EventTuiPromptAppend(BaseModel):
-    type: Literal["tui.prompt.append"]
-    properties: EventTuiPromptAppendProperties
-
-
-class EventTuiCommandExecutePropertiesCommand(str, Enum):
-    SESSION_LIST = "session.list"
-    SESSION_NEW = "session.new"
-    SESSION_SHARE = "session.share"
-    SESSION_INTERRUPT = "session.interrupt"
-    SESSION_COMPACT = "session.compact"
-    SESSION_PAGE_UP = "session.page.up"
-    SESSION_PAGE_DOWN = "session.page.down"
-    SESSION_HALF_PAGE_UP = "session.half.page.up"
-    SESSION_HALF_PAGE_DOWN = "session.half.page.down"
-    SESSION_FIRST = "session.first"
-    SESSION_LAST = "session.last"
-    PROMPT_CLEAR = "prompt.clear"
-    PROMPT_SUBMIT = "prompt.submit"
-    AGENT_CYCLE = "agent.cycle"
-
-
-class EventTuiCommandExecuteProperties(BaseModel):
-    command: Union[EventTuiCommandExecutePropertiesCommand, str]
-
-
-class EventTuiCommandExecute(BaseModel):
-    type: Literal["tui.command.execute"]
-    properties: EventTuiCommandExecuteProperties
-
-
-class EventTuiToastShowPropertiesVariant(str, Enum):
-    INFO = "info"
-    SUCCESS = "success"
-    WARNING = "warning"
-    ERROR = "error"
-
-
-class EventTuiToastShowProperties(BaseModel):
-    title: Optional[Optional[str]]
-    message: str
-    variant: EventTuiToastShowPropertiesVariant
-    duration: Optional[Optional[float]] = Field(default=5000, description="Duration in milliseconds")
-
-
-class EventTuiToastShow(BaseModel):
-    type: Literal["tui.toast.show"]
-    properties: EventTuiToastShowProperties
-
-
-class EventMcpToolsChangedProperties(BaseModel):
-    server: str
-
-
-class EventMcpToolsChanged(BaseModel):
-    type: Literal["mcp.tools.changed"]
-    properties: EventMcpToolsChangedProperties
-
-
-class EventCommandExecutedProperties(BaseModel):
-    name: str
-    session_id: str = Field(..., alias="sessionID", pattern="^ses.*")
-    arguments: str
-    message_id: str = Field(..., alias="messageID", pattern="^msg.*")
-
-
-class EventCommandExecuted(BaseModel):
-    type: Literal["command.executed"]
-    properties: EventCommandExecutedProperties
-
-
-class PermissionAction(str, Enum):
-    ALLOW = "allow"
-    DENY = "deny"
-    ASK = "ask"
-
-
-class PermissionRule(BaseModel):
-    permission: str
-    pattern: str
-    action: PermissionAction
-
-
-PermissionRuleset: TypeAlias = list[PermissionRule]
-
-
-class SessionSummary(BaseModel):
-    additions: float
-    deletions: float
-    files: float
-    diffs: Optional[Optional[list[FileDiff]]]
-
-
-class SessionShare(BaseModel):
-    url: str
-
-
-class SessionTime(BaseModel):
-    created: float
-    updated: float
-    compacting: Optional[Optional[float]]
-    archived: Optional[Optional[float]]
-
-
-class SessionRevert(BaseModel):
-    message_id: str = Field(..., alias="messageID")
-    part_id: Optional[Optional[str]] = Field(default=None, alias="partID")
-    snapshot: Optional[Optional[str]]
-    diff: Optional[Optional[str]]
-
-
-class Session(BaseModel):
-    id: str = Field(..., pattern="^ses.*")
-    project_id: str = Field(..., alias="projectID")
-    directory: str
-    parent_id: Optional[Optional[str]] = Field(default=None, alias="parentID", pattern="^ses.*")
-    summary: Optional[Optional[SessionSummary]]
-    share: Optional[Optional[SessionShare]]
+class SessionStatusAction(BaseModel):
+    reason: str
+    provider: str
     title: str
-    version: str
-    time: SessionTime
-    permission: Optional[Optional[PermissionRuleset]]
-    revert: Optional[Optional[SessionRevert]]
+    message: str
+    label: str
+    link: Optional[Optional[str]]
 
 
-class EventSessionCreatedProperties(BaseModel):
-    info: Session
+class SessionStatus_(BaseModel):
+    type: SessionStatusType_
+    attempt: int = Field(..., ge=0)
+    message: str
+    action: Optional[Optional[SessionStatusAction]]
+    next: int = Field(..., ge=0)
 
 
-class EventSessionCreated(BaseModel):
-    type: Literal["session.created"]
-    properties: EventSessionCreatedProperties
+class SessionStatusType_2(str, Enum):
+    BUSY = "busy"
 
 
-class EventSessionUpdatedProperties(BaseModel):
-    info: Session
+class SessionStatus_2(BaseModel):
+    type: SessionStatusType_2
 
 
-class EventSessionUpdated(BaseModel):
-    type: Literal["session.updated"]
-    properties: EventSessionUpdatedProperties
-
-
-class EventSessionDeletedProperties(BaseModel):
-    info: Session
-
-
-class EventSessionDeleted(BaseModel):
-    type: Literal["session.deleted"]
-    properties: EventSessionDeletedProperties
-
-
-class EventSessionDiffProperties(BaseModel):
-    session_id: str = Field(..., alias="sessionID")
-    diff: list[FileDiff]
-
-
-class EventSessionDiff(BaseModel):
-    type: Literal["session.diff"]
-    properties: EventSessionDiffProperties
-
-
-class EventSessionErrorProperties(BaseModel):
-    session_id: Optional[Optional[str]] = Field(default=None, alias="sessionID")
-    error: Optional[Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, ApiError]]]
-
-
-class EventSessionError(BaseModel):
-    type: Literal["session.error"]
-    properties: EventSessionErrorProperties
-
-
-class EventFileWatcherUpdatedProperties(BaseModel):
-    file: str
-    event: Union[Literal["add"], Literal["change"], Literal["unlink"]]
-
-
-class EventFileWatcherUpdated(BaseModel):
-    type: Literal["file.watcher.updated"]
-    properties: EventFileWatcherUpdatedProperties
-
-
-class EventVcsBranchUpdatedProperties(BaseModel):
-    branch: Optional[Optional[str]]
-
-
-class EventVcsBranchUpdated(BaseModel):
-    type: Literal["vcs.branch.updated"]
-    properties: EventVcsBranchUpdatedProperties
+SessionStatus_3: TypeAlias = Union[SessionStatus, SessionStatus_, SessionStatus_2]
 
 
 class PtyStatus(str, Enum):
@@ -790,173 +695,13 @@ class PtyStatus(str, Enum):
 
 
 class Pty(BaseModel):
-    id: str = Field(..., pattern="^pty.*")
+    id: str = Field(..., pattern="^pty")
     title: str
     command: str
     args: list[str]
     cwd: str
     status: PtyStatus
-    pid: float
-
-
-class EventPtyCreatedProperties(BaseModel):
-    info: Pty
-
-
-class EventPtyCreated(BaseModel):
-    type: Literal["pty.created"]
-    properties: EventPtyCreatedProperties
-
-
-class EventPtyUpdatedProperties(BaseModel):
-    info: Pty
-
-
-class EventPtyUpdated(BaseModel):
-    type: Literal["pty.updated"]
-    properties: EventPtyUpdatedProperties
-
-
-class EventPtyExitedProperties(BaseModel):
-    id: str = Field(..., pattern="^pty.*")
-    exit_code: float = Field(..., alias="exitCode")
-
-
-class EventPtyExited(BaseModel):
-    type: Literal["pty.exited"]
-    properties: EventPtyExitedProperties
-
-
-class EventPtyDeletedProperties(BaseModel):
-    id: str = Field(..., pattern="^pty.*")
-
-
-class EventPtyDeleted(BaseModel):
-    type: Literal["pty.deleted"]
-    properties: EventPtyDeletedProperties
-
-
-class EventServerConnected(BaseModel):
-    type: Literal["server.connected"]
-    properties: dict[str, Any]
-
-
-class EventGlobalDisposed(BaseModel):
-    type: Literal["global.disposed"]
-    properties: dict[str, Any]
-
-
-Event: TypeAlias = Union[EventInstallationUpdated, EventInstallationUpdateAvailable, EventProjectUpdated, EventServerInstanceDisposed, EventLspClientDiagnostics, EventLspUpdated, EventMessageUpdated, EventMessageRemoved, EventMessagePartUpdated, EventMessagePartRemoved, EventPermissionAsked, EventPermissionReplied, EventSessionStatus, EventSessionIdle, EventSessionCompacted, EventFileEdited, EventTodoUpdated, EventTuiPromptAppend, EventTuiCommandExecute, EventTuiToastShow, EventMcpToolsChanged, EventCommandExecuted, EventSessionCreated, EventSessionUpdated, EventSessionDeleted, EventSessionDiff, EventSessionError, EventFileWatcherUpdated, EventVcsBranchUpdated, EventPtyCreated, EventPtyUpdated, EventPtyExited, EventPtyDeleted, EventServerConnected, EventGlobalDisposed]
-
-
-class GlobalEvent(BaseModel):
-    directory: str
-    payload: Event
-
-
-class BadRequestError(BaseModel):
-    data: Any
-    errors: list[dict[str, Any]]
-    success: Literal[False]
-
-
-class NotFoundErrorData(BaseModel):
-    message: str
-
-
-class NotFoundError(BaseModel):
-    name: Literal["NotFoundError"]
-    data: NotFoundErrorData
-
-
-class KeybindsConfig(BaseModel):
-    leader: Optional[Optional[str]] = Field(default="ctrl+x", description="Leader key for keybind combinations")
-    app_exit: Optional[Optional[str]] = Field(default="ctrl+c,ctrl+d,<leader>q", description="Exit the application")
-    editor_open: Optional[Optional[str]] = Field(default="<leader>e", description="Open external editor")
-    theme_list: Optional[Optional[str]] = Field(default="<leader>t", description="List available themes")
-    sidebar_toggle: Optional[Optional[str]] = Field(default="<leader>b", description="Toggle sidebar")
-    scrollbar_toggle: Optional[Optional[str]] = Field(default="none", description="Toggle session scrollbar")
-    username_toggle: Optional[Optional[str]] = Field(default="none", description="Toggle username visibility")
-    status_view: Optional[Optional[str]] = Field(default="<leader>s", description="View status")
-    session_export: Optional[Optional[str]] = Field(default="<leader>x", description="Export session to editor")
-    session_new: Optional[Optional[str]] = Field(default="<leader>n", description="Create a new session")
-    session_list: Optional[Optional[str]] = Field(default="<leader>l", description="List all sessions")
-    session_timeline: Optional[Optional[str]] = Field(default="<leader>g", description="Show session timeline")
-    session_fork: Optional[Optional[str]] = Field(default="none", description="Fork session from message")
-    session_rename: Optional[Optional[str]] = Field(default="none", description="Rename session")
-    session_share: Optional[Optional[str]] = Field(default="none", description="Share current session")
-    session_unshare: Optional[Optional[str]] = Field(default="none", description="Unshare current session")
-    session_interrupt: Optional[Optional[str]] = Field(default="escape", description="Interrupt current session")
-    session_compact: Optional[Optional[str]] = Field(default="<leader>c", description="Compact the session")
-    messages_page_up: Optional[Optional[str]] = Field(default="pageup", description="Scroll messages up by one page")
-    messages_page_down: Optional[Optional[str]] = Field(default="pagedown", description="Scroll messages down by one page")
-    messages_half_page_up: Optional[Optional[str]] = Field(default="ctrl+alt+u", description="Scroll messages up by half page")
-    messages_half_page_down: Optional[Optional[str]] = Field(default="ctrl+alt+d", description="Scroll messages down by half page")
-    messages_first: Optional[Optional[str]] = Field(default="ctrl+g,home", description="Navigate to first message")
-    messages_last: Optional[Optional[str]] = Field(default="ctrl+alt+g,end", description="Navigate to last message")
-    messages_next: Optional[Optional[str]] = Field(default="none", description="Navigate to next message")
-    messages_previous: Optional[Optional[str]] = Field(default="none", description="Navigate to previous message")
-    messages_last_user: Optional[Optional[str]] = Field(default="none", description="Navigate to last user message")
-    messages_copy: Optional[Optional[str]] = Field(default="<leader>y", description="Copy message")
-    messages_undo: Optional[Optional[str]] = Field(default="<leader>u", description="Undo message")
-    messages_redo: Optional[Optional[str]] = Field(default="<leader>r", description="Redo message")
-    messages_toggle_conceal: Optional[Optional[str]] = Field(default="<leader>h", description="Toggle code block concealment in messages")
-    tool_details: Optional[Optional[str]] = Field(default="none", description="Toggle tool details visibility")
-    model_list: Optional[Optional[str]] = Field(default="<leader>m", description="List available models")
-    model_cycle_recent: Optional[Optional[str]] = Field(default="f2", description="Next recently used model")
-    model_cycle_recent_reverse: Optional[Optional[str]] = Field(default="shift+f2", description="Previous recently used model")
-    model_cycle_favorite: Optional[Optional[str]] = Field(default="none", description="Next favorite model")
-    model_cycle_favorite_reverse: Optional[Optional[str]] = Field(default="none", description="Previous favorite model")
-    command_list: Optional[Optional[str]] = Field(default="ctrl+p", description="List available commands")
-    agent_list: Optional[Optional[str]] = Field(default="<leader>a", description="List agents")
-    agent_cycle: Optional[Optional[str]] = Field(default="tab", description="Next agent")
-    agent_cycle_reverse: Optional[Optional[str]] = Field(default="shift+tab", description="Previous agent")
-    variant_cycle: Optional[Optional[str]] = Field(default="ctrl+t", description="Cycle model variants")
-    input_clear: Optional[Optional[str]] = Field(default="ctrl+c", description="Clear input field")
-    input_paste: Optional[Optional[str]] = Field(default="ctrl+v", description="Paste from clipboard")
-    input_submit: Optional[Optional[str]] = Field(default="return", description="Submit input")
-    input_newline: Optional[Optional[str]] = Field(default="shift+return,ctrl+return,alt+return,ctrl+j", description="Insert newline in input")
-    input_move_left: Optional[Optional[str]] = Field(default="left,ctrl+b", description="Move cursor left in input")
-    input_move_right: Optional[Optional[str]] = Field(default="right,ctrl+f", description="Move cursor right in input")
-    input_move_up: Optional[Optional[str]] = Field(default="up", description="Move cursor up in input")
-    input_move_down: Optional[Optional[str]] = Field(default="down", description="Move cursor down in input")
-    input_select_left: Optional[Optional[str]] = Field(default="shift+left", description="Select left in input")
-    input_select_right: Optional[Optional[str]] = Field(default="shift+right", description="Select right in input")
-    input_select_up: Optional[Optional[str]] = Field(default="shift+up", description="Select up in input")
-    input_select_down: Optional[Optional[str]] = Field(default="shift+down", description="Select down in input")
-    input_line_home: Optional[Optional[str]] = Field(default="ctrl+a", description="Move to start of line in input")
-    input_line_end: Optional[Optional[str]] = Field(default="ctrl+e", description="Move to end of line in input")
-    input_select_line_home: Optional[Optional[str]] = Field(default="ctrl+shift+a", description="Select to start of line in input")
-    input_select_line_end: Optional[Optional[str]] = Field(default="ctrl+shift+e", description="Select to end of line in input")
-    input_visual_line_home: Optional[Optional[str]] = Field(default="alt+a", description="Move to start of visual line in input")
-    input_visual_line_end: Optional[Optional[str]] = Field(default="alt+e", description="Move to end of visual line in input")
-    input_select_visual_line_home: Optional[Optional[str]] = Field(default="alt+shift+a", description="Select to start of visual line in input")
-    input_select_visual_line_end: Optional[Optional[str]] = Field(default="alt+shift+e", description="Select to end of visual line in input")
-    input_buffer_home: Optional[Optional[str]] = Field(default="home", description="Move to start of buffer in input")
-    input_buffer_end: Optional[Optional[str]] = Field(default="end", description="Move to end of buffer in input")
-    input_select_buffer_home: Optional[Optional[str]] = Field(default="shift+home", description="Select to start of buffer in input")
-    input_select_buffer_end: Optional[Optional[str]] = Field(default="shift+end", description="Select to end of buffer in input")
-    input_delete_line: Optional[Optional[str]] = Field(default="ctrl+shift+d", description="Delete line in input")
-    input_delete_to_line_end: Optional[Optional[str]] = Field(default="ctrl+k", description="Delete to end of line in input")
-    input_delete_to_line_start: Optional[Optional[str]] = Field(default="ctrl+u", description="Delete to start of line in input")
-    input_backspace: Optional[Optional[str]] = Field(default="backspace,shift+backspace", description="Backspace in input")
-    input_delete: Optional[Optional[str]] = Field(default="ctrl+d,delete,shift+delete", description="Delete character in input")
-    input_undo: Optional[Optional[str]] = Field(default="ctrl+-,super+z", description="Undo in input")
-    input_redo: Optional[Optional[str]] = Field(default="ctrl+.,super+shift+z", description="Redo in input")
-    input_word_forward: Optional[Optional[str]] = Field(default="alt+f,alt+right,ctrl+right", description="Move word forward in input")
-    input_word_backward: Optional[Optional[str]] = Field(default="alt+b,alt+left,ctrl+left", description="Move word backward in input")
-    input_select_word_forward: Optional[Optional[str]] = Field(default="alt+shift+f,alt+shift+right", description="Select word forward in input")
-    input_select_word_backward: Optional[Optional[str]] = Field(default="alt+shift+b,alt+shift+left", description="Select word backward in input")
-    input_delete_word_forward: Optional[Optional[str]] = Field(default="alt+d,alt+delete,ctrl+delete", description="Delete word forward in input")
-    input_delete_word_backward: Optional[Optional[str]] = Field(default="ctrl+w,ctrl+backspace,alt+backspace", description="Delete word backward in input")
-    history_previous: Optional[Optional[str]] = Field(default="up", description="Previous history item")
-    history_next: Optional[Optional[str]] = Field(default="down", description="Next history item")
-    session_child_cycle: Optional[Optional[str]] = Field(default="<leader>right", description="Next child session")
-    session_child_cycle_reverse: Optional[Optional[str]] = Field(default="<leader>left", description="Previous child session")
-    session_parent: Optional[Optional[str]] = Field(default="<leader>up", description="Go to parent session")
-    terminal_suspend: Optional[Optional[str]] = Field(default="ctrl+z", description="Suspend terminal")
-    terminal_title_toggle: Optional[Optional[str]] = Field(default="none", description="Toggle terminal title")
-    tips_toggle: Optional[Optional[str]] = Field(default="<leader>h", description="Toggle tips on home screen")
+    pid: int = Field(..., ge=0)
 
 
 class LogLevel(str, Enum):
@@ -967,10 +712,26 @@ class LogLevel(str, Enum):
 
 
 class ServerConfig(BaseModel):
-    port: Optional[Optional[int]] = Field(default=None, description="Port to listen on", gt=0, le=9007199254740991)
-    hostname: Optional[Optional[str]] = Field(default=None, description="Hostname to listen on")
+    port: Optional[Optional[int]] = Field(default=None, gt=0)
+    hostname: Optional[Optional[str]]
     mdns: Optional[Optional[bool]]
-    cors: Optional[Optional[list[str]]] = Field(default=None, description="Additional domains to allow for CORS")
+    mdns_domain: Optional[Optional[str]] = Field(default=None, alias="mdnsDomain")
+    cors: Optional[Optional[list[str]]]
+
+
+class ReferenceConfigEntry(BaseModel):
+    repository: str = Field(..., description="Git repository URL, host/path reference, or GitHub owner/repo shorthand")
+    branch: Optional[Optional[str]]
+
+
+class ReferenceConfigEntry_(BaseModel):
+    path: str = Field(..., description="Absolute path, ~/ path, or workspace-relative path to a local reference directory")
+
+
+ReferenceConfigEntry_2: TypeAlias = Union[str, ReferenceConfigEntry, ReferenceConfigEntry_]
+
+
+ReferenceConfig: TypeAlias = dict[str, Any]
 
 
 class PermissionActionConfig(str, Enum):
@@ -995,18 +756,27 @@ class PermissionConfig(BaseModel):
     task: Optional[Optional[PermissionRuleConfig]]
     external_directory: Optional[Optional[PermissionRuleConfig]]
     todowrite: Optional[Optional[PermissionActionConfig]]
-    todoread: Optional[Optional[PermissionActionConfig]]
+    question: Optional[Optional[PermissionActionConfig]]
     webfetch: Optional[Optional[PermissionActionConfig]]
     websearch: Optional[Optional[PermissionActionConfig]]
-    codesearch: Optional[Optional[PermissionActionConfig]]
+    repo_clone: Optional[Optional[PermissionRuleConfig]]
+    repo_overview: Optional[Optional[PermissionRuleConfig]]
     lsp: Optional[Optional[PermissionRuleConfig]]
     doom_loop: Optional[Optional[PermissionActionConfig]]
+    skill: Optional[Optional[PermissionRuleConfig]]
 
 
-PermissionConfig_: TypeAlias = Union[PermissionConfig, PermissionActionConfig]
+PermissionConfig_: TypeAlias = Union[PermissionActionConfig, PermissionConfig]
 
 
 AgentConfig: TypeAlias = dict[str, Any]
+
+
+ProviderConfigOptions: TypeAlias = dict[str, Any]
+
+
+class ProviderConfigModelsValueInterleaved(Enum):
+    pass
 
 
 class ProviderConfigModelsValueInterleavedField(str, Enum):
@@ -1014,7 +784,7 @@ class ProviderConfigModelsValueInterleavedField(str, Enum):
     REASONING_DETAILS = "reasoning_details"
 
 
-class ProviderConfigModelsValueInterleaved(BaseModel):
+class ProviderConfigModelsValueInterleaved_(BaseModel):
     field: ProviderConfigModelsValueInterleavedField
 
 
@@ -1035,6 +805,7 @@ class ProviderConfigModelsValueCost(BaseModel):
 
 class ProviderConfigModelsValueLimit(BaseModel):
     context: float
+    input: Optional[Optional[float]]
     output: float
 
 
@@ -1055,18 +826,20 @@ class ProviderConfigModelsValueModalitiesOutput(str, Enum):
 
 
 class ProviderConfigModelsValueModalities(BaseModel):
-    input: list[ProviderConfigModelsValueModalitiesInput]
-    output: list[ProviderConfigModelsValueModalitiesOutput]
+    input: Optional[Optional[list[ProviderConfigModelsValueModalitiesInput]]]
+    output: Optional[Optional[list[ProviderConfigModelsValueModalitiesOutput]]]
 
 
 class ProviderConfigModelsValueStatus(str, Enum):
     ALPHA = "alpha"
     BETA = "beta"
     DEPRECATED = "deprecated"
+    ACTIVE = "active"
 
 
 class ProviderConfigModelsValueProvider(BaseModel):
-    npm: str
+    npm: Optional[Optional[str]]
+    api: Optional[Optional[str]]
 
 
 ProviderConfigModelsValueVariantsValue: TypeAlias = dict[str, Any]
@@ -1081,19 +854,16 @@ class ProviderConfigModelsValue(BaseModel):
     reasoning: Optional[Optional[bool]]
     temperature: Optional[Optional[bool]]
     tool_call: Optional[Optional[bool]]
-    interleaved: Optional[Optional[Union[Literal[True], ProviderConfigModelsValueInterleaved]]]
+    interleaved: Optional[Optional[Union[ProviderConfigModelsValueInterleaved, ProviderConfigModelsValueInterleaved_]]]
     cost: Optional[Optional[ProviderConfigModelsValueCost]]
     limit: Optional[Optional[ProviderConfigModelsValueLimit]]
     modalities: Optional[Optional[ProviderConfigModelsValueModalities]]
     experimental: Optional[Optional[bool]]
     status: Optional[Optional[ProviderConfigModelsValueStatus]]
+    provider: Optional[Optional[ProviderConfigModelsValueProvider]]
     options: Optional[Optional[dict[str, Any]]]
     headers: Optional[Optional[dict[str, Any]]]
-    provider: Optional[Optional[ProviderConfigModelsValueProvider]]
     variants: Optional[Optional[dict[str, Any]]]
-
-
-ProviderConfigOptions: TypeAlias = dict[str, Any]
 
 
 class ProviderConfig(BaseModel):
@@ -1102,33 +872,47 @@ class ProviderConfig(BaseModel):
     env: Optional[Optional[list[str]]]
     id: Optional[Optional[str]]
     npm: Optional[Optional[str]]
-    models: Optional[Optional[dict[str, Any]]]
     whitelist: Optional[Optional[list[str]]]
     blacklist: Optional[Optional[list[str]]]
     options: Optional[Optional[ProviderConfigOptions]]
+    models: Optional[Optional[dict[str, Any]]]
+
+
+class McpLocalConfigType(str, Enum):
+    LOCAL = "local"
 
 
 class McpLocalConfig(BaseModel):
-    type: Literal["local"]
+    type: McpLocalConfigType
     command: list[str] = Field(..., description="Command and arguments to run the MCP server")
     environment: Optional[Optional[dict[str, Any]]]
     enabled: Optional[Optional[bool]]
-    timeout: Optional[Optional[int]] = Field(default=None, description="Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.", gt=0, le=9007199254740991)
+    timeout: Optional[Optional[int]] = Field(default=None, gt=0)
 
 
 class McpOAuthConfig(BaseModel):
-    client_id: Optional[Optional[str]] = Field(default=None, alias="clientId", description="OAuth client ID. If not provided, dynamic client registration (RFC 7591) will be attempted.")
-    client_secret: Optional[Optional[str]] = Field(default=None, alias="clientSecret", description="OAuth client secret (if required by the authorization server)")
-    scope: Optional[Optional[str]] = Field(default=None, description="OAuth scopes to request during authorization")
+    client_id: Optional[Optional[str]] = Field(default=None, alias="clientId")
+    client_secret: Optional[Optional[str]] = Field(default=None, alias="clientSecret")
+    scope: Optional[Optional[str]]
+    callback_port: Optional[Optional[int]] = Field(default=None, alias="callbackPort", ge=1, le=65535)
+    redirect_uri: Optional[Optional[str]] = Field(default=None, alias="redirectUri")
+
+
+class McpRemoteConfigType(str, Enum):
+    REMOTE = "remote"
+
+
+class McpRemoteConfigOauth(Enum):
+    pass
 
 
 class McpRemoteConfig(BaseModel):
-    type: Literal["remote"]
+    type: McpRemoteConfigType
     url: str = Field(..., description="URL of the remote MCP server")
     enabled: Optional[Optional[bool]]
     headers: Optional[Optional[dict[str, Any]]]
-    oauth: Optional[Optional[Union[McpOAuthConfig, Literal[False]]]] = Field(default=None, description="OAuth authentication configuration for the MCP server. Set to false to disable OAuth auto-detection.")
-    timeout: Optional[Optional[int]] = Field(default=None, description="Timeout in ms for fetching tools from the MCP server. Defaults to 5000 (5 seconds) if not specified.", gt=0, le=9007199254740991)
+    oauth: Optional[Optional[Union[McpOAuthConfig, McpRemoteConfigOauth]]] = Field(default=None, description="OAuth authentication configuration for the MCP server. Set to false to disable OAuth auto-detection.")
+    timeout: Optional[Optional[int]] = Field(default=None, gt=0)
 
 
 class LayoutConfig(str, Enum):
@@ -1136,210 +920,15 @@ class LayoutConfig(str, Enum):
     STRETCH = "stretch"
 
 
-class ConfigTuiScrollAcceleration(BaseModel):
-    enabled: bool
+class ImageAttachmentConfig(BaseModel):
+    auto_resize: Optional[Optional[bool]]
+    max_width: Optional[Optional[int]] = Field(default=None, gt=0)
+    max_height: Optional[Optional[int]] = Field(default=None, gt=0)
+    max_base64_bytes: Optional[Optional[int]] = Field(default=None, gt=0)
 
 
-class ConfigTuiDiffStyle(str, Enum):
-    AUTO = "auto"
-    STACKED = "stacked"
-
-
-class ConfigTui(BaseModel):
-    scroll_speed: Optional[Optional[float]] = Field(default=None, description="TUI scroll speed", ge=0.001)
-    scroll_acceleration: Optional[Optional[ConfigTuiScrollAcceleration]]
-    diff_style: Optional[Optional[ConfigTuiDiffStyle]]
-
-
-class ConfigCommandValue(BaseModel):
-    template: str
-    description: Optional[Optional[str]]
-    agent: Optional[Optional[str]]
-    model: Optional[Optional[str]]
-    subtask: Optional[Optional[bool]]
-
-
-class ConfigWatcher(BaseModel):
-    ignore: Optional[Optional[list[str]]]
-
-
-class ConfigShare(str, Enum):
-    MANUAL = "manual"
-    AUTO = "auto"
-    DISABLED = "disabled"
-
-
-class ConfigMode(BaseModel):
-    build: Optional[Optional[AgentConfig]]
-    plan: Optional[Optional[AgentConfig]]
-
-
-class ConfigAgent(BaseModel):
-    plan: Optional[Optional[AgentConfig]]
-    build: Optional[Optional[AgentConfig]]
-    general: Optional[Optional[AgentConfig]]
-    explore: Optional[Optional[AgentConfig]]
-    title: Optional[Optional[AgentConfig]]
-    summary: Optional[Optional[AgentConfig]]
-    compaction: Optional[Optional[AgentConfig]]
-
-
-class ConfigFormatterValue(BaseModel):
-    disabled: Optional[Optional[bool]]
-    command: Optional[Optional[list[str]]]
-    environment: Optional[Optional[dict[str, Any]]]
-    extensions: Optional[Optional[list[str]]]
-
-
-class ConfigEnterprise(BaseModel):
-    url: Optional[Optional[str]] = Field(default=None, description="Enterprise URL")
-
-
-class ConfigCompaction(BaseModel):
-    auto: Optional[Optional[bool]]
-    prune: Optional[Optional[bool]]
-
-
-class ConfigExperimentalHookFileEditedValue(BaseModel):
-    command: list[str]
-    environment: Optional[Optional[dict[str, Any]]]
-
-
-class ConfigExperimentalHookSessionCompleted(BaseModel):
-    command: list[str]
-    environment: Optional[Optional[dict[str, Any]]]
-
-
-class ConfigExperimentalHook(BaseModel):
-    file_edited: Optional[Optional[dict[str, Any]]]
-    session_completed: Optional[Optional[list[ConfigExperimentalHookSessionCompleted]]]
-
-
-class ConfigExperimental(BaseModel):
-    hook: Optional[Optional[ConfigExperimentalHook]]
-    chat_max_retries: Optional[Optional[float]] = Field(default=None, alias="chatMaxRetries", description="Number of retries for chat completions on failure")
-    disable_paste_summary: Optional[Optional[bool]]
-    batch_tool: Optional[Optional[bool]]
-    open_telemetry: Optional[Optional[bool]] = Field(default=None, alias="openTelemetry")
-    primary_tools: Optional[Optional[list[str]]] = Field(default=None, description="Tools that should only be available to primary agents.")
-    continue_loop_on_deny: Optional[Optional[bool]]
-    mcp_timeout: Optional[Optional[int]] = Field(default=None, description="Timeout in milliseconds for model context protocol (MCP) requests", gt=0, le=9007199254740991)
-
-
-class Config(BaseModel):
-    schema_: Optional[Optional[str]] = Field(default=None, alias="$schema", description="JSON schema reference for configuration validation")
-    theme: Optional[Optional[str]] = Field(default=None, description="Theme name to use for the interface")
-    keybinds: Optional[Optional[KeybindsConfig]]
-    log_level: Optional[Optional[LogLevel]] = Field(default=None, alias="logLevel")
-    tui: Optional[Optional[ConfigTui]]
-    server: Optional[Optional[ServerConfig]]
-    command: Optional[Optional[dict[str, Any]]]
-    watcher: Optional[Optional[ConfigWatcher]]
-    plugin: Optional[Optional[list[str]]]
-    snapshot: Optional[Optional[bool]]
-    share: Optional[Optional[ConfigShare]]
-    autoshare: Optional[Optional[bool]]
-    autoupdate: Optional[Optional[Union[bool, Literal["notify"]]]] = Field(default=None, description="Automatically update to the latest version. Set to true to auto-update, false to disable, or 'notify' to show update notifications")
-    disabled_providers: Optional[Optional[list[str]]] = Field(default=None, description="Disable providers that are loaded automatically")
-    enabled_providers: Optional[Optional[list[str]]] = Field(default=None, description="When set, ONLY these providers will be enabled. All other providers will be ignored")
-    model: Optional[Optional[str]] = Field(default=None, description="Model to use in the format of provider/model, eg anthropic/claude-2")
-    small_model: Optional[Optional[str]] = Field(default=None, description="Small model to use for tasks like title generation in the format of provider/model")
-    default_agent: Optional[Optional[str]] = Field(default=None, description="Default agent to use when none is specified. Must be a primary agent. Falls back to 'build' if not set or if the specified agent is invalid.")
-    username: Optional[Optional[str]] = Field(default=None, description="Custom username to display in conversations instead of system username")
-    mode: Optional[Optional[ConfigMode]]
-    agent: Optional[Optional[ConfigAgent]]
-    provider: Optional[Optional[dict[str, Any]]]
-    mcp: Optional[Optional[dict[str, Any]]]
-    formatter: Optional[Optional[Union[Literal[False], dict[str, Any]]]]
-    lsp: Optional[Optional[Union[Literal[False], dict[str, Any]]]]
-    instructions: Optional[Optional[list[str]]] = Field(default=None, description="Additional instruction files or patterns to include")
-    layout: Optional[Optional[LayoutConfig]]
-    permission: Optional[Optional[PermissionConfig_]]
-    tools: Optional[Optional[dict[str, Any]]]
-    enterprise: Optional[Optional[ConfigEnterprise]]
-    compaction: Optional[Optional[ConfigCompaction]]
-    experimental: Optional[Optional[ConfigExperimental]]
-
-
-ToolIds: TypeAlias = list[str]
-
-
-class ToolListItem(BaseModel):
-    id: str
-    description: str
-    parameters: Any
-
-
-ToolList: TypeAlias = list[ToolListItem]
-
-
-class Path(BaseModel):
-    home: str
-    state: str
-    config: str
-    worktree: str
-    directory: str
-
-
-class VcsInfo(BaseModel):
-    branch: str
-
-
-class TextPartInputTime(BaseModel):
-    start: float
-    end: Optional[Optional[float]]
-
-
-class TextPartInput(BaseModel):
-    id: Optional[Optional[str]]
-    type: Literal["text"]
-    text: str
-    synthetic: Optional[Optional[bool]]
-    ignored: Optional[Optional[bool]]
-    time: Optional[Optional[TextPartInputTime]]
-    metadata: Optional[Optional[dict[str, Any]]]
-
-
-class FilePartInput(BaseModel):
-    id: Optional[Optional[str]]
-    type: Literal["file"]
-    mime: str
-    filename: Optional[Optional[str]]
-    url: str
-    source: Optional[Optional[FilePartSource]]
-
-
-class AgentPartInputSource(BaseModel):
-    value: str
-    start: int = Field(..., ge=-9007199254740991, le=9007199254740991)
-    end: int = Field(..., ge=-9007199254740991, le=9007199254740991)
-
-
-class AgentPartInput(BaseModel):
-    id: Optional[Optional[str]]
-    type: Literal["agent"]
-    name: str
-    source: Optional[Optional[AgentPartInputSource]]
-
-
-class SubtaskPartInput(BaseModel):
-    id: Optional[Optional[str]]
-    type: Literal["subtask"]
-    prompt: str
-    description: str
-    agent: str
-    command: Optional[Optional[str]]
-
-
-class Command(BaseModel):
-    name: str
-    description: Optional[Optional[str]]
-    agent: Optional[Optional[str]]
-    model: Optional[Optional[str]]
-    mcp: Optional[Optional[bool]]
-    template: str
-    subtask: Optional[Optional[bool]]
-    hints: list[str]
+class AttachmentConfig(BaseModel):
+    image: Optional[Optional[ImageAttachmentConfig]]
 
 
 class ModelApi(BaseModel):
@@ -1388,6 +977,27 @@ class ModelCostCache(BaseModel):
     write: float
 
 
+class ModelCostTiersCache(BaseModel):
+    read: float
+    write: float
+
+
+class ModelCostTiersTierType(str, Enum):
+    CONTEXT = "context"
+
+
+class ModelCostTiersTier(BaseModel):
+    type: ModelCostTiersTierType
+    size: float
+
+
+class ModelCostTiers(BaseModel):
+    input: float
+    output: float
+    cache: ModelCostTiersCache
+    tier: ModelCostTiersTier
+
+
 class ModelCostExperimentalOver200kCache(BaseModel):
     read: float
     write: float
@@ -1403,11 +1013,13 @@ class ModelCost(BaseModel):
     input: float
     output: float
     cache: ModelCostCache
+    tiers: Optional[Optional[list[ModelCostTiers]]]
     experimental_over200k: Optional[Optional[ModelCostExperimentalOver200k]] = Field(default=None, alias="experimentalOver200K")
 
 
 class ModelLimit(BaseModel):
     context: float
+    input: Optional[Optional[float]]
     output: float
 
 
@@ -1451,15 +1063,228 @@ class Provider(BaseModel):
     models: dict[str, Any]
 
 
-class ProviderAuthMethod(BaseModel):
-    type: Union[Literal["oauth"], Literal["api"]]
-    label: str
+class ConsoleState(BaseModel):
+    console_managed_providers: list[str] = Field(..., alias="consoleManagedProviders")
+    active_org_name: Optional[Optional[str]] = Field(default=None, alias="activeOrgName")
+    switchable_org_count: int = Field(..., alias="switchableOrgCount", ge=0)
 
 
-class ProviderAuthAuthorization(BaseModel):
+class EffectHttpApiErrorInternalServerErrorTag(str, Enum):
+    INTERNAL_SERVER_ERROR = "InternalServerError"
+
+
+class EffectHttpApiErrorInternalServerError(BaseModel):
+    tag: EffectHttpApiErrorInternalServerErrorTag = Field(..., alias="_tag")
+
+
+class ToolListItem(BaseModel):
+    id: str
+    description: str
+    parameters: Any
+
+
+ToolList: TypeAlias = list[ToolListItem]
+
+
+ToolIds: TypeAlias = list[str]
+
+
+class WorktreeErrorName(str, Enum):
+    WORKTREE_NOT_GIT_ERROR = "WorktreeNotGitError"
+    WORKTREE_NAME_GENERATION_FAILED_ERROR = "WorktreeNameGenerationFailedError"
+    WORKTREE_CREATE_FAILED_ERROR = "WorktreeCreateFailedError"
+    WORKTREE_START_COMMAND_FAILED_ERROR = "WorktreeStartCommandFailedError"
+    WORKTREE_REMOVE_FAILED_ERROR = "WorktreeRemoveFailedError"
+    WORKTREE_RESET_FAILED_ERROR = "WorktreeResetFailedError"
+    WORKTREE_LIST_FAILED_ERROR = "WorktreeListFailedError"
+
+
+class WorktreeErrorData(BaseModel):
+    message: str
+
+
+class WorktreeError(BaseModel):
+    name: WorktreeErrorName
+    data: WorktreeErrorData
+
+
+class WorktreeCreateInput(BaseModel):
+    name: Optional[Optional[str]]
+    start_command: Optional[Optional[str]] = Field(default=None, alias="startCommand", description="Additional startup script to run after the project's start command")
+
+
+class Worktree(BaseModel):
+    name: str
+    branch: Optional[Optional[str]]
+    directory: str
+
+
+class WorktreeRemoveInput(BaseModel):
+    directory: str
+
+
+class WorktreeResetInput(BaseModel):
+    directory: str
+
+
+class PermissionAction(str, Enum):
+    ALLOW = "allow"
+    DENY = "deny"
+    ASK = "ask"
+
+
+class PermissionRule(BaseModel):
+    permission: str
+    pattern: str
+    action: PermissionAction
+
+
+PermissionRuleset: TypeAlias = list[PermissionRule]
+
+
+class SessionSummary(BaseModel):
+    additions: float
+    deletions: float
+    files: float
+    diffs: Optional[Optional[list[SnapshotFileDiff]]]
+
+
+class SessionTokensCache(BaseModel):
+    read: float
+    write: float
+
+
+class SessionTokens(BaseModel):
+    input: float
+    output: float
+    reasoning: float
+    cache: SessionTokensCache
+
+
+class SessionShare(BaseModel):
     url: str
-    method: Union[Literal["auto"], Literal["code"]]
-    instructions: str
+
+
+class SessionModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class SessionTime(BaseModel):
+    created: int = Field(..., ge=0)
+    updated: int = Field(..., ge=0)
+    compacting: Optional[Optional[int]] = Field(default=None, ge=0)
+    archived: Optional[Optional[float]]
+
+
+class SessionRevert(BaseModel):
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    part_id: Optional[Optional[str]] = Field(default=None, alias="partID", pattern="^prt")
+    snapshot: Optional[Optional[str]]
+    diff: Optional[Optional[str]]
+
+
+class Session(BaseModel):
+    id: str = Field(..., pattern="^ses")
+    slug: str
+    project_id: str = Field(..., alias="projectID")
+    workspace_id: Optional[Optional[str]] = Field(default=None, alias="workspaceID", pattern="^wrk")
+    directory: str
+    path: Optional[Optional[str]]
+    parent_id: Optional[Optional[str]] = Field(default=None, alias="parentID", pattern="^ses")
+    summary: Optional[Optional[SessionSummary]]
+    cost: Optional[Optional[float]]
+    tokens: Optional[Optional[SessionTokens]]
+    share: Optional[Optional[SessionShare]]
+    title: str
+    agent: Optional[Optional[str]]
+    model: Optional[Optional[SessionModel]]
+    version: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: SessionTime
+    permission: Optional[Optional[PermissionRuleset]]
+    revert: Optional[Optional[SessionRevert]]
+
+
+class ProjectSummary(BaseModel):
+    id: str
+    name: Optional[Optional[str]]
+    worktree: str
+
+
+class GlobalSessionSummary(BaseModel):
+    additions: float
+    deletions: float
+    files: float
+    diffs: Optional[Optional[list[SnapshotFileDiff]]]
+
+
+class GlobalSessionTokensCache(BaseModel):
+    read: float
+    write: float
+
+
+class GlobalSessionTokens(BaseModel):
+    input: float
+    output: float
+    reasoning: float
+    cache: GlobalSessionTokensCache
+
+
+class GlobalSessionShare(BaseModel):
+    url: str
+
+
+class GlobalSessionModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class GlobalSessionTime(BaseModel):
+    created: int = Field(..., ge=0)
+    updated: int = Field(..., ge=0)
+    compacting: Optional[Optional[int]] = Field(default=None, ge=0)
+    archived: Optional[Optional[float]]
+
+
+class GlobalSessionRevert(BaseModel):
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    part_id: Optional[Optional[str]] = Field(default=None, alias="partID", pattern="^prt")
+    snapshot: Optional[Optional[str]]
+    diff: Optional[Optional[str]]
+
+
+class GlobalSession(BaseModel):
+    id: str = Field(..., pattern="^ses")
+    slug: str
+    project_id: str = Field(..., alias="projectID")
+    workspace_id: Optional[Optional[str]] = Field(default=None, alias="workspaceID", pattern="^wrk")
+    directory: str
+    path: Optional[Optional[str]]
+    parent_id: Optional[Optional[str]] = Field(default=None, alias="parentID", pattern="^ses")
+    summary: Optional[Optional[GlobalSessionSummary]]
+    cost: Optional[Optional[float]]
+    tokens: Optional[Optional[GlobalSessionTokens]]
+    share: Optional[Optional[GlobalSessionShare]]
+    title: str
+    agent: Optional[Optional[str]]
+    model: Optional[Optional[GlobalSessionModel]]
+    version: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: GlobalSessionTime
+    permission: Optional[Optional[PermissionRuleset]]
+    revert: Optional[Optional[GlobalSessionRevert]]
+    project: Optional[ProjectSummary]
+
+
+class McpResource(BaseModel):
+    name: str
+    uri: str
+    description: Optional[Optional[str]]
+    mime_type: Optional[Optional[str]] = Field(default=None, alias="mimeType")
+    client: str
 
 
 class SymbolLocation(BaseModel):
@@ -1469,7 +1294,7 @@ class SymbolLocation(BaseModel):
 
 class Symbol(BaseModel):
     name: str
-    kind: float
+    kind: int = Field(..., ge=0)
     location: SymbolLocation
 
 
@@ -1486,11 +1311,16 @@ class FileNode(BaseModel):
     ignored: bool
 
 
+class FileContentType(str, Enum):
+    TEXT = "text"
+    BINARY = "binary"
+
+
 class FileContentPatchHunks(BaseModel):
-    old_start: float = Field(..., alias="oldStart")
-    old_lines: float = Field(..., alias="oldLines")
-    new_start: float = Field(..., alias="newStart")
-    new_lines: float = Field(..., alias="newLines")
+    old_start: int = Field(..., alias="oldStart", ge=0)
+    old_lines: int = Field(..., alias="oldLines", ge=0)
+    new_start: int = Field(..., alias="newStart", ge=0)
+    new_lines: int = Field(..., alias="newLines", ge=0)
     lines: list[str]
 
 
@@ -1503,12 +1333,16 @@ class FileContentPatch(BaseModel):
     index: Optional[Optional[str]]
 
 
+class FileContentEncoding(str, Enum):
+    BASE64 = "base64"
+
+
 class FileContent(BaseModel):
-    type: Literal["text"]
+    type: FileContentType
     content: str
     diff: Optional[Optional[str]]
     patch: Optional[Optional[FileContentPatch]]
-    encoding: Optional[Optional[Literal["base64"]]]
+    encoding: Optional[Optional[FileContentEncoding]]
     mime_type: Optional[Optional[str]] = Field(default=None, alias="mimeType")
 
 
@@ -1520,9 +1354,85 @@ class FileStatus(str, Enum):
 
 class File(BaseModel):
     path: str
-    added: int = Field(..., ge=-9007199254740991, le=9007199254740991)
-    removed: int = Field(..., ge=-9007199254740991, le=9007199254740991)
+    added: int = Field(..., ge=0)
+    removed: int = Field(..., ge=0)
     status: FileStatus
+
+
+class Path(BaseModel):
+    home: str
+    state: str
+    config: str
+    worktree: str
+    directory: str
+
+
+class VcsInfo(BaseModel):
+    branch: Optional[Optional[str]]
+    default_branch: Optional[Optional[str]]
+
+
+class VcsFileStatusStatus(str, Enum):
+    ADDED = "added"
+    DELETED = "deleted"
+    MODIFIED = "modified"
+
+
+class VcsFileStatus(BaseModel):
+    file: str
+    additions: float
+    deletions: float
+    status: VcsFileStatusStatus
+
+
+class VcsFileDiffStatus(str, Enum):
+    ADDED = "added"
+    DELETED = "deleted"
+    MODIFIED = "modified"
+
+
+class VcsFileDiff(BaseModel):
+    file: str
+    patch: Optional[Optional[str]]
+    additions: float
+    deletions: float
+    status: Optional[Optional[VcsFileDiffStatus]]
+
+
+class VcsApplyErrorName(str, Enum):
+    VCS_APPLY_ERROR = "VcsApplyError"
+
+
+class VcsApplyErrorDataReason(str, Enum):
+    NON_GIT = "non-git"
+    NOT_CLEAN = "not-clean"
+
+
+class VcsApplyErrorData(BaseModel):
+    message: str
+    reason: VcsApplyErrorDataReason
+
+
+class VcsApplyError(BaseModel):
+    name: VcsApplyErrorName
+    data: VcsApplyErrorData
+
+
+class CommandSource(str, Enum):
+    COMMAND = "command"
+    MCP = "mcp"
+    SKILL = "skill"
+
+
+class Command(BaseModel):
+    name: str
+    description: Optional[Optional[str]]
+    agent: Optional[Optional[str]]
+    model: Optional[Optional[str]]
+    source: Optional[Optional[CommandSource]]
+    template: str
+    subtask: Optional[Optional[bool]]
+    hints: list[str]
 
 
 class AgentMode(str, Enum):
@@ -1547,41 +1457,22 @@ class Agent(BaseModel):
     color: Optional[Optional[str]]
     permission: PermissionRuleset
     model: Optional[Optional[AgentModel]]
+    variant: Optional[Optional[str]]
     prompt: Optional[Optional[str]]
     options: dict[str, Any]
-    steps: Optional[Optional[int]] = Field(default=None, gt=0, le=9007199254740991)
+    steps: Optional[Optional[float]]
 
 
-class McpStatusConnected(BaseModel):
-    status: Literal["connected"]
-
-
-class McpStatusDisabled(BaseModel):
-    status: Literal["disabled"]
-
-
-class McpStatusFailed(BaseModel):
-    status: Literal["failed"]
-    error: str
-
-
-class McpStatusNeedsAuth(BaseModel):
-    status: Literal["needs_auth"]
-
-
-class McpStatusNeedsClientRegistration(BaseModel):
-    status: Literal["needs_client_registration"]
-    error: str
-
-
-McpStatus: TypeAlias = Union[McpStatusConnected, McpStatusDisabled, McpStatusFailed, McpStatusNeedsAuth, McpStatusNeedsClientRegistration]
+class LspStatusStatus(str, Enum):
+    CONNECTED = "connected"
+    ERROR = "error"
 
 
 class LspStatus(BaseModel):
     id: str
     name: str
     root: str
-    status: Union[Literal["connected"], Literal["error"]]
+    status: LspStatusStatus
 
 
 class FormatterStatus(BaseModel):
@@ -1590,23 +1481,5123 @@ class FormatterStatus(BaseModel):
     enabled: bool
 
 
-class OAuth(BaseModel):
-    type: Literal["oauth"]
+class McpStatusConnectedStatus(str, Enum):
+    CONNECTED = "connected"
+
+
+class McpStatusConnected(BaseModel):
+    status: McpStatusConnectedStatus
+
+
+class McpStatusDisabledStatus(str, Enum):
+    DISABLED = "disabled"
+
+
+class McpStatusDisabled(BaseModel):
+    status: McpStatusDisabledStatus
+
+
+class McpStatusFailedStatus(str, Enum):
+    FAILED = "failed"
+
+
+class McpStatusFailed(BaseModel):
+    status: McpStatusFailedStatus
+    error: str
+
+
+class McpStatusNeedsAuthStatus(str, Enum):
+    NEEDS_AUTH = "needs_auth"
+
+
+class McpStatusNeedsAuth(BaseModel):
+    status: McpStatusNeedsAuthStatus
+
+
+class McpStatusNeedsClientRegistrationStatus(str, Enum):
+    NEEDS_CLIENT_REGISTRATION = "needs_client_registration"
+
+
+class McpStatusNeedsClientRegistration(BaseModel):
+    status: McpStatusNeedsClientRegistrationStatus
+    error: str
+
+
+McpStatus: TypeAlias = Union[McpStatusConnected, McpStatusDisabled, McpStatusFailed, McpStatusNeedsAuth, McpStatusNeedsClientRegistration]
+
+
+class McpUnsupportedOAuthError(BaseModel):
+    error: str
+
+
+class McpServerNotFoundErrorTag(str, Enum):
+    MCP_SERVER_NOT_FOUND_ERROR = "McpServerNotFoundError"
+
+
+class McpServerNotFoundError(BaseModel):
+    tag: McpServerNotFoundErrorTag = Field(..., alias="_tag")
+    name: str
+    message: str
+
+
+class ProjectVcs(str, Enum):
+    GIT = "git"
+
+
+class ProjectIcon(BaseModel):
+    url: Optional[Optional[str]]
+    override: Optional[Optional[str]]
+    color: Optional[Optional[str]]
+
+
+class ProjectCommands(BaseModel):
+    start: Optional[Optional[str]] = Field(default=None, description="Startup script to run when creating a new workspace (worktree)")
+
+
+class ProjectTime(BaseModel):
+    created: int = Field(..., ge=0)
+    updated: int = Field(..., ge=0)
+    initialized: Optional[Optional[int]] = Field(default=None, ge=0)
+
+
+class Project(BaseModel):
+    id: str
+    worktree: str
+    vcs: Optional[Optional[ProjectVcs]]
+    name: Optional[Optional[str]]
+    icon: Optional[Optional[ProjectIcon]]
+    commands: Optional[Optional[ProjectCommands]]
+    time: ProjectTime
+    sandboxes: list[str]
+
+
+class ProjectNotFoundErrorTag(str, Enum):
+    PROJECT_NOT_FOUND_ERROR = "ProjectNotFoundError"
+
+
+class ProjectNotFoundError(BaseModel):
+    tag: ProjectNotFoundErrorTag = Field(..., alias="_tag")
+    project_id: str = Field(..., alias="projectID")
+    message: str
+
+
+class PtyNotFoundErrorTag(str, Enum):
+    PTY_NOT_FOUND_ERROR = "PtyNotFoundError"
+
+
+class PtyNotFoundError(BaseModel):
+    tag: PtyNotFoundErrorTag = Field(..., alias="_tag")
+    pty_id: str = Field(..., alias="ptyID")
+    message: str
+
+
+class PtyForbiddenErrorTag(str, Enum):
+    PTY_FORBIDDEN_ERROR = "PtyForbiddenError"
+
+
+class PtyForbiddenError(BaseModel):
+    tag: PtyForbiddenErrorTag = Field(..., alias="_tag")
+    message: str
+
+
+class QuestionRequest(BaseModel):
+    id: str = Field(..., pattern="^que")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    questions: list[QuestionInfo] = Field(..., description="Questions to ask")
+    tool: Optional[Optional[QuestionTool]]
+
+
+class QuestionNotFoundErrorTag(str, Enum):
+    QUESTION_NOT_FOUND_ERROR = "QuestionNotFoundError"
+
+
+class QuestionNotFoundError(BaseModel):
+    tag: QuestionNotFoundErrorTag = Field(..., alias="_tag")
+    request_id: str = Field(..., alias="requestID")
+    message: str
+
+
+class PermissionRequestTool(BaseModel):
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    call_id: str = Field(..., alias="callID")
+
+
+class PermissionRequest(BaseModel):
+    id: str = Field(..., pattern="^per")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    permission: str
+    patterns: list[str]
+    metadata: dict[str, Any]
+    always: list[str]
+    tool: Optional[Optional[PermissionRequestTool]]
+
+
+class PermissionNotFoundErrorTag(str, Enum):
+    PERMISSION_NOT_FOUND_ERROR = "PermissionNotFoundError"
+
+
+class PermissionNotFoundError(BaseModel):
+    tag: PermissionNotFoundErrorTag = Field(..., alias="_tag")
+    request_id: str = Field(..., alias="requestID")
+    message: str
+
+
+class ProviderAuthMethodType(str, Enum):
+    OAUTH = "oauth"
+    API = "api"
+
+
+class ProviderAuthMethodPromptsType(str, Enum):
+    TEXT = "text"
+
+
+class ProviderAuthMethodPromptsWhenOp(str, Enum):
+    EQ = "eq"
+    NEQ = "neq"
+
+
+class ProviderAuthMethodPromptsWhen(BaseModel):
+    key: str
+    op: ProviderAuthMethodPromptsWhenOp
+    value: str
+
+
+class ProviderAuthMethodPrompts(BaseModel):
+    type: ProviderAuthMethodPromptsType
+    key: str
+    message: str
+    placeholder: Optional[Optional[str]]
+    when: Optional[Optional[ProviderAuthMethodPromptsWhen]]
+
+
+class ProviderAuthMethodPromptsType_(str, Enum):
+    SELECT = "select"
+
+
+class ProviderAuthMethodPromptsOptions(BaseModel):
+    label: str
+    value: str
+    hint: Optional[Optional[str]]
+
+
+class ProviderAuthMethodPromptsWhenOp_(str, Enum):
+    EQ = "eq"
+    NEQ = "neq"
+
+
+class ProviderAuthMethodPromptsWhen_(BaseModel):
+    key: str
+    op: ProviderAuthMethodPromptsWhenOp_
+    value: str
+
+
+class ProviderAuthMethodPrompts_(BaseModel):
+    type: ProviderAuthMethodPromptsType_
+    key: str
+    message: str
+    options: list[ProviderAuthMethodPromptsOptions]
+    when: Optional[Optional[ProviderAuthMethodPromptsWhen_]]
+
+
+class ProviderAuthMethod(BaseModel):
+    type: ProviderAuthMethodType
+    label: str
+    prompts: Optional[Optional[list[Union[ProviderAuthMethodPrompts, ProviderAuthMethodPrompts_]]]]
+
+
+class ProviderAuthAuthorizationMethod(str, Enum):
+    AUTO = "auto"
+    CODE = "code"
+
+
+class ProviderAuthAuthorization(BaseModel):
+    url: str
+    method: ProviderAuthAuthorizationMethod
+    instructions: str
+
+
+class ProviderAuthError1Name(str, Enum):
+    BAD_REQUEST = "BadRequest"
+    PROVIDER_AUTH_OAUTH_MISSING = "ProviderAuthOauthMissing"
+    PROVIDER_AUTH_OAUTH_CODE_MISSING = "ProviderAuthOauthCodeMissing"
+    PROVIDER_AUTH_OAUTH_CALLBACK_FAILED = "ProviderAuthOauthCallbackFailed"
+    PROVIDER_AUTH_VALIDATION_FAILED = "ProviderAuthValidationFailed"
+
+
+class ProviderAuthError1Data(BaseModel):
+    provider_id: Optional[Optional[str]] = Field(default=None, alias="providerID")
+    field: Optional[Optional[str]]
+    message: Optional[Optional[str]]
+    kind: Optional[Optional[str]]
+
+
+class ProviderAuthError1(BaseModel):
+    name: ProviderAuthError1Name
+    data: ProviderAuthError1Data
+
+
+class NotFoundErrorName(str, Enum):
+    NOT_FOUND_ERROR = "NotFoundError"
+
+
+class NotFoundErrorData(BaseModel):
+    message: str
+
+
+class NotFoundError(BaseModel):
+    name: NotFoundErrorName
+    data: NotFoundErrorData
+
+
+class TextPartInputType(str, Enum):
+    TEXT = "text"
+
+
+class TextPartInputTime(BaseModel):
+    start: int = Field(..., ge=0)
+    end: Optional[Optional[int]] = Field(default=None, ge=0)
+
+
+class TextPartInput(BaseModel):
+    id: Optional[Optional[str]] = Field(default=None, pattern="^prt")
+    type: TextPartInputType
+    text: str
+    synthetic: Optional[Optional[bool]]
+    ignored: Optional[Optional[bool]]
+    time: Optional[Optional[TextPartInputTime]]
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class FilePartInputType(str, Enum):
+    FILE = "file"
+
+
+class FilePartInput(BaseModel):
+    id: Optional[Optional[str]] = Field(default=None, pattern="^prt")
+    type: FilePartInputType
+    mime: str
+    filename: Optional[Optional[str]]
+    url: str
+    source: Optional[Optional[FilePartSource]]
+
+
+class AgentPartInputType(str, Enum):
+    AGENT = "agent"
+
+
+class AgentPartInputSource(BaseModel):
+    value: str
+    start: int = Field(..., ge=0)
+    end: int = Field(..., ge=0)
+
+
+class AgentPartInput(BaseModel):
+    id: Optional[Optional[str]] = Field(default=None, pattern="^prt")
+    type: AgentPartInputType
+    name: str
+    source: Optional[Optional[AgentPartInputSource]]
+
+
+class SubtaskPartInputType(str, Enum):
+    SUBTASK = "subtask"
+
+
+class SubtaskPartInputModel(BaseModel):
+    provider_id: str = Field(..., alias="providerID")
+    model_id: str = Field(..., alias="modelID")
+
+
+class SubtaskPartInput(BaseModel):
+    id: Optional[Optional[str]] = Field(default=None, pattern="^prt")
+    type: SubtaskPartInputType
+    prompt: str
+    description: str
+    agent: str
+    model: Optional[Optional[SubtaskPartInputModel]]
+    command: Optional[Optional[str]]
+
+
+class SessionBusyErrorTag(str, Enum):
+    SESSION_BUSY_ERROR = "SessionBusyError"
+
+
+class SessionBusyError(BaseModel):
+    tag: SessionBusyErrorTag = Field(..., alias="_tag")
+    session_id: str = Field(..., alias="sessionID")
+    message: str
+
+
+class InvalidCursorErrorTag(str, Enum):
+    INVALID_CURSOR_ERROR = "InvalidCursorError"
+
+
+class InvalidCursorError(BaseModel):
+    tag: InvalidCursorErrorTag = Field(..., alias="_tag")
+    message: str
+
+
+class UnauthorizedErrorTag(str, Enum):
+    UNAUTHORIZED_ERROR = "UnauthorizedError"
+
+
+class UnauthorizedError(BaseModel):
+    tag: UnauthorizedErrorTag = Field(..., alias="_tag")
+    message: str
+
+
+class SessionNotFoundErrorTag(str, Enum):
+    SESSION_NOT_FOUND_ERROR = "SessionNotFoundError"
+
+
+class SessionNotFoundError(BaseModel):
+    tag: SessionNotFoundErrorTag = Field(..., alias="_tag")
+    session_id: str = Field(..., alias="sessionID")
+    message: str
+
+
+class ServiceUnavailableErrorTag(str, Enum):
+    SERVICE_UNAVAILABLE_ERROR = "ServiceUnavailableError"
+
+
+class ServiceUnavailableError(BaseModel):
+    tag: ServiceUnavailableErrorTag = Field(..., alias="_tag")
+    message: str
+    service: Optional[Optional[str]]
+
+
+class UnknownError1Tag(str, Enum):
+    UNKNOWN_ERROR = "UnknownError"
+
+
+class UnknownError1(BaseModel):
+    tag: UnknownError1Tag = Field(..., alias="_tag")
+    message: str
+    ref: Optional[Optional[str]]
+
+
+class ProviderNotFoundErrorTag(str, Enum):
+    PROVIDER_NOT_FOUND_ERROR = "ProviderNotFoundError"
+
+
+class ProviderNotFoundError(BaseModel):
+    tag: ProviderNotFoundErrorTag = Field(..., alias="_tag")
+    provider_id: str = Field(..., alias="providerID")
+    message: str
+
+
+class EventTuiPromptAppendType(str, Enum):
+    TUI_PROMPT_APPEND = "tui.prompt.append"
+
+
+class EventTuiPromptAppendProperties(BaseModel):
+    text: str
+
+
+class EventTuiPromptAppend(BaseModel):
+    type: EventTuiPromptAppendType
+    properties: EventTuiPromptAppendProperties
+
+
+class EventTuiCommandExecuteType(str, Enum):
+    TUI_COMMAND_EXECUTE = "tui.command.execute"
+
+
+class EventTuiCommandExecutePropertiesCommand(str, Enum):
+    SESSION_LIST = "session.list"
+    SESSION_NEW = "session.new"
+    SESSION_SHARE = "session.share"
+    SESSION_INTERRUPT = "session.interrupt"
+    SESSION_COMPACT = "session.compact"
+    SESSION_PAGE_UP = "session.page.up"
+    SESSION_PAGE_DOWN = "session.page.down"
+    SESSION_LINE_UP = "session.line.up"
+    SESSION_LINE_DOWN = "session.line.down"
+    SESSION_HALF_PAGE_UP = "session.half.page.up"
+    SESSION_HALF_PAGE_DOWN = "session.half.page.down"
+    SESSION_FIRST = "session.first"
+    SESSION_LAST = "session.last"
+    PROMPT_CLEAR = "prompt.clear"
+    PROMPT_SUBMIT = "prompt.submit"
+    AGENT_CYCLE = "agent.cycle"
+
+
+class EventTuiCommandExecuteProperties(BaseModel):
+    command: Union[EventTuiCommandExecutePropertiesCommand, str]
+
+
+class EventTuiCommandExecute(BaseModel):
+    type: EventTuiCommandExecuteType
+    properties: EventTuiCommandExecuteProperties
+
+
+class EventTuiToastShowType(str, Enum):
+    TUI_TOAST_SHOW = "tui.toast.show"
+
+
+class EventTuiToastShowPropertiesVariant(str, Enum):
+    INFO = "info"
+    SUCCESS = "success"
+    WARNING = "warning"
+    ERROR = "error"
+
+
+class EventTuiToastShowProperties(BaseModel):
+    title: Optional[Optional[str]]
+    message: str
+    variant: EventTuiToastShowPropertiesVariant
+    duration: Optional[Optional[int]] = Field(default=None, gt=0)
+
+
+class EventTuiToastShow(BaseModel):
+    type: EventTuiToastShowType
+    properties: EventTuiToastShowProperties
+
+
+class EventTuiSessionSelectType(str, Enum):
+    TUI_SESSION_SELECT = "tui.session.select"
+
+
+class EventTuiSessionSelectProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", description="Session ID to navigate to", pattern="^ses")
+
+
+class EventTuiSessionSelect(BaseModel):
+    type: EventTuiSessionSelectType
+    properties: EventTuiSessionSelectProperties
+
+
+class WorkspaceTimeUsed(str, Enum):
+    NA_N = "NaN"
+
+
+class WorkspaceTimeUsed_(str, Enum):
+    INFINITY = "Infinity"
+
+
+class WorkspaceTimeUsed_2(str, Enum):
+    INFINITY = "-Infinity"
+
+
+class WorkspaceTimeUsed_3(str, Enum):
+    INFINITY = "Infinity"
+    INFINITY_ = "-Infinity"
+    NA_N = "NaN"
+
+
+class Workspace(BaseModel):
+    id: str = Field(..., pattern="^wrk")
+    type: str
+    name: str
+    branch: Optional[Optional[str]]
+    directory: Optional[Optional[str]]
+    extra: Optional[Optional[Any]]
+    project_id: str = Field(..., alias="projectID")
+    time_used: Union[float, WorkspaceTimeUsed, WorkspaceTimeUsed_, WorkspaceTimeUsed_2, WorkspaceTimeUsed_3] = Field(..., alias="timeUsed")
+
+
+class WorkspaceCreateErrorName(str, Enum):
+    WORKSPACE_CREATE_ERROR = "WorkspaceCreateError"
+
+
+class WorkspaceCreateErrorData(BaseModel):
+    message: str
+
+
+class WorkspaceCreateError(BaseModel):
+    name: WorkspaceCreateErrorName
+    data: WorkspaceCreateErrorData
+
+
+class WorkspaceWarpErrorName(str, Enum):
+    WORKSPACE_WARP_ERROR = "WorkspaceWarpError"
+
+
+class WorkspaceWarpErrorData(BaseModel):
+    message: str
+
+
+class WorkspaceWarpError(BaseModel):
+    name: WorkspaceWarpErrorName
+    data: WorkspaceWarpErrorData
+
+
+class EffectHttpApiErrorForbiddenTag(str, Enum):
+    FORBIDDEN = "Forbidden"
+
+
+class EffectHttpApiErrorForbidden(BaseModel):
+    tag: EffectHttpApiErrorForbiddenTag = Field(..., alias="_tag")
+
+
+class EventTuiPromptAppendType_(str, Enum):
+    TUI_PROMPT_APPEND = "tui.prompt.append"
+
+
+class EventTuiPromptAppendProperties_(BaseModel):
+    text: str
+
+
+class EventTuiPromptAppend_(BaseModel):
+    id: str
+    type: EventTuiPromptAppendType_
+    properties: EventTuiPromptAppendProperties_
+
+
+class EventTuiCommandExecuteType_(str, Enum):
+    TUI_COMMAND_EXECUTE = "tui.command.execute"
+
+
+class EventTuiCommandExecutePropertiesCommand_(str, Enum):
+    SESSION_LIST = "session.list"
+    SESSION_NEW = "session.new"
+    SESSION_SHARE = "session.share"
+    SESSION_INTERRUPT = "session.interrupt"
+    SESSION_COMPACT = "session.compact"
+    SESSION_PAGE_UP = "session.page.up"
+    SESSION_PAGE_DOWN = "session.page.down"
+    SESSION_LINE_UP = "session.line.up"
+    SESSION_LINE_DOWN = "session.line.down"
+    SESSION_HALF_PAGE_UP = "session.half.page.up"
+    SESSION_HALF_PAGE_DOWN = "session.half.page.down"
+    SESSION_FIRST = "session.first"
+    SESSION_LAST = "session.last"
+    PROMPT_CLEAR = "prompt.clear"
+    PROMPT_SUBMIT = "prompt.submit"
+    AGENT_CYCLE = "agent.cycle"
+
+
+class EventTuiCommandExecuteProperties_(BaseModel):
+    command: Union[EventTuiCommandExecutePropertiesCommand_, str]
+
+
+class EventTuiCommandExecute_(BaseModel):
+    id: str
+    type: EventTuiCommandExecuteType_
+    properties: EventTuiCommandExecuteProperties_
+
+
+class EventTuiToastShowType_(str, Enum):
+    TUI_TOAST_SHOW = "tui.toast.show"
+
+
+class EventTuiToastShowPropertiesVariant_(str, Enum):
+    INFO = "info"
+    SUCCESS = "success"
+    WARNING = "warning"
+    ERROR = "error"
+
+
+class EventTuiToastShowProperties_(BaseModel):
+    title: Optional[Optional[str]]
+    message: str
+    variant: EventTuiToastShowPropertiesVariant_
+    duration: Optional[Optional[int]] = Field(default=None, gt=0)
+
+
+class EventTuiToastShow_(BaseModel):
+    id: str
+    type: EventTuiToastShowType_
+    properties: EventTuiToastShowProperties_
+
+
+class EventTuiSessionSelectType_(str, Enum):
+    TUI_SESSION_SELECT = "tui.session.select"
+
+
+class EventTuiSessionSelectProperties_(BaseModel):
+    session_id: str = Field(..., alias="sessionID", description="Session ID to navigate to", pattern="^ses")
+
+
+class EventTuiSessionSelect_(BaseModel):
+    id: str
+    type: EventTuiSessionSelectType_
+    properties: EventTuiSessionSelectProperties_
+
+
+class ModelV2InfoEndpointType(str, Enum):
+    UNKNOWN = "unknown"
+
+
+class ModelV2InfoEndpoint(BaseModel):
+    type: ModelV2InfoEndpointType
+
+
+class ModelV2InfoEndpointType_(str, Enum):
+    OPENAI_RESPONSES = "openai/responses"
+
+
+class ModelV2InfoEndpoint_(BaseModel):
+    type: ModelV2InfoEndpointType_
+    url: str
+    websocket: Optional[Optional[bool]]
+
+
+class ModelV2InfoEndpointType_2(str, Enum):
+    OPENAI_COMPLETIONS = "openai/completions"
+
+
+class ModelV2InfoEndpointReasoningType(str, Enum):
+    REASONING_CONTENT = "reasoning_content"
+
+
+class ModelV2InfoEndpointReasoning(BaseModel):
+    type: ModelV2InfoEndpointReasoningType
+
+
+class ModelV2InfoEndpointReasoningType_(str, Enum):
+    REASONING_DETAILS = "reasoning_details"
+
+
+class ModelV2InfoEndpointReasoning_(BaseModel):
+    type: ModelV2InfoEndpointReasoningType_
+
+
+class ModelV2InfoEndpoint_2(BaseModel):
+    type: ModelV2InfoEndpointType_2
+    url: str
+    reasoning: Optional[Optional[Union[ModelV2InfoEndpointReasoning, ModelV2InfoEndpointReasoning_]]]
+
+
+class ModelV2InfoEndpointType_3(str, Enum):
+    ANTHROPIC_MESSAGES = "anthropic/messages"
+
+
+class ModelV2InfoEndpoint_3(BaseModel):
+    type: ModelV2InfoEndpointType_3
+    url: str
+
+
+class ModelV2InfoEndpointType_4(str, Enum):
+    AISDK = "aisdk"
+
+
+class ModelV2InfoEndpoint_4(BaseModel):
+    type: ModelV2InfoEndpointType_4
+    package: str
+    url: Optional[Optional[str]]
+
+
+class ModelV2InfoCapabilities(BaseModel):
+    tools: bool
+    input: list[str]
+    output: list[str]
+
+
+class ModelV2InfoOptionsAisdk(BaseModel):
+    provider: dict[str, Any]
+    request: dict[str, Any]
+
+
+class ModelV2InfoOptions(BaseModel):
+    headers: dict[str, Any]
+    body: dict[str, Any]
+    aisdk: ModelV2InfoOptionsAisdk
+    variant: Optional[Optional[str]]
+
+
+class ModelV2InfoVariantsAisdk(BaseModel):
+    provider: dict[str, Any]
+    request: dict[str, Any]
+
+
+class ModelV2InfoVariants(BaseModel):
+    id: str
+    headers: dict[str, Any]
+    body: dict[str, Any]
+    aisdk: ModelV2InfoVariantsAisdk
+
+
+class ModelV2InfoTimeReleased(str, Enum):
+    NA_N = "NaN"
+
+
+class ModelV2InfoTimeReleased_(str, Enum):
+    INFINITY = "Infinity"
+
+
+class ModelV2InfoTimeReleased_2(str, Enum):
+    INFINITY = "-Infinity"
+
+
+class ModelV2InfoTimeReleased_3(str, Enum):
+    INFINITY = "Infinity"
+    INFINITY_ = "-Infinity"
+    NA_N = "NaN"
+
+
+class ModelV2InfoTime(BaseModel):
+    released: Union[float, ModelV2InfoTimeReleased, ModelV2InfoTimeReleased_, ModelV2InfoTimeReleased_2, ModelV2InfoTimeReleased_3]
+
+
+class ModelV2InfoCostTierType(str, Enum):
+    CONTEXT = "context"
+
+
+class ModelV2InfoCostTier(BaseModel):
+    type: ModelV2InfoCostTierType
+    size: int
+
+
+class ModelV2InfoCostCache(BaseModel):
+    read: float
+    write: float
+
+
+class ModelV2InfoCost(BaseModel):
+    tier: Optional[Optional[ModelV2InfoCostTier]]
+    input: float
+    output: float
+    cache: ModelV2InfoCostCache
+
+
+class ModelV2InfoStatus(str, Enum):
+    ALPHA = "alpha"
+    BETA = "beta"
+    DEPRECATED = "deprecated"
+    ACTIVE = "active"
+
+
+class ModelV2InfoLimit(BaseModel):
+    context: int
+    input: Optional[Optional[int]]
+    output: int
+
+
+class ModelV2Info(BaseModel):
+    id: str
+    api_id: str = Field(..., alias="apiID")
+    provider_id: str = Field(..., alias="providerID")
+    family: Optional[Optional[str]]
+    name: str
+    endpoint: Union[ModelV2InfoEndpoint, ModelV2InfoEndpoint_, ModelV2InfoEndpoint_2, ModelV2InfoEndpoint_3, ModelV2InfoEndpoint_4]
+    capabilities: ModelV2InfoCapabilities
+    options: ModelV2InfoOptions
+    variants: list[ModelV2InfoVariants]
+    time: ModelV2InfoTime
+    cost: list[ModelV2InfoCost]
+    status: ModelV2InfoStatus
+    enabled: bool
+    limit: ModelV2InfoLimit
+
+
+class PromptSource(BaseModel):
+    start: float
+    end: float
+    text: str
+
+
+class PromptFileAttachment(BaseModel):
+    uri: str
+    mime: str
+    name: Optional[Optional[str]]
+    description: Optional[Optional[str]]
+    source: Optional[Optional[PromptSource]]
+
+
+class PromptAgentAttachment(BaseModel):
+    name: str
+    source: Optional[Optional[PromptSource]]
+
+
+class PromptReferenceAttachmentKind(str, Enum):
+    LOCAL = "local"
+    GIT = "git"
+    INVALID = "invalid"
+
+
+class PromptReferenceAttachment(BaseModel):
+    name: str
+    kind: PromptReferenceAttachmentKind
+    uri: Optional[Optional[str]]
+    repository: Optional[Optional[str]]
+    branch: Optional[Optional[str]]
+    target: Optional[Optional[str]]
+    target_uri: Optional[Optional[str]] = Field(default=None, alias="targetUri")
+    problem: Optional[Optional[str]]
+    source: Optional[Optional[PromptSource]]
+
+
+class Prompt(BaseModel):
+    text: str
+    files: Optional[Optional[list[PromptFileAttachment]]]
+    agents: Optional[Optional[list[PromptAgentAttachment]]]
+    references: Optional[Optional[list[PromptReferenceAttachment]]]
+
+
+class SessionErrorUnknownType(str, Enum):
+    UNKNOWN = "unknown"
+
+
+class SessionErrorUnknown(BaseModel):
+    type: SessionErrorUnknownType
+    message: str
+
+
+class ToolTextContentType(str, Enum):
+    TEXT = "text"
+
+
+class ToolTextContent(BaseModel):
+    type: ToolTextContentType
+    text: str
+
+
+class ToolFileContentType(str, Enum):
+    FILE = "file"
+
+
+class ToolFileContent(BaseModel):
+    type: ToolFileContentType
+    uri: str
+    mime: str
+    name: Optional[Optional[str]]
+
+
+class SessionNextRetryError(BaseModel):
+    message: str
+    status_code: Optional[Optional[float]] = Field(default=None, alias="statusCode")
+    is_retryable: bool = Field(..., alias="isRetryable")
+    response_headers: Optional[Optional[dict[str, Any]]] = Field(default=None, alias="responseHeaders")
+    response_body: Optional[Optional[str]] = Field(default=None, alias="responseBody")
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class AuthOAuthCredentialType(str, Enum):
+    OAUTH = "oauth"
+
+
+class AuthOAuthCredential(BaseModel):
+    type: AuthOAuthCredentialType
     refresh: str
     access: str
-    expires: float
-    enterprise_url: Optional[Optional[str]] = Field(default=None, alias="enterpriseUrl")
+    expires: int = Field(..., ge=0)
 
 
-class ApiAuth(BaseModel):
-    type: Literal["api"]
+class AuthApiKeyCredentialType(str, Enum):
+    API = "api"
+
+
+class AuthApiKeyCredential(BaseModel):
+    type: AuthApiKeyCredentialType
     key: str
+    metadata: Optional[Optional[dict[str, Any]]]
 
 
-class WellKnownAuth(BaseModel):
-    type: Literal["wellknown"]
-    key: str
-    token: str
+AuthCredential: TypeAlias = Union[AuthOAuthCredential, AuthApiKeyCredential]
 
 
-Auth: TypeAlias = Union[OAuth, ApiAuth, WellKnownAuth]
+class AuthInfo(BaseModel):
+    id: str
+    service_id: str = Field(..., alias="serviceID")
+    description: str
+    credential: AuthCredential
+
+
+class EventServerInstanceDisposedType(str, Enum):
+    SERVER_INSTANCE_DISPOSED = "server.instance.disposed"
+
+
+class EventServerInstanceDisposedProperties(BaseModel):
+    directory: str
+
+
+class EventServerInstanceDisposed(BaseModel):
+    id: str
+    type: EventServerInstanceDisposedType
+    properties: EventServerInstanceDisposedProperties
+
+
+class SyncEventSessionNextAgentSwitchedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextAgentSwitchedName(str, Enum):
+    SESSION_NEXT_AGENT_SWITCHED_1 = "session.next.agent.switched.1"
+
+
+class SyncEventSessionNextAgentSwitchedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextAgentSwitchedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    agent: str
+
+
+class SyncEventSessionNextAgentSwitched(BaseModel):
+    type: SyncEventSessionNextAgentSwitchedType
+    name: SyncEventSessionNextAgentSwitchedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextAgentSwitchedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextAgentSwitchedData
+
+
+class SyncEventSessionNextModelSwitchedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextModelSwitchedName(str, Enum):
+    SESSION_NEXT_MODEL_SWITCHED_1 = "session.next.model.switched.1"
+
+
+class SyncEventSessionNextModelSwitchedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextModelSwitchedDataModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class SyncEventSessionNextModelSwitchedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    model: SyncEventSessionNextModelSwitchedDataModel
+
+
+class SyncEventSessionNextModelSwitched(BaseModel):
+    type: SyncEventSessionNextModelSwitchedType
+    name: SyncEventSessionNextModelSwitchedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextModelSwitchedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextModelSwitchedData
+
+
+class SyncEventSessionNextPromptedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextPromptedName(str, Enum):
+    SESSION_NEXT_PROMPTED_1 = "session.next.prompted.1"
+
+
+class SyncEventSessionNextPromptedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextPromptedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    prompt: Prompt
+
+
+class SyncEventSessionNextPrompted(BaseModel):
+    type: SyncEventSessionNextPromptedType
+    name: SyncEventSessionNextPromptedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextPromptedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextPromptedData
+
+
+class SyncEventSessionNextSyntheticType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextSyntheticName(str, Enum):
+    SESSION_NEXT_SYNTHETIC_1 = "session.next.synthetic.1"
+
+
+class SyncEventSessionNextSyntheticAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextSyntheticData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class SyncEventSessionNextSynthetic(BaseModel):
+    type: SyncEventSessionNextSyntheticType
+    name: SyncEventSessionNextSyntheticName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextSyntheticAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextSyntheticData
+
+
+class SyncEventSessionNextShellStartedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextShellStartedName(str, Enum):
+    SESSION_NEXT_SHELL_STARTED_1 = "session.next.shell.started.1"
+
+
+class SyncEventSessionNextShellStartedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextShellStartedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    command: str
+
+
+class SyncEventSessionNextShellStarted(BaseModel):
+    type: SyncEventSessionNextShellStartedType
+    name: SyncEventSessionNextShellStartedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextShellStartedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextShellStartedData
+
+
+class SyncEventSessionNextShellEndedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextShellEndedName(str, Enum):
+    SESSION_NEXT_SHELL_ENDED_1 = "session.next.shell.ended.1"
+
+
+class SyncEventSessionNextShellEndedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextShellEndedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    output: str
+
+
+class SyncEventSessionNextShellEnded(BaseModel):
+    type: SyncEventSessionNextShellEndedType
+    name: SyncEventSessionNextShellEndedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextShellEndedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextShellEndedData
+
+
+class SyncEventSessionNextStepStartedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextStepStartedName(str, Enum):
+    SESSION_NEXT_STEP_STARTED_1 = "session.next.step.started.1"
+
+
+class SyncEventSessionNextStepStartedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextStepStartedDataModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class SyncEventSessionNextStepStartedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    agent: str
+    model: SyncEventSessionNextStepStartedDataModel
+    snapshot: Optional[Optional[str]]
+
+
+class SyncEventSessionNextStepStarted(BaseModel):
+    type: SyncEventSessionNextStepStartedType
+    name: SyncEventSessionNextStepStartedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextStepStartedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextStepStartedData
+
+
+class SyncEventSessionNextStepEndedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextStepEndedName(str, Enum):
+    SESSION_NEXT_STEP_ENDED_1 = "session.next.step.ended.1"
+
+
+class SyncEventSessionNextStepEndedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextStepEndedDataTokensCache(BaseModel):
+    read: float
+    write: float
+
+
+class SyncEventSessionNextStepEndedDataTokens(BaseModel):
+    input: float
+    output: float
+    reasoning: float
+    cache: SyncEventSessionNextStepEndedDataTokensCache
+
+
+class SyncEventSessionNextStepEndedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    finish: str
+    cost: float
+    tokens: SyncEventSessionNextStepEndedDataTokens
+    snapshot: Optional[Optional[str]]
+
+
+class SyncEventSessionNextStepEnded(BaseModel):
+    type: SyncEventSessionNextStepEndedType
+    name: SyncEventSessionNextStepEndedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextStepEndedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextStepEndedData
+
+
+class SyncEventSessionNextStepFailedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextStepFailedName(str, Enum):
+    SESSION_NEXT_STEP_FAILED_1 = "session.next.step.failed.1"
+
+
+class SyncEventSessionNextStepFailedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextStepFailedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    error: SessionErrorUnknown
+
+
+class SyncEventSessionNextStepFailed(BaseModel):
+    type: SyncEventSessionNextStepFailedType
+    name: SyncEventSessionNextStepFailedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextStepFailedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextStepFailedData
+
+
+class SyncEventSessionNextTextStartedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextTextStartedName(str, Enum):
+    SESSION_NEXT_TEXT_STARTED_1 = "session.next.text.started.1"
+
+
+class SyncEventSessionNextTextStartedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextTextStartedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+
+
+class SyncEventSessionNextTextStarted(BaseModel):
+    type: SyncEventSessionNextTextStartedType
+    name: SyncEventSessionNextTextStartedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextTextStartedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextTextStartedData
+
+
+class SyncEventSessionNextTextDeltaType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextTextDeltaName(str, Enum):
+    SESSION_NEXT_TEXT_DELTA_1 = "session.next.text.delta.1"
+
+
+class SyncEventSessionNextTextDeltaAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextTextDeltaData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    delta: str
+
+
+class SyncEventSessionNextTextDelta(BaseModel):
+    type: SyncEventSessionNextTextDeltaType
+    name: SyncEventSessionNextTextDeltaName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextTextDeltaAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextTextDeltaData
+
+
+class SyncEventSessionNextTextEndedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextTextEndedName(str, Enum):
+    SESSION_NEXT_TEXT_ENDED_1 = "session.next.text.ended.1"
+
+
+class SyncEventSessionNextTextEndedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextTextEndedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class SyncEventSessionNextTextEnded(BaseModel):
+    type: SyncEventSessionNextTextEndedType
+    name: SyncEventSessionNextTextEndedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextTextEndedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextTextEndedData
+
+
+class SyncEventSessionNextReasoningStartedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextReasoningStartedName(str, Enum):
+    SESSION_NEXT_REASONING_STARTED_1 = "session.next.reasoning.started.1"
+
+
+class SyncEventSessionNextReasoningStartedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextReasoningStartedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+
+
+class SyncEventSessionNextReasoningStarted(BaseModel):
+    type: SyncEventSessionNextReasoningStartedType
+    name: SyncEventSessionNextReasoningStartedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextReasoningStartedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextReasoningStartedData
+
+
+class SyncEventSessionNextReasoningDeltaType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextReasoningDeltaName(str, Enum):
+    SESSION_NEXT_REASONING_DELTA_1 = "session.next.reasoning.delta.1"
+
+
+class SyncEventSessionNextReasoningDeltaAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextReasoningDeltaData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+    delta: str
+
+
+class SyncEventSessionNextReasoningDelta(BaseModel):
+    type: SyncEventSessionNextReasoningDeltaType
+    name: SyncEventSessionNextReasoningDeltaName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextReasoningDeltaAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextReasoningDeltaData
+
+
+class SyncEventSessionNextReasoningEndedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextReasoningEndedName(str, Enum):
+    SESSION_NEXT_REASONING_ENDED_1 = "session.next.reasoning.ended.1"
+
+
+class SyncEventSessionNextReasoningEndedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextReasoningEndedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+    text: str
+
+
+class SyncEventSessionNextReasoningEnded(BaseModel):
+    type: SyncEventSessionNextReasoningEndedType
+    name: SyncEventSessionNextReasoningEndedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextReasoningEndedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextReasoningEndedData
+
+
+class SyncEventSessionNextToolInputStartedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextToolInputStartedName(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_STARTED_1 = "session.next.tool.input.started.1"
+
+
+class SyncEventSessionNextToolInputStartedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextToolInputStartedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    name: str
+
+
+class SyncEventSessionNextToolInputStarted(BaseModel):
+    type: SyncEventSessionNextToolInputStartedType
+    name: SyncEventSessionNextToolInputStartedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextToolInputStartedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextToolInputStartedData
+
+
+class SyncEventSessionNextToolInputDeltaType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextToolInputDeltaName(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_DELTA_1 = "session.next.tool.input.delta.1"
+
+
+class SyncEventSessionNextToolInputDeltaAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextToolInputDeltaData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    delta: str
+
+
+class SyncEventSessionNextToolInputDelta(BaseModel):
+    type: SyncEventSessionNextToolInputDeltaType
+    name: SyncEventSessionNextToolInputDeltaName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextToolInputDeltaAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextToolInputDeltaData
+
+
+class SyncEventSessionNextToolInputEndedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextToolInputEndedName(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_ENDED_1 = "session.next.tool.input.ended.1"
+
+
+class SyncEventSessionNextToolInputEndedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextToolInputEndedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    text: str
+
+
+class SyncEventSessionNextToolInputEnded(BaseModel):
+    type: SyncEventSessionNextToolInputEndedType
+    name: SyncEventSessionNextToolInputEndedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextToolInputEndedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextToolInputEndedData
+
+
+class SyncEventSessionNextToolCalledType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextToolCalledName(str, Enum):
+    SESSION_NEXT_TOOL_CALLED_1 = "session.next.tool.called.1"
+
+
+class SyncEventSessionNextToolCalledAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextToolCalledDataProvider(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class SyncEventSessionNextToolCalledData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    tool: str
+    input: dict[str, Any]
+    provider: SyncEventSessionNextToolCalledDataProvider
+
+
+class SyncEventSessionNextToolCalled(BaseModel):
+    type: SyncEventSessionNextToolCalledType
+    name: SyncEventSessionNextToolCalledName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextToolCalledAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextToolCalledData
+
+
+class SyncEventSessionNextToolProgressType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextToolProgressName(str, Enum):
+    SESSION_NEXT_TOOL_PROGRESS_1 = "session.next.tool.progress.1"
+
+
+class SyncEventSessionNextToolProgressAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextToolProgressData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    structured: dict[str, Any]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+
+
+class SyncEventSessionNextToolProgress(BaseModel):
+    type: SyncEventSessionNextToolProgressType
+    name: SyncEventSessionNextToolProgressName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextToolProgressAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextToolProgressData
+
+
+class SyncEventSessionNextToolSuccessType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextToolSuccessName(str, Enum):
+    SESSION_NEXT_TOOL_SUCCESS_1 = "session.next.tool.success.1"
+
+
+class SyncEventSessionNextToolSuccessAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextToolSuccessDataProvider(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class SyncEventSessionNextToolSuccessData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    structured: dict[str, Any]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+    provider: SyncEventSessionNextToolSuccessDataProvider
+
+
+class SyncEventSessionNextToolSuccess(BaseModel):
+    type: SyncEventSessionNextToolSuccessType
+    name: SyncEventSessionNextToolSuccessName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextToolSuccessAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextToolSuccessData
+
+
+class SyncEventSessionNextToolFailedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextToolFailedName(str, Enum):
+    SESSION_NEXT_TOOL_FAILED_1 = "session.next.tool.failed.1"
+
+
+class SyncEventSessionNextToolFailedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextToolFailedDataProvider(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class SyncEventSessionNextToolFailedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    error: SessionErrorUnknown
+    provider: SyncEventSessionNextToolFailedDataProvider
+
+
+class SyncEventSessionNextToolFailed(BaseModel):
+    type: SyncEventSessionNextToolFailedType
+    name: SyncEventSessionNextToolFailedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextToolFailedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextToolFailedData
+
+
+class SyncEventSessionNextRetriedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextRetriedName(str, Enum):
+    SESSION_NEXT_RETRIED_1 = "session.next.retried.1"
+
+
+class SyncEventSessionNextRetriedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextRetriedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    attempt: float
+    error: SessionNextRetryError
+
+
+class SyncEventSessionNextRetried(BaseModel):
+    type: SyncEventSessionNextRetriedType
+    name: SyncEventSessionNextRetriedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextRetriedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextRetriedData
+
+
+class SyncEventSessionNextCompactionStartedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextCompactionStartedName(str, Enum):
+    SESSION_NEXT_COMPACTION_STARTED_1 = "session.next.compaction.started.1"
+
+
+class SyncEventSessionNextCompactionStartedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextCompactionStartedDataReason(str, Enum):
+    AUTO = "auto"
+    MANUAL = "manual"
+
+
+class SyncEventSessionNextCompactionStartedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reason: SyncEventSessionNextCompactionStartedDataReason
+
+
+class SyncEventSessionNextCompactionStarted(BaseModel):
+    type: SyncEventSessionNextCompactionStartedType
+    name: SyncEventSessionNextCompactionStartedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextCompactionStartedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextCompactionStartedData
+
+
+class SyncEventSessionNextCompactionDeltaType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextCompactionDeltaName(str, Enum):
+    SESSION_NEXT_COMPACTION_DELTA_1 = "session.next.compaction.delta.1"
+
+
+class SyncEventSessionNextCompactionDeltaAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextCompactionDeltaData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class SyncEventSessionNextCompactionDelta(BaseModel):
+    type: SyncEventSessionNextCompactionDeltaType
+    name: SyncEventSessionNextCompactionDeltaName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextCompactionDeltaAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextCompactionDeltaData
+
+
+class SyncEventSessionNextCompactionEndedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionNextCompactionEndedName(str, Enum):
+    SESSION_NEXT_COMPACTION_ENDED_1 = "session.next.compaction.ended.1"
+
+
+class SyncEventSessionNextCompactionEndedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionNextCompactionEndedData(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+    include: Optional[Optional[str]]
+
+
+class SyncEventSessionNextCompactionEnded(BaseModel):
+    type: SyncEventSessionNextCompactionEndedType
+    name: SyncEventSessionNextCompactionEndedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionNextCompactionEndedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionNextCompactionEndedData
+
+
+class SyncEventSessionCreatedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionCreatedName(str, Enum):
+    SESSION_CREATED_1 = "session.created.1"
+
+
+class SyncEventSessionCreatedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionCreatedData(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class SyncEventSessionCreated(BaseModel):
+    type: SyncEventSessionCreatedType
+    name: SyncEventSessionCreatedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionCreatedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionCreatedData
+
+
+class SyncEventSessionUpdatedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionUpdatedName(str, Enum):
+    SESSION_UPDATED_1 = "session.updated.1"
+
+
+class SyncEventSessionUpdatedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionUpdatedData(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class SyncEventSessionUpdated(BaseModel):
+    type: SyncEventSessionUpdatedType
+    name: SyncEventSessionUpdatedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionUpdatedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionUpdatedData
+
+
+class SyncEventSessionDeletedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventSessionDeletedName(str, Enum):
+    SESSION_DELETED_1 = "session.deleted.1"
+
+
+class SyncEventSessionDeletedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventSessionDeletedData(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class SyncEventSessionDeleted(BaseModel):
+    type: SyncEventSessionDeletedType
+    name: SyncEventSessionDeletedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventSessionDeletedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventSessionDeletedData
+
+
+class SyncEventMessageUpdatedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventMessageUpdatedName(str, Enum):
+    MESSAGE_UPDATED_1 = "message.updated.1"
+
+
+class SyncEventMessageUpdatedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventMessageUpdatedData(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Message
+
+
+class SyncEventMessageUpdated(BaseModel):
+    type: SyncEventMessageUpdatedType
+    name: SyncEventMessageUpdatedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventMessageUpdatedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventMessageUpdatedData
+
+
+class SyncEventMessageRemovedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventMessageRemovedName(str, Enum):
+    MESSAGE_REMOVED_1 = "message.removed.1"
+
+
+class SyncEventMessageRemovedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventMessageRemovedData(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+
+
+class SyncEventMessageRemoved(BaseModel):
+    type: SyncEventMessageRemovedType
+    name: SyncEventMessageRemovedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventMessageRemovedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventMessageRemovedData
+
+
+class SyncEventMessagePartUpdatedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventMessagePartUpdatedName(str, Enum):
+    MESSAGE_PART_UPDATED_1 = "message.part.updated.1"
+
+
+class SyncEventMessagePartUpdatedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventMessagePartUpdatedData(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    part: Part
+    time: float
+
+
+class SyncEventMessagePartUpdated(BaseModel):
+    type: SyncEventMessagePartUpdatedType
+    name: SyncEventMessagePartUpdatedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventMessagePartUpdatedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventMessagePartUpdatedData
+
+
+class SyncEventMessagePartRemovedType(str, Enum):
+    SYNC = "sync"
+
+
+class SyncEventMessagePartRemovedName(str, Enum):
+    MESSAGE_PART_REMOVED_1 = "message.part.removed.1"
+
+
+class SyncEventMessagePartRemovedAggregateId(str, Enum):
+    SESSION_ID = "sessionID"
+
+
+class SyncEventMessagePartRemovedData(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    part_id: str = Field(..., alias="partID", pattern="^prt")
+
+
+class SyncEventMessagePartRemoved(BaseModel):
+    type: SyncEventMessagePartRemovedType
+    name: SyncEventMessagePartRemovedName
+    id: str
+    seq: float
+    aggregate_id: SyncEventMessagePartRemovedAggregateId = Field(..., alias="aggregateID")
+    data: SyncEventMessagePartRemovedData
+
+
+class GlobalEventPayloadType(str, Enum):
+    MODELS_DEV_REFRESHED = "models-dev.refreshed"
+
+
+class GlobalEventPayload(BaseModel):
+    id: str
+    type: GlobalEventPayloadType
+    properties: dict[str, Any]
+
+
+class GlobalEventPayloadType_(str, Enum):
+    PLUGIN_ADDED = "plugin.added"
+
+
+class GlobalEventPayloadProperties(BaseModel):
+    id: str
+
+
+class GlobalEventPayload_(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_
+    properties: GlobalEventPayloadProperties
+
+
+class GlobalEventPayloadType_2(str, Enum):
+    CATALOG_MODEL_UPDATED = "catalog.model.updated"
+
+
+class GlobalEventPayloadProperties_(BaseModel):
+    model: ModelV2Info
+
+
+class GlobalEventPayload_2(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_2
+    properties: GlobalEventPayloadProperties_
+
+
+class GlobalEventPayloadType_3(str, Enum):
+    FILE_EDITED = "file.edited"
+
+
+class GlobalEventPayloadProperties_2(BaseModel):
+    file: str
+
+
+class GlobalEventPayload_3(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_3
+    properties: GlobalEventPayloadProperties_2
+
+
+class GlobalEventPayloadType_4(str, Enum):
+    SESSION_NEXT_AGENT_SWITCHED = "session.next.agent.switched"
+
+
+class GlobalEventPayloadProperties_3(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    agent: str
+
+
+class GlobalEventPayload_4(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_4
+    properties: GlobalEventPayloadProperties_3
+
+
+class GlobalEventPayloadType_5(str, Enum):
+    SESSION_NEXT_MODEL_SWITCHED = "session.next.model.switched"
+
+
+class GlobalEventPayloadPropertiesModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class GlobalEventPayloadProperties_4(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    model: GlobalEventPayloadPropertiesModel
+
+
+class GlobalEventPayload_5(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_5
+    properties: GlobalEventPayloadProperties_4
+
+
+class GlobalEventPayloadType_6(str, Enum):
+    SESSION_NEXT_PROMPTED = "session.next.prompted"
+
+
+class GlobalEventPayloadProperties_5(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    prompt: Prompt
+
+
+class GlobalEventPayload_6(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_6
+    properties: GlobalEventPayloadProperties_5
+
+
+class GlobalEventPayloadType_7(str, Enum):
+    SESSION_NEXT_SYNTHETIC = "session.next.synthetic"
+
+
+class GlobalEventPayloadProperties_6(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class GlobalEventPayload_7(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_7
+    properties: GlobalEventPayloadProperties_6
+
+
+class GlobalEventPayloadType_8(str, Enum):
+    SESSION_NEXT_SHELL_STARTED = "session.next.shell.started"
+
+
+class GlobalEventPayloadProperties_7(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    command: str
+
+
+class GlobalEventPayload_8(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_8
+    properties: GlobalEventPayloadProperties_7
+
+
+class GlobalEventPayloadType_9(str, Enum):
+    SESSION_NEXT_SHELL_ENDED = "session.next.shell.ended"
+
+
+class GlobalEventPayloadProperties_8(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    output: str
+
+
+class GlobalEventPayload_9(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_9
+    properties: GlobalEventPayloadProperties_8
+
+
+class GlobalEventPayloadType_10(str, Enum):
+    SESSION_NEXT_STEP_STARTED = "session.next.step.started"
+
+
+class GlobalEventPayloadPropertiesModel_(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class GlobalEventPayloadProperties_9(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    agent: str
+    model: GlobalEventPayloadPropertiesModel_
+    snapshot: Optional[Optional[str]]
+
+
+class GlobalEventPayload_10(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_10
+    properties: GlobalEventPayloadProperties_9
+
+
+class GlobalEventPayloadType_11(str, Enum):
+    SESSION_NEXT_STEP_ENDED = "session.next.step.ended"
+
+
+class GlobalEventPayloadPropertiesTokensCache(BaseModel):
+    read: float
+    write: float
+
+
+class GlobalEventPayloadPropertiesTokens(BaseModel):
+    input: float
+    output: float
+    reasoning: float
+    cache: GlobalEventPayloadPropertiesTokensCache
+
+
+class GlobalEventPayloadProperties_10(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    finish: str
+    cost: float
+    tokens: GlobalEventPayloadPropertiesTokens
+    snapshot: Optional[Optional[str]]
+
+
+class GlobalEventPayload_11(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_11
+    properties: GlobalEventPayloadProperties_10
+
+
+class GlobalEventPayloadType_12(str, Enum):
+    SESSION_NEXT_STEP_FAILED = "session.next.step.failed"
+
+
+class GlobalEventPayloadProperties_11(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    error: SessionErrorUnknown
+
+
+class GlobalEventPayload_12(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_12
+    properties: GlobalEventPayloadProperties_11
+
+
+class GlobalEventPayloadType_13(str, Enum):
+    SESSION_NEXT_TEXT_STARTED = "session.next.text.started"
+
+
+class GlobalEventPayloadProperties_12(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+
+
+class GlobalEventPayload_13(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_13
+    properties: GlobalEventPayloadProperties_12
+
+
+class GlobalEventPayloadType_14(str, Enum):
+    SESSION_NEXT_TEXT_DELTA = "session.next.text.delta"
+
+
+class GlobalEventPayloadProperties_13(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    delta: str
+
+
+class GlobalEventPayload_14(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_14
+    properties: GlobalEventPayloadProperties_13
+
+
+class GlobalEventPayloadType_15(str, Enum):
+    SESSION_NEXT_TEXT_ENDED = "session.next.text.ended"
+
+
+class GlobalEventPayloadProperties_14(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class GlobalEventPayload_15(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_15
+    properties: GlobalEventPayloadProperties_14
+
+
+class GlobalEventPayloadType_16(str, Enum):
+    SESSION_NEXT_REASONING_STARTED = "session.next.reasoning.started"
+
+
+class GlobalEventPayloadProperties_15(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+
+
+class GlobalEventPayload_16(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_16
+    properties: GlobalEventPayloadProperties_15
+
+
+class GlobalEventPayloadType_17(str, Enum):
+    SESSION_NEXT_REASONING_DELTA = "session.next.reasoning.delta"
+
+
+class GlobalEventPayloadProperties_16(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+    delta: str
+
+
+class GlobalEventPayload_17(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_17
+    properties: GlobalEventPayloadProperties_16
+
+
+class GlobalEventPayloadType_18(str, Enum):
+    SESSION_NEXT_REASONING_ENDED = "session.next.reasoning.ended"
+
+
+class GlobalEventPayloadProperties_17(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+    text: str
+
+
+class GlobalEventPayload_18(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_18
+    properties: GlobalEventPayloadProperties_17
+
+
+class GlobalEventPayloadType_19(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_STARTED = "session.next.tool.input.started"
+
+
+class GlobalEventPayloadProperties_18(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    name: str
+
+
+class GlobalEventPayload_19(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_19
+    properties: GlobalEventPayloadProperties_18
+
+
+class GlobalEventPayloadType_20(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_DELTA = "session.next.tool.input.delta"
+
+
+class GlobalEventPayloadProperties_19(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    delta: str
+
+
+class GlobalEventPayload_20(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_20
+    properties: GlobalEventPayloadProperties_19
+
+
+class GlobalEventPayloadType_21(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_ENDED = "session.next.tool.input.ended"
+
+
+class GlobalEventPayloadProperties_20(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    text: str
+
+
+class GlobalEventPayload_21(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_21
+    properties: GlobalEventPayloadProperties_20
+
+
+class GlobalEventPayloadType_22(str, Enum):
+    SESSION_NEXT_TOOL_CALLED = "session.next.tool.called"
+
+
+class GlobalEventPayloadPropertiesProvider(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class GlobalEventPayloadProperties_21(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    tool: str
+    input: dict[str, Any]
+    provider: GlobalEventPayloadPropertiesProvider
+
+
+class GlobalEventPayload_22(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_22
+    properties: GlobalEventPayloadProperties_21
+
+
+class GlobalEventPayloadType_23(str, Enum):
+    SESSION_NEXT_TOOL_PROGRESS = "session.next.tool.progress"
+
+
+class GlobalEventPayloadProperties_22(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    structured: dict[str, Any]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+
+
+class GlobalEventPayload_23(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_23
+    properties: GlobalEventPayloadProperties_22
+
+
+class GlobalEventPayloadType_24(str, Enum):
+    SESSION_NEXT_TOOL_SUCCESS = "session.next.tool.success"
+
+
+class GlobalEventPayloadPropertiesProvider_(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class GlobalEventPayloadProperties_23(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    structured: dict[str, Any]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+    provider: GlobalEventPayloadPropertiesProvider_
+
+
+class GlobalEventPayload_24(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_24
+    properties: GlobalEventPayloadProperties_23
+
+
+class GlobalEventPayloadType_25(str, Enum):
+    SESSION_NEXT_TOOL_FAILED = "session.next.tool.failed"
+
+
+class GlobalEventPayloadPropertiesProvider_2(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class GlobalEventPayloadProperties_24(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    error: SessionErrorUnknown
+    provider: GlobalEventPayloadPropertiesProvider_2
+
+
+class GlobalEventPayload_25(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_25
+    properties: GlobalEventPayloadProperties_24
+
+
+class GlobalEventPayloadType_26(str, Enum):
+    SESSION_NEXT_RETRIED = "session.next.retried"
+
+
+class GlobalEventPayloadProperties_25(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    attempt: float
+    error: SessionNextRetryError
+
+
+class GlobalEventPayload_26(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_26
+    properties: GlobalEventPayloadProperties_25
+
+
+class GlobalEventPayloadType_27(str, Enum):
+    SESSION_NEXT_COMPACTION_STARTED = "session.next.compaction.started"
+
+
+class GlobalEventPayloadPropertiesReason(str, Enum):
+    AUTO = "auto"
+    MANUAL = "manual"
+
+
+class GlobalEventPayloadProperties_26(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reason: GlobalEventPayloadPropertiesReason
+
+
+class GlobalEventPayload_27(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_27
+    properties: GlobalEventPayloadProperties_26
+
+
+class GlobalEventPayloadType_28(str, Enum):
+    SESSION_NEXT_COMPACTION_DELTA = "session.next.compaction.delta"
+
+
+class GlobalEventPayloadProperties_27(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class GlobalEventPayload_28(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_28
+    properties: GlobalEventPayloadProperties_27
+
+
+class GlobalEventPayloadType_29(str, Enum):
+    SESSION_NEXT_COMPACTION_ENDED = "session.next.compaction.ended"
+
+
+class GlobalEventPayloadProperties_28(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+    include: Optional[Optional[str]]
+
+
+class GlobalEventPayload_29(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_29
+    properties: GlobalEventPayloadProperties_28
+
+
+class GlobalEventPayloadType_30(str, Enum):
+    FILE_WATCHER_UPDATED = "file.watcher.updated"
+
+
+class GlobalEventPayloadPropertiesEvent(str, Enum):
+    ADD = "add"
+    CHANGE = "change"
+    UNLINK = "unlink"
+
+
+class GlobalEventPayloadProperties_29(BaseModel):
+    file: str
+    event: GlobalEventPayloadPropertiesEvent
+
+
+class GlobalEventPayload_30(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_30
+    properties: GlobalEventPayloadProperties_29
+
+
+class GlobalEventPayloadType_31(str, Enum):
+    SESSION_CREATED = "session.created"
+
+
+class GlobalEventPayloadProperties_30(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class GlobalEventPayload_31(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_31
+    properties: GlobalEventPayloadProperties_30
+
+
+class GlobalEventPayloadType_32(str, Enum):
+    SESSION_UPDATED = "session.updated"
+
+
+class GlobalEventPayloadProperties_31(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class GlobalEventPayload_32(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_32
+    properties: GlobalEventPayloadProperties_31
+
+
+class GlobalEventPayloadType_33(str, Enum):
+    SESSION_DELETED = "session.deleted"
+
+
+class GlobalEventPayloadProperties_32(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class GlobalEventPayload_33(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_33
+    properties: GlobalEventPayloadProperties_32
+
+
+class GlobalEventPayloadType_34(str, Enum):
+    MESSAGE_UPDATED = "message.updated"
+
+
+class GlobalEventPayloadProperties_33(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Message
+
+
+class GlobalEventPayload_34(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_34
+    properties: GlobalEventPayloadProperties_33
+
+
+class GlobalEventPayloadType_35(str, Enum):
+    MESSAGE_REMOVED = "message.removed"
+
+
+class GlobalEventPayloadProperties_34(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+
+
+class GlobalEventPayload_35(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_35
+    properties: GlobalEventPayloadProperties_34
+
+
+class GlobalEventPayloadType_36(str, Enum):
+    MESSAGE_PART_UPDATED = "message.part.updated"
+
+
+class GlobalEventPayloadProperties_35(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    part: Part
+    time: float
+
+
+class GlobalEventPayload_36(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_36
+    properties: GlobalEventPayloadProperties_35
+
+
+class GlobalEventPayloadType_37(str, Enum):
+    MESSAGE_PART_REMOVED = "message.part.removed"
+
+
+class GlobalEventPayloadProperties_36(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    part_id: str = Field(..., alias="partID", pattern="^prt")
+
+
+class GlobalEventPayload_37(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_37
+    properties: GlobalEventPayloadProperties_36
+
+
+class GlobalEventPayloadType_38(str, Enum):
+    MESSAGE_PART_DELTA = "message.part.delta"
+
+
+class GlobalEventPayloadProperties_37(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    part_id: str = Field(..., alias="partID", pattern="^prt")
+    field: str
+    delta: str
+
+
+class GlobalEventPayload_38(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_38
+    properties: GlobalEventPayloadProperties_37
+
+
+class GlobalEventPayloadType_39(str, Enum):
+    PERMISSION_ASKED = "permission.asked"
+
+
+class GlobalEventPayloadPropertiesTool(BaseModel):
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    call_id: str = Field(..., alias="callID")
+
+
+class GlobalEventPayloadProperties_38(BaseModel):
+    id: str = Field(..., pattern="^per")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    permission: str
+    patterns: list[str]
+    metadata: dict[str, Any]
+    always: list[str]
+    tool: Optional[Optional[GlobalEventPayloadPropertiesTool]]
+
+
+class GlobalEventPayload_39(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_39
+    properties: GlobalEventPayloadProperties_38
+
+
+class GlobalEventPayloadType_40(str, Enum):
+    PERMISSION_REPLIED = "permission.replied"
+
+
+class GlobalEventPayloadPropertiesReply(str, Enum):
+    ONCE = "once"
+    ALWAYS = "always"
+    REJECT = "reject"
+
+
+class GlobalEventPayloadProperties_39(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    request_id: str = Field(..., alias="requestID", pattern="^per")
+    reply: GlobalEventPayloadPropertiesReply
+
+
+class GlobalEventPayload_40(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_40
+    properties: GlobalEventPayloadProperties_39
+
+
+class GlobalEventPayloadType_41(str, Enum):
+    SESSION_DIFF = "session.diff"
+
+
+class GlobalEventPayloadProperties_40(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    diff: list[SnapshotFileDiff]
+
+
+class GlobalEventPayload_41(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_41
+    properties: GlobalEventPayloadProperties_40
+
+
+class GlobalEventPayloadType_42(str, Enum):
+    SESSION_ERROR = "session.error"
+
+
+class GlobalEventPayloadProperties_41(BaseModel):
+    session_id: Optional[Optional[str]] = Field(default=None, alias="sessionID", pattern="^ses")
+    error: Optional[Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError]]]
+
+
+class GlobalEventPayload_42(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_42
+    properties: GlobalEventPayloadProperties_41
+
+
+class GlobalEventPayloadType_43(str, Enum):
+    QUESTION_ASKED = "question.asked"
+
+
+class GlobalEventPayloadProperties_42(BaseModel):
+    id: str = Field(..., pattern="^que")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    questions: list[QuestionInfo] = Field(..., description="Questions to ask")
+    tool: Optional[Optional[QuestionTool]]
+
+
+class GlobalEventPayload_43(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_43
+    properties: GlobalEventPayloadProperties_42
+
+
+class GlobalEventPayloadType_44(str, Enum):
+    QUESTION_REPLIED = "question.replied"
+
+
+class GlobalEventPayloadProperties_43(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    request_id: str = Field(..., alias="requestID", pattern="^que")
+    answers: list[QuestionAnswer]
+
+
+class GlobalEventPayload_44(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_44
+    properties: GlobalEventPayloadProperties_43
+
+
+class GlobalEventPayloadType_45(str, Enum):
+    QUESTION_REJECTED = "question.rejected"
+
+
+class GlobalEventPayloadProperties_44(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    request_id: str = Field(..., alias="requestID", pattern="^que")
+
+
+class GlobalEventPayload_45(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_45
+    properties: GlobalEventPayloadProperties_44
+
+
+class GlobalEventPayloadType_46(str, Enum):
+    TODO_UPDATED = "todo.updated"
+
+
+class GlobalEventPayloadProperties_45(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    todos: list[Todo]
+
+
+class GlobalEventPayload_46(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_46
+    properties: GlobalEventPayloadProperties_45
+
+
+class GlobalEventPayloadType_47(str, Enum):
+    SESSION_STATUS = "session.status"
+
+
+class GlobalEventPayloadProperties_46(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    status: SessionStatus_3
+
+
+class GlobalEventPayload_47(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_47
+    properties: GlobalEventPayloadProperties_46
+
+
+class GlobalEventPayloadType_48(str, Enum):
+    SESSION_IDLE = "session.idle"
+
+
+class GlobalEventPayloadProperties_47(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+
+
+class GlobalEventPayload_48(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_48
+    properties: GlobalEventPayloadProperties_47
+
+
+class GlobalEventPayloadType_49(str, Enum):
+    SESSION_COMPACTED = "session.compacted"
+
+
+class GlobalEventPayloadProperties_48(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+
+
+class GlobalEventPayload_49(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_49
+    properties: GlobalEventPayloadProperties_48
+
+
+class GlobalEventPayloadType_50(str, Enum):
+    LSP_UPDATED = "lsp.updated"
+
+
+class GlobalEventPayload_50(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_50
+    properties: dict[str, Any]
+
+
+class GlobalEventPayloadType_51(str, Enum):
+    TUI_PROMPT_APPEND = "tui.prompt.append"
+
+
+class GlobalEventPayloadProperties_49(BaseModel):
+    text: str
+
+
+class GlobalEventPayload_51(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_51
+    properties: GlobalEventPayloadProperties_49
+
+
+class GlobalEventPayloadType_52(str, Enum):
+    TUI_COMMAND_EXECUTE = "tui.command.execute"
+
+
+class GlobalEventPayloadPropertiesCommand(str, Enum):
+    SESSION_LIST = "session.list"
+    SESSION_NEW = "session.new"
+    SESSION_SHARE = "session.share"
+    SESSION_INTERRUPT = "session.interrupt"
+    SESSION_COMPACT = "session.compact"
+    SESSION_PAGE_UP = "session.page.up"
+    SESSION_PAGE_DOWN = "session.page.down"
+    SESSION_LINE_UP = "session.line.up"
+    SESSION_LINE_DOWN = "session.line.down"
+    SESSION_HALF_PAGE_UP = "session.half.page.up"
+    SESSION_HALF_PAGE_DOWN = "session.half.page.down"
+    SESSION_FIRST = "session.first"
+    SESSION_LAST = "session.last"
+    PROMPT_CLEAR = "prompt.clear"
+    PROMPT_SUBMIT = "prompt.submit"
+    AGENT_CYCLE = "agent.cycle"
+
+
+class GlobalEventPayloadProperties_50(BaseModel):
+    command: Union[GlobalEventPayloadPropertiesCommand, str]
+
+
+class GlobalEventPayload_52(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_52
+    properties: GlobalEventPayloadProperties_50
+
+
+class GlobalEventPayloadType_53(str, Enum):
+    TUI_TOAST_SHOW = "tui.toast.show"
+
+
+class GlobalEventPayloadPropertiesVariant(str, Enum):
+    INFO = "info"
+    SUCCESS = "success"
+    WARNING = "warning"
+    ERROR = "error"
+
+
+class GlobalEventPayloadProperties_51(BaseModel):
+    title: Optional[Optional[str]]
+    message: str
+    variant: GlobalEventPayloadPropertiesVariant
+    duration: Optional[Optional[int]] = Field(default=None, gt=0)
+
+
+class GlobalEventPayload_53(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_53
+    properties: GlobalEventPayloadProperties_51
+
+
+class GlobalEventPayloadType_54(str, Enum):
+    TUI_SESSION_SELECT = "tui.session.select"
+
+
+class GlobalEventPayloadProperties_52(BaseModel):
+    session_id: str = Field(..., alias="sessionID", description="Session ID to navigate to", pattern="^ses")
+
+
+class GlobalEventPayload_54(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_54
+    properties: GlobalEventPayloadProperties_52
+
+
+class GlobalEventPayloadType_55(str, Enum):
+    MCP_TOOLS_CHANGED = "mcp.tools.changed"
+
+
+class GlobalEventPayloadProperties_53(BaseModel):
+    server: str
+
+
+class GlobalEventPayload_55(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_55
+    properties: GlobalEventPayloadProperties_53
+
+
+class GlobalEventPayloadType_56(str, Enum):
+    MCP_BROWSER_OPEN_FAILED = "mcp.browser.open.failed"
+
+
+class GlobalEventPayloadProperties_54(BaseModel):
+    mcp_name: str = Field(..., alias="mcpName")
+    url: str
+
+
+class GlobalEventPayload_56(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_56
+    properties: GlobalEventPayloadProperties_54
+
+
+class GlobalEventPayloadType_57(str, Enum):
+    COMMAND_EXECUTED = "command.executed"
+
+
+class GlobalEventPayloadProperties_55(BaseModel):
+    name: str
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    arguments: str
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+
+
+class GlobalEventPayload_57(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_57
+    properties: GlobalEventPayloadProperties_55
+
+
+class GlobalEventPayloadType_58(str, Enum):
+    PROJECT_UPDATED = "project.updated"
+
+
+class GlobalEventPayloadPropertiesVcs(str, Enum):
+    GIT = "git"
+
+
+class GlobalEventPayloadPropertiesIcon(BaseModel):
+    url: Optional[Optional[str]]
+    override: Optional[Optional[str]]
+    color: Optional[Optional[str]]
+
+
+class GlobalEventPayloadPropertiesCommands(BaseModel):
+    start: Optional[Optional[str]] = Field(default=None, description="Startup script to run when creating a new workspace (worktree)")
+
+
+class GlobalEventPayloadPropertiesTime(BaseModel):
+    created: int = Field(..., ge=0)
+    updated: int = Field(..., ge=0)
+    initialized: Optional[Optional[int]] = Field(default=None, ge=0)
+
+
+class GlobalEventPayloadProperties_56(BaseModel):
+    id: str
+    worktree: str
+    vcs: Optional[Optional[GlobalEventPayloadPropertiesVcs]]
+    name: Optional[Optional[str]]
+    icon: Optional[Optional[GlobalEventPayloadPropertiesIcon]]
+    commands: Optional[Optional[GlobalEventPayloadPropertiesCommands]]
+    time: GlobalEventPayloadPropertiesTime
+    sandboxes: list[str]
+
+
+class GlobalEventPayload_58(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_58
+    properties: GlobalEventPayloadProperties_56
+
+
+class GlobalEventPayloadType_59(str, Enum):
+    VCS_BRANCH_UPDATED = "vcs.branch.updated"
+
+
+class GlobalEventPayloadProperties_57(BaseModel):
+    branch: Optional[Optional[str]]
+
+
+class GlobalEventPayload_59(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_59
+    properties: GlobalEventPayloadProperties_57
+
+
+class GlobalEventPayloadType_60(str, Enum):
+    WORKSPACE_READY = "workspace.ready"
+
+
+class GlobalEventPayloadProperties_58(BaseModel):
+    name: str
+
+
+class GlobalEventPayload_60(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_60
+    properties: GlobalEventPayloadProperties_58
+
+
+class GlobalEventPayloadType_61(str, Enum):
+    WORKSPACE_FAILED = "workspace.failed"
+
+
+class GlobalEventPayloadProperties_59(BaseModel):
+    message: str
+
+
+class GlobalEventPayload_61(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_61
+    properties: GlobalEventPayloadProperties_59
+
+
+class GlobalEventPayloadType_62(str, Enum):
+    WORKSPACE_STATUS = "workspace.status"
+
+
+class GlobalEventPayloadPropertiesStatus(str, Enum):
+    CONNECTED = "connected"
+    CONNECTING = "connecting"
+    DISCONNECTED = "disconnected"
+    ERROR = "error"
+
+
+class GlobalEventPayloadProperties_60(BaseModel):
+    workspace_id: str = Field(..., alias="workspaceID", pattern="^wrk")
+    status: GlobalEventPayloadPropertiesStatus
+
+
+class GlobalEventPayload_62(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_62
+    properties: GlobalEventPayloadProperties_60
+
+
+class GlobalEventPayloadType_63(str, Enum):
+    WORKTREE_READY = "worktree.ready"
+
+
+class GlobalEventPayloadProperties_61(BaseModel):
+    name: str
+    branch: Optional[Optional[str]]
+
+
+class GlobalEventPayload_63(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_63
+    properties: GlobalEventPayloadProperties_61
+
+
+class GlobalEventPayloadType_64(str, Enum):
+    WORKTREE_FAILED = "worktree.failed"
+
+
+class GlobalEventPayloadProperties_62(BaseModel):
+    message: str
+
+
+class GlobalEventPayload_64(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_64
+    properties: GlobalEventPayloadProperties_62
+
+
+class GlobalEventPayloadType_65(str, Enum):
+    PTY_CREATED = "pty.created"
+
+
+class GlobalEventPayloadProperties_63(BaseModel):
+    info: Pty
+
+
+class GlobalEventPayload_65(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_65
+    properties: GlobalEventPayloadProperties_63
+
+
+class GlobalEventPayloadType_66(str, Enum):
+    PTY_UPDATED = "pty.updated"
+
+
+class GlobalEventPayloadProperties_64(BaseModel):
+    info: Pty
+
+
+class GlobalEventPayload_66(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_66
+    properties: GlobalEventPayloadProperties_64
+
+
+class GlobalEventPayloadType_67(str, Enum):
+    PTY_EXITED = "pty.exited"
+
+
+class GlobalEventPayloadProperties_65(BaseModel):
+    id: str = Field(..., pattern="^pty")
+    exit_code: int = Field(..., alias="exitCode", ge=0)
+
+
+class GlobalEventPayload_67(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_67
+    properties: GlobalEventPayloadProperties_65
+
+
+class GlobalEventPayloadType_68(str, Enum):
+    PTY_DELETED = "pty.deleted"
+
+
+class GlobalEventPayloadProperties_66(BaseModel):
+    id: str = Field(..., pattern="^pty")
+
+
+class GlobalEventPayload_68(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_68
+    properties: GlobalEventPayloadProperties_66
+
+
+class GlobalEventPayloadType_69(str, Enum):
+    INSTALLATION_UPDATED = "installation.updated"
+
+
+class GlobalEventPayloadProperties_67(BaseModel):
+    version: str
+
+
+class GlobalEventPayload_69(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_69
+    properties: GlobalEventPayloadProperties_67
+
+
+class GlobalEventPayloadType_70(str, Enum):
+    INSTALLATION_UPDATE_AVAILABLE = "installation.update-available"
+
+
+class GlobalEventPayloadProperties_68(BaseModel):
+    version: str
+
+
+class GlobalEventPayload_70(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_70
+    properties: GlobalEventPayloadProperties_68
+
+
+class GlobalEventPayloadType_71(str, Enum):
+    SERVER_CONNECTED = "server.connected"
+
+
+class GlobalEventPayload_71(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_71
+    properties: dict[str, Any]
+
+
+class GlobalEventPayloadType_72(str, Enum):
+    GLOBAL_DISPOSED = "global.disposed"
+
+
+class GlobalEventPayload_72(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_72
+    properties: dict[str, Any]
+
+
+class GlobalEventPayloadType_73(str, Enum):
+    ACCOUNT_ADDED = "account.added"
+
+
+class GlobalEventPayloadProperties_69(BaseModel):
+    account: AuthInfo
+
+
+class GlobalEventPayload_73(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_73
+    properties: GlobalEventPayloadProperties_69
+
+
+class GlobalEventPayloadType_74(str, Enum):
+    ACCOUNT_REMOVED = "account.removed"
+
+
+class GlobalEventPayloadProperties_70(BaseModel):
+    account: AuthInfo
+
+
+class GlobalEventPayload_74(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_74
+    properties: GlobalEventPayloadProperties_70
+
+
+class GlobalEventPayloadType_75(str, Enum):
+    ACCOUNT_SWITCHED = "account.switched"
+
+
+class GlobalEventPayloadProperties_71(BaseModel):
+    service_id: str = Field(..., alias="serviceID")
+    from_: Optional[Optional[str]] = Field(default=None, alias="from")
+    to: Optional[Optional[str]]
+
+
+class GlobalEventPayload_75(BaseModel):
+    id: str
+    type: GlobalEventPayloadType_75
+    properties: GlobalEventPayloadProperties_71
+
+
+class GlobalEvent(BaseModel):
+    directory: str
+    project: Optional[Optional[str]]
+    workspace: Optional[Optional[str]]
+    payload: Union[GlobalEventPayload, GlobalEventPayload_, GlobalEventPayload_2, GlobalEventPayload_3, GlobalEventPayload_4, GlobalEventPayload_5, GlobalEventPayload_6, GlobalEventPayload_7, GlobalEventPayload_8, GlobalEventPayload_9, GlobalEventPayload_10, GlobalEventPayload_11, GlobalEventPayload_12, GlobalEventPayload_13, GlobalEventPayload_14, GlobalEventPayload_15, GlobalEventPayload_16, GlobalEventPayload_17, GlobalEventPayload_18, GlobalEventPayload_19, GlobalEventPayload_20, GlobalEventPayload_21, GlobalEventPayload_22, GlobalEventPayload_23, GlobalEventPayload_24, GlobalEventPayload_25, GlobalEventPayload_26, GlobalEventPayload_27, GlobalEventPayload_28, GlobalEventPayload_29, GlobalEventPayload_30, GlobalEventPayload_31, GlobalEventPayload_32, GlobalEventPayload_33, GlobalEventPayload_34, GlobalEventPayload_35, GlobalEventPayload_36, GlobalEventPayload_37, GlobalEventPayload_38, GlobalEventPayload_39, GlobalEventPayload_40, GlobalEventPayload_41, GlobalEventPayload_42, GlobalEventPayload_43, GlobalEventPayload_44, GlobalEventPayload_45, GlobalEventPayload_46, GlobalEventPayload_47, GlobalEventPayload_48, GlobalEventPayload_49, GlobalEventPayload_50, GlobalEventPayload_51, GlobalEventPayload_52, GlobalEventPayload_53, GlobalEventPayload_54, GlobalEventPayload_55, GlobalEventPayload_56, GlobalEventPayload_57, GlobalEventPayload_58, GlobalEventPayload_59, GlobalEventPayload_60, GlobalEventPayload_61, GlobalEventPayload_62, GlobalEventPayload_63, GlobalEventPayload_64, GlobalEventPayload_65, GlobalEventPayload_66, GlobalEventPayload_67, GlobalEventPayload_68, GlobalEventPayload_69, GlobalEventPayload_70, GlobalEventPayload_71, GlobalEventPayload_72, GlobalEventPayload_73, GlobalEventPayload_74, GlobalEventPayload_75, EventServerInstanceDisposed, SyncEventSessionNextAgentSwitched, SyncEventSessionNextModelSwitched, SyncEventSessionNextPrompted, SyncEventSessionNextSynthetic, SyncEventSessionNextShellStarted, SyncEventSessionNextShellEnded, SyncEventSessionNextStepStarted, SyncEventSessionNextStepEnded, SyncEventSessionNextStepFailed, SyncEventSessionNextTextStarted, SyncEventSessionNextTextDelta, SyncEventSessionNextTextEnded, SyncEventSessionNextReasoningStarted, SyncEventSessionNextReasoningDelta, SyncEventSessionNextReasoningEnded, SyncEventSessionNextToolInputStarted, SyncEventSessionNextToolInputDelta, SyncEventSessionNextToolInputEnded, SyncEventSessionNextToolCalled, SyncEventSessionNextToolProgress, SyncEventSessionNextToolSuccess, SyncEventSessionNextToolFailed, SyncEventSessionNextRetried, SyncEventSessionNextCompactionStarted, SyncEventSessionNextCompactionDelta, SyncEventSessionNextCompactionEnded, SyncEventSessionCreated, SyncEventSessionUpdated, SyncEventSessionDeleted, SyncEventMessageUpdated, SyncEventMessageRemoved, SyncEventMessagePartUpdated, SyncEventMessagePartRemoved]
+
+
+class PolicyEffect(str, Enum):
+    ALLOW = "allow"
+    DENY = "deny"
+
+
+class ConfigV2ExperimentalPolicyAction(str, Enum):
+    PROVIDER_USE = "provider.use"
+
+
+class ConfigV2ExperimentalPolicy(BaseModel):
+    action: ConfigV2ExperimentalPolicyAction
+    effect: PolicyEffect
+    resource: str
+
+
+class ConfigCommandValue(BaseModel):
+    template: str
+    description: Optional[Optional[str]]
+    agent: Optional[Optional[str]]
+    model: Optional[Optional[str]]
+    subtask: Optional[Optional[bool]]
+
+
+class ConfigSkills(BaseModel):
+    paths: Optional[Optional[list[str]]]
+    urls: Optional[Optional[list[str]]]
+
+
+class ConfigWatcher(BaseModel):
+    ignore: Optional[Optional[list[str]]]
+
+
+class ConfigShare(str, Enum):
+    MANUAL = "manual"
+    AUTO = "auto"
+    DISABLED = "disabled"
+
+
+class ConfigAutoupdate(str, Enum):
+    NOTIFY = "notify"
+
+
+class ConfigMode(BaseModel):
+    build: Optional[Optional[AgentConfig]]
+    plan: Optional[Optional[AgentConfig]]
+
+
+class ConfigAgent(BaseModel):
+    plan: Optional[Optional[AgentConfig]]
+    build: Optional[Optional[AgentConfig]]
+    general: Optional[Optional[AgentConfig]]
+    explore: Optional[Optional[AgentConfig]]
+    scout: Optional[Optional[AgentConfig]]
+    title: Optional[Optional[AgentConfig]]
+    summary: Optional[Optional[AgentConfig]]
+    compaction: Optional[Optional[AgentConfig]]
+
+
+class ConfigFormatterValue(BaseModel):
+    disabled: Optional[Optional[bool]]
+    command: Optional[Optional[list[str]]]
+    environment: Optional[Optional[dict[str, Any]]]
+    extensions: Optional[Optional[list[str]]]
+
+
+class ConfigEnterprise(BaseModel):
+    url: Optional[Optional[str]]
+
+
+class ConfigToolOutput(BaseModel):
+    max_lines: Optional[Optional[int]] = Field(default=None, gt=0)
+    max_bytes: Optional[Optional[int]] = Field(default=None, gt=0)
+
+
+class ConfigCompaction(BaseModel):
+    auto: Optional[Optional[bool]]
+    prune: Optional[Optional[bool]]
+    tail_turns: Optional[Optional[int]] = Field(default=None, ge=0)
+    preserve_recent_tokens: Optional[Optional[int]] = Field(default=None, ge=0)
+    reserved: Optional[Optional[int]] = Field(default=None, ge=0)
+
+
+class ConfigExperimental(BaseModel):
+    disable_paste_summary: Optional[Optional[bool]]
+    batch_tool: Optional[Optional[bool]]
+    open_telemetry: Optional[Optional[bool]] = Field(default=None, alias="openTelemetry")
+    primary_tools: Optional[Optional[list[str]]]
+    continue_loop_on_deny: Optional[Optional[bool]]
+    mcp_timeout: Optional[Optional[int]] = Field(default=None, gt=0)
+    policies: Optional[Optional[list[ConfigV2ExperimentalPolicy]]]
+
+
+class Config(BaseModel):
+    schema_: Optional[Optional[str]] = Field(default=None, alias="$schema")
+    shell: Optional[Optional[str]]
+    log_level: Optional[Optional[LogLevel]] = Field(default=None, alias="logLevel")
+    server: Optional[Optional[ServerConfig]]
+    command: Optional[Optional[dict[str, Any]]]
+    skills: Optional[Optional[ConfigSkills]]
+    reference: Optional[Optional[ReferenceConfig]]
+    watcher: Optional[Optional[ConfigWatcher]]
+    snapshot: Optional[Optional[bool]]
+    plugin: Optional[Optional[list[Union[str, Tuple[str, dict[str, Any]]]]]]
+    share: Optional[Optional[ConfigShare]]
+    autoshare: Optional[Optional[bool]]
+    autoupdate: Optional[Optional[Union[bool, ConfigAutoupdate]]] = Field(default=None, description="Automatically update to the latest version. Set to true to auto-update, false to disable, or 'notify' to show update notifications")
+    disabled_providers: Optional[Optional[list[str]]]
+    enabled_providers: Optional[Optional[list[str]]]
+    model: Optional[Optional[str]]
+    small_model: Optional[Optional[str]]
+    default_agent: Optional[Optional[str]]
+    username: Optional[Optional[str]]
+    mode: Optional[Optional[ConfigMode]]
+    agent: Optional[Optional[ConfigAgent]]
+    provider: Optional[Optional[dict[str, Any]]]
+    mcp: Optional[Optional[dict[str, Any]]]
+    formatter: Optional[Optional[Union[bool, dict[str, Any]]]] = Field(default=None, description="Enable or configure formatters. Omit or set to false to disable, true to enable built-ins, or an object to enable built-ins with overrides.")
+    lsp: Optional[Optional[Union[bool, dict[str, Any]]]] = Field(default=None, description="Enable or configure LSP servers. Omit or set to false to disable, true to enable built-ins, or an object to enable built-ins with overrides.")
+    instructions: Optional[Optional[list[str]]]
+    layout: Optional[Optional[LayoutConfig]]
+    permission: Optional[Optional[PermissionConfig_]]
+    tools: Optional[Optional[dict[str, Any]]]
+    attachment: Optional[Optional[AttachmentConfig]]
+    enterprise: Optional[Optional[ConfigEnterprise]]
+    tool_output: Optional[Optional[ConfigToolOutput]]
+    compaction: Optional[Optional[ConfigCompaction]]
+    experimental: Optional[Optional[ConfigExperimental]]
+
+
+class SessionInfoModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class SessionInfoTokensCache(BaseModel):
+    read: float
+    write: float
+
+
+class SessionInfoTokens(BaseModel):
+    input: float
+    output: float
+    reasoning: float
+    cache: SessionInfoTokensCache
+
+
+class SessionInfoTime(BaseModel):
+    created: float
+    updated: float
+    archived: Optional[Optional[float]]
+
+
+class SessionInfo(BaseModel):
+    id: str = Field(..., pattern="^ses")
+    parent_id: Optional[Optional[str]] = Field(default=None, alias="parentID", pattern="^ses")
+    project_id: str = Field(..., alias="projectID")
+    workspace_id: Optional[Optional[str]] = Field(default=None, alias="workspaceID", pattern="^wrk")
+    path: Optional[Optional[str]]
+    agent: Optional[Optional[str]]
+    model: Optional[Optional[SessionInfoModel]]
+    cost: float
+    tokens: SessionInfoTokens
+    time: SessionInfoTime
+    title: str
+
+
+class V2SessionsResponseCursor(BaseModel):
+    previous: Optional[Optional[str]]
+    next: Optional[Optional[str]]
+
+
+class V2SessionsResponse(BaseModel):
+    items: list[SessionInfo]
+    cursor: V2SessionsResponseCursor
+
+
+class SessionDelivery(str, Enum):
+    IMMEDIATE = "immediate"
+    DEFERRED = "deferred"
+
+
+class SessionMessageAgentSwitchedTime(BaseModel):
+    created: float
+
+
+class SessionMessageAgentSwitchedType(str, Enum):
+    AGENT_SWITCHED = "agent-switched"
+
+
+class SessionMessageAgentSwitched(BaseModel):
+    id: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: SessionMessageAgentSwitchedTime
+    type: SessionMessageAgentSwitchedType
+    agent: str
+
+
+class SessionMessageModelSwitchedTime(BaseModel):
+    created: float
+
+
+class SessionMessageModelSwitchedType(str, Enum):
+    MODEL_SWITCHED = "model-switched"
+
+
+class SessionMessageModelSwitchedModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class SessionMessageModelSwitched(BaseModel):
+    id: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: SessionMessageModelSwitchedTime
+    type: SessionMessageModelSwitchedType
+    model: SessionMessageModelSwitchedModel
+
+
+class SessionMessageUserTime(BaseModel):
+    created: float
+
+
+class SessionMessageUserType(str, Enum):
+    USER = "user"
+
+
+class SessionMessageUser(BaseModel):
+    id: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: SessionMessageUserTime
+    text: str
+    files: Optional[Optional[list[PromptFileAttachment]]]
+    agents: Optional[Optional[list[PromptAgentAttachment]]]
+    references: Optional[Optional[list[PromptReferenceAttachment]]]
+    type: SessionMessageUserType
+
+
+class SessionMessageSyntheticTime(BaseModel):
+    created: float
+
+
+class SessionMessageSyntheticType(str, Enum):
+    SYNTHETIC = "synthetic"
+
+
+class SessionMessageSynthetic(BaseModel):
+    id: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: SessionMessageSyntheticTime
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+    type: SessionMessageSyntheticType
+
+
+class SessionMessageShellTime(BaseModel):
+    created: float
+    completed: Optional[Optional[float]]
+
+
+class SessionMessageShellType(str, Enum):
+    SHELL = "shell"
+
+
+class SessionMessageShell(BaseModel):
+    id: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: SessionMessageShellTime
+    type: SessionMessageShellType
+    call_id: str = Field(..., alias="callID")
+    command: str
+    output: str
+
+
+class SessionMessageAssistantTextType(str, Enum):
+    TEXT = "text"
+
+
+class SessionMessageAssistantText(BaseModel):
+    type: SessionMessageAssistantTextType
+    text: str
+
+
+class SessionMessageAssistantReasoningType(str, Enum):
+    REASONING = "reasoning"
+
+
+class SessionMessageAssistantReasoning(BaseModel):
+    type: SessionMessageAssistantReasoningType
+    id: str
+    text: str
+
+
+class SessionMessageToolStatePendingStatus(str, Enum):
+    PENDING = "pending"
+
+
+class SessionMessageToolStatePending(BaseModel):
+    status: SessionMessageToolStatePendingStatus
+    input: str
+
+
+class SessionMessageToolStateRunningStatus(str, Enum):
+    RUNNING = "running"
+
+
+class SessionMessageToolStateRunning(BaseModel):
+    status: SessionMessageToolStateRunningStatus
+    input: dict[str, Any]
+    structured: dict[str, Any]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+
+
+class SessionMessageToolStateCompletedStatus(str, Enum):
+    COMPLETED = "completed"
+
+
+class SessionMessageToolStateCompleted(BaseModel):
+    status: SessionMessageToolStateCompletedStatus
+    input: dict[str, Any]
+    attachments: Optional[Optional[list[PromptFileAttachment]]]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+    structured: dict[str, Any]
+
+
+class SessionMessageToolStateErrorStatus(str, Enum):
+    ERROR = "error"
+
+
+class SessionMessageToolStateError(BaseModel):
+    status: SessionMessageToolStateErrorStatus
+    input: dict[str, Any]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+    structured: dict[str, Any]
+    error: SessionErrorUnknown
+
+
+class SessionMessageAssistantToolType(str, Enum):
+    TOOL = "tool"
+
+
+class SessionMessageAssistantToolProvider(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class SessionMessageAssistantToolTime(BaseModel):
+    created: float
+    ran: Optional[Optional[float]]
+    completed: Optional[Optional[float]]
+    pruned: Optional[Optional[float]]
+
+
+class SessionMessageAssistantTool(BaseModel):
+    type: SessionMessageAssistantToolType
+    id: str
+    name: str
+    provider: Optional[Optional[SessionMessageAssistantToolProvider]]
+    state: Union[SessionMessageToolStatePending, SessionMessageToolStateRunning, SessionMessageToolStateCompleted, SessionMessageToolStateError]
+    time: SessionMessageAssistantToolTime
+
+
+class SessionMessageAssistantTime(BaseModel):
+    created: float
+    completed: Optional[Optional[float]]
+
+
+class SessionMessageAssistantType(str, Enum):
+    ASSISTANT = "assistant"
+
+
+class SessionMessageAssistantModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class SessionMessageAssistantSnapshot(BaseModel):
+    start: Optional[Optional[str]]
+    end: Optional[Optional[str]]
+
+
+class SessionMessageAssistantTokensCache(BaseModel):
+    read: float
+    write: float
+
+
+class SessionMessageAssistantTokens(BaseModel):
+    input: float
+    output: float
+    reasoning: float
+    cache: SessionMessageAssistantTokensCache
+
+
+class SessionMessageAssistant(BaseModel):
+    id: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: SessionMessageAssistantTime
+    type: SessionMessageAssistantType
+    agent: str
+    model: SessionMessageAssistantModel
+    content: list[Union[SessionMessageAssistantText, SessionMessageAssistantReasoning, SessionMessageAssistantTool]]
+    snapshot: Optional[Optional[SessionMessageAssistantSnapshot]]
+    finish: Optional[Optional[str]]
+    cost: Optional[Optional[float]]
+    tokens: Optional[Optional[SessionMessageAssistantTokens]]
+    error: Optional[Optional[SessionErrorUnknown]]
+
+
+class SessionMessageCompactionType(str, Enum):
+    COMPACTION = "compaction"
+
+
+class SessionMessageCompactionReason(str, Enum):
+    AUTO = "auto"
+    MANUAL = "manual"
+
+
+class SessionMessageCompactionTime(BaseModel):
+    created: float
+
+
+class SessionMessageCompaction(BaseModel):
+    type: SessionMessageCompactionType
+    reason: SessionMessageCompactionReason
+    summary: str
+    include: Optional[Optional[str]]
+    id: str
+    metadata: Optional[Optional[dict[str, Any]]]
+    time: SessionMessageCompactionTime
+
+
+SessionMessage: TypeAlias = Union[SessionMessageAgentSwitched, SessionMessageModelSwitched, SessionMessageUser, SessionMessageSynthetic, SessionMessageShell, SessionMessageAssistant, SessionMessageCompaction]
+
+
+class V2SessionMessagesResponseCursor(BaseModel):
+    previous: Optional[Optional[str]]
+    next: Optional[Optional[str]]
+
+
+class V2SessionMessagesResponse(BaseModel):
+    items: list[SessionMessage]
+    cursor: V2SessionMessagesResponseCursor
+
+
+class ProviderV2InfoEnabled(Enum):
+    pass
+
+
+class ProviderV2InfoEnabledVia(str, Enum):
+    ENV = "env"
+
+
+class ProviderV2InfoEnabled_(BaseModel):
+    via: ProviderV2InfoEnabledVia
+    name: str
+
+
+class ProviderV2InfoEnabledVia_(str, Enum):
+    ACCOUNT = "account"
+
+
+class ProviderV2InfoEnabled_2(BaseModel):
+    via: ProviderV2InfoEnabledVia_
+    service: str
+
+
+class ProviderV2InfoEnabledVia_2(str, Enum):
+    CUSTOM = "custom"
+
+
+class ProviderV2InfoEnabled_3(BaseModel):
+    via: ProviderV2InfoEnabledVia_2
+    data: dict[str, Any]
+
+
+class ProviderV2InfoEndpointType(str, Enum):
+    UNKNOWN = "unknown"
+
+
+class ProviderV2InfoEndpoint(BaseModel):
+    type: ProviderV2InfoEndpointType
+
+
+class ProviderV2InfoEndpointType_(str, Enum):
+    OPENAI_RESPONSES = "openai/responses"
+
+
+class ProviderV2InfoEndpoint_(BaseModel):
+    type: ProviderV2InfoEndpointType_
+    url: str
+    websocket: Optional[Optional[bool]]
+
+
+class ProviderV2InfoEndpointType_2(str, Enum):
+    OPENAI_COMPLETIONS = "openai/completions"
+
+
+class ProviderV2InfoEndpointReasoningType(str, Enum):
+    REASONING_CONTENT = "reasoning_content"
+
+
+class ProviderV2InfoEndpointReasoning(BaseModel):
+    type: ProviderV2InfoEndpointReasoningType
+
+
+class ProviderV2InfoEndpointReasoningType_(str, Enum):
+    REASONING_DETAILS = "reasoning_details"
+
+
+class ProviderV2InfoEndpointReasoning_(BaseModel):
+    type: ProviderV2InfoEndpointReasoningType_
+
+
+class ProviderV2InfoEndpoint_2(BaseModel):
+    type: ProviderV2InfoEndpointType_2
+    url: str
+    reasoning: Optional[Optional[Union[ProviderV2InfoEndpointReasoning, ProviderV2InfoEndpointReasoning_]]]
+
+
+class ProviderV2InfoEndpointType_3(str, Enum):
+    ANTHROPIC_MESSAGES = "anthropic/messages"
+
+
+class ProviderV2InfoEndpoint_3(BaseModel):
+    type: ProviderV2InfoEndpointType_3
+    url: str
+
+
+class ProviderV2InfoEndpointType_4(str, Enum):
+    AISDK = "aisdk"
+
+
+class ProviderV2InfoEndpoint_4(BaseModel):
+    type: ProviderV2InfoEndpointType_4
+    package: str
+    url: Optional[Optional[str]]
+
+
+class ProviderV2InfoOptionsAisdk(BaseModel):
+    provider: dict[str, Any]
+    request: dict[str, Any]
+
+
+class ProviderV2InfoOptions(BaseModel):
+    headers: dict[str, Any]
+    body: dict[str, Any]
+    aisdk: ProviderV2InfoOptionsAisdk
+
+
+class ProviderV2Info(BaseModel):
+    id: str
+    name: str
+    enabled: Union[ProviderV2InfoEnabled, ProviderV2InfoEnabled_, ProviderV2InfoEnabled_2, ProviderV2InfoEnabled_3]
+    env: list[str]
+    endpoint: Union[ProviderV2InfoEndpoint, ProviderV2InfoEndpoint_, ProviderV2InfoEndpoint_2, ProviderV2InfoEndpoint_3, ProviderV2InfoEndpoint_4]
+    options: ProviderV2InfoOptions
+
+
+class EventModelsDevRefreshedType(str, Enum):
+    MODELS_DEV_REFRESHED = "models-dev.refreshed"
+
+
+class EventModelsDevRefreshed(BaseModel):
+    id: str
+    type: EventModelsDevRefreshedType
+    properties: dict[str, Any]
+
+
+class EventPluginAddedType(str, Enum):
+    PLUGIN_ADDED = "plugin.added"
+
+
+class EventPluginAddedProperties(BaseModel):
+    id: str
+
+
+class EventPluginAdded(BaseModel):
+    id: str
+    type: EventPluginAddedType
+    properties: EventPluginAddedProperties
+
+
+class ModelV2Info1EndpointType(str, Enum):
+    UNKNOWN = "unknown"
+
+
+class ModelV2Info1Endpoint(BaseModel):
+    type: ModelV2Info1EndpointType
+
+
+class ModelV2Info1EndpointType_(str, Enum):
+    OPENAI_RESPONSES = "openai/responses"
+
+
+class ModelV2Info1Endpoint_(BaseModel):
+    type: ModelV2Info1EndpointType_
+    url: str
+    websocket: Optional[Optional[bool]]
+
+
+class ModelV2Info1EndpointType_2(str, Enum):
+    OPENAI_COMPLETIONS = "openai/completions"
+
+
+class ModelV2Info1EndpointReasoningType(str, Enum):
+    REASONING_CONTENT = "reasoning_content"
+
+
+class ModelV2Info1EndpointReasoning(BaseModel):
+    type: ModelV2Info1EndpointReasoningType
+
+
+class ModelV2Info1EndpointReasoningType_(str, Enum):
+    REASONING_DETAILS = "reasoning_details"
+
+
+class ModelV2Info1EndpointReasoning_(BaseModel):
+    type: ModelV2Info1EndpointReasoningType_
+
+
+class ModelV2Info1Endpoint_2(BaseModel):
+    type: ModelV2Info1EndpointType_2
+    url: str
+    reasoning: Optional[Optional[Union[ModelV2Info1EndpointReasoning, ModelV2Info1EndpointReasoning_]]]
+
+
+class ModelV2Info1EndpointType_3(str, Enum):
+    ANTHROPIC_MESSAGES = "anthropic/messages"
+
+
+class ModelV2Info1Endpoint_3(BaseModel):
+    type: ModelV2Info1EndpointType_3
+    url: str
+
+
+class ModelV2Info1EndpointType_4(str, Enum):
+    AISDK = "aisdk"
+
+
+class ModelV2Info1Endpoint_4(BaseModel):
+    type: ModelV2Info1EndpointType_4
+    package: str
+    url: Optional[Optional[str]]
+
+
+class ModelV2Info1Capabilities(BaseModel):
+    tools: bool
+    input: list[str]
+    output: list[str]
+
+
+class ModelV2Info1OptionsAisdk(BaseModel):
+    provider: dict[str, Any]
+    request: dict[str, Any]
+
+
+class ModelV2Info1Options(BaseModel):
+    headers: dict[str, Any]
+    body: dict[str, Any]
+    aisdk: ModelV2Info1OptionsAisdk
+    variant: Optional[Optional[str]]
+
+
+class ModelV2Info1VariantsAisdk(BaseModel):
+    provider: dict[str, Any]
+    request: dict[str, Any]
+
+
+class ModelV2Info1Variants(BaseModel):
+    id: str
+    headers: dict[str, Any]
+    body: dict[str, Any]
+    aisdk: ModelV2Info1VariantsAisdk
+
+
+class ModelV2Info1TimeReleased(str, Enum):
+    NA_N = "NaN"
+
+
+class ModelV2Info1TimeReleased_(str, Enum):
+    INFINITY = "Infinity"
+
+
+class ModelV2Info1TimeReleased_2(str, Enum):
+    INFINITY = "-Infinity"
+
+
+class ModelV2Info1Time(BaseModel):
+    released: Union[float, ModelV2Info1TimeReleased, ModelV2Info1TimeReleased_, ModelV2Info1TimeReleased_2]
+
+
+class ModelV2Info1CostTierType(str, Enum):
+    CONTEXT = "context"
+
+
+class ModelV2Info1CostTier(BaseModel):
+    type: ModelV2Info1CostTierType
+    size: int
+
+
+class ModelV2Info1CostCache(BaseModel):
+    read: float
+    write: float
+
+
+class ModelV2Info1Cost(BaseModel):
+    tier: Optional[Optional[ModelV2Info1CostTier]]
+    input: float
+    output: float
+    cache: ModelV2Info1CostCache
+
+
+class ModelV2Info1Status(str, Enum):
+    ALPHA = "alpha"
+    BETA = "beta"
+    DEPRECATED = "deprecated"
+    ACTIVE = "active"
+
+
+class ModelV2Info1Limit(BaseModel):
+    context: int
+    input: Optional[Optional[int]]
+    output: int
+
+
+class ModelV2Info1(BaseModel):
+    id: str
+    api_id: str = Field(..., alias="apiID")
+    provider_id: str = Field(..., alias="providerID")
+    family: Optional[Optional[str]]
+    name: str
+    endpoint: Union[ModelV2Info1Endpoint, ModelV2Info1Endpoint_, ModelV2Info1Endpoint_2, ModelV2Info1Endpoint_3, ModelV2Info1Endpoint_4]
+    capabilities: ModelV2Info1Capabilities
+    options: ModelV2Info1Options
+    variants: list[ModelV2Info1Variants]
+    time: ModelV2Info1Time
+    cost: list[ModelV2Info1Cost]
+    status: ModelV2Info1Status
+    enabled: bool
+    limit: ModelV2Info1Limit
+
+
+class EventCatalogModelUpdatedType(str, Enum):
+    CATALOG_MODEL_UPDATED = "catalog.model.updated"
+
+
+class EventCatalogModelUpdatedProperties(BaseModel):
+    model: ModelV2Info1
+
+
+class EventCatalogModelUpdated(BaseModel):
+    id: str
+    type: EventCatalogModelUpdatedType
+    properties: EventCatalogModelUpdatedProperties
+
+
+class EventFileEditedType(str, Enum):
+    FILE_EDITED = "file.edited"
+
+
+class EventFileEditedProperties(BaseModel):
+    file: str
+
+
+class EventFileEdited(BaseModel):
+    id: str
+    type: EventFileEditedType
+    properties: EventFileEditedProperties
+
+
+class EventSessionNextAgentSwitchedType(str, Enum):
+    SESSION_NEXT_AGENT_SWITCHED = "session.next.agent.switched"
+
+
+class EventSessionNextAgentSwitchedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    agent: str
+
+
+class EventSessionNextAgentSwitched(BaseModel):
+    id: str
+    type: EventSessionNextAgentSwitchedType
+    properties: EventSessionNextAgentSwitchedProperties
+
+
+class EventSessionNextModelSwitchedType(str, Enum):
+    SESSION_NEXT_MODEL_SWITCHED = "session.next.model.switched"
+
+
+class EventSessionNextModelSwitchedPropertiesModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class EventSessionNextModelSwitchedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    model: EventSessionNextModelSwitchedPropertiesModel
+
+
+class EventSessionNextModelSwitched(BaseModel):
+    id: str
+    type: EventSessionNextModelSwitchedType
+    properties: EventSessionNextModelSwitchedProperties
+
+
+class EventSessionNextPromptedType(str, Enum):
+    SESSION_NEXT_PROMPTED = "session.next.prompted"
+
+
+class EventSessionNextPromptedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    prompt: Prompt
+
+
+class EventSessionNextPrompted(BaseModel):
+    id: str
+    type: EventSessionNextPromptedType
+    properties: EventSessionNextPromptedProperties
+
+
+class EventSessionNextSyntheticType(str, Enum):
+    SESSION_NEXT_SYNTHETIC = "session.next.synthetic"
+
+
+class EventSessionNextSyntheticProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class EventSessionNextSynthetic(BaseModel):
+    id: str
+    type: EventSessionNextSyntheticType
+    properties: EventSessionNextSyntheticProperties
+
+
+class EventSessionNextShellStartedType(str, Enum):
+    SESSION_NEXT_SHELL_STARTED = "session.next.shell.started"
+
+
+class EventSessionNextShellStartedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    command: str
+
+
+class EventSessionNextShellStarted(BaseModel):
+    id: str
+    type: EventSessionNextShellStartedType
+    properties: EventSessionNextShellStartedProperties
+
+
+class EventSessionNextShellEndedType(str, Enum):
+    SESSION_NEXT_SHELL_ENDED = "session.next.shell.ended"
+
+
+class EventSessionNextShellEndedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    output: str
+
+
+class EventSessionNextShellEnded(BaseModel):
+    id: str
+    type: EventSessionNextShellEndedType
+    properties: EventSessionNextShellEndedProperties
+
+
+class EventSessionNextStepStartedType(str, Enum):
+    SESSION_NEXT_STEP_STARTED = "session.next.step.started"
+
+
+class EventSessionNextStepStartedPropertiesModel(BaseModel):
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[Optional[str]]
+
+
+class EventSessionNextStepStartedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    agent: str
+    model: EventSessionNextStepStartedPropertiesModel
+    snapshot: Optional[Optional[str]]
+
+
+class EventSessionNextStepStarted(BaseModel):
+    id: str
+    type: EventSessionNextStepStartedType
+    properties: EventSessionNextStepStartedProperties
+
+
+class EventSessionNextStepEndedType(str, Enum):
+    SESSION_NEXT_STEP_ENDED = "session.next.step.ended"
+
+
+class EventSessionNextStepEndedPropertiesTokensCache(BaseModel):
+    read: float
+    write: float
+
+
+class EventSessionNextStepEndedPropertiesTokens(BaseModel):
+    input: float
+    output: float
+    reasoning: float
+    cache: EventSessionNextStepEndedPropertiesTokensCache
+
+
+class EventSessionNextStepEndedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    finish: str
+    cost: float
+    tokens: EventSessionNextStepEndedPropertiesTokens
+    snapshot: Optional[Optional[str]]
+
+
+class EventSessionNextStepEnded(BaseModel):
+    id: str
+    type: EventSessionNextStepEndedType
+    properties: EventSessionNextStepEndedProperties
+
+
+class EventSessionNextStepFailedType(str, Enum):
+    SESSION_NEXT_STEP_FAILED = "session.next.step.failed"
+
+
+class EventSessionNextStepFailedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    error: SessionErrorUnknown
+
+
+class EventSessionNextStepFailed(BaseModel):
+    id: str
+    type: EventSessionNextStepFailedType
+    properties: EventSessionNextStepFailedProperties
+
+
+class EventSessionNextTextStartedType(str, Enum):
+    SESSION_NEXT_TEXT_STARTED = "session.next.text.started"
+
+
+class EventSessionNextTextStartedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+
+
+class EventSessionNextTextStarted(BaseModel):
+    id: str
+    type: EventSessionNextTextStartedType
+    properties: EventSessionNextTextStartedProperties
+
+
+class EventSessionNextTextDeltaType(str, Enum):
+    SESSION_NEXT_TEXT_DELTA = "session.next.text.delta"
+
+
+class EventSessionNextTextDeltaProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    delta: str
+
+
+class EventSessionNextTextDelta(BaseModel):
+    id: str
+    type: EventSessionNextTextDeltaType
+    properties: EventSessionNextTextDeltaProperties
+
+
+class EventSessionNextTextEndedType(str, Enum):
+    SESSION_NEXT_TEXT_ENDED = "session.next.text.ended"
+
+
+class EventSessionNextTextEndedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class EventSessionNextTextEnded(BaseModel):
+    id: str
+    type: EventSessionNextTextEndedType
+    properties: EventSessionNextTextEndedProperties
+
+
+class EventSessionNextReasoningStartedType(str, Enum):
+    SESSION_NEXT_REASONING_STARTED = "session.next.reasoning.started"
+
+
+class EventSessionNextReasoningStartedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+
+
+class EventSessionNextReasoningStarted(BaseModel):
+    id: str
+    type: EventSessionNextReasoningStartedType
+    properties: EventSessionNextReasoningStartedProperties
+
+
+class EventSessionNextReasoningDeltaType(str, Enum):
+    SESSION_NEXT_REASONING_DELTA = "session.next.reasoning.delta"
+
+
+class EventSessionNextReasoningDeltaProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+    delta: str
+
+
+class EventSessionNextReasoningDelta(BaseModel):
+    id: str
+    type: EventSessionNextReasoningDeltaType
+    properties: EventSessionNextReasoningDeltaProperties
+
+
+class EventSessionNextReasoningEndedType(str, Enum):
+    SESSION_NEXT_REASONING_ENDED = "session.next.reasoning.ended"
+
+
+class EventSessionNextReasoningEndedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reasoning_id: str = Field(..., alias="reasoningID")
+    text: str
+
+
+class EventSessionNextReasoningEnded(BaseModel):
+    id: str
+    type: EventSessionNextReasoningEndedType
+    properties: EventSessionNextReasoningEndedProperties
+
+
+class EventSessionNextToolInputStartedType(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_STARTED = "session.next.tool.input.started"
+
+
+class EventSessionNextToolInputStartedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    name: str
+
+
+class EventSessionNextToolInputStarted(BaseModel):
+    id: str
+    type: EventSessionNextToolInputStartedType
+    properties: EventSessionNextToolInputStartedProperties
+
+
+class EventSessionNextToolInputDeltaType(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_DELTA = "session.next.tool.input.delta"
+
+
+class EventSessionNextToolInputDeltaProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    delta: str
+
+
+class EventSessionNextToolInputDelta(BaseModel):
+    id: str
+    type: EventSessionNextToolInputDeltaType
+    properties: EventSessionNextToolInputDeltaProperties
+
+
+class EventSessionNextToolInputEndedType(str, Enum):
+    SESSION_NEXT_TOOL_INPUT_ENDED = "session.next.tool.input.ended"
+
+
+class EventSessionNextToolInputEndedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    text: str
+
+
+class EventSessionNextToolInputEnded(BaseModel):
+    id: str
+    type: EventSessionNextToolInputEndedType
+    properties: EventSessionNextToolInputEndedProperties
+
+
+class EventSessionNextToolCalledType(str, Enum):
+    SESSION_NEXT_TOOL_CALLED = "session.next.tool.called"
+
+
+class EventSessionNextToolCalledPropertiesProvider(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class EventSessionNextToolCalledProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    tool: str
+    input: dict[str, Any]
+    provider: EventSessionNextToolCalledPropertiesProvider
+
+
+class EventSessionNextToolCalled(BaseModel):
+    id: str
+    type: EventSessionNextToolCalledType
+    properties: EventSessionNextToolCalledProperties
+
+
+class EventSessionNextToolProgressType(str, Enum):
+    SESSION_NEXT_TOOL_PROGRESS = "session.next.tool.progress"
+
+
+class EventSessionNextToolProgressProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    structured: dict[str, Any]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+
+
+class EventSessionNextToolProgress(BaseModel):
+    id: str
+    type: EventSessionNextToolProgressType
+    properties: EventSessionNextToolProgressProperties
+
+
+class EventSessionNextToolSuccessType(str, Enum):
+    SESSION_NEXT_TOOL_SUCCESS = "session.next.tool.success"
+
+
+class EventSessionNextToolSuccessPropertiesProvider(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class EventSessionNextToolSuccessProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    structured: dict[str, Any]
+    content: list[Union[ToolTextContent, ToolFileContent]]
+    provider: EventSessionNextToolSuccessPropertiesProvider
+
+
+class EventSessionNextToolSuccess(BaseModel):
+    id: str
+    type: EventSessionNextToolSuccessType
+    properties: EventSessionNextToolSuccessProperties
+
+
+class EventSessionNextToolFailedType(str, Enum):
+    SESSION_NEXT_TOOL_FAILED = "session.next.tool.failed"
+
+
+class EventSessionNextToolFailedPropertiesProvider(BaseModel):
+    executed: bool
+    metadata: Optional[Optional[dict[str, Any]]]
+
+
+class EventSessionNextToolFailedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    call_id: str = Field(..., alias="callID")
+    error: SessionErrorUnknown
+    provider: EventSessionNextToolFailedPropertiesProvider
+
+
+class EventSessionNextToolFailed(BaseModel):
+    id: str
+    type: EventSessionNextToolFailedType
+    properties: EventSessionNextToolFailedProperties
+
+
+class EventSessionNextRetriedType(str, Enum):
+    SESSION_NEXT_RETRIED = "session.next.retried"
+
+
+class EventSessionNextRetriedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    attempt: float
+    error: SessionNextRetryError
+
+
+class EventSessionNextRetried(BaseModel):
+    id: str
+    type: EventSessionNextRetriedType
+    properties: EventSessionNextRetriedProperties
+
+
+class EventSessionNextCompactionStartedType(str, Enum):
+    SESSION_NEXT_COMPACTION_STARTED = "session.next.compaction.started"
+
+
+class EventSessionNextCompactionStartedPropertiesReason(str, Enum):
+    AUTO = "auto"
+    MANUAL = "manual"
+
+
+class EventSessionNextCompactionStartedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    reason: EventSessionNextCompactionStartedPropertiesReason
+
+
+class EventSessionNextCompactionStarted(BaseModel):
+    id: str
+    type: EventSessionNextCompactionStartedType
+    properties: EventSessionNextCompactionStartedProperties
+
+
+class EventSessionNextCompactionDeltaType(str, Enum):
+    SESSION_NEXT_COMPACTION_DELTA = "session.next.compaction.delta"
+
+
+class EventSessionNextCompactionDeltaProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+
+
+class EventSessionNextCompactionDelta(BaseModel):
+    id: str
+    type: EventSessionNextCompactionDeltaType
+    properties: EventSessionNextCompactionDeltaProperties
+
+
+class EventSessionNextCompactionEndedType(str, Enum):
+    SESSION_NEXT_COMPACTION_ENDED = "session.next.compaction.ended"
+
+
+class EventSessionNextCompactionEndedProperties(BaseModel):
+    timestamp: float
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    text: str
+    include: Optional[Optional[str]]
+
+
+class EventSessionNextCompactionEnded(BaseModel):
+    id: str
+    type: EventSessionNextCompactionEndedType
+    properties: EventSessionNextCompactionEndedProperties
+
+
+class EventFileWatcherUpdatedType(str, Enum):
+    FILE_WATCHER_UPDATED = "file.watcher.updated"
+
+
+class EventFileWatcherUpdatedPropertiesEvent(str, Enum):
+    ADD = "add"
+    CHANGE = "change"
+    UNLINK = "unlink"
+
+
+class EventFileWatcherUpdatedProperties(BaseModel):
+    file: str
+    event: EventFileWatcherUpdatedPropertiesEvent
+
+
+class EventFileWatcherUpdated(BaseModel):
+    id: str
+    type: EventFileWatcherUpdatedType
+    properties: EventFileWatcherUpdatedProperties
+
+
+class EventSessionCreatedType(str, Enum):
+    SESSION_CREATED = "session.created"
+
+
+class EventSessionCreatedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class EventSessionCreated(BaseModel):
+    id: str
+    type: EventSessionCreatedType
+    properties: EventSessionCreatedProperties
+
+
+class EventSessionUpdatedType(str, Enum):
+    SESSION_UPDATED = "session.updated"
+
+
+class EventSessionUpdatedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class EventSessionUpdated(BaseModel):
+    id: str
+    type: EventSessionUpdatedType
+    properties: EventSessionUpdatedProperties
+
+
+class EventSessionDeletedType(str, Enum):
+    SESSION_DELETED = "session.deleted"
+
+
+class EventSessionDeletedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Session
+
+
+class EventSessionDeleted(BaseModel):
+    id: str
+    type: EventSessionDeletedType
+    properties: EventSessionDeletedProperties
+
+
+class EventMessageUpdatedType(str, Enum):
+    MESSAGE_UPDATED = "message.updated"
+
+
+class EventMessageUpdatedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    info: Message
+
+
+class EventMessageUpdated(BaseModel):
+    id: str
+    type: EventMessageUpdatedType
+    properties: EventMessageUpdatedProperties
+
+
+class EventMessageRemovedType(str, Enum):
+    MESSAGE_REMOVED = "message.removed"
+
+
+class EventMessageRemovedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+
+
+class EventMessageRemoved(BaseModel):
+    id: str
+    type: EventMessageRemovedType
+    properties: EventMessageRemovedProperties
+
+
+class EventMessagePartUpdatedType(str, Enum):
+    MESSAGE_PART_UPDATED = "message.part.updated"
+
+
+class EventMessagePartUpdatedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    part: Part
+    time: float
+
+
+class EventMessagePartUpdated(BaseModel):
+    id: str
+    type: EventMessagePartUpdatedType
+    properties: EventMessagePartUpdatedProperties
+
+
+class EventMessagePartRemovedType(str, Enum):
+    MESSAGE_PART_REMOVED = "message.part.removed"
+
+
+class EventMessagePartRemovedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    part_id: str = Field(..., alias="partID", pattern="^prt")
+
+
+class EventMessagePartRemoved(BaseModel):
+    id: str
+    type: EventMessagePartRemovedType
+    properties: EventMessagePartRemovedProperties
+
+
+class EventMessagePartDeltaType(str, Enum):
+    MESSAGE_PART_DELTA = "message.part.delta"
+
+
+class EventMessagePartDeltaProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    part_id: str = Field(..., alias="partID", pattern="^prt")
+    field: str
+    delta: str
+
+
+class EventMessagePartDelta(BaseModel):
+    id: str
+    type: EventMessagePartDeltaType
+    properties: EventMessagePartDeltaProperties
+
+
+class EventPermissionAskedType(str, Enum):
+    PERMISSION_ASKED = "permission.asked"
+
+
+class EventPermissionAskedPropertiesTool(BaseModel):
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+    call_id: str = Field(..., alias="callID")
+
+
+class EventPermissionAskedProperties(BaseModel):
+    id: str = Field(..., pattern="^per")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    permission: str
+    patterns: list[str]
+    metadata: dict[str, Any]
+    always: list[str]
+    tool: Optional[Optional[EventPermissionAskedPropertiesTool]]
+
+
+class EventPermissionAsked(BaseModel):
+    id: str
+    type: EventPermissionAskedType
+    properties: EventPermissionAskedProperties
+
+
+class EventPermissionRepliedType(str, Enum):
+    PERMISSION_REPLIED = "permission.replied"
+
+
+class EventPermissionRepliedPropertiesReply(str, Enum):
+    ONCE = "once"
+    ALWAYS = "always"
+    REJECT = "reject"
+
+
+class EventPermissionRepliedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    request_id: str = Field(..., alias="requestID", pattern="^per")
+    reply: EventPermissionRepliedPropertiesReply
+
+
+class EventPermissionReplied(BaseModel):
+    id: str
+    type: EventPermissionRepliedType
+    properties: EventPermissionRepliedProperties
+
+
+class EventSessionDiffType(str, Enum):
+    SESSION_DIFF = "session.diff"
+
+
+class EventSessionDiffProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    diff: list[SnapshotFileDiff]
+
+
+class EventSessionDiff(BaseModel):
+    id: str
+    type: EventSessionDiffType
+    properties: EventSessionDiffProperties
+
+
+class EventSessionErrorType(str, Enum):
+    SESSION_ERROR = "session.error"
+
+
+class EventSessionErrorProperties(BaseModel):
+    session_id: Optional[Optional[str]] = Field(default=None, alias="sessionID", pattern="^ses")
+    error: Optional[Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError]]]
+
+
+class EventSessionError(BaseModel):
+    id: str
+    type: EventSessionErrorType
+    properties: EventSessionErrorProperties
+
+
+class EventQuestionAskedType(str, Enum):
+    QUESTION_ASKED = "question.asked"
+
+
+class EventQuestionAskedProperties(BaseModel):
+    id: str = Field(..., pattern="^que")
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    questions: list[QuestionInfo] = Field(..., description="Questions to ask")
+    tool: Optional[Optional[QuestionTool]]
+
+
+class EventQuestionAsked(BaseModel):
+    id: str
+    type: EventQuestionAskedType
+    properties: EventQuestionAskedProperties
+
+
+class EventQuestionRepliedType(str, Enum):
+    QUESTION_REPLIED = "question.replied"
+
+
+class EventQuestionRepliedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    request_id: str = Field(..., alias="requestID", pattern="^que")
+    answers: list[QuestionAnswer]
+
+
+class EventQuestionReplied(BaseModel):
+    id: str
+    type: EventQuestionRepliedType
+    properties: EventQuestionRepliedProperties
+
+
+class EventQuestionRejectedType(str, Enum):
+    QUESTION_REJECTED = "question.rejected"
+
+
+class EventQuestionRejectedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    request_id: str = Field(..., alias="requestID", pattern="^que")
+
+
+class EventQuestionRejected(BaseModel):
+    id: str
+    type: EventQuestionRejectedType
+    properties: EventQuestionRejectedProperties
+
+
+class EventTodoUpdatedType(str, Enum):
+    TODO_UPDATED = "todo.updated"
+
+
+class EventTodoUpdatedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    todos: list[Todo]
+
+
+class EventTodoUpdated(BaseModel):
+    id: str
+    type: EventTodoUpdatedType
+    properties: EventTodoUpdatedProperties
+
+
+class EventSessionStatusType(str, Enum):
+    SESSION_STATUS = "session.status"
+
+
+class EventSessionStatusProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    status: SessionStatus_3
+
+
+class EventSessionStatus(BaseModel):
+    id: str
+    type: EventSessionStatusType
+    properties: EventSessionStatusProperties
+
+
+class EventSessionIdleType(str, Enum):
+    SESSION_IDLE = "session.idle"
+
+
+class EventSessionIdleProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+
+
+class EventSessionIdle(BaseModel):
+    id: str
+    type: EventSessionIdleType
+    properties: EventSessionIdleProperties
+
+
+class EventSessionCompactedType(str, Enum):
+    SESSION_COMPACTED = "session.compacted"
+
+
+class EventSessionCompactedProperties(BaseModel):
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+
+
+class EventSessionCompacted(BaseModel):
+    id: str
+    type: EventSessionCompactedType
+    properties: EventSessionCompactedProperties
+
+
+class EventLspUpdatedType(str, Enum):
+    LSP_UPDATED = "lsp.updated"
+
+
+class EventLspUpdated(BaseModel):
+    id: str
+    type: EventLspUpdatedType
+    properties: dict[str, Any]
+
+
+class EventMcpToolsChangedType(str, Enum):
+    MCP_TOOLS_CHANGED = "mcp.tools.changed"
+
+
+class EventMcpToolsChangedProperties(BaseModel):
+    server: str
+
+
+class EventMcpToolsChanged(BaseModel):
+    id: str
+    type: EventMcpToolsChangedType
+    properties: EventMcpToolsChangedProperties
+
+
+class EventMcpBrowserOpenFailedType(str, Enum):
+    MCP_BROWSER_OPEN_FAILED = "mcp.browser.open.failed"
+
+
+class EventMcpBrowserOpenFailedProperties(BaseModel):
+    mcp_name: str = Field(..., alias="mcpName")
+    url: str
+
+
+class EventMcpBrowserOpenFailed(BaseModel):
+    id: str
+    type: EventMcpBrowserOpenFailedType
+    properties: EventMcpBrowserOpenFailedProperties
+
+
+class EventCommandExecutedType(str, Enum):
+    COMMAND_EXECUTED = "command.executed"
+
+
+class EventCommandExecutedProperties(BaseModel):
+    name: str
+    session_id: str = Field(..., alias="sessionID", pattern="^ses")
+    arguments: str
+    message_id: str = Field(..., alias="messageID", pattern="^msg")
+
+
+class EventCommandExecuted(BaseModel):
+    id: str
+    type: EventCommandExecutedType
+    properties: EventCommandExecutedProperties
+
+
+class EventProjectUpdatedType(str, Enum):
+    PROJECT_UPDATED = "project.updated"
+
+
+class EventProjectUpdatedPropertiesVcs(str, Enum):
+    GIT = "git"
+
+
+class EventProjectUpdatedPropertiesIcon(BaseModel):
+    url: Optional[Optional[str]]
+    override: Optional[Optional[str]]
+    color: Optional[Optional[str]]
+
+
+class EventProjectUpdatedPropertiesCommands(BaseModel):
+    start: Optional[Optional[str]] = Field(default=None, description="Startup script to run when creating a new workspace (worktree)")
+
+
+class EventProjectUpdatedPropertiesTime(BaseModel):
+    created: int = Field(..., ge=0)
+    updated: int = Field(..., ge=0)
+    initialized: Optional[Optional[int]] = Field(default=None, ge=0)
+
+
+class EventProjectUpdatedProperties(BaseModel):
+    id: str
+    worktree: str
+    vcs: Optional[Optional[EventProjectUpdatedPropertiesVcs]]
+    name: Optional[Optional[str]]
+    icon: Optional[Optional[EventProjectUpdatedPropertiesIcon]]
+    commands: Optional[Optional[EventProjectUpdatedPropertiesCommands]]
+    time: EventProjectUpdatedPropertiesTime
+    sandboxes: list[str]
+
+
+class EventProjectUpdated(BaseModel):
+    id: str
+    type: EventProjectUpdatedType
+    properties: EventProjectUpdatedProperties
+
+
+class EventVcsBranchUpdatedType(str, Enum):
+    VCS_BRANCH_UPDATED = "vcs.branch.updated"
+
+
+class EventVcsBranchUpdatedProperties(BaseModel):
+    branch: Optional[Optional[str]]
+
+
+class EventVcsBranchUpdated(BaseModel):
+    id: str
+    type: EventVcsBranchUpdatedType
+    properties: EventVcsBranchUpdatedProperties
+
+
+class EventWorkspaceReadyType(str, Enum):
+    WORKSPACE_READY = "workspace.ready"
+
+
+class EventWorkspaceReadyProperties(BaseModel):
+    name: str
+
+
+class EventWorkspaceReady(BaseModel):
+    id: str
+    type: EventWorkspaceReadyType
+    properties: EventWorkspaceReadyProperties
+
+
+class EventWorkspaceFailedType(str, Enum):
+    WORKSPACE_FAILED = "workspace.failed"
+
+
+class EventWorkspaceFailedProperties(BaseModel):
+    message: str
+
+
+class EventWorkspaceFailed(BaseModel):
+    id: str
+    type: EventWorkspaceFailedType
+    properties: EventWorkspaceFailedProperties
+
+
+class EventWorkspaceStatusType(str, Enum):
+    WORKSPACE_STATUS = "workspace.status"
+
+
+class EventWorkspaceStatusPropertiesStatus(str, Enum):
+    CONNECTED = "connected"
+    CONNECTING = "connecting"
+    DISCONNECTED = "disconnected"
+    ERROR = "error"
+
+
+class EventWorkspaceStatusProperties(BaseModel):
+    workspace_id: str = Field(..., alias="workspaceID", pattern="^wrk")
+    status: EventWorkspaceStatusPropertiesStatus
+
+
+class EventWorkspaceStatus(BaseModel):
+    id: str
+    type: EventWorkspaceStatusType
+    properties: EventWorkspaceStatusProperties
+
+
+class EventWorktreeReadyType(str, Enum):
+    WORKTREE_READY = "worktree.ready"
+
+
+class EventWorktreeReadyProperties(BaseModel):
+    name: str
+    branch: Optional[Optional[str]]
+
+
+class EventWorktreeReady(BaseModel):
+    id: str
+    type: EventWorktreeReadyType
+    properties: EventWorktreeReadyProperties
+
+
+class EventWorktreeFailedType(str, Enum):
+    WORKTREE_FAILED = "worktree.failed"
+
+
+class EventWorktreeFailedProperties(BaseModel):
+    message: str
+
+
+class EventWorktreeFailed(BaseModel):
+    id: str
+    type: EventWorktreeFailedType
+    properties: EventWorktreeFailedProperties
+
+
+class EventPtyCreatedType(str, Enum):
+    PTY_CREATED = "pty.created"
+
+
+class EventPtyCreatedProperties(BaseModel):
+    info: Pty
+
+
+class EventPtyCreated(BaseModel):
+    id: str
+    type: EventPtyCreatedType
+    properties: EventPtyCreatedProperties
+
+
+class EventPtyUpdatedType(str, Enum):
+    PTY_UPDATED = "pty.updated"
+
+
+class EventPtyUpdatedProperties(BaseModel):
+    info: Pty
+
+
+class EventPtyUpdated(BaseModel):
+    id: str
+    type: EventPtyUpdatedType
+    properties: EventPtyUpdatedProperties
+
+
+class EventPtyExitedType(str, Enum):
+    PTY_EXITED = "pty.exited"
+
+
+class EventPtyExitedProperties(BaseModel):
+    id: str = Field(..., pattern="^pty")
+    exit_code: int = Field(..., alias="exitCode", ge=0)
+
+
+class EventPtyExited(BaseModel):
+    id: str
+    type: EventPtyExitedType
+    properties: EventPtyExitedProperties
+
+
+class EventPtyDeletedType(str, Enum):
+    PTY_DELETED = "pty.deleted"
+
+
+class EventPtyDeletedProperties(BaseModel):
+    id: str = Field(..., pattern="^pty")
+
+
+class EventPtyDeleted(BaseModel):
+    id: str
+    type: EventPtyDeletedType
+    properties: EventPtyDeletedProperties
+
+
+class EventInstallationUpdatedType(str, Enum):
+    INSTALLATION_UPDATED = "installation.updated"
+
+
+class EventInstallationUpdatedProperties(BaseModel):
+    version: str
+
+
+class EventInstallationUpdated(BaseModel):
+    id: str
+    type: EventInstallationUpdatedType
+    properties: EventInstallationUpdatedProperties
+
+
+class EventInstallationUpdateAvailableType(str, Enum):
+    INSTALLATION_UPDATE_AVAILABLE = "installation.update-available"
+
+
+class EventInstallationUpdateAvailableProperties(BaseModel):
+    version: str
+
+
+class EventInstallationUpdateAvailable(BaseModel):
+    id: str
+    type: EventInstallationUpdateAvailableType
+    properties: EventInstallationUpdateAvailableProperties
+
+
+class EventServerConnectedType(str, Enum):
+    SERVER_CONNECTED = "server.connected"
+
+
+class EventServerConnected(BaseModel):
+    id: str
+    type: EventServerConnectedType
+    properties: dict[str, Any]
+
+
+class EventGlobalDisposedType(str, Enum):
+    GLOBAL_DISPOSED = "global.disposed"
+
+
+class EventGlobalDisposed(BaseModel):
+    id: str
+    type: EventGlobalDisposedType
+    properties: dict[str, Any]
+
+
+class EventAccountAddedType(str, Enum):
+    ACCOUNT_ADDED = "account.added"
+
+
+class EventAccountAddedProperties(BaseModel):
+    account: AuthInfo
+
+
+class EventAccountAdded(BaseModel):
+    id: str
+    type: EventAccountAddedType
+    properties: EventAccountAddedProperties
+
+
+class EventAccountRemovedType(str, Enum):
+    ACCOUNT_REMOVED = "account.removed"
+
+
+class EventAccountRemovedProperties(BaseModel):
+    account: AuthInfo
+
+
+class EventAccountRemoved(BaseModel):
+    id: str
+    type: EventAccountRemovedType
+    properties: EventAccountRemovedProperties
+
+
+class EventAccountSwitchedType(str, Enum):
+    ACCOUNT_SWITCHED = "account.switched"
+
+
+class EventAccountSwitchedProperties(BaseModel):
+    service_id: str = Field(..., alias="serviceID")
+    from_: Optional[Optional[str]] = Field(default=None, alias="from")
+    to: Optional[Optional[str]]
+
+
+class EventAccountSwitched(BaseModel):
+    id: str
+    type: EventAccountSwitchedType
+    properties: EventAccountSwitchedProperties
+
+
+Event: TypeAlias = Union[EventModelsDevRefreshed, EventPluginAdded, EventCatalogModelUpdated, EventFileEdited, EventSessionNextAgentSwitched, EventSessionNextModelSwitched, EventSessionNextPrompted, EventSessionNextSynthetic, EventSessionNextShellStarted, EventSessionNextShellEnded, EventSessionNextStepStarted, EventSessionNextStepEnded, EventSessionNextStepFailed, EventSessionNextTextStarted, EventSessionNextTextDelta, EventSessionNextTextEnded, EventSessionNextReasoningStarted, EventSessionNextReasoningDelta, EventSessionNextReasoningEnded, EventSessionNextToolInputStarted, EventSessionNextToolInputDelta, EventSessionNextToolInputEnded, EventSessionNextToolCalled, EventSessionNextToolProgress, EventSessionNextToolSuccess, EventSessionNextToolFailed, EventSessionNextRetried, EventSessionNextCompactionStarted, EventSessionNextCompactionDelta, EventSessionNextCompactionEnded, EventFileWatcherUpdated, EventSessionCreated, EventSessionUpdated, EventSessionDeleted, EventMessageUpdated, EventMessageRemoved, EventMessagePartUpdated, EventMessagePartRemoved, EventMessagePartDelta, EventPermissionAsked, EventPermissionReplied, EventSessionDiff, EventSessionError, EventQuestionAsked, EventQuestionReplied, EventQuestionRejected, EventTodoUpdated, EventSessionStatus, EventSessionIdle, EventSessionCompacted, EventLspUpdated, EventTuiPromptAppend_, EventTuiCommandExecute_, EventTuiToastShow_, EventTuiSessionSelect_, EventMcpToolsChanged, EventMcpBrowserOpenFailed, EventCommandExecuted, EventProjectUpdated, EventVcsBranchUpdated, EventWorkspaceReady, EventWorkspaceFailed, EventWorkspaceStatus, EventWorktreeReady, EventWorktreeFailed, EventPtyCreated, EventPtyUpdated, EventPtyExited, EventPtyDeleted, EventInstallationUpdated, EventInstallationUpdateAvailable, EventServerConnected, EventGlobalDisposed, EventAccountAdded, EventAccountRemoved, EventAccountSwitched, EventServerInstanceDisposed]
+
+
+class BadRequestErrorName(str, Enum):
+    BAD_REQUEST = "BadRequest"
+
+
+class BadRequestErrorDataKind(str, Enum):
+    PARAMS = "Params"
+    HEADERS = "Headers"
+    QUERY = "Query"
+    BODY = "Body"
+    PAYLOAD = "Payload"
+
+
+class BadRequestErrorData(BaseModel):
+    message: str
+    kind: Optional[Optional[BadRequestErrorDataKind]]
+
+
+class BadRequestError(BaseModel):
+    name: BadRequestErrorName
+    data: BadRequestErrorData
