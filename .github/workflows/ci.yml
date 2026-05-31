@@ -36,7 +36,7 @@ jobs:
         include:
           # All Node versions on Ubuntu (fast, catches Node issues)
           - os: ubuntu-latest
-            node-version: '22.13.0'
+            node-version: '22.18.0'
           - os: ubuntu-latest
             node-version: '24.14.0'
           - os: ubuntu-latest
