@@ -78,7 +78,7 @@
     "lint-staged": "16.4.0",
     "oxfmt": "0.52.0",
     "publint": "0.3.21",
-    "tsdown": "0.21.8",
+    "tsdown": "0.22.1",
     "tsx": "4.22.3",
     "turbo": "2.9.16",
     "typescript": "6.0.3",
@@ -86,7 +86,7 @@
     "vitest": "4.1.0"
   },
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=22.18.0"
   },
   "packageManager": "pnpm@11.4.0"
 }
