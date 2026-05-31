@@ -10,8 +10,8 @@ import { identifiers } from '../constants';
 import { unknownToPipes } from './unknown';
 
 function baseNode(ctx: ArrayResolverContext): PipeResult {
-  const { applyModifiers, path, pipes, plugin, symbols, walk } = ctx;
-  const { v } = symbols;
+  const { applyModifiers, path, pipes, plugin, walk } = ctx;
+  const { v } = plugin.symbols;
 
   const arrayFn = $(v).attr(identifiers.schemas.array);
 
@@ -44,23 +44,23 @@ function baseNode(ctx: ArrayResolverContext): PipeResult {
 }
 
 function lengthNode(ctx: ArrayResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
     return $(v).attr(identifiers.actions.length).call($.fromValue(schema.minItems));
   }
 }
 
 function maxLengthNode(ctx: ArrayResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (schema.maxItems === undefined) return;
   return $(v).attr(identifiers.actions.maxLength).call($.fromValue(schema.maxItems));
 }
 
 function minLengthNode(ctx: ArrayResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (schema.minItems === undefined) return;
   return $(v).attr(identifiers.actions.minLength).call($.fromValue(schema.minItems));
 }

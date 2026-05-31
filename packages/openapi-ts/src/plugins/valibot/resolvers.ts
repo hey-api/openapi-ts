@@ -218,6 +218,10 @@ export interface EnumResolverContext
          * Literal nodes for each enum member.
          */
         enumMembers: Array<ReturnType<typeof $.literal>>;
+        /**
+         * Pipe nodes for each enum member.
+         */
+        literalSchemas: Array<Pipe>;
       };
     }> {
   schema: SchemaWithType<'enum'>;

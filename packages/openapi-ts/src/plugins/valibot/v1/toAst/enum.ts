@@ -11,35 +11,39 @@ import { unknownToPipes } from './unknown';
 
 function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
   const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
+
   const enumMembers: Array<ReturnType<typeof $.literal>> = [];
+  const literalSchemas: Array<Pipe> = [];
 
   for (const item of schema.items ?? []) {
     if (item.type === 'string' && typeof item.const === 'string') {
       const literal = $.literal(item.const);
       enumMembers.push(literal);
+      literalSchemas.push($(v).attr(identifiers.schemas.literal).call(literal));
     } else if (
       (item.type === 'number' || item.type === 'integer') &&
       typeof item.const === 'number'
     ) {
       const literal = $.literal(item.const);
       enumMembers.push(literal);
+      literalSchemas.push($(v).attr(identifiers.schemas.literal).call(literal));
     } else if (item.type === 'boolean' && typeof item.const === 'boolean') {
       const literal = $.literal(item.const);
-      enumMembers.push(literal);
+      literalSchemas.push($(v).attr(identifiers.schemas.literal).call(literal));
     }
   }
 
-  return { enumMembers };
+  return { enumMembers, literalSchemas };
 }
 
 function baseNode(ctx: EnumResolverContext): PipeResult {
-  const { enumMembers } = ctx.nodes.items(ctx);
-  if (!enumMembers.length) {
+  const { enumMembers: picklistMembers, literalSchemas } = ctx.nodes.items(ctx);
+  if (!literalSchemas.length) {
     return unknownToPipes({ path: ctx.path, plugin: ctx.plugin });
   }
 
-  const { symbols } = ctx;
-  const { v } = symbols;
+  const { v } = ctx.plugin.symbols;
 
   const def = ctx.plugin
     .querySymbols({
@@ -58,9 +62,19 @@ function baseNode(ctx: EnumResolverContext): PipeResult {
     return $(v).attr(identifiers.schemas.enum).call(def);
   }
 
+  if (picklistMembers.length > 0 && picklistMembers.length === literalSchemas.length) {
+    return $(v)
+      .attr(identifiers.schemas.picklist)
+      .call($.array(...picklistMembers));
+  }
+
+  if (literalSchemas.length === 1) {
+    return literalSchemas[0]!;
+  }
+
   return $(v)
-    .attr(identifiers.schemas.picklist)
-    .call($.array(...enumMembers));
+    .attr(identifiers.schemas.union)
+    .call($.array(...literalSchemas));
 }
 
 function enumResolver(ctx: EnumResolverContext): Pipes {

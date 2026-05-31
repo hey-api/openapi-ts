@@ -247,7 +247,7 @@ export interface EnumResolverContext
          */
         enumMembers: Array<ReturnType<typeof $.literal>>;
         /**
-         * Schema expressions for each non-null enum member (e.g. z.literal(...)).
+         * Chain nodes for each enum member.
          */
         literalSchemas: Array<Chain>;
       };

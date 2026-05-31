@@ -6,8 +6,8 @@ import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
 import type { ZodResult } from '../../shared/types';
 
 function baseNode(ctx: UnionResolverContext): Chain {
-  const { childResults, parentSchema, plugin, schemas, symbols } = ctx;
-  const { z } = symbols;
+  const { childResults, parentSchema, plugin, schemas } = ctx;
+  const { z } = plugin.symbols;
 
   if (!childResults.length) {
     return $(z).attr(identifiers.null).call();

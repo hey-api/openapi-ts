@@ -15,7 +15,7 @@ import { getSignatureParameters } from './signature';
 import { createRequestValidator } from './validator';
 
 /** TODO: needs complete refactor */
-export const operationOptionsType = ({
+export function operationOptionsType({
   isDataAllowed = true,
   operation,
   plugin,
@@ -25,7 +25,7 @@ export const operationOptionsType = ({
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
-}): ReturnType<typeof $.type> => {
+}): ReturnType<typeof $.type> {
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
@@ -84,7 +84,7 @@ export const operationOptionsType = ({
   return $.type(symbolOptions).$if(!isDataAllowed || symbolDataType, (t) =>
     t.generic(isDataAllowed ? symbolDataType! : 'never'),
   );
-};
+}
 
 type OperationParameters = {
   argNames: Array<string>;
@@ -166,9 +166,9 @@ export function operationParameters({
  * options are: 'arraybuffer', 'document', 'json', 'text', 'stream'
  * browser only: 'blob'
  */
-const getResponseType = (
+function getResponseType(
   contentType: string | null | undefined,
-): 'arraybuffer' | 'blob' | 'document' | 'json' | 'stream' | 'text' | undefined => {
+): 'arraybuffer' | 'blob' | 'document' | 'json' | 'stream' | 'text' | undefined {
   if (!contentType) {
     return;
   }
@@ -199,7 +199,7 @@ const getResponseType = (
   }
 
   return;
-};
+}
 
 export function operationStatements({
   isRequiredOptions,
@@ -519,7 +519,7 @@ export function operationReturnType({
     return $.type('Promise').generic(
       sseResult
         .generic(queryType('responses'))
-        .generic(queryType('errors'))
+        .generic($.type.or(queryType('errors'), $.type('void')))
         .generic('ThrowOnError'),
     );
   }
