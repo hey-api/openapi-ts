@@ -1,5 +1,6 @@
 import colors from 'ansi-colors';
 
+import type { LogLevel } from '../../types/logs';
 import type { Input } from './types';
 
 export function compileInputPath(input: Omit<Input, 'watch'>) {
@@ -12,6 +13,7 @@ export function compileInputPath(input: Omit<Input, 'watch'>) {
     | 'project'
     | 'registry'
     | 'tags'
+    | 'uuid'
     | 'version'
   > &
     Pick<Input, 'path'> = {
@@ -98,13 +100,15 @@ export function compileInputPath(input: Omit<Input, 'watch'>) {
 export function logInputPaths(
   inputPaths: ReadonlyArray<ReturnType<typeof compileInputPath>>,
   jobIndex: number,
+  logLevel?: LogLevel,
 ): void {
+  if (logLevel === 'silent') return;
+
   const lines: Array<string> = [];
 
   const jobPrefix = colors.gray(`[Job ${jobIndex + 1}] `);
-  const count = inputPaths.length;
-  const baseString = colors.cyan(`Generating from ${count} ${count === 1 ? 'input' : 'inputs'}:`);
-  lines.push(`${jobPrefix}⏳ ${baseString}`);
+  const baseString = colors.cyan(`Generating...`);
+  lines.push(`${jobPrefix}${colors.gray('~')} ${baseString}`);
 
   inputPaths.forEach((inputPath, index) => {
     const itemPrefixStr = `  [${index + 1}] `;
@@ -148,6 +152,11 @@ export function logInputPaths(
             )}`,
           );
         }
+        if (logLevel === 'debug') {
+          lines.push(
+            `${jobPrefix}${detailIndent}${colors.gray('url:')} ${colors.green(inputPath.path)}`,
+          );
+        }
         lines.push(
           `${jobPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('Hey API')}`,
         );
@@ -160,13 +169,14 @@ export function logInputPaths(
         } else {
           lines.push(`${jobPrefix}${itemPrefix}${baseInput}`);
         }
-        // @ts-expect-error
         if (inputPath.uuid) {
           lines.push(
-            `${jobPrefix}${detailIndent}${colors.gray('uuid:')} ${colors.green(
-              // @ts-expect-error
-              inputPath.uuid,
-            )}`,
+            `${jobPrefix}${detailIndent}${colors.gray('uuid:')} ${colors.green(inputPath.uuid)}`,
+          );
+        }
+        if (logLevel === 'debug' && baseInput) {
+          lines.push(
+            `${jobPrefix}${detailIndent}${colors.gray('url:')} ${colors.green(inputPath.path)}`,
           );
         }
         lines.push(
@@ -177,6 +187,11 @@ export function logInputPaths(
       case 'scalar': {
         const baseInput = [inputPath.organization, inputPath.project].filter(Boolean).join('/');
         lines.push(`${jobPrefix}${itemPrefix}${baseInput}`);
+        if (logLevel === 'debug') {
+          lines.push(
+            `${jobPrefix}${detailIndent}${colors.gray('url:')} ${colors.green(inputPath.path)}`,
+          );
+        }
         lines.push(
           `${jobPrefix}${detailIndent}${colors.gray('registry:')} ${colors.green('Scalar')}`,
         );

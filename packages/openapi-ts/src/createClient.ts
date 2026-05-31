@@ -49,8 +49,8 @@ export async function createClient({
   const inputPaths = config.input.map((input) => compileInputPath(input));
 
   // on first run, print the message as soon as possible
-  if (config.logs.level !== 'silent' && !_watches) {
-    logInputPaths(inputPaths, jobIndex);
+  if (!_watches) {
+    logInputPaths(inputPaths, jobIndex, config.logs.level);
   }
 
   const getSpecData = async (input: Input, index: number) => {
@@ -116,9 +116,9 @@ export async function createClient({
 
     // on subsequent runs in watch mode, print the message only if we know we're
     // generating the output
-    if (config.logs.level !== 'silent' && _watches) {
+    if (_watches) {
       console.clear();
-      logInputPaths(inputPaths, jobIndex);
+      logInputPaths(inputPaths, jobIndex, config.logs.level);
     }
 
     const eventInputPatch = logger.timeEvent('input.patch');
@@ -183,7 +183,7 @@ export async function createClient({
           ? `./${path.relative(process.env.INIT_CWD, config.output.path)}`
           : config.output.path;
         console.log(
-          `${jobPrefix}${colors.green('✅ Done!')} Your output is in ${colors.cyanBright(outputPath)} ${colors.gray(`(${fileCount} ${fileCount === 1 ? 'file' : 'files'} in ${ms(totalMs)})`)}`,
+          `${jobPrefix}${colors.green('✓')} ${colors.cyanBright(outputPath)} ${colors.gray(`· ${fileCount} ${fileCount === 1 ? 'file' : 'files'} · ${ms(totalMs)}`)}`,
         );
       }
     }

@@ -1,3 +1,5 @@
+import type { AnyString } from '@hey-api/types';
+
 import type { File } from '../files/file';
 import type { Language } from '../languages/types';
 import type { IAnalysisContext } from '../planner/types';
@@ -46,4 +48,6 @@ export interface INode<T = unknown> {
   toAst(): T;
   /** Brand used for renderer dispatch. */
   readonly '~brand': string;
+  /** Branding property to identify the DSL class at runtime. */
+  readonly '~dsl'?: AnyString;
 }

@@ -6,6 +6,7 @@
   },
   "definitions": {
     "1-10": {
+      "default": "1-10",
       "enum": ["1-10", "11-20"],
       "type": "string"
     },
@@ -22,6 +23,7 @@
       "type": "string"
     },
     "Numbers": {
+      "default": 100,
       "enum": [100, 200, 300, -100, -200, -300],
       "type": "number"
     },
