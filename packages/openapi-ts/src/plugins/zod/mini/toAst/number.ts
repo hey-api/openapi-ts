@@ -9,8 +9,8 @@ import type { Chain, ChainResult } from '../../shared/chain';
 import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: NumberResolverContext): Chain {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
     return $(z).attr(identifiers.coerce).attr(identifiers.bigint).call();
   }
@@ -22,15 +22,15 @@ function baseNode(ctx: NumberResolverContext): Chain {
 }
 
 function constNode(ctx: NumberResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (schema.const === undefined) return;
   return $(z).attr(identifiers.literal).call(ctx.utils.maybeBigInt(schema.const, schema.format));
 }
 
 function maxNode(ctx: NumberResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (schema.exclusiveMaximum !== undefined) {
     return $(z)
       .attr(identifiers.lt)
@@ -52,8 +52,8 @@ function maxNode(ctx: NumberResolverContext): ChainResult {
 }
 
 function minNode(ctx: NumberResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (schema.exclusiveMinimum !== undefined) {
     return $(z)
       .attr(identifiers.gt)

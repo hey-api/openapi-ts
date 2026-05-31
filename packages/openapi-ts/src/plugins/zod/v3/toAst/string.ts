@@ -12,8 +12,8 @@ function baseNode(ctx: StringResolverContext): Chain {
 }
 
 function constNode(ctx: StringResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (typeof schema.const !== 'string') return;
   return $(z).attr(identifiers.literal).call($.literal(schema.const));
 }

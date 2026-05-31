@@ -10,8 +10,8 @@ import type { ZodPlugin } from '../../types';
 import { unknownToAst } from './unknown';
 
 function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
 
   const enumMembers: Array<ReturnType<typeof $.literal>> = [];
   const literalSchemas: Array<Chain> = [];
@@ -39,17 +39,10 @@ function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['no
 function baseNode(ctx: EnumResolverContext): Chain {
   const { enumMembers, literalSchemas } = ctx.nodes.items(ctx);
   if (!literalSchemas.length) {
-    return unknownToAst({
-      path: ctx.path,
-      plugin: ctx.plugin,
-      schema: {
-        type: 'unknown',
-      },
-    });
+    return unknownToAst({ path: ctx.path, plugin: ctx.plugin });
   }
 
-  const { symbols } = ctx;
-  const { z } = symbols;
+  const { z } = ctx.plugin.symbols;
 
   const def = ctx.plugin
     .querySymbols({

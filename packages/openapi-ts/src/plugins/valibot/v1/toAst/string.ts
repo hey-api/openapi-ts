@@ -15,15 +15,15 @@ function baseNode(ctx: StringResolverContext): PipeResult {
 }
 
 function constNode(ctx: StringResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (typeof schema.const !== 'string') return;
   return $(v).attr(identifiers.schemas.literal).call($.literal(schema.const));
 }
 
 function formatNode(ctx: StringResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   switch (schema.format) {
     case 'date':
       return $(v).attr(identifiers.actions.isoDate).call();
@@ -44,29 +44,29 @@ function formatNode(ctx: StringResolverContext): PipeResult {
 }
 
 function lengthNode(ctx: StringResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (schema.minLength === undefined || schema.minLength !== schema.maxLength) return;
   return $(v).attr(identifiers.actions.length).call($.literal(schema.minLength));
 }
 
 function maxLengthNode(ctx: StringResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (schema.maxLength === undefined) return;
   return $(v).attr(identifiers.actions.maxLength).call($.literal(schema.maxLength));
 }
 
 function minLengthNode(ctx: StringResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (schema.minLength === undefined) return;
   return $(v).attr(identifiers.actions.minLength).call($.literal(schema.minLength));
 }
 
 function patternNode(ctx: StringResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (!schema.pattern) return;
   const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
   return $(v).attr(identifiers.actions.regex).call($.regexp(schema.pattern, flags));
