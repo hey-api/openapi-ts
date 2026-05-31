@@ -24,7 +24,7 @@
     "@pinia/colada": "0.19.1",
     "@types/cross-spawn": "6.0.6",
     "ajv": "8.17.1",
-    "arktype": "2.1.29",
+    "arktype": "2.2.0",
     "axios": "1.13.4",
     "cross-spawn": "7.0.6",
     "eslint": "9.39.2",
