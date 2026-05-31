@@ -1521,8 +1521,8 @@ importers:
         specifier: 8.17.1
         version: 8.17.1
       arktype:
-        specifier: 2.1.29
-        version: 2.1.29
+        specifier: 2.2.0
+        version: 2.2.0
       axios:
         specifier: 1.13.4
         version: 1.13.4
@@ -8896,9 +8896,6 @@ packages:
 
   arkregex@0.0.5:
     resolution: {integrity: sha512-ncYjBdLlh5/QnVsAA8De16Tc9EqmYM7y/WU9j+236KcyYNUXogpz3sC4ATIZYzzLxwI+0sEOaQLEmLmRleaEXw==}
-
-  arktype@2.1.29:
-    resolution: {integrity: sha512-jyfKk4xIOzvYNayqnD8ZJQqOwcrTOUbIU4293yrzAjA3O1dWh61j71ArMQ6tS/u4pD7vabSPe7nG3RCyoXW6RQ==}
 
   arktype@2.2.0:
     resolution: {integrity: sha512-t54MZ7ti5BhOEvzEkgKnWvqj+UbDfWig+DHr5I34xatymPusKLS0lQpNJd8M6DzmIto2QGszHfNKoFIT8tMCZQ==}
@@ -25070,12 +25067,6 @@ snapshots:
   arkregex@0.0.5:
     dependencies:
       '@ark/util': 0.56.0
-
-  arktype@2.1.29:
-    dependencies:
-      '@ark/schema': 0.56.0
-      '@ark/util': 0.56.0
-      arkregex: 0.0.5
 
   arktype@2.2.0:
     dependencies:
