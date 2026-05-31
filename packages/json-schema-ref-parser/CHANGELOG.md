@@ -1,5 +1,11 @@
 # @hey-api/json-schema-ref-parser
 
+## 1.4.3
+
+### Patch Changes
+
+- **bundle**: fix: name whole-file `$ref`s after the source filename ([#3936](https://github.com/hey-api/openapi-ts/pull/3936)) ([`4219ae5`](https://github.com/hey-api/openapi-ts/commit/4219ae5a8e4a2135afc09dab23e9bc401c7b9628)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
 ## 1.4.2
 
 ### Patch Changes
