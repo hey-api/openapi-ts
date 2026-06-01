@@ -3,13 +3,9 @@ import type { INode } from './nodes/node';
 import type { IProject } from './project/types';
 
 export interface RenderContext<Node extends INode = INode> {
-  /**
-   * The current file.
-   */
+  /** The current file. */
   file: File<Node>;
-  /**
-   * The project the file belongs to.
-   */
+  /** The project the file belongs to. */
   project: IProject;
 }
 
