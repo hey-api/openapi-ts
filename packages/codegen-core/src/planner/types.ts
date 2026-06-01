@@ -1,4 +1,3 @@
-import type { IProjectMeta } from '../extensions';
 import type { Ref } from '../refs/types';
 import type { Symbol } from '../symbols/symbol';
 import type { NameScopes, Scope } from './scope';
@@ -21,8 +20,6 @@ export interface IAnalysisContext {
   injectChildren(input: Input): void;
   /** Get local names in the current scope. */
   localNames(scope: Scope): NameScopes;
-  /** Arbitrary project metadata. */
-  meta: IProjectMeta;
   /** Pop the current local scope. */
   popScope(): void;
   /** Push a new local scope. */

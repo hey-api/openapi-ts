@@ -9,6 +9,7 @@ import type {
   NodeNameSanitizer,
   NodeRelationship,
   NodeScope,
+  ProjectMeta,
   Ref,
   Symbol,
 } from '@hey-api/codegen-core';
@@ -18,7 +19,10 @@ import type { AnyString } from '@hey-api/types';
 import { py } from '../py-compiler';
 import type { AccessOptions } from './utils/context';
 
-export abstract class PyDsl<T extends py.Node = py.Node> implements Node<T> {
+export abstract class PyDsl<
+  T extends py.Node = py.Node,
+  L extends Language = 'python',
+> implements Node<T, L> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   analyze(_: AnalysisContext): void {}
   clone(): this {
@@ -41,7 +45,8 @@ export abstract class PyDsl<T extends py.Node = py.Node> implements Node<T> {
     } as Node['name'];
   }
   readonly nameSanitizer?: NodeNameSanitizer;
-  language: Language = 'python';
+  language: L = 'python' as L;
+  meta: Required<ProjectMeta>[L] = {} as Required<ProjectMeta>[L];
   parent?: Node;
   root: boolean = false;
   scope?: NodeScope = 'value';
