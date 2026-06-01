@@ -26,12 +26,14 @@ export function createUseQuery({
   const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useQuery));
 
   const symbolUseQuery = plugin.symbols.useQuery;
+  const symbolSkipToken = $(plugin.symbols.skipToken);
 
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
   });
   const typeData = useTypeData({ operation, plugin });
+  const sdkParamType = $.type.or(typeData, $.type.query(symbolSkipToken));
 
   const symbolQueryOptionsFn = plugin.referenceSymbol({
     category: 'hook',
@@ -45,7 +47,7 @@ export function createUseQuery({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
+        .param(optionsParamName, (p) => p.required(isRequiredOptions).type(sdkParamType))
         .do($(symbolUseQuery).call($(symbolQueryOptionsFn).call(optionsParamName)).return()),
     );
   plugin.node(statement);

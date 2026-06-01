@@ -4,6 +4,7 @@ import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
 import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
+import type { TsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
@@ -98,11 +99,13 @@ function createQueryKeyLiteral({
   id,
   isInfinite,
   operation,
+  optionsExpr,
   plugin,
 }: {
   id: string;
   isInfinite?: boolean;
   operation: IR.OperationObject;
+  optionsExpr: TsDsl<any>;
   plugin: PluginInstance;
 }): ReturnType<typeof $.call> {
   const config = isInfinite ? plugin.config.infiniteQueryKeys : plugin.config.queryKeys;
@@ -117,7 +120,7 @@ function createQueryKeyLiteral({
   });
   const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
-    'options',
+    optionsExpr,
     isInfinite || tagsArray ? $.literal(Boolean(isInfinite)) : undefined,
     tagsArray,
   );
@@ -172,17 +175,25 @@ export function queryKeyStatement({
   typeQueryKey?: ReturnType<typeof $.type>;
 }): ReturnType<typeof $.const> {
   const typeData = useTypeData({ operation, plugin });
+  const symbolSkipToken = $(plugin.symbols.skipToken);
+  const symbolUnwrapSkipToken = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'unwrapSkipToken',
+    tool: plugin.name,
+  });
+  const paramType = $.type.or(typeData, $.type.query(symbolSkipToken));
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
+        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(paramType))
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
           createQueryKeyLiteral({
             id: operation.id,
             isInfinite,
             operation,
+            optionsExpr: $(symbolUnwrapSkipToken).call('options'),
             plugin,
           }).return(),
         ),
