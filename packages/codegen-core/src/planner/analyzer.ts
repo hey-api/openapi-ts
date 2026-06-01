@@ -9,21 +9,21 @@ import { createScope, registerChildName } from './scope';
 import type { IAnalysisContext, Input } from './types';
 
 export class AnalysisContext implements IAnalysisContext {
+  /** Arbitrary project metadata. */
+  private meta: IProjectMeta;
   /**
    * Stack of parent nodes during analysis.
    *
    * The top of the stack is the current semantic container.
    */
-  private _parentStack: Array<INode> = [];
+  private parentStack: Array<INode> = [];
 
-  /** Arbitrary project metadata. */
-  meta: IProjectMeta;
   scope: Scope;
   scopes: Scope = createScope();
   symbol?: Symbol;
 
   constructor(node: INode, meta: IProjectMeta) {
-    this._parentStack.push(node);
+    this.parentStack.push(node);
     this.meta = meta;
     this.scope = this.scopes;
     this.symbol = node.symbol;
@@ -33,7 +33,7 @@ export class AnalysisContext implements IAnalysisContext {
    * Get the current semantic parent (top of stack).
    */
   get currentParent(): INode | undefined {
-    return this._parentStack[this._parentStack.length - 1];
+    return this.parentStack[this.parentStack.length - 1];
   }
 
   /**
@@ -73,6 +73,7 @@ export class AnalysisContext implements IAnalysisContext {
       const node = fromRef(value);
       this.addChild(node, 'container');
       this.pushParent(node);
+      node.meta = this.meta[node.language] ?? {};
       node.analyze(this);
       this.popParent();
     }
@@ -116,7 +117,7 @@ export class AnalysisContext implements IAnalysisContext {
    * Call this when exiting a container node.
    */
   popParent(): void {
-    this._parentStack.pop();
+    this.parentStack.pop();
   }
 
   popScope(): void {
@@ -127,7 +128,7 @@ export class AnalysisContext implements IAnalysisContext {
    * Push a node as the current semantic parent.
    */
   pushParent(node: INode): void {
-    this._parentStack.push(node);
+    this.parentStack.push(node);
   }
 
   pushScope(): void {
@@ -165,6 +166,7 @@ export class Analyzer {
     if (cached) return cached;
 
     node.root = true;
+    node.meta = this.meta[node.language] ?? {};
     const ctx = new AnalysisContext(node, this.meta);
     node.analyze(ctx);
 

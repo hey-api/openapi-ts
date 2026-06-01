@@ -9,6 +9,7 @@ import type {
   NodeNameSanitizer,
   NodeRelationship,
   NodeScope,
+  ProjectMeta,
   Ref,
   Symbol,
 } from '@hey-api/codegen-core';
@@ -18,7 +19,10 @@ import ts from 'typescript';
 
 import type { AccessOptions } from './utils/context';
 
-export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
+export abstract class TsDsl<
+  T extends ts.Node = ts.Node,
+  L extends Language = 'typescript',
+> implements Node<T> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   analyze(_: AnalysisContext): void {}
   clone(): this {
@@ -41,7 +45,8 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
     } as Node['name'];
   }
   readonly nameSanitizer?: NodeNameSanitizer;
-  language: Language = 'typescript';
+  language: L = 'typescript' as L;
+  meta: Required<ProjectMeta>[L] = {} as Required<ProjectMeta>[L];
   parent?: Node;
   root: boolean = false;
   scope?: NodeScope = 'value';
