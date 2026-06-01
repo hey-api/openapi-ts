@@ -1,5 +1,15 @@
 # @hey-api/shared
 
+## 0.4.7
+
+### Patch Changes
+
+- **plugin**: add generics support to `querySymbol()` and `querySymbols()` ([#3982](https://github.com/hey-api/openapi-ts/pull/3982)) ([`11f9324`](https://github.com/hey-api/openapi-ts/commit/11f9324a729a2db2f37c9f36a19c10b0d695e574)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.4
+
 ## 0.4.6
 
 ### Patch Changes
