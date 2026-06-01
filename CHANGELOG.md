@@ -2,6 +2,145 @@
 
 # 2026-06-01
 
+## @hey-api/openapi-ts 0.98.1
+
+### Updates
+
+- cli: simplify generate command messages ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+
+### Plugins
+
+#### valibot
+
+- revert referencing TypeScript enums ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+
+#### zod
+
+- revert referencing TypeScript enums ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+
+---
+
+## @hey-api/openapi-ts 0.98.0
+
+### ⚠️ Breaking
+
+This release has 1 breaking change. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** config: declarative configuration ([#3950](https://github.com/hey-api/openapi-ts/pull/3950))
+
+This is an internal change that simplifies the configuration and plugin APIs. The generated output should be unaffected, please [open an issue](https://github.com/hey-api/openapi-ts/issues) if that's not the case. If you have custom plugins, refer to the [custom plugin guide](https://heyapi.dev/docs/openapi/typescript/plugins/custom) for the latest instructions.
+- dsl: track extended class symbols ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
+- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/openapi-ts/pull/3953))
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+
+#### @hey-api/client-axios
+
+- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+
+#### @hey-api/client-fetch
+
+- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+
+#### @hey-api/client-ky
+
+- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+
+#### @hey-api/client-next
+
+- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
+- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+
+#### @hey-api/client-nuxt
+
+- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+
+#### @hey-api/client-ofetch
+
+- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+
+#### @hey-api/sdk
+
+- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
+- expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/openapi-ts/pull/3935))
+
+#### orpc
+
+- handle no-content success responses ([#3948](https://github.com/hey-api/openapi-ts/pull/3948))
+
+#### valibot
+
+- improve boolean enum handling ([#3974](https://github.com/hey-api/openapi-ts/pull/3974))
+
+---
+
+## @hey-api/codegen-core 0.8.4
+
+### Updates
+
+- node: add `~dsl` property ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+
+---
+
+## @hey-api/codegen-core 0.8.3
+
+### Updates
+
+- symbol: add `children` and `override` property ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
+- symbols: export `pythonNameConflictResolver`, `SymbolChild`, `SymbolKind`, and `SymbolRegistry` ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.3
+
+### Updates
+
+- bundle: name whole-file `$ref`s after the source filename ([#3936](https://github.com/hey-api/openapi-ts/pull/3936))
+
+---
+
+## @hey-api/shared 0.4.7
+
+### Updates
+
+- plugin: add generics support to `querySymbol()` and `querySymbols()` ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+
+---
+
+## @hey-api/shared 0.4.6
+
+### Updates
+
+- plugin: add `symbols` property ([#3942](https://github.com/hey-api/openapi-ts/pull/3942))
+- parser: expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/openapi-ts/pull/3935))
+- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/openapi-ts/pull/3953))
+- config: `valueToObject` is recursive ([#3927](https://github.com/hey-api/openapi-ts/pull/3927))
+- plugin: do not stamp external symbols ([#3942](https://github.com/hey-api/openapi-ts/pull/3942))
+- plugin: export `coerce`, `defineConfig`, `Coercer`, `CoercerMap`, `ConfigTable`, `PluginSymbols`, `PluginTag`, `TableDirectives`, and `WithCoercers` ([#3927](https://github.com/hey-api/openapi-ts/pull/3927))
+
+---
+
+# 2026-05-31
+
 ## @hey-api/openapi-ts 0.98.0
 
 ### ⚠️ Breaking
