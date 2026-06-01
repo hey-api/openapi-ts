@@ -156,6 +156,12 @@ export type Input = {
    */
   tags?: ReadonlyArray<string>;
   /**
+   * **Requires `registry` to be `readme`**
+   *
+   * The unique identifier for the ReadMe API registry entry.
+   */
+  uuid?: string;
+  /**
    * **Requires `path` to start with `https://get.heyapi.dev` or be undefined**
    *
    * Every OpenAPI document contains a required version field. You can
