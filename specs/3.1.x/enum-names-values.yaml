@@ -45,6 +45,16 @@ components:
         - - bar
         - - baz
       type: array
+    DecimalVarnames:
+      enum:
+        - FM
+        - PS
+        - B/ILT
+      type: string
+      x-enum-varnames:
+        - '101.147'
+        - '90.20'
+        - '90.35'
     MyFooRef:
       type: object
       properties:

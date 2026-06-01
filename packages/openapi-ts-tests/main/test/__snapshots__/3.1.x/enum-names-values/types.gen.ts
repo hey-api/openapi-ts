@@ -22,6 +22,8 @@ export type Arrays = [
     'baz'
 ];
 
+export type DecimalVarnames = 'FM' | 'PS' | 'B/ILT';
+
 export type MyFooRef = {
     foo?: Array<MyFoo2>;
 };

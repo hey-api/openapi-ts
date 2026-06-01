@@ -44,3 +44,20 @@ export const Arrays = {
 } as const;
 
 export type Arrays = typeof Arrays[keyof typeof Arrays];
+
+export const DecimalVarnames = {
+    /**
+     * 101.147
+     */
+    101147: 'FM',
+    /**
+     * 90.20
+     */
+    9020: 'PS',
+    /**
+     * 90.35
+     */
+    9035: 'B/ILT'
+} as const;
+
+export type DecimalVarnames = typeof DecimalVarnames[keyof typeof DecimalVarnames];

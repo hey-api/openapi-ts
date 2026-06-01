@@ -38,6 +38,21 @@ export type Arrays = [
     'baz'
 ];
 
+export enum DecimalVarnames {
+    /**
+     * 101.147
+     */
+    '101_147' = 'FM',
+    /**
+     * 90.20
+     */
+    '90_20' = 'PS',
+    /**
+     * 90.35
+     */
+    '90_35' = 'B/ILT'
+}
+
 export type MyFooRef = {
     foo?: Array<MyFoo2>;
 };
