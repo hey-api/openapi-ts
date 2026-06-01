@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import type { ExportModule, ImportModule } from '../bindings';
-import type { IProjectRenderMeta } from '../extensions';
 import type { File } from '../files/file';
 import type { INode } from '../nodes/node';
 import { canDeclarationsShareIdentifier } from '../project/namespace';
@@ -18,22 +17,23 @@ import { createScope, registerName } from './scope';
 const isTypeOnlyKind = (kind: SymbolKind) => kind === 'type' || kind === 'interface';
 
 export class Planner {
-  private readonly analyzer = new Analyzer();
+  private readonly analyzer: Analyzer;
   private readonly cacheResolvedNames = new Set<number>();
   private readonly project: IProject;
 
   constructor(project: IProject) {
+    this.analyzer = new Analyzer(project.meta);
     this.project = project;
   }
 
   /**
    * Executes the planning phase for the project.
    */
-  plan(meta?: IProjectRenderMeta) {
+  plan() {
     this.cacheResolvedNames.clear();
     this.allocateFiles();
     this.assignLocalNames();
-    this.resolveFilePaths(meta);
+    this.resolveFilePaths();
     this.planExports();
     this.planImports();
   }
@@ -112,7 +112,7 @@ export class Planner {
    *
    * Resolves final paths relative to the project's root directory.
    */
-  private resolveFilePaths(meta?: IProjectRenderMeta): void {
+  private resolveFilePaths(): void {
     for (const file of this.project.files.registered()) {
       if (file.external) {
         file.setFinalPath(file.logicalFilePath);
@@ -124,7 +124,7 @@ export class Planner {
       if (finalPath) {
         file.setFinalPath(path.resolve(this.project.root, finalPath));
       }
-      const ctx: RenderContext = { file, meta, project: this.project };
+      const ctx: RenderContext = { file, project: this.project };
       const renderer = this.project.renderers.find((r) => r.supports(ctx));
       if (renderer) file.setRenderer(renderer);
     }

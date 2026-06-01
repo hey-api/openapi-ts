@@ -44,16 +44,12 @@ describe('Project', () => {
 
   it('passes correct ctx to renderer.render()', () => {
     const p = makeProject();
-    p.render({ hello: true });
+    p.render();
 
     const file = [...p.files.registered()][0]!;
     const renderer = file.renderer!;
 
-    expect(renderer.render).toHaveBeenCalledWith({
-      file,
-      meta: { hello: true },
-      project: p,
-    });
+    expect(renderer.render).toHaveBeenCalledWith({ file, project: p });
   });
 });
 
