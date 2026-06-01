@@ -130,7 +130,7 @@ export type {
 } from './plugins/validator';
 export { requestValidatorLayers, resolveValidatorLayer } from './plugins/validator';
 export { findPackageJson, findTsConfigPath, loadPackageJson } from './tsConfig';
-export type { Logs } from './types/logs';
+export type { LogLevel, Logs } from './types/logs';
 export type { WatchValues } from './types/watch';
 export { escapeComment } from './utils/escape';
 export { utils } from './utils/exports';

@@ -360,12 +360,26 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     return result as T extends number ? void : number;
   }
 
-  querySymbol(filter: SymbolMeta): Symbol<ResolvedNode> | undefined {
-    return this.querySymbols(filter)[0];
+  querySymbol<TNode extends Node = ResolvedNode>(
+    filter: SymbolMeta,
+    tags?: ReadonlyArray<NonNullable<TNode['~dsl']>>,
+    predicate?: (symbol: Symbol<TNode>) => boolean,
+  ): Symbol<TNode> | undefined {
+    return this.querySymbols<TNode>(filter, tags, predicate)[0];
   }
 
-  querySymbols(filter: SymbolMeta): Array<Symbol<ResolvedNode>> {
-    return this.gen.symbols.query(filter) as Array<Symbol<ResolvedNode>>;
+  querySymbols<TNode extends Node = ResolvedNode>(
+    filter: SymbolMeta,
+    tags?: ReadonlyArray<NonNullable<TNode['~dsl']>>,
+    predicate?: (symbol: Symbol<TNode>) => boolean,
+  ): Array<Symbol<TNode>> {
+    const results = this.gen.symbols.query(filter) as Array<Symbol<TNode>>;
+    if (!tags?.length && !predicate) return results;
+    const set = tags?.length ? new Set(tags) : null;
+    return results.filter((symbol) => {
+      if (set && !set.has(symbol.node?.['~dsl'] ?? '')) return false;
+      return predicate ? predicate(symbol) : true;
+    });
   }
 
   referenceSymbol(meta: SymbolMeta): Symbol<ResolvedNode> {
