@@ -5,7 +5,7 @@ import '@hey-api/codegen-core';
 import '@hey-api/shared';
 
 declare module '@hey-api/codegen-core' {
-  interface ProjectRenderMeta {
+  interface ProjectMeta {
     /**
      * If specified, this will be the file extension used when importing
      * other modules. By default, we don't add a file extension and let the

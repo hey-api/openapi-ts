@@ -1,3 +1,4 @@
+import type { IProjectMeta } from '../extensions';
 import { isNodeRef, isSymbolRef } from '../guards';
 import type { INode, NodeRelationship } from '../nodes/node';
 import { fromRef, isRef, ref } from '../refs/refs';
@@ -15,12 +16,15 @@ export class AnalysisContext implements IAnalysisContext {
    */
   private _parentStack: Array<INode> = [];
 
+  /** Arbitrary project metadata. */
+  meta: IProjectMeta;
   scope: Scope;
   scopes: Scope = createScope();
   symbol?: Symbol;
 
-  constructor(node: INode) {
+  constructor(node: INode, meta: IProjectMeta) {
     this._parentStack.push(node);
+    this.meta = meta;
     this.scope = this.scopes;
     this.symbol = node.symbol;
   }
@@ -149,14 +153,19 @@ export class AnalysisContext implements IAnalysisContext {
 }
 
 export class Analyzer {
+  private readonly meta: IProjectMeta;
   private nodeCache = new WeakMap<INode, AnalysisContext>();
+
+  constructor(meta: IProjectMeta) {
+    this.meta = meta;
+  }
 
   analyzeNode(node: INode): AnalysisContext {
     const cached = this.nodeCache.get(node);
     if (cached) return cached;
 
     node.root = true;
-    const ctx = new AnalysisContext(node);
+    const ctx = new AnalysisContext(node, this.meta);
     node.analyze(ctx);
 
     this.nodeCache.set(node, ctx);

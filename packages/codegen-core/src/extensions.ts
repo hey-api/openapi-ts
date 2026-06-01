@@ -1,14 +1,15 @@
+import type { Language } from './languages/types';
+
 /**
- * Arbitrary metadata passed to the project's render function.
+ * Arbitrary project metadata.
  *
  * Implementers should extend this interface for their own needs.
  */
-export interface IProjectRenderMeta {
-  [key: string]: unknown;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IProjectMeta extends Partial<Record<Language, unknown>> {}
 
 /**
- * Additional metadata about the symbol.
+ * Arbitrary symbol metadata.
  *
  * Implementers should extend this interface for their own needs.
  */

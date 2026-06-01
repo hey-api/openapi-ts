@@ -53,7 +53,7 @@ export type _TypeExports = [
   index.NodeScope,
   index.Output,
   index.Project,
-  index.ProjectRenderMeta,
+  index.ProjectMeta,
   index.Ref<any>,
   index.Refs<any>,
   index.RenderContext,
