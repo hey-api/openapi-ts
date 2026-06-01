@@ -138,6 +138,11 @@ export async function createClient({
         }
         return name === '__init__' || name.endsWith(suffix) ? name : `${name}${suffix}`;
       },
+      meta: {
+        python: {
+          version: config.output.pythonVersion,
+        },
+      },
       nameConflictResolvers: config.output.nameConflictResolver
         ? {
             python: config.output.nameConflictResolver,

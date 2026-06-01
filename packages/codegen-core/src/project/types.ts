@@ -1,4 +1,4 @@
-import type { IProjectRenderMeta } from '../extensions';
+import type { IProjectMeta } from '../extensions';
 import type { IFileRegistry } from '../files/types';
 import type { Extensions, ModuleEntryNames, NameConflictResolvers } from '../languages/types';
 import type { INodeRegistry } from '../nodes/types';
@@ -42,6 +42,8 @@ export interface IProject {
   readonly fileName?: (name: string) => string;
   /** Centralized file registry for the project. */
   readonly files: IFileRegistry;
+  /** Arbitrary project metadata. */
+  readonly meta: IProjectMeta;
   /**
    * Map of module entry names for each language.
    *
@@ -74,7 +76,7 @@ export interface IProject {
    * @param meta Arbitrary metadata.
    * @returns void
    */
-  plan(meta?: IProjectRenderMeta): void;
+  plan(meta?: IProjectMeta): void;
   /**
    * Produces output representations for all files in the project.
    *
@@ -83,7 +85,7 @@ export interface IProject {
    * @example
    * project.render().forEach(output => writeFile(output));
    */
-  render(meta?: IProjectRenderMeta): ReadonlyArray<IOutput>;
+  render(meta?: IProjectMeta): ReadonlyArray<IOutput>;
   /**
    * List of available renderers.
    *

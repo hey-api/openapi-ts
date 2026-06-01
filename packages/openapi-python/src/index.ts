@@ -5,15 +5,10 @@ import '@hey-api/codegen-core';
 import '@hey-api/shared';
 
 declare module '@hey-api/codegen-core' {
-  interface ProjectRenderMeta {
-    /**
-     * If specified, this will be the file extension used when importing
-     * other modules. By default, we don't add a file extension and let the
-     * runtime resolve it.
-     *
-     * @default null
-     */
-    importFileExtension?: AnyString | null;
+  interface ProjectMeta {
+    python?: {
+      version: PythonVersion;
+    };
   }
 
   interface SymbolMeta {
@@ -61,6 +56,7 @@ import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
+import type { PythonVersion } from './config/output/types';
 import type { UserConfig } from './config/types';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
