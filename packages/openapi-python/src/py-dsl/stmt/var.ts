@@ -2,13 +2,13 @@ import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 
 import { py } from '../../py-compiler';
-import { PyDsl } from '../base';
+import { type MaybePyDsl, PyDsl } from '../base';
 import { ValueMixin } from '../mixins/value';
 import { safeRuntimeName } from '../utils/name';
 
 const Mixed = ValueMixin(PyDsl<py.Assignment>);
 
-export type VarType = NodeName | PyDsl<py.Expression>;
+export type VarType = NodeName | MaybePyDsl<py.Expression>;
 
 export class VarPyDsl extends Mixed {
   readonly '~dsl' = 'VarPyDsl';
@@ -44,7 +44,7 @@ export class VarPyDsl extends Mixed {
   override toAst() {
     this.$validate();
     const target = this.$node(this.name)!;
-    const type = this.$type();
+    const type = this.$_type();
     const value = this.$value();
 
     return py.factory.createAssignment(target, type, value);
@@ -56,14 +56,14 @@ export class VarPyDsl extends Mixed {
     throw new Error(`Variable assignment missing ${missing.join(' and ')}`);
   }
 
-  protected $type(): py.Expression | undefined {
+  protected $_type(): py.Expression | undefined {
     return this.$node(this._type);
   }
 
   private missingRequiredCalls(): ReadonlyArray<string> {
     const missing: Array<string> = [];
     if (!this.$node(this.name)) missing.push('name');
-    const hasAnnotation = this.$type();
+    const hasAnnotation = this.$_type();
     const hasValue = this.$value();
     if (!hasAnnotation && !hasValue) {
       missing.push('.type() or .assign()');

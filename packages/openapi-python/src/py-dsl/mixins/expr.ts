@@ -22,17 +22,14 @@ export function ExprMixin<T extends py.Expression, TBase extends BaseCtor<T>>(Ba
     }
 
     protected attr(...args: DropFirst<Parameters<typeof f.attr>>): ReturnType<typeof f.attr> {
-      // @ts-expect-error - fix this type
       return f.attr(this, ...args);
     }
 
     protected call(...args: DropFirst<Parameters<typeof f.call>>): ReturnType<typeof f.call> {
-      // @ts-expect-error - fix this type
       return f.call(this, ...args);
     }
 
     protected return(): ReturnType<typeof f.return> {
-      // @ts-expect-error - fix this type
       return f.return(this);
     }
 

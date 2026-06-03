@@ -5,7 +5,7 @@ import * as SYMBOLS from '../../../symbols';
 export function tanStackQuerySymbols(plugin: PluginInstance) {
   return {
     ...SYMBOLS.TANSTACK_QUERY(plugin),
-    axios: SYMBOLS.AXIOS(plugin),
+    axios: SYMBOLS.AXIOS(plugin.symbolFactory),
   };
 }
 

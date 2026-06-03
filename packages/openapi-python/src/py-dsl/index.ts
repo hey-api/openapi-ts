@@ -53,6 +53,7 @@ import { TryPyDsl } from './stmt/try';
 import { VarPyDsl } from './stmt/var';
 import { WhilePyDsl } from './stmt/while';
 import { WithPyDsl } from './stmt/with';
+import { TypeOrPyDsl } from './type/or';
 // import { TokenPyDsl } from './token';
 // import { TypeAliasPyDsl } from './type/alias';
 // import { TypeAndPyDsl } from './type/and';
@@ -239,47 +240,48 @@ const pyDsl = {
   tuple: (...args: ConstructorParameters<typeof TuplePyDsl>) => new TuplePyDsl(...args),
 
   /** Creates a basic type reference or type expression (e.g., Foo or Foo<T>). */
-  // type: Object.assign(
-  //   (...args: ConstructorParameters<typeof TypeExprTsDsl>) => new TypeExprTsDsl(...args),
-  //   {
-  /** Creates a type alias declaration (e.g., `type Foo = Bar`). */
-  // alias: (...args: ConstructorParameters<typeof TypeAliasTsDsl>) => new TypeAliasTsDsl(...args),
-  /** Creates an intersection type (e.g., `A & B`). */
-  // and: (...args: ConstructorParameters<typeof TypeAndTsDsl>) => new TypeAndTsDsl(...args),
-  /** Creates a qualified type reference (e.g., Foo.Bar). */
-  // attr: (...args: ConstructorParameters<typeof TypeAttrTsDsl>) => new TypeAttrTsDsl(...args),
-  /** Creates a basic type reference or type expression (e.g., Foo or Foo<T>). */
-  // expr: (...args: ConstructorParameters<typeof TypeExprTsDsl>) => new TypeExprTsDsl(...args),
-  /** Converts a runtime value into a corresponding type expression node. */
-  // fromValue: (...args: Parameters<typeof typeValue>) => typeValue(...args),
-  /** Creates a function type node (e.g., `(a: string) => number`). */
-  // func: (...args: ConstructorParameters<typeof TypeFuncTsDsl>) => new TypeFuncTsDsl(...args),
-  /** Creates an indexed-access type (e.g., `Foo<T>[K]`). */
-  // idx: (...args: ConstructorParameters<typeof TypeIdxTsDsl>) => new TypeIdxTsDsl(...args),
-  /** Creates a literal type node (e.g., 'foo', 42, or true). */
-  // literal: (...args: ConstructorParameters<typeof TypeLiteralTsDsl>) =>
-  //   new TypeLiteralTsDsl(...args),
-  /** Creates a mapped type (e.g., `{ [K in keyof T]: U }`). */
-  // mapped: (...args: ConstructorParameters<typeof TypeMappedTsDsl>) =>
-  //   new TypeMappedTsDsl(...args),
-  /** Creates a type literal node (e.g., { foo: string }). */
-  // object: (...args: ConstructorParameters<typeof TypeObjectTsDsl>) =>
-  //   new TypeObjectTsDsl(...args),
-  /** Creates a type operator node (e.g., `readonly T`, `keyof T`, `unique T`). */
-  // operator: (...args: ConstructorParameters<typeof TypeOperatorTsDsl>) =>
-  //   new TypeOperatorTsDsl(...args),
-  /** Represents a union type (e.g., `A | B | C`). */
-  // or: (...args: ConstructorParameters<typeof TypeOrTsDsl>) => new TypeOrTsDsl(...args),
-  /** Creates a type parameter (e.g., `<T>`). */
-  // param: (...args: ConstructorParameters<typeof TypeParamTsDsl>) => new TypeParamTsDsl(...args),
-  /** Creates a type query node (e.g., `typeof Foo`). */
-  // query: (...args: ConstructorParameters<typeof TypeQueryTsDsl>) => new TypeQueryTsDsl(...args),
-  /** Builds a TypeScript template literal *type* (e.g., `${Foo}-${Bar}` as a type). */
-  // template: (...args: ConstructorParameters<typeof TypeTemplateTsDsl>) =>
-  //   new TypeTemplateTsDsl(...args),
-  /** Creates a tuple type (e.g., [A, B, C]). */
-  // tuple: (...args: ConstructorParameters<typeof TypeTupleTsDsl>) => new TypeTupleTsDsl(...args),
-  // },
+  type: {
+    // type: Object.assign(
+    //   (...args: ConstructorParameters<typeof TypeExprTsDsl>) => new TypeExprTsDsl(...args),
+    //   {
+    /** Creates a type alias declaration (e.g., `type Foo = Bar`). */
+    // alias: (...args: ConstructorParameters<typeof TypeAliasTsDsl>) => new TypeAliasTsDsl(...args),
+    /** Creates an intersection type (e.g., `A & B`). */
+    // and: (...args: ConstructorParameters<typeof TypeAndTsDsl>) => new TypeAndTsDsl(...args),
+    /** Creates a qualified type reference (e.g., Foo.Bar). */
+    // attr: (...args: ConstructorParameters<typeof TypeAttrTsDsl>) => new TypeAttrTsDsl(...args),
+    /** Creates a basic type reference or type expression (e.g., Foo or Foo<T>). */
+    // expr: (...args: ConstructorParameters<typeof TypeExprTsDsl>) => new TypeExprTsDsl(...args),
+    /** Converts a runtime value into a corresponding type expression node. */
+    // fromValue: (...args: Parameters<typeof typeValue>) => typeValue(...args),
+    /** Creates a function type node (e.g., `(a: string) => number`). */
+    // func: (...args: ConstructorParameters<typeof TypeFuncTsDsl>) => new TypeFuncTsDsl(...args),
+    /** Creates an indexed-access type (e.g., `Foo<T>[K]`). */
+    // idx: (...args: ConstructorParameters<typeof TypeIdxTsDsl>) => new TypeIdxTsDsl(...args),
+    /** Creates a literal type node (e.g., 'foo', 42, or true). */
+    // literal: (...args: ConstructorParameters<typeof TypeLiteralTsDsl>) =>
+    //   new TypeLiteralTsDsl(...args),
+    /** Creates a mapped type (e.g., `{ [K in keyof T]: U }`). */
+    // mapped: (...args: ConstructorParameters<typeof TypeMappedTsDsl>) =>
+    //   new TypeMappedTsDsl(...args),
+    /** Creates a type literal node (e.g., { foo: string }). */
+    // object: (...args: ConstructorParameters<typeof TypeObjectTsDsl>) =>
+    //   new TypeObjectTsDsl(...args),
+    /** Creates a type operator node (e.g., `readonly T`, `keyof T`, `unique T`). */
+    // operator: (...args: ConstructorParameters<typeof TypeOperatorTsDsl>) =>
+    //   new TypeOperatorTsDsl(...args),
+    /** Creates a union type (e.g., `A | B | C`). */
+    or: (...args: ConstructorParameters<typeof TypeOrPyDsl>) => new TypeOrPyDsl(...args),
+    /** Creates a type parameter (e.g., `<T>`). */
+    // param: (...args: ConstructorParameters<typeof TypeParamTsDsl>) => new TypeParamTsDsl(...args),
+    /** Creates a type query node (e.g., `typeof Foo`). */
+    // query: (...args: ConstructorParameters<typeof TypeQueryTsDsl>) => new TypeQueryTsDsl(...args),
+    /** Builds a TypeScript template literal *type* (e.g., `${Foo}-${Bar}` as a type). */
+    // template: (...args: ConstructorParameters<typeof TypeTemplateTsDsl>) =>
+    //   new TypeTemplateTsDsl(...args),
+    /** Creates a tuple type (e.g., [A, B, C]). */
+    // tuple: (...args: ConstructorParameters<typeof TypeTupleTsDsl>) => new TypeTupleTsDsl(...args),
+  },
   // ),
   /** Creates a `typeof` expression (e.g., `typeof value`). */
   // typeofExpr: (...args: ConstructorParameters<typeof TypeOfExprTsDsl>) =>
@@ -320,7 +322,6 @@ export type DollarPyDsl = {
 };
 
 export type { MaybePyDsl } from './base';
-// export type { MaybePyDsl, TypePyDsl } from './base';
 export { PyDsl } from './base';
 export type { CallArgs } from './expr/call';
 export type { VarType } from './stmt/var';

@@ -7,29 +7,25 @@ import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: ArrayResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
+  const any = plugin.symbols.typing.Any;
 
   if (!childResults.length) {
     return {
-      type: $('list').slice(plugin.symbols.typing.Any),
+      type: $('list').slice(any),
     };
   }
 
   if (childResults.length === 1) {
     const itemResult = applyModifiers(childResults[0]!);
     return {
-      type: $('list').slice(itemResult.type ?? plugin.symbols.typing.Any),
+      type: $('list').slice(itemResult.type ?? any),
     };
   }
 
-  if (childResults.length > 1) {
-    const itemTypes = childResults.map((r) => applyModifiers(r).type ?? plugin.symbols.typing.Any);
-    return {
-      type: $('list').slice($(plugin.symbols.typing.Union).slice(...itemTypes)),
-    };
-  }
+  const itemTypes = childResults.map((r) => applyModifiers(r).type ?? any);
 
   return {
-    type: $('list').slice(plugin.symbols.typing.Any),
+    type: $('list').slice($.type.or(...itemTypes)),
   };
 }
 

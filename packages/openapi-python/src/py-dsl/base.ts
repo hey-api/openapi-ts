@@ -195,33 +195,6 @@ export abstract class PyDsl<
     return this.unwrap(value as any) as NodeOfMaybe<I>;
   }
 
-  // protected $type<I>(value: I, args?: ReadonlyArray<ts.TypeNode>): TypeOfMaybe<I> {
-  //   if (value === undefined) {
-  //     return undefined as TypeOfMaybe<I>;
-  //   }
-  //   // @ts-expect-error
-  //   if (isRef(value)) value = fromRef(value);
-  //   if (isSymbol(value)) {
-  //     return ts.factory.createTypeReferenceNode(value.finalName, args) as TypeOfMaybe<I>;
-  //   }
-  //   if (typeof value === 'string') {
-  //     return ts.factory.createTypeReferenceNode(value, args) as TypeOfMaybe<I>;
-  //   }
-  //   if (typeof value === 'boolean') {
-  //     const literal = value ? ts.factory.createTrue() : ts.factory.createFalse();
-  //     return ts.factory.createLiteralTypeNode(literal) as TypeOfMaybe<I>;
-  //   }
-  //   if (typeof value === 'number') {
-  //     return ts.factory.createLiteralTypeNode(
-  //       ts.factory.createNumericLiteral(value),
-  //     ) as TypeOfMaybe<I>;
-  //   }
-  //   if (value instanceof Array) {
-  //     return value.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
-  //   }
-  //   return this.unwrap(value as any) as TypeOfMaybe<I>;
-  // }
-
   private _name?: Ref<NodeName>;
 
   /** Unwraps nested nodes into raw Python AST. */
@@ -245,31 +218,10 @@ type NodeOf<I> =
           ? I
           : never;
 
-export type MaybePyDsl<T> =
-  T extends PyDsl<infer U> ? U | PyDsl<U> : T extends py.Node ? T | PyDsl<T> : never;
+export type MaybePyDsl<T> = [T] extends [PyDsl<infer U>]
+  ? U | PyDsl<U>
+  : [T] extends [py.Node]
+    ? T | PyDsl<T>
+    : never;
 
-// export abstract class TypePyDsl<
-//   T extends
-//     | ts.LiteralTypeNode
-//     | ts.QualifiedName
-//     | ts.TypeElement
-//     | ts.TypeNode
-//     | ts.TypeParameterDeclaration = ts.TypeNode,
-// > extends PyDsl<T> {}
-
-// type TypeOfMaybe<I> = undefined extends I
-//   ? TypeOf<NonNullable<FromRef<I>>> | undefined
-//   : TypeOf<FromRef<I>>;
-
-// type TypeOf<I> =
-//   I extends ReadonlyArray<infer U>
-//     ? ReadonlyArray<TypeOf<U>>
-//     : I extends string
-//       ? ts.TypeNode
-//       : I extends boolean
-//         ? ts.LiteralTypeNode
-//         : I extends PyDsl<infer N>
-//           ? N
-//           : I extends ts.TypeNode
-//             ? I
-//             : never;
+// export abstract class TypePyDsl<T extends py.Expression = py.Expression> extends PyDsl<T> {}

@@ -1,8 +1,8 @@
-import type { PluginInstance } from '@hey-api/shared';
+import type { SymbolFactory } from '@hey-api/shared';
 
-export function ANGULAR(plugin: PluginInstance) {
+export function ANGULAR(factory: SymbolFactory) {
   return {
-    Injectable: plugin.symbol('Injectable', {
+    Injectable: factory.register('Injectable', {
       external: '@angular/core',
     }),
   };
