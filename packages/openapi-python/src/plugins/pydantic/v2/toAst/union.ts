@@ -25,9 +25,8 @@ function baseNode(ctx: UnionResolverContext): PydanticType {
     };
   }
 
-  if (nonNullResults.length === 1) {
-    const finalResult = applyModifiers(nonNullResults[0]!);
-    return finalResult;
+  if (nonNullResults.length === 1 && !isNullable) {
+    return applyModifiers(nonNullResults[0]!);
   }
 
   const itemTypes = nonNullResults.map((r) => applyModifiers(r).type ?? plugin.symbols.typing.Any);
@@ -37,7 +36,7 @@ function baseNode(ctx: UnionResolverContext): PydanticType {
   }
 
   return {
-    type: $(plugin.symbols.typing.Union).slice(...itemTypes),
+    type: $.type.or(...itemTypes),
   };
 }
 

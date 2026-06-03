@@ -55,3 +55,4 @@ export type {
   SymbolKind,
   ISymbolRegistry as SymbolRegistry,
 } from './symbols/types';
+export { Version } from './version';

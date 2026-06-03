@@ -1276,7 +1276,7 @@ class GlobalSession(BaseModel):
     time: GlobalSessionTime
     permission: Optional[Optional[PermissionRuleset]]
     revert: Optional[Optional[GlobalSessionRevert]]
-    project: Optional[ProjectSummary]
+    project: Optional[Union[ProjectSummary, None]]
 
 
 class McpResource(BaseModel):
@@ -1988,9 +1988,9 @@ class Workspace(BaseModel):
     id: str = Field(..., pattern="^wrk")
     type: str
     name: str
-    branch: Optional[Optional[str]]
-    directory: Optional[Optional[str]]
-    extra: Optional[Optional[Any]]
+    branch: Optional[Optional[Union[str, None]]]
+    directory: Optional[Optional[Union[str, None]]]
+    extra: Optional[Optional[Union[Any, None]]]
     project_id: str = Field(..., alias="projectID")
     time_used: Union[float, WorkspaceTimeUsed, WorkspaceTimeUsed_, WorkspaceTimeUsed_2, WorkspaceTimeUsed_3] = Field(..., alias="timeUsed")
 

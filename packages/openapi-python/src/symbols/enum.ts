@@ -1,7 +1,9 @@
-import type { PluginInstance } from '@hey-api/shared';
+import type { SymbolFactory } from '@hey-api/shared';
 
-export function ENUM(plugin: PluginInstance) {
+export function ENUM(factory: SymbolFactory) {
   return {
-    Enum: plugin.symbol('Enum', { external: 'enum' }),
+    Enum: factory.register('Enum', { external: 'enum' }),
   };
 }
+
+export type EnumSymbols = ReturnType<typeof ENUM>;

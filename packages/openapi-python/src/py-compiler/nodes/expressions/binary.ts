@@ -21,7 +21,12 @@ export type PyBinaryOperator =
   | 'in'
   | 'not in'
   | 'and'
-  | 'or';
+  | 'or'
+  | '|'
+  | '&'
+  | '^'
+  | '<<'
+  | '>>';
 
 export interface PyBinaryExpression extends PyNodeBase {
   kind: PyNodeKind.BinaryExpression;

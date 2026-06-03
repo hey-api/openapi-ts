@@ -1,8 +1,8 @@
-import type { PluginInstance } from '@hey-api/shared';
+import type { SymbolFactory } from '@hey-api/shared';
 
-export function PYDANTIC(plugin: PluginInstance) {
+export function PYDANTIC(factory: SymbolFactory) {
   return {
-    BaseModel: plugin.symbol('BaseModel', {
+    BaseModel: factory.register('BaseModel', {
       children: [
         // v2 model_* API
         {
@@ -117,8 +117,10 @@ export function PYDANTIC(plugin: PluginInstance) {
       ],
       external: 'pydantic',
     }),
-    ConfigDict: plugin.symbol('ConfigDict', { external: 'pydantic' }),
-    Field: plugin.symbol('Field', { external: 'pydantic' }),
-    dataclass: plugin.symbol('dataclass', { external: 'pydantic.dataclasses' }),
+    ConfigDict: factory.register('ConfigDict', { external: 'pydantic' }),
+    Field: factory.register('Field', { external: 'pydantic' }),
+    dataclass: factory.register('dataclass', { external: 'pydantic.dataclasses' }),
   };
 }
+
+export type PydanticSymbols = ReturnType<typeof PYDANTIC>;
