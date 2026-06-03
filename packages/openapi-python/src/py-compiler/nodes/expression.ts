@@ -4,20 +4,21 @@ import type { PyAwaitExpression } from './expressions/await';
 import type { PyBinaryExpression } from './expressions/binary';
 import type { PyCallExpression } from './expressions/call';
 import type { PyDictExpression } from './expressions/dict';
-import type { PyFStringExpression } from './expressions/fString';
+import type { PyFStringExpression } from './expressions/f-string';
 import type { PyGeneratorExpression } from './expressions/generator';
 import type { PyIdentifier } from './expressions/identifier';
-import type { PyKeywordArgument } from './expressions/keywordArg';
+import type { PyKeywordArgument } from './expressions/keyword-arg';
 import type { PyLambdaExpression } from './expressions/lambda';
 import type { PyListExpression } from './expressions/list';
 import type { PyLiteral } from './expressions/literal';
 import type { PyMemberExpression } from './expressions/member';
+import type { PyRStringExpression } from './expressions/r-string';
 import type { PySetExpression } from './expressions/set';
 import type { PySubscriptExpression } from './expressions/subscript';
 import type { PySubscriptSlice } from './expressions/subscript-slice';
 import type { PyTupleExpression } from './expressions/tuple';
 import type { PyYieldExpression } from './expressions/yield';
-import type { PyYieldFromExpression } from './expressions/yieldFrom';
+import type { PyYieldFromExpression } from './expressions/yield-from';
 
 export type PyExpression =
   | PyAsyncExpression
@@ -34,6 +35,7 @@ export type PyExpression =
   | PyListExpression
   | PyLiteral
   | PyMemberExpression
+  | PyRStringExpression
   | PySetExpression
   | PySubscriptExpression
   | PySubscriptSlice

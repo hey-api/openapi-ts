@@ -1,0 +1,1 @@
+pattern = "^ses\"\"\"foo'bar"

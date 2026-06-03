@@ -17,6 +17,8 @@ import { createScope, registerName } from './scope';
 const isTypeOnlyKind = (kind: SymbolKind) => kind === 'type' || kind === 'interface';
 
 export class Planner {
+  private static readonly MAX_ALLOCATION_ROUNDS = 100;
+
   private readonly analyzer: Analyzer;
   private readonly cacheResolvedNames = new Set<number>();
   private readonly project: IProject;
@@ -31,8 +33,17 @@ export class Planner {
    */
   plan() {
     this.cacheResolvedNames.clear();
-    this.allocateFiles();
-    this.assignLocalNames();
+
+    let rounds = 0;
+    while (this.allocateFiles()) {
+      this.assignLocalNames();
+      if (++rounds > Planner.MAX_ALLOCATION_ROUNDS) {
+        throw new Error(
+          `File allocation failed to converge after ${Planner.MAX_ALLOCATION_ROUNDS} rounds`,
+        );
+      }
+    }
+
     this.resolveFilePaths();
     this.planExports();
     this.planImports();
@@ -42,25 +53,30 @@ export class Planner {
    * Creates and assigns a file to every node, re-export,
    * and external dependency.
    */
-  private allocateFiles(): void {
+  private allocateFiles(): number {
+    let allocated = 0;
     this.analyzer.analyze(this.project.nodes.all(), (ctx, node) => {
       const symbol = node.symbol;
       if (!symbol) return;
 
-      const file = this.project.files.register({
-        external: false,
-        language: node.language,
-        logicalFilePath: symbol.getFilePath?.(symbol) || this.project.defaultFileName,
-      });
-      file.addNode(node);
-      symbol.setFile(file);
-      for (const logicalFilePath of symbol.getExportFromFilePath?.(symbol) ?? []) {
-        this.project.files.register({
+      if (!symbol.file) {
+        const file = this.project.files.register({
           external: false,
-          language: file.language,
-          logicalFilePath,
+          language: node.language,
+          logicalFilePath: symbol.getFilePath?.(symbol) || this.project.defaultFileName,
         });
+        file.addNode(node);
+        symbol.setFile(file);
+        allocated++;
+        for (const logicalFilePath of symbol.getExportFromFilePath?.(symbol) ?? []) {
+          this.project.files.register({
+            external: false,
+            language: file.language,
+            logicalFilePath,
+          });
+        }
       }
+
       ctx.walkScopes((dependency) => {
         const dep = fromRef(dependency);
         if (dep.external && dep.isCanonical && !dep.file) {
@@ -70,9 +86,11 @@ export class Planner {
             logicalFilePath: dep.external,
           });
           dep.setFile(file);
+          allocated++;
         }
       });
     });
+    return allocated;
   }
 
   /**
@@ -93,7 +111,7 @@ export class Planner {
       ctx.walkScopes((dependency) => {
         const dep = fromRef(dependency);
         // top-level or external symbol
-        if (dep.file) return;
+        if (dep.file || dep.external) return;
         // TODO: pass node
         this.assignLocalName({
           ctx,
@@ -291,6 +309,7 @@ export class Planner {
             symbol: imp,
           };
           fileMap.set(key, entry);
+          dep.addImport(imp);
         }
         entry.kinds.add(dep.kind);
 

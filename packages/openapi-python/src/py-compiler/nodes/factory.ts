@@ -1,6 +1,6 @@
 import { createClassDeclaration } from './declarations/class';
 import { createFunctionDeclaration } from './declarations/function';
-import { createFunctionParameter } from './declarations/functionParameter';
+import { createFunctionParameter } from './declarations/function-parameter';
 import { createAsyncExpression } from './expressions/async';
 import { createAwaitExpression } from './expressions/await';
 import { createBinaryExpression } from './expressions/binary';
@@ -9,22 +9,23 @@ import { createDictComprehension } from './expressions/comprehensions/dict';
 import { createListComprehension } from './expressions/comprehensions/list';
 import { createSetComprehension } from './expressions/comprehensions/set';
 import { createDictExpression } from './expressions/dict';
-import { createFStringExpression } from './expressions/fString';
+import { createFStringExpression } from './expressions/f-string';
 import { createGeneratorExpression } from './expressions/generator';
 import { createIdentifier } from './expressions/identifier';
-import { createKeywordArgument } from './expressions/keywordArg';
+import { createKeywordArgument } from './expressions/keyword-arg';
 import { createLambdaExpression } from './expressions/lambda';
 import { createListExpression } from './expressions/list';
 import { createLiteral } from './expressions/literal';
 import { createMemberExpression } from './expressions/member';
+import { createRStringExpression } from './expressions/r-string';
 import { createSetExpression } from './expressions/set';
 import { createSubscriptExpression } from './expressions/subscript';
 import { createSubscriptSlice } from './expressions/subscript-slice';
 import { createTupleExpression } from './expressions/tuple';
 import { createYieldExpression } from './expressions/yield';
-import { createYieldFromExpression } from './expressions/yieldFrom';
+import { createYieldFromExpression } from './expressions/yield-from';
 import { createAssignment } from './statements/assignment';
-import { createAugmentedAssignment } from './statements/augmentedAssignment';
+import { createAugmentedAssignment } from './statements/augmented-assignment';
 import { createBlock } from './statements/block';
 import { createBreakStatement } from './statements/break';
 import { createContinueStatement } from './statements/continue';
@@ -39,9 +40,9 @@ import { createReturnStatement } from './statements/return';
 import { createTryStatement } from './statements/try';
 import { createWhileStatement } from './statements/while';
 import { createWithStatement } from './statements/with';
-import { createWithItem } from './statements/withItem';
+import { createWithItem } from './statements/with-item';
 import { createComment } from './structure/comment';
-import { createSourceFile } from './structure/sourceFile';
+import { createSourceFile } from './structure/source-file';
 
 export const factory = {
   createAssignment,
@@ -74,6 +75,7 @@ export const factory = {
   createListExpression,
   createLiteral,
   createMemberExpression,
+  createRStringExpression,
   createRaiseStatement,
   createReturnStatement,
   createSetComprehension,

@@ -2,11 +2,19 @@ import { ref } from '@hey-api/codegen-core';
 import type { SchemaExtractor } from '@hey-api/shared';
 import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@hey-api/shared';
 
+import { $ as $$ } from '../dsl';
 import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
-import type { PydanticFinal } from '../shared/types';
+import type { PydanticNode, PydanticResult } from '../shared/types';
 import type { PydanticPlugin } from '../types';
 import { createVisitor } from './visitor';
+
+function toNode(result: PydanticResult, plugin: PydanticPlugin['Instance']): PydanticNode {
+  if (result.node) {
+    return result.node;
+  }
+  return { kind: 'alias', type: result.type ?? $$.constrainedType(plugin.symbols.typing.Any) };
+}
 
 export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorResult {
   const processor = createSchemaProcessor();
@@ -15,8 +23,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     (hooks) => hooks.schemas?.shouldExtract,
     (ctx) =>
       ctx.schema.type === 'object' &&
-      ctx.schema.properties !== undefined &&
-      Boolean(Object.keys(ctx.schema.properties).length),
+      (ctx.schema.properties !== undefined || !ctx.schema.additionalProperties),
     (ctx) =>
       ctx.schema.type === 'enum' &&
       ctx.schema.items !== undefined &&
@@ -43,7 +50,7 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
     return ctx.schema;
   };
 
-  function process(ctx: ProcessorContext): PydanticFinal | void {
+  function process(ctx: ProcessorContext): PydanticNode | void {
     if (!processor.markEmitted(ctx.path)) return;
 
     const shouldExport = ctx.export !== false;
@@ -60,14 +67,16 @@ export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorRe
       const final = visitor.applyModifiers(result, {
         path: ref(ctx.path),
         plugin,
-      }) as PydanticFinal;
+      }) as PydanticResult;
+
+      const node = toNode(final, plugin);
 
       if (shouldExport) {
-        exportAst({ ...ctx, final, plugin });
+        exportAst({ ...ctx, node, plugin });
         return;
       }
 
-      return final;
+      return node;
     });
   }
 

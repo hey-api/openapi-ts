@@ -3,10 +3,11 @@ import type { PluginInstance } from '@hey-api/shared';
 import * as SYMBOLS from '../../symbols';
 
 export function pydanticSymbols(plugin: PluginInstance) {
+  const factory = plugin.symbolFactory;
   return {
-    ...SYMBOLS.PYDANTIC(plugin.symbolFactory),
-    enum: SYMBOLS.ENUM(plugin.symbolFactory),
-    typing: SYMBOLS.TYPING(plugin.symbolFactory),
+    ...SYMBOLS.PYDANTIC(factory),
+    enum: SYMBOLS.ENUM(factory),
+    typing: SYMBOLS.TYPING(factory),
   };
 }
 

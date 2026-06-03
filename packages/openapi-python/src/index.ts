@@ -9,6 +9,7 @@ declare module '@hey-api/codegen-core' {
     python: {
       Version: Version<PythonVersion>;
       symbols: {
+        enum: EnumSymbols;
         typing: TypingSymbols;
       };
       version: PythonVersion;
@@ -66,6 +67,7 @@ import type { UserConfig } from './config/types';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 import type { PydanticPlugin, PydanticResolvers } from './plugins/pydantic';
+import type { EnumSymbols } from './symbols/enum';
 import type { TypingSymbols } from './symbols/typing';
 
 colors.enabled = colorSupport().hasBasic;
