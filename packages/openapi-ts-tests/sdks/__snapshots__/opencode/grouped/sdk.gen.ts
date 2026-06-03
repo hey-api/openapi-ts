@@ -65,7 +65,7 @@ export const globalHealth = <ThrowOnError extends boolean = false>(options?: Opt
  *
  * Subscribe to global events from the OpenCode system using server-sent events.
  */
-export const globalEvent = <ThrowOnError extends boolean = false>(options?: Options<GlobalEventData, ThrowOnError, GlobalEventResponse>): Promise<ServerSentEventsResult<GlobalEventResponses, GlobalEventErrors | void, ThrowOnError>> => (options?.client ?? client).sse.get<GlobalEventResponses, GlobalEventErrors, ThrowOnError>({ url: '/global/event', ...options });
+export const globalEvent = <ThrowOnError extends boolean = false>(options?: Options<GlobalEventData, ThrowOnError, GlobalEventResponse>): Promise<ServerSentEventsResult<GlobalEventResponses>> => (options?.client ?? client).sse.get<GlobalEventResponses, GlobalEventErrors, ThrowOnError>({ url: '/global/event', ...options });
 
 /**
  * Get global configuration
@@ -114,7 +114,7 @@ export const globalUpgrade = <ThrowOnError extends boolean = false>(options?: Op
  *
  * Get events
  */
-export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError, EventSubscribeResponse>): Promise<ServerSentEventsResult<EventSubscribeResponses, unknown | void, ThrowOnError>> => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({ url: '/event', ...options });
+export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError, EventSubscribeResponse>): Promise<ServerSentEventsResult<EventSubscribeResponses>> => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({ url: '/event', ...options });
 
 /**
  * Get configuration
