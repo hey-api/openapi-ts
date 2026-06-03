@@ -21,7 +21,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Subscribe to event stream
  */
-export const subscribeToEventStream = <ThrowOnError extends boolean = false>(options?: Options<SubscribeToEventStreamData, ThrowOnError, SubscribeToEventStreamResponse>): Promise<ServerSentEventsResult<SubscribeToEventStreamResponses, unknown | void, ThrowOnError>> => (options?.client ?? client).sse.post<SubscribeToEventStreamResponses, unknown, ThrowOnError>({ url: '/events/subscribe', ...options });
+export const subscribeToEventStream = <ThrowOnError extends boolean = false>(options?: Options<SubscribeToEventStreamData, ThrowOnError, SubscribeToEventStreamResponse>): Promise<ServerSentEventsResult<SubscribeToEventStreamResponses>> => (options?.client ?? client).sse.post<SubscribeToEventStreamResponses, unknown, ThrowOnError>({ url: '/events/subscribe', ...options });
 
 /**
  * List events

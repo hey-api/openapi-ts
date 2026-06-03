@@ -516,12 +516,7 @@ export function operationReturnType({
   }
 
   if (isSse) {
-    return $.type('Promise').generic(
-      sseResult
-        .generic(queryType('responses'))
-        .generic($.type.or(queryType('errors'), $.type('void')))
-        .generic('ThrowOnError'),
-    );
+    return $.type('Promise').generic(sseResult.generic(queryType('responses')));
   }
 
   return requestResult

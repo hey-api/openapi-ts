@@ -23,7 +23,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  *
  * Get events
  */
-export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError, EventSubscribeResponse>): Promise<ServerSentEventsResult<EventSubscribeResponses, unknown | void, ThrowOnError>> => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
+export const eventSubscribe = <ThrowOnError extends boolean = false>(options?: Options<EventSubscribeData, ThrowOnError, EventSubscribeResponse>): Promise<ServerSentEventsResult<EventSubscribeResponses>> => (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
     responseType: 'text',
     url: '/event',
     ...options
