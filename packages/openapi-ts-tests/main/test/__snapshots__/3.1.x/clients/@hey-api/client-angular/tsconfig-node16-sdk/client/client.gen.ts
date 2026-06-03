@@ -84,7 +84,7 @@ export const createClient = (config: Config = {}): Client => {
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
     if (opts.body === undefined || opts.serializedBody === '') {
-      opts.headers.delete('Content-Type');
+      opts.headers = opts.headers.delete('Content-Type');
     }
 
     const url = buildUrl(opts as Config & RequestOptions);
