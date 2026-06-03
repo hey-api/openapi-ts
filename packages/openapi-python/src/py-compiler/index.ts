@@ -5,7 +5,7 @@ import type {
 } from './nodes/comprehension';
 import type { PyClassDeclaration as _PyClassDeclaration } from './nodes/declarations/class';
 import type { PyFunctionDeclaration as _PyFunctionDeclaration } from './nodes/declarations/function';
-import type { PyFunctionParameter as _PyFunctionParameter } from './nodes/declarations/functionParameter';
+import type { PyFunctionParameter as _PyFunctionParameter } from './nodes/declarations/function-parameter';
 import type { PyExpression as _PyExpression } from './nodes/expression';
 import type { PyAsyncExpression as _PyAsyncExpression } from './nodes/expressions/async';
 import type { PyAwaitExpression as _PyAwaitExpression } from './nodes/expressions/await';
@@ -18,10 +18,10 @@ import type { PyDictComprehension as _PyDictComprehension } from './nodes/expres
 import type { PyListComprehension as _PyListComprehension } from './nodes/expressions/comprehensions/list';
 import type { PySetComprehension as _PySetComprehension } from './nodes/expressions/comprehensions/set';
 import type { PyDictExpression as _PyDictExpression } from './nodes/expressions/dict';
-import type { PyFStringExpression as _PyFStringExpression } from './nodes/expressions/fString';
+import type { PyFStringExpression as _PyFStringExpression } from './nodes/expressions/f-string';
 import type { PyGeneratorExpression as _PyGeneratorExpression } from './nodes/expressions/generator';
 import type { PyIdentifier as _PyIdentifier } from './nodes/expressions/identifier';
-import type { PyKeywordArgument as _PyKeywordArgument } from './nodes/expressions/keywordArg';
+import type { PyKeywordArgument as _PyKeywordArgument } from './nodes/expressions/keyword-arg';
 import type { PyLambdaExpression as _PyLambdaExpression } from './nodes/expressions/lambda';
 import type { PyListExpression as _PyListExpression } from './nodes/expressions/list';
 import type {
@@ -29,12 +29,13 @@ import type {
   PyLiteralValue as _PyLiteralValue,
 } from './nodes/expressions/literal';
 import type { PyMemberExpression as _PyMemberExpression } from './nodes/expressions/member';
+import type { PyRStringExpression as _PyRStringExpression } from './nodes/expressions/r-string';
 import type { PySetExpression as _PySetExpression } from './nodes/expressions/set';
 import type { PySubscriptExpression as _PySubscriptExpression } from './nodes/expressions/subscript';
 import type { PySubscriptSlice as _PySubscriptSlice } from './nodes/expressions/subscript-slice';
 import type { PyTupleExpression as _PyTupleExpression } from './nodes/expressions/tuple';
 import type { PyYieldExpression as _PyYieldExpression } from './nodes/expressions/yield';
-import type { PyYieldFromExpression as _PyYieldFromExpression } from './nodes/expressions/yieldFrom';
+import type { PyYieldFromExpression as _PyYieldFromExpression } from './nodes/expressions/yield-from';
 import { factory } from './nodes/factory';
 import { PyNodeKind } from './nodes/kinds';
 import type { PyStatement as _PyStatement } from './nodes/statement';
@@ -42,7 +43,7 @@ import type { PyAssignment as _PyAssignment } from './nodes/statements/assignmen
 import type {
   PyAugmentedAssignment as _PyAugmentedAssignment,
   PyAugmentedOperator as _PyAugmentedOperator,
-} from './nodes/statements/augmentedAssignment';
+} from './nodes/statements/augmented-assignment';
 import type { PyBlock as _PyBlock } from './nodes/statements/block';
 import type { PyBreakStatement as _PyBreakStatement } from './nodes/statements/break';
 import type { PyContinueStatement as _PyContinueStatement } from './nodes/statements/continue';
@@ -57,9 +58,9 @@ import type { PyReturnStatement as _PyReturnStatement } from './nodes/statements
 import type { PyTryStatement as _PyTryStatement } from './nodes/statements/try';
 import type { PyWhileStatement as _PyWhileStatement } from './nodes/statements/while';
 import type { PyWithStatement as _PyWithStatement } from './nodes/statements/with';
-import type { PyWithItem as _PyWithItem } from './nodes/statements/withItem';
+import type { PyWithItem as _PyWithItem } from './nodes/statements/with-item';
 import type { PyComment as _PyComment } from './nodes/structure/comment';
-import type { PySourceFile as _PySourceFile } from './nodes/structure/sourceFile';
+import type { PySourceFile as _PySourceFile } from './nodes/structure/source-file';
 import type { PyPrinterOptions as _PyPrinterOptions } from './printer';
 import { createPrinter, printAst } from './printer';
 
@@ -116,6 +117,7 @@ export namespace py {
   export type ListExpression = _PyListExpression;
   export type Literal = _PyLiteral;
   export type MemberExpression = _PyMemberExpression;
+  export type RStringExpression = _PyRStringExpression;
   export type SetExpression = _PySetExpression;
   export type SubscriptExpression = _PySubscriptExpression;
   export type SubscriptSlice = _PySubscriptSlice;

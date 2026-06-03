@@ -37,7 +37,7 @@ export function createPrinter(options?: PyPrinterOptions) {
   const quoteStyle = options?.quoteStyle ?? 'double';
   const quoteConflict = options?.quoteConflict ?? 'avoid-escape';
 
-  function createStringLiteral(value: string): string {
+  function selectQuote(value: string): { conflict: boolean; quote: string } {
     const preferred = quoteStyle === 'double' ? '"' : "'";
     const alternative = quoteStyle === 'double' ? "'" : '"';
 
@@ -45,14 +45,18 @@ export function createPrinter(options?: PyPrinterOptions) {
     const hasAlternative = value.includes(alternative);
 
     if (quoteConflict === 'escape' || (hasPreferred && hasAlternative)) {
-      return `${preferred}${value.replaceAll(preferred, `\\${preferred}`)}${preferred}`;
+      return { conflict: true, quote: preferred };
     }
 
-    if (hasPreferred && !hasAlternative) {
-      return `${alternative}${value}${alternative}`;
-    }
+    return { conflict: false, quote: hasPreferred ? alternative : preferred };
+  }
 
-    return `${preferred}${value}${preferred}`;
+  function createStringLiteral(value: string): string {
+    const result = selectQuote(value);
+    if (result.conflict) {
+      return `${result.quote}${value.replaceAll(result.quote, `\\${result.quote}`)}${result.quote}`;
+    }
+    return `${result.quote}${value}${result.quote}`;
   }
 
   let indentLevel = 0;
@@ -366,6 +370,30 @@ export function createPrinter(options?: PyPrinterOptions) {
           parts.push(printLine('raise'));
         }
         break;
+
+      case PyNodeKind.RStringExpression: {
+        const trailingBackslashes = node.value.match(/\\+$/);
+        const endsWithOddBackslashes =
+          trailingBackslashes !== null &&
+          trailingBackslashes !== undefined &&
+          trailingBackslashes[0].length % 2 !== 0;
+        if (endsWithOddBackslashes) {
+          parts.push(createStringLiteral(node.value.replaceAll('\\', '\\\\')));
+          break;
+        }
+        const result = selectQuote(node.value);
+        if (result.conflict) {
+          const tripleQuote = result.quote.repeat(3);
+          if (node.value.includes(tripleQuote)) {
+            parts.push(createStringLiteral(node.value.replaceAll('\\', '\\\\')));
+          } else {
+            parts.push(`r${tripleQuote}${node.value}${tripleQuote}`);
+          }
+        } else {
+          parts.push(`r${result.quote}${node.value}${result.quote}`);
+        }
+        break;
+      }
 
       case PyNodeKind.ReturnStatement:
         if (node.expression) {

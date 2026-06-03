@@ -3,7 +3,7 @@ import type { PyExpression } from '../expression';
 import { PyNodeKind } from '../kinds';
 import type { PyStatement } from '../statement';
 import { createBlock, type PyBlock } from './block';
-import type { PyWithItem } from './withItem';
+import type { PyWithItem } from './with-item';
 
 export interface PyWithStatement extends PyNodeBase {
   body: PyBlock;

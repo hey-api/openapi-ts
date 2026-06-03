@@ -4,9 +4,10 @@ import type { SchemaExtractor, SchemaVisitor } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
 
 import { $ } from '../../../py-dsl';
+import { $ as $$ } from '../../pydantic/dsl';
 import { composeMeta, defaultMeta, inheritMeta } from '../shared/meta';
 import type { ProcessorContext } from '../shared/processor';
-import type { PydanticFinal, PydanticResult } from '../shared/types';
+import type { PydanticResult } from '../shared/types';
 import type { PydanticPlugin } from '../types';
 import { arrayToType } from './toAst/array';
 import { booleanToType } from './toAst/boolean';
@@ -36,34 +37,37 @@ export function createVisitor(
   const { plugin, schemaExtractor } = config;
 
   return {
-    applyModifiers(result, ctx, options = {}): PydanticFinal {
+    applyModifiers(result, ctx, options = {}): PydanticResult {
       const { optional } = options;
 
       const needsDefault = result.meta.default !== undefined;
       const needsOptional = optional || needsDefault;
       const needsNullable = result.meta.nullable;
 
-      let type = result.type;
-      const fieldConstraints = { ...result.fieldConstraints };
-
-      if (needsOptional || needsNullable) {
-        const optionalType = plugin.symbols.typing.Optional;
-        type = $(optionalType).slice(type ?? plugin.symbols.typing.Any);
-        if (needsOptional) {
-          fieldConstraints.default = needsDefault ? result.meta.default : null;
-        }
+      if (!needsOptional && !needsNullable) {
+        return result;
       }
 
+      const inner = result.type?.type ?? $(plugin.symbols.typing.Any);
+      const wrappedType = $(plugin.symbols.typing.Optional).slice(inner);
+
+      const existingConstraints = result.type?.constraints ?? $$.constraints();
+      const updatedConstraints = needsOptional ? existingConstraints : existingConstraints;
+
       return {
-        enumMembers: result.enumMembers,
-        fieldConstraints,
-        fields: result.fields,
-        type,
+        meta: result.meta ?? {
+          default: undefined,
+          hasForwardReference: false,
+          nullable: false,
+          readonly: false,
+        },
+        node: result.node,
+        type: $$.constrainedType(wrappedType, updatedConstraints),
       };
     },
     array(schema, ctx, walk) {
-      const { childResults, fieldConstraints, type } = arrayToType({
-        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
+      const result = arrayToType({
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticResult,
         path: ctx.path,
         plugin,
         schema,
@@ -71,9 +75,8 @@ export function createVisitor(
       });
 
       return {
-        fieldConstraints,
-        meta: composeMeta(childResults, { ...defaultMeta(schema) }),
-        type,
+        ...result,
+        meta: composeMeta(result.childResults, { ...defaultMeta(schema) }),
       };
     },
     boolean(schema, ctx) {
@@ -87,7 +90,11 @@ export function createVisitor(
       const result = enumToType({ path: ctx.path, plugin, schema });
       return {
         ...result,
-        meta: defaultMeta(schema),
+        meta: {
+          ...defaultMeta(schema),
+          nullable: result.isNullable,
+        },
+        node: result.enumMembers.length ? { kind: 'enum', members: result.enumMembers } : undefined,
       };
     },
     integer(schema, ctx) {
@@ -111,7 +118,7 @@ export function createVisitor(
     },
     intersection(items, schemas, parentSchema, ctx) {
       const result = intersectionToType({
-        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticResult,
         childResults: items,
         parentSchema,
         path: ctx.path,
@@ -153,8 +160,8 @@ export function createVisitor(
       };
     },
     object(schema, ctx, walk) {
-      const { childResults, fields, type } = objectToFields({
-        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
+      const result = objectToFields({
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticResult,
         path: ctx.path,
         plugin,
         schema,
@@ -162,9 +169,8 @@ export function createVisitor(
       });
 
       return {
-        fields,
-        meta: inheritMeta(schema, childResults),
-        type: type ?? '',
+        ...result,
+        meta: inheritMeta(schema, result.childResults),
       };
     },
     postProcess(result) {
@@ -186,7 +192,7 @@ export function createVisitor(
           ...defaultMeta(schema),
           hasForwardReference: !isRegistered,
         },
-        type: refSymbol,
+        type: $$.constrainedType(refSymbol),
       };
     },
     string(schema, ctx) {
@@ -197,8 +203,8 @@ export function createVisitor(
       };
     },
     tuple(schema, ctx, walk) {
-      const { childResults, fieldConstraints, type } = tupleToType({
-        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
+      const result = tupleToType({
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticResult,
         path: ctx.path,
         plugin,
         schema,
@@ -206,9 +212,8 @@ export function createVisitor(
       });
 
       return {
-        fieldConstraints,
-        meta: composeMeta(childResults, { ...defaultMeta(schema) }),
-        type,
+        ...result,
+        meta: composeMeta(result.childResults, { ...defaultMeta(schema) }),
       };
     },
     undefined(schema, ctx) {
@@ -224,7 +229,7 @@ export function createVisitor(
     },
     union(items, schemas, parentSchema, ctx) {
       const result = unionToType({
-        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticFinal,
+        applyModifiers: (result, opts) => this.applyModifiers(result, ctx, opts) as PydanticResult,
         childResults: items,
         parentSchema,
         path: ctx.path,

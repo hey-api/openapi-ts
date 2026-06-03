@@ -1,10 +1,10 @@
 import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { StringResolverContext } from '../../resolvers';
 import type { PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
-import type { FieldConstraints } from '../constants';
 
 function constNode(ctx: StringResolverContext): PydanticType | undefined {
   const { plugin, schema } = ctx;
@@ -12,7 +12,7 @@ function constNode(ctx: StringResolverContext): PydanticType | undefined {
   if (typeof schema.const === 'string') {
     const literal = plugin.symbols.typing.Literal;
     return {
-      type: $(literal).slice($.literal(schema.const)),
+      type: $$.constrainedType($(literal).slice($.literal(schema.const))),
     };
   }
 }
@@ -20,27 +20,15 @@ function constNode(ctx: StringResolverContext): PydanticType | undefined {
 function baseNode(ctx: StringResolverContext): PydanticType {
   const { schema } = ctx;
 
-  const constraints: FieldConstraints = {};
+  const c = $$.constraints();
 
-  if (schema.minLength !== undefined) {
-    constraints.min_length = schema.minLength;
-  }
-
-  if (schema.maxLength !== undefined) {
-    constraints.max_length = schema.maxLength;
-  }
-
-  if (schema.pattern !== undefined) {
-    constraints.pattern = schema.pattern;
-  }
-
-  if (schema.description !== undefined) {
-    constraints.description = schema.description;
-  }
+  if (schema.minLength !== undefined) c.minLength(schema.minLength);
+  if (schema.maxLength !== undefined) c.maxLength(schema.maxLength);
+  if (schema.pattern !== undefined) c.pattern(schema.pattern);
+  if (schema.description !== undefined) c.description(schema.description);
 
   return {
-    fieldConstraints: constraints,
-    type: 'str',
+    type: $$.constrainedType('str', c.isEmpty ? undefined : c),
   };
 }
 

@@ -2,6 +2,7 @@ import type { SymbolFactory } from '@hey-api/shared';
 
 export function TYPING(factory: SymbolFactory) {
   return {
+    Annotated: factory.register('Annotated', { external: 'typing' }),
     Any: factory.register('Any', { external: 'typing' }),
     Literal: factory.register('Literal', { external: 'typing' }),
     NoReturn: factory.register('NoReturn', { external: 'typing' }),

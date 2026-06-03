@@ -20,7 +20,7 @@ import type { LazyOrAsync, MaybeArray } from '@hey-api/types';
 import type { Configs } from './config/init';
 import { resolveJobs } from './config/init';
 import type { UserConfig } from './config/types';
-import { createClient as pCreateClient } from './createClient';
+import { createClient as pCreateClient } from './create-client';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
