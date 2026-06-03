@@ -92,11 +92,7 @@ export function operationParameters({
       if (param.isRequired) {
         result.parameters.push($.param(paramName).type(type));
       } else {
-        result.parameters.push(
-          $.param(paramName)
-            .type($(plugin.symbols.typing.Union).slice(type, 'None'))
-            .default('None'),
-        );
+        result.parameters.push($.param(paramName).type($.type.or(type, 'None')).default('None'));
       }
     }
   }

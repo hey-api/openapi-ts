@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { type Logger, Project } from '@hey-api/codegen-core';
+import { type Logger, Project, Version } from '@hey-api/codegen-core';
 import { $RefParser, ResolverError } from '@hey-api/json-schema-ref-parser';
 import type { Input, OpenApi, WatchValues } from '@hey-api/shared';
 import {
@@ -14,6 +14,7 @@ import {
   parseOpenApiSpec,
   patchOpenApiSpec,
   postprocessOutput,
+  SymbolFactory,
 } from '@hey-api/shared';
 import { format as ms } from '@lukeed/ms';
 import colors from 'ansi-colors';
@@ -22,6 +23,7 @@ import { postProcessors } from './config/output/postprocess';
 import type { Config } from './config/types';
 import { generateOutput } from './generate/output';
 import { PythonRenderer } from './py-dsl';
+import { TYPING } from './symbols';
 
 export async function createClient({
   config,
@@ -138,11 +140,6 @@ export async function createClient({
         }
         return name === '__init__' || name.endsWith(suffix) ? name : `${name}${suffix}`;
       },
-      meta: {
-        python: {
-          version: config.output.pythonVersion,
-        },
-      },
       nameConflictResolvers: config.output.nameConflictResolver
         ? {
             python: config.output.nameConflictResolver,
@@ -168,6 +165,17 @@ export async function createClient({
       project,
       spec: data as OpenApi.V2_0_X | OpenApi.V3_0_X | OpenApi.V3_1_X,
     });
+    const symbolFactory = new SymbolFactory({
+      eventHooks: SymbolFactory.buildEventHooks([context.config.parser.hooks.events]),
+      project,
+    });
+    project.meta.python = {
+      Version: new Version(config.output.pythonVersion),
+      symbols: {
+        typing: TYPING(symbolFactory),
+      },
+      version: config.output.pythonVersion,
+    };
     parseOpenApiSpec(context);
     context.graph = buildGraph(context.ir, logger).graph;
     eventParser.timeEnd();

@@ -24,8 +24,8 @@ export function sdkSymbols(plugin: PluginInstance) {
         tool: client.name,
       },
     }),
-    funcTools: SYMBOLS.FUNC_TOOLS(plugin),
-    typing: SYMBOLS.TYPING(plugin),
+    funcTools: SYMBOLS.FUNC_TOOLS(plugin.symbolFactory),
+    typing: SYMBOLS.TYPING(plugin.symbolFactory),
   };
 }
 

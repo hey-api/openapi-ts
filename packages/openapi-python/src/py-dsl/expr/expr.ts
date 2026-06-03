@@ -5,17 +5,19 @@ import type { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import { ExprMixin } from '../mixins/expr';
+import { f } from '../utils/factories';
 
-type Id = NodeName | MaybePyDsl<py.Expression>;
+export type ExprId = NodeName | MaybePyDsl<py.Expression>;
+export type ExprCtor = (id: ExprId) => ExprPyDsl;
 
 const Mixed = ExprMixin(PyDsl<py.Expression>);
 
 export class ExprPyDsl extends Mixed {
   readonly '~dsl' = 'ExprPyDsl';
 
-  protected _exprInput: Ref<Id>;
+  protected _exprInput: Ref<ExprId>;
 
-  constructor(id: Id) {
+  constructor(id: ExprId) {
     super();
     this._exprInput = ref(id);
     if (typeof id === 'string' || isSymbol(id)) {
@@ -34,3 +36,5 @@ export class ExprPyDsl extends Mixed {
     return this.$node(this._exprInput);
   }
 }
+
+f.expr.set((...args) => new ExprPyDsl(...args));

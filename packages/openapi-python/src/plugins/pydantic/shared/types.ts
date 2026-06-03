@@ -1,6 +1,7 @@
-import type { Symbol } from '@hey-api/codegen-core';
+import type { NodeName, Symbol } from '@hey-api/codegen-core';
 
-import type { VarType } from '../../../py-dsl';
+import type { py } from '../../../py-compiler';
+import type { MaybePyDsl, VarType } from '../../../py-dsl';
 import type { PydanticEnumDsl, PydanticModelDsl, PydTypeAliasPyDsl } from '../dsl';
 import type { FieldConstraints } from '../v2/constants';
 
@@ -9,7 +10,7 @@ import type { FieldConstraints } from '../v2/constants';
  */
 export interface PydanticType {
   fieldConstraints?: FieldConstraints;
-  type?: VarType;
+  type?: NodeName | MaybePyDsl<py.Expression>;
 }
 
 /**

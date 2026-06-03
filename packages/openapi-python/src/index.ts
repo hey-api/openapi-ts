@@ -6,7 +6,11 @@ import '@hey-api/shared';
 
 declare module '@hey-api/codegen-core' {
   interface ProjectMeta {
-    python?: {
+    python: {
+      Version: Version<PythonVersion>;
+      symbols: {
+        typing: TypingSymbols;
+      };
       version: PythonVersion;
     };
   }
@@ -51,6 +55,7 @@ declare module '@hey-api/shared' {
 }
 // END OVERRIDES
 
+import type { Version } from '@hey-api/codegen-core';
 import type { AnyString, LazyOrAsync, MaybeArray } from '@hey-api/types';
 import colors from 'ansi-colors';
 // @ts-expect-error
@@ -61,6 +66,7 @@ import type { UserConfig } from './config/types';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 import type { PydanticPlugin, PydanticResolvers } from './plugins/pydantic';
+import type { TypingSymbols } from './symbols/typing';
 
 colors.enabled = colorSupport().hasBasic;
 

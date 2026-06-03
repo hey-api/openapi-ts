@@ -1,13 +1,15 @@
-import type { PluginInstance } from '@hey-api/shared';
+import type { SymbolFactory } from '@hey-api/shared';
 
-export function TYPING(plugin: PluginInstance) {
+export function TYPING(factory: SymbolFactory) {
   return {
-    Any: plugin.symbol('Any', { external: 'typing' }),
-    Literal: plugin.symbol('Literal', { external: 'typing' }),
-    NoReturn: plugin.symbol('NoReturn', { external: 'typing' }),
-    Optional: plugin.symbol('Optional', { external: 'typing' }),
-    Tuple: plugin.symbol('Tuple', { external: 'typing' }),
-    TypeAlias: plugin.symbol('TypeAlias', { external: 'typing' }),
-    Union: plugin.symbol('Union', { external: 'typing' }),
+    Any: factory.register('Any', { external: 'typing' }),
+    Literal: factory.register('Literal', { external: 'typing' }),
+    NoReturn: factory.register('NoReturn', { external: 'typing' }),
+    Optional: factory.register('Optional', { external: 'typing' }),
+    Tuple: factory.register('Tuple', { external: 'typing' }),
+    TypeAlias: factory.register('TypeAlias', { external: 'typing' }),
+    Union: factory.register('Union', { external: 'typing' }),
   };
 }
+
+export type TypingSymbols = ReturnType<typeof TYPING>;
