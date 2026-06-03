@@ -103,7 +103,7 @@ export const globalHealth = <ThrowOnError extends boolean = false>(options?: Opt
  *
  * Subscribe to global events from the OpenCode system using server-sent events.
  */
-export const globalEvent = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError, GlobalEventResponse>): Promise<ServerSentEventsResult<GlobalEventResponses, GlobalEventErrors | void, ThrowOnError>> => (options?.client ?? client).sse.get<GlobalEventResponses, GlobalEventErrors, ThrowOnError>({ url: '/global/event', ...options });
+export const globalEvent = <ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError, GlobalEventResponse>): Promise<ServerSentEventsResult<GlobalEventResponses>> => (options?.client ?? client).sse.get<GlobalEventResponses, GlobalEventErrors, ThrowOnError>({ url: '/global/event', ...options });
 
 /**
  * Get global configuration
@@ -169,7 +169,7 @@ export const globalUpgrade = <ThrowOnError extends boolean = false>(parameters?:
 export const eventSubscribe = <ThrowOnError extends boolean = false>(parameters?: {
     directory?: string;
     workspace?: string;
-}, options?: Options<never, ThrowOnError, EventSubscribeResponse>): Promise<ServerSentEventsResult<EventSubscribeResponses, unknown | void, ThrowOnError>> => {
+}, options?: Options<never, ThrowOnError, EventSubscribeResponse>): Promise<ServerSentEventsResult<EventSubscribeResponses>> => {
     const params = buildClientParams([parameters], [{ args: [{ in: 'query', key: 'directory' }, { in: 'query', key: 'workspace' }] }]);
     return (options?.client ?? client).sse.get<EventSubscribeResponses, unknown, ThrowOnError>({
         url: '/event',
