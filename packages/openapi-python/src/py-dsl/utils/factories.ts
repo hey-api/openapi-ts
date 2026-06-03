@@ -1,5 +1,7 @@
 import type { AttrCtor } from '../expr/attr';
+import type { BinaryCtor } from '../expr/binary';
 import type { CallCtor } from '../expr/call';
+import type { ExprCtor } from '../expr/expr';
 import type { SubscriptCtor } from '../expr/subscript';
 import type { ReturnCtor } from '../stmt/return';
 
@@ -30,8 +32,14 @@ export const f = {
   /** Factory for creating property access expressions (e.g., `obj.foo`). */
   attr: createFactory<AttrCtor>('attr'),
 
+  /** Factory for creating binary expressions (e.g., `a + b`). */
+  binary: createFactory<BinaryCtor>('binary'),
+
   /** Factory for creating function or method call expressions (e.g., `fn(arg)`). */
   call: createFactory<CallCtor>('call'),
+
+  /** Factory for creating expression nodes. */
+  expr: createFactory<ExprCtor>('expr'),
 
   /** Factory for creating return statements. */
   return: createFactory<ReturnCtor>('return'),

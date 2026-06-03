@@ -68,8 +68,8 @@ export type Hooks = {
      * @returns void
      */
     'symbol:register:after'?: (args: {
-      /** Plugin that registered the symbol. */
-      plugin: PluginInstance;
+      /** Plugin that registered the symbol, if available. */
+      plugin?: PluginInstance;
       /** The registered symbol. */
       symbol: Symbol;
     }) => void;
@@ -82,8 +82,8 @@ export type Hooks = {
      * @returns void
      */
     'symbol:register:before'?: (args: {
-      /** Plugin registering the symbol. */
-      plugin: PluginInstance;
+      /** Plugin registering the symbol, if available. */
+      plugin?: PluginInstance;
       /** Symbol to register. */
       symbol: SymbolIn;
     }) => void;

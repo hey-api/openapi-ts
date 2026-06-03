@@ -1,6 +1,8 @@
+import type { NodeName } from '@hey-api/codegen-core';
 import { childContext } from '@hey-api/shared';
 
-import { $, type VarType } from '../../../../py-dsl';
+import type { py } from '../../../../py-compiler';
+import { $, type MaybePyDsl } from '../../../../py-dsl';
 import type { TupleResolverContext } from '../../resolvers';
 import type { PydanticResult, PydanticType } from '../../shared/types';
 import type { FieldConstraints } from '../constants';
@@ -17,7 +19,7 @@ function baseNode(ctx: TupleResolverContext): PydanticType {
     };
   }
 
-  const itemTypes: Array<VarType> = [];
+  const itemTypes: Array<NodeName | MaybePyDsl<py.Expression>> = [];
 
   for (const result of childResults) {
     const finalResult = applyModifiers(result);

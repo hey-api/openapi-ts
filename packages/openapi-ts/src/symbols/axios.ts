@@ -1,8 +1,8 @@
-import type { PluginInstance } from '@hey-api/shared';
+import type { SymbolFactory } from '@hey-api/shared';
 
-export function AXIOS(plugin: PluginInstance) {
+export function AXIOS(factory: SymbolFactory) {
   return {
-    AxiosError: plugin.symbol('AxiosError', {
+    AxiosError: factory.register('AxiosError', {
       external: 'axios',
       kind: 'type',
     }),

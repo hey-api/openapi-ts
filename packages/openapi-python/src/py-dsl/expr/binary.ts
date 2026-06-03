@@ -2,29 +2,16 @@ import type { AnalysisContext, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 
 import { py } from '../../py-compiler';
+import type { PyBinaryOperator } from '../../py-compiler/nodes/expressions/binary';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
+import { f } from '../utils/factories';
 
-export type PyBinaryOperator =
-  | '+'
-  | '-'
-  | '*'
-  | '/'
-  | '//'
-  | '%'
-  | '**'
-  | '=='
-  | '!='
-  | '>'
-  | '>='
-  | '<'
-  | '<='
-  | 'is'
-  | 'is not'
-  | 'in'
-  | 'not in'
-  | 'and'
-  | 'or';
+export type BinaryCtor = (
+  left: MaybePyDsl<py.Expression>,
+  op: PyBinaryOperator,
+  right: MaybePyDsl<py.Expression>,
+) => BinaryPyDsl;
 
 const Mixed = PyDsl<py.BinaryExpression>;
 
@@ -167,3 +154,5 @@ export class BinaryPyDsl extends Mixed {
     return this;
   }
 }
+
+f.binary.set((...args) => new BinaryPyDsl(...args));

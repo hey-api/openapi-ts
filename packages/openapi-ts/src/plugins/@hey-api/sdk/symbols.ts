@@ -49,7 +49,7 @@ export function sdkSymbols(plugin: PluginInstance) {
       external: clientModule,
       kind: 'type',
     }),
-    angular: SYMBOLS.ANGULAR(plugin),
+    angular: SYMBOLS.ANGULAR(plugin.symbolFactory),
     buildClientParams: plugin.symbol('buildClientParams', {
       external: clientModule,
       meta: {

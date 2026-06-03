@@ -1,8 +1,8 @@
-import type { PluginInstance } from '@hey-api/shared';
+import type { SymbolFactory } from '@hey-api/shared';
 
-export function VALIBOT(plugin: PluginInstance) {
+export function VALIBOT(factory: SymbolFactory) {
   return {
-    v: plugin.symbol('v', {
+    v: factory.register('v', {
       external: 'valibot',
       importKind: 'namespace',
     }),

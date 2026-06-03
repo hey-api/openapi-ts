@@ -4,7 +4,7 @@ import * as SYMBOLS from '../../symbols';
 
 export function valibotSymbols(plugin: PluginInstance) {
   return {
-    ...SYMBOLS.VALIBOT(plugin),
+    ...SYMBOLS.VALIBOT(plugin.symbolFactory),
   };
 }
 
