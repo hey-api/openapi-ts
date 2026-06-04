@@ -6,6 +6,7 @@ export {
   jsonBodySerializer,
   urlSearchParamsBodySerializer,
 } from './core/bodySerializer';
+export type { ClientMeta, Meta } from './core/types';
 export type {
   Client,
   ClientOptions,

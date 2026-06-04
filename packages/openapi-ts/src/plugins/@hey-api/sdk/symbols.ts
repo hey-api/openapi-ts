@@ -25,6 +25,14 @@ export function sdkSymbols(plugin: PluginInstance) {
         tool: client.name,
       },
     }),
+    Meta: plugin.symbol('Meta', {
+      external: clientModule,
+      kind: 'type',
+      meta: {
+        resource: 'client.Meta',
+        tool: client.name,
+      },
+    }),
     Options: plugin.symbol('Options', {
       external: clientModule,
       kind: 'type',
