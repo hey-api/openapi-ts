@@ -362,6 +362,35 @@ export default {
 
 Learn more about available transformers on the [Validators](/docs/openapi/typescript/validators) page.
 
+## Metadata
+
+Every SDK method accepts an optional `meta` object. You can use it to pass arbitrary values that aren't part of the SDK function and read them back in your [client](/docs/openapi/typescript/clients)'s interceptors/middleware.
+
+```ts
+await getFoo({ meta: { timeout: 5000 } });
+```
+
+By default `meta` is untyped, so typos and wrong-typed values compile silently. To make it typesafe, augment the `ClientMeta` interface exported by your client. This is a standard TypeScript [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html) extension point, so it applies to every SDK call.
+
+```ts title="client-meta.d.ts"
+declare module '@hey-api/client-fetch' {
+  interface ClientMeta {
+    timeout?: number;
+    retry?: boolean;
+  }
+}
+```
+
+After augmentation, `meta` is fully type-checked at the call site — declared keys get autocomplete, and unknown keys or wrong-typed values are rejected.
+
+```ts
+await getFoo({ meta: { timeout: 5000 } }); // ✅
+await getFoo({ meta: { timeoutt: 5000 } }); // ❌ unknown key
+await getFoo({ meta: { timeout: '5s' } }); // ❌ wrong type
+```
+
+Augment the module that matches your configured client (for example `@hey-api/client-axios`). If you use a [custom client](/docs/openapi/typescript/clients/custom), augment the module you import it from.
+
 ## Code Examples
 
 The SDK plugin can generate ready-to-use code examples for each operation, showing how to call the SDK methods with proper parameters and setup.
