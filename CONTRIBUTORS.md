@@ -28,6 +28,7 @@
 - [Finn Poppinga](https://github.com/fpoppinga)
 - [Flo Edelmann](https://github.com/FloEdelmann)
 - [Florian Lutze](https://github.com/flow96)
+- [Francesco Stefanini](https://github.com/frastefanini)
 - [Francisco García](https://github.com/goltra)
 - [George Smith](https://github.com/georgesmith46)
 - [Gergan Penkov](https://github.com/gergan)
