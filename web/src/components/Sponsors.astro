@@ -15,7 +15,7 @@ const TIERS: Array<{ id: Tier; label: string }> = [
 
 <div class="sponsors">
   {TIERS.map(({ id, label }) => {
-    const tierSponsors = sponsors.filter((s) => s.tier === id);
+    const tierSponsors = sponsors.filter((s) => s.tier === id && !s.past);
     if (!tierSponsors.length) return null;
     return <SponsorTier tier={id} label={label} sponsors={tierSponsors} />;
   })}
