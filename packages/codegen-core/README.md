@@ -104,6 +104,18 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           fastapi.tiangolo.com
         </a>
       </td>
+      <td align="center" width="172px">
+        <a href="https://kutt.to/yZVkdV" target="_blank">
+          <picture height="40px">
+            <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/brands/unblocked/logo-light.svg">
+            <img alt="Unblocked logo" height="40px" src="https://heyapi.dev/assets/brands/unblocked/logo-dark.svg">
+          </picture>
+        </a>
+        <br/>
+        <a href="https://kutt.to/yZVkdV" style="text-decoration:none;" target="_blank">
+          getunblocked.com
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
