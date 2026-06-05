@@ -118,7 +118,7 @@ export async function createClient(
       }
     }
 
-    if (inputError) return [];
+    if (inputError) throw error;
 
     throw error;
   }
