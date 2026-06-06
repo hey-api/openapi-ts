@@ -12,9 +12,9 @@ import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '.
 import { handleMeta } from '../shared/meta';
 import {
   ensureFieldsResponseTypes,
+  fieldsResultStatements,
   fieldsStyleParamName,
   fieldsStyleUnion,
-  parenExpr,
 } from '../shared/responseTypes';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -67,7 +67,7 @@ export function createQueryOptions({
     ? $.type(fieldsTypes.symbolResponseResult).generic(typeResponse).generic(fieldsStyleParamName)
     : typeResponse;
   const wrappedError = fieldsTypes
-    ? $.type(fieldsTypes.symbolResponseError).generic(typeError).generic(fieldsStyleParamName)
+    ? $.type(fieldsTypes.symbolErrorResult).generic(typeError).generic(fieldsStyleParamName)
     : typeError;
 
   const sdkCallObject = isFields
@@ -97,42 +97,15 @@ export function createQueryOptions({
   );
 
   const statements: Array<TsDsl<any>> = [];
-  if (isFields) {
-    const isFieldsCall = $(optionsParamName)
-      .attr('responseStyle')
-      .optional()
-      .eq($.literal('fields'));
-    const errorFieldsObject = $.object()
-      .pretty()
-      .prop('error', $('result').attr('error'))
-      .prop('request', $('result').attr('request'))
-      .prop('response', $('result').attr('response'));
-    const dataFieldsObject = $.object()
-      .pretty()
-      .prop('data', $('result').attr('data'))
-      .prop('request', $('result').attr('request'))
-      .prop('response', $('result').attr('response'));
+  if (fieldsTypes) {
     statements.push(
-      $.const('result').assign(awaitSdkFn),
-      $.if($('result').attr('error').neq($('undefined'))).do(
-        $.throw(
-          $.as(
-            parenExpr(
-              $.ternary(isFieldsCall).do(errorFieldsObject).otherwise($('result').attr('error')),
-            ),
-            wrappedError,
-          ),
-          false,
-        ),
-      ),
-      $.return(
-        $.as(
-          parenExpr(
-            $.ternary(isFieldsCall).do(dataFieldsObject).otherwise($('result').attr('data')),
-          ),
-          wrappedResponse,
-        ),
-      ),
+      ...fieldsResultStatements({
+        awaitSdkFn,
+        fieldsTypes,
+        optionsName: optionsParamName,
+        wrappedError,
+        wrappedResponse,
+      }),
     );
   } else if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));

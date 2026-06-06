@@ -41,13 +41,22 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const exportQueryKey = (options?: Options<ExportData>) => createQueryKey('export', options);
 
-type ResponseError<E, TStyle extends 'data' | 'fields'> = TStyle extends "fields" ? {
-    error: E;
-    request?: Request;
-    response?: Response;
-} : E;
+export class ResponseError<E> extends Error {
+    readonly error: E;
+    readonly request?: Request;
+    readonly response?: Response;
+    constructor(error: E, request?: Request, response?: Response) {
+        super(response ? `Request failed with status ${response.status}: ${response.statusText}` : 'Request failed');
+        this.name = 'ResponseError';
+        this.error = error;
+        this.request = request;
+        this.response = response;
+    }
+}
 
-type ResponseResult<T, TStyle extends 'data' | 'fields'> = TStyle extends "fields" ? {
+export type ErrorResult<E, TStyle extends 'data' | 'fields'> = TStyle extends "fields" ? ResponseError<E> : E;
+
+export type ResponseResult<T, TStyle extends 'data' | 'fields'> = TStyle extends "fields" ? {
     data: T;
     request: Request;
     response: Response;
@@ -55,7 +64,7 @@ type ResponseResult<T, TStyle extends 'data' | 'fields'> = TStyle extends "field
 
 export const exportOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<ExportData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof exportQueryKey>>({
+}) => queryOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof exportQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await export_({
             ...options,
@@ -65,13 +74,9 @@ export const exportOptions = <TStyle extends 'data' | 'fields' = 'fields'>(optio
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -82,8 +87,8 @@ export const exportOptions = <TStyle extends 'data' | 'fields' = 'fields'>(optio
 
 export const patchApiVbyApiVersionNoTagMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PatchApiVbyApiVersionNoTagData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PatchApiVbyApiVersionNoTagData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PatchApiVbyApiVersionNoTagData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PatchApiVbyApiVersionNoTagData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PatchApiVbyApiVersionNoTagData>> = {
         mutationFn: async (fnOptions) => {
             const result = await patchApiVbyApiVersionNoTag({
                 ...options,
@@ -92,13 +97,9 @@ export const patchApiVbyApiVersionNoTagMutation = <TStyle extends 'data' | 'fiel
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -110,8 +111,8 @@ export const patchApiVbyApiVersionNoTagMutation = <TStyle extends 'data' | 'fiel
 
 export const importMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<ImportData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<ImportResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<ImportData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<ImportResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<ImportData>> = {
+}): UseMutationOptions<ResponseResult<ImportResponse, TStyle>, ErrorResult<DefaultError, TStyle>, Options<ImportData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<ImportResponse, TStyle>, ErrorResult<DefaultError, TStyle>, Options<ImportData>> = {
         mutationFn: async (fnOptions) => {
             const result = await import_({
                 ...options,
@@ -120,13 +121,9 @@ export const importMutation = <TStyle extends 'data' | 'fields' = 'fields'>(opti
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -138,8 +135,8 @@ export const importMutation = <TStyle extends 'data' | 'fields' = 'fields'>(opti
 
 export const fooWowMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<FooWowData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<FooWowData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<FooWowData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<FooWowData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<FooWowData>> = {
         mutationFn: async (fnOptions) => {
             const result = await fooWow({
                 ...options,
@@ -148,13 +145,9 @@ export const fooWowMutation = <TStyle extends 'data' | 'fields' = 'fields'>(opti
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -168,7 +161,7 @@ export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVe
 
 export const apiVVersionODataControllerCountOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<ApiVVersionODataControllerCountData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<ApiVVersionODataControllerCountResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<ApiVVersionODataControllerCountResponse, TStyle>, ReturnType<typeof apiVVersionODataControllerCountQueryKey>>({
+}) => queryOptions<ResponseResult<ApiVVersionODataControllerCountResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<ApiVVersionODataControllerCountResponse, TStyle>, ReturnType<typeof apiVVersionODataControllerCountQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await apiVVersionODataControllerCount({
             ...options,
@@ -178,13 +171,9 @@ export const apiVVersionODataControllerCountOptions = <TStyle extends 'data' | '
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -197,7 +186,7 @@ export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetA
 
 export const getApiVbyApiVersionSimpleOperationOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<GetApiVbyApiVersionSimpleOperationData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<GetApiVbyApiVersionSimpleOperationResponse, TStyle>, ResponseError<GetApiVbyApiVersionSimpleOperationError, TStyle>, ResponseResult<GetApiVbyApiVersionSimpleOperationResponse, TStyle>, ReturnType<typeof getApiVbyApiVersionSimpleOperationQueryKey>>({
+}) => queryOptions<ResponseResult<GetApiVbyApiVersionSimpleOperationResponse, TStyle>, ErrorResult<GetApiVbyApiVersionSimpleOperationError, TStyle>, ResponseResult<GetApiVbyApiVersionSimpleOperationResponse, TStyle>, ReturnType<typeof getApiVbyApiVersionSimpleOperationQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await getApiVbyApiVersionSimpleOperation({
             ...options,
@@ -207,13 +196,9 @@ export const getApiVbyApiVersionSimpleOperationOptions = <TStyle extends 'data' 
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<GetApiVbyApiVersionSimpleOperationError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<GetApiVbyApiVersionSimpleOperationError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -224,8 +209,8 @@ export const getApiVbyApiVersionSimpleOperationOptions = <TStyle extends 'data' 
 
 export const deleteCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeleteCallWithoutParametersAndResponseData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeleteCallWithoutParametersAndResponseData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DeleteCallWithoutParametersAndResponseData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DeleteCallWithoutParametersAndResponseData>> = {
         mutationFn: async (fnOptions) => {
             const result = await deleteCallWithoutParametersAndResponse({
                 ...options,
@@ -234,13 +219,9 @@ export const deleteCallWithoutParametersAndResponseMutation = <TStyle extends 'd
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -254,7 +235,7 @@ export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<Ge
 
 export const getCallWithoutParametersAndResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<GetCallWithoutParametersAndResponseData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof getCallWithoutParametersAndResponseQueryKey>>({
+}) => queryOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof getCallWithoutParametersAndResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await getCallWithoutParametersAndResponse({
             ...options,
@@ -264,13 +245,9 @@ export const getCallWithoutParametersAndResponseOptions = <TStyle extends 'data'
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -281,8 +258,8 @@ export const getCallWithoutParametersAndResponseOptions = <TStyle extends 'data'
 
 export const patchCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PatchCallWithoutParametersAndResponseData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PatchCallWithoutParametersAndResponseData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PatchCallWithoutParametersAndResponseData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PatchCallWithoutParametersAndResponseData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PatchCallWithoutParametersAndResponseData>> = {
         mutationFn: async (fnOptions) => {
             const result = await patchCallWithoutParametersAndResponse({
                 ...options,
@@ -291,13 +268,9 @@ export const patchCallWithoutParametersAndResponseMutation = <TStyle extends 'da
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -309,8 +282,8 @@ export const patchCallWithoutParametersAndResponseMutation = <TStyle extends 'da
 
 export const postCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PostCallWithoutParametersAndResponseData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostCallWithoutParametersAndResponseData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostCallWithoutParametersAndResponseData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PostCallWithoutParametersAndResponseData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PostCallWithoutParametersAndResponseData>> = {
         mutationFn: async (fnOptions) => {
             const result = await postCallWithoutParametersAndResponse({
                 ...options,
@@ -319,13 +292,9 @@ export const postCallWithoutParametersAndResponseMutation = <TStyle extends 'dat
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -337,8 +306,8 @@ export const postCallWithoutParametersAndResponseMutation = <TStyle extends 'dat
 
 export const putCallWithoutParametersAndResponseMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PutCallWithoutParametersAndResponseData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PutCallWithoutParametersAndResponseData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PutCallWithoutParametersAndResponseData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PutCallWithoutParametersAndResponseData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PutCallWithoutParametersAndResponseData>> = {
         mutationFn: async (fnOptions) => {
             const result = await putCallWithoutParametersAndResponse({
                 ...options,
@@ -347,13 +316,9 @@ export const putCallWithoutParametersAndResponseMutation = <TStyle extends 'data
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -365,8 +330,8 @@ export const putCallWithoutParametersAndResponseMutation = <TStyle extends 'data
 
 export const deleteFooMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DeleteFooData3>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeleteFooData3>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeleteFooData3>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DeleteFooData3>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DeleteFooData3>> = {
         mutationFn: async (fnOptions) => {
             const result = await deleteFoo({
                 ...options,
@@ -375,13 +340,9 @@ export const deleteFooMutation = <TStyle extends 'data' | 'fields' = 'fields'>(o
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -393,8 +354,8 @@ export const deleteFooMutation = <TStyle extends 'data' | 'fields' = 'fields'>(o
 
 export const callWithDescriptionsMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithDescriptionsData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithDescriptionsData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithDescriptionsData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithDescriptionsData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithDescriptionsData>> = {
         mutationFn: async (fnOptions) => {
             const result = await callWithDescriptions({
                 ...options,
@@ -403,13 +364,9 @@ export const callWithDescriptionsMutation = <TStyle extends 'data' | 'fields' = 
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -424,8 +381,8 @@ export const callWithDescriptionsMutation = <TStyle extends 'data' | 'fields' = 
  */
 export const deprecatedCallMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DeprecatedCallData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeprecatedCallData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DeprecatedCallData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DeprecatedCallData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DeprecatedCallData>> = {
         mutationFn: async (fnOptions) => {
             const result = await deprecatedCall({
                 ...options,
@@ -434,13 +391,9 @@ export const deprecatedCallMutation = <TStyle extends 'data' | 'fields' = 'field
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -452,8 +405,8 @@ export const deprecatedCallMutation = <TStyle extends 'data' | 'fields' = 'field
 
 export const callWithParametersMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithParametersData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithParametersData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithParametersData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithParametersData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithParametersData>> = {
         mutationFn: async (fnOptions) => {
             const result = await callWithParameters({
                 ...options,
@@ -462,13 +415,9 @@ export const callWithParametersMutation = <TStyle extends 'data' | 'fields' = 'f
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -480,8 +429,8 @@ export const callWithParametersMutation = <TStyle extends 'data' | 'fields' = 'f
 
 export const callWithWeirdParameterNamesMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithWeirdParameterNamesData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithWeirdParameterNamesData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithWeirdParameterNamesData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithWeirdParameterNamesData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithWeirdParameterNamesData>> = {
         mutationFn: async (fnOptions) => {
             const result = await callWithWeirdParameterNames({
                 ...options,
@@ -490,13 +439,9 @@ export const callWithWeirdParameterNamesMutation = <TStyle extends 'data' | 'fie
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -510,7 +455,7 @@ export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOpt
 
 export const getCallWithOptionalParamOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<GetCallWithOptionalParamData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof getCallWithOptionalParamQueryKey>>({
+}) => queryOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof getCallWithOptionalParamQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await getCallWithOptionalParam({
             ...options,
@@ -520,13 +465,9 @@ export const getCallWithOptionalParamOptions = <TStyle extends 'data' | 'fields'
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -568,7 +509,7 @@ export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCal
 
 export const getCallWithOptionalParamInfiniteOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<GetCallWithOptionalParamData> & {
     responseStyle?: TStyle;
-}) => infiniteQueryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, InfiniteData<ResponseResult<unknown, TStyle>>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+}) => infiniteQueryOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, InfiniteData<ResponseResult<unknown, TStyle>>, QueryKey<Options<GetCallWithOptionalParamData>>, number | Pick<QueryKey<Options<GetCallWithOptionalParamData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore
 {
     queryFn: async ({ pageParam, queryKey, signal }) => {
@@ -587,13 +528,9 @@ export const getCallWithOptionalParamInfiniteOptions = <TStyle extends 'data' | 
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -604,8 +541,8 @@ export const getCallWithOptionalParamInfiniteOptions = <TStyle extends 'data' | 
 
 export const postCallWithOptionalParamMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PostCallWithOptionalParamData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<PostCallWithOptionalParamResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostCallWithOptionalParamData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<PostCallWithOptionalParamResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostCallWithOptionalParamData>> = {
+}): UseMutationOptions<ResponseResult<PostCallWithOptionalParamResponse, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PostCallWithOptionalParamData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<PostCallWithOptionalParamResponse, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PostCallWithOptionalParamData>> = {
         mutationFn: async (fnOptions) => {
             const result = await postCallWithOptionalParam({
                 ...options,
@@ -614,13 +551,9 @@ export const postCallWithOptionalParamMutation = <TStyle extends 'data' | 'field
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -632,8 +565,8 @@ export const postCallWithOptionalParamMutation = <TStyle extends 'data' | 'field
 
 export const postApiVbyApiVersionRequestBodyMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PostApiVbyApiVersionRequestBodyData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostApiVbyApiVersionRequestBodyData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostApiVbyApiVersionRequestBodyData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PostApiVbyApiVersionRequestBodyData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PostApiVbyApiVersionRequestBodyData>> = {
         mutationFn: async (fnOptions) => {
             const result = await postApiVbyApiVersionRequestBody({
                 ...options,
@@ -642,13 +575,9 @@ export const postApiVbyApiVersionRequestBodyMutation = <TStyle extends 'data' | 
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -660,8 +589,8 @@ export const postApiVbyApiVersionRequestBodyMutation = <TStyle extends 'data' | 
 
 export const postApiVbyApiVersionFormDataMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PostApiVbyApiVersionFormDataData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostApiVbyApiVersionFormDataData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PostApiVbyApiVersionFormDataData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PostApiVbyApiVersionFormDataData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PostApiVbyApiVersionFormDataData>> = {
         mutationFn: async (fnOptions) => {
             const result = await postApiVbyApiVersionFormData({
                 ...options,
@@ -670,13 +599,9 @@ export const postApiVbyApiVersionFormDataMutation = <TStyle extends 'data' | 'fi
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -690,7 +615,7 @@ export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefa
 
 export const callWithDefaultParametersOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<CallWithDefaultParametersData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof callWithDefaultParametersQueryKey>>({
+}) => queryOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof callWithDefaultParametersQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await callWithDefaultParameters({
             ...options,
@@ -700,13 +625,9 @@ export const callWithDefaultParametersOptions = <TStyle extends 'data' | 'fields
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -717,8 +638,8 @@ export const callWithDefaultParametersOptions = <TStyle extends 'data' | 'fields
 
 export const callWithDefaultOptionalParametersMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithDefaultOptionalParametersData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithDefaultOptionalParametersData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithDefaultOptionalParametersData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithDefaultOptionalParametersData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithDefaultOptionalParametersData>> = {
         mutationFn: async (fnOptions) => {
             const result = await callWithDefaultOptionalParameters({
                 ...options,
@@ -727,13 +648,9 @@ export const callWithDefaultOptionalParametersMutation = <TStyle extends 'data' 
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -745,8 +662,8 @@ export const callWithDefaultOptionalParametersMutation = <TStyle extends 'data' 
 
 export const callToTestOrderOfParamsMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallToTestOrderOfParamsData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallToTestOrderOfParamsData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallToTestOrderOfParamsData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallToTestOrderOfParamsData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallToTestOrderOfParamsData>> = {
         mutationFn: async (fnOptions) => {
             const result = await callToTestOrderOfParams({
                 ...options,
@@ -755,13 +672,9 @@ export const callToTestOrderOfParamsMutation = <TStyle extends 'data' | 'fields'
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -773,8 +686,8 @@ export const callToTestOrderOfParamsMutation = <TStyle extends 'data' | 'fields'
 
 export const duplicateNameMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DuplicateNameData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateNameData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateNameData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DuplicateNameData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DuplicateNameData>> = {
         mutationFn: async (fnOptions) => {
             const result = await duplicateName({
                 ...options,
@@ -783,13 +696,9 @@ export const duplicateNameMutation = <TStyle extends 'data' | 'fields' = 'fields
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -803,7 +712,7 @@ export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) =>
 
 export const duplicateName2Options = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<DuplicateName2Data> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof duplicateName2QueryKey>>({
+}) => queryOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof duplicateName2QueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await duplicateName2({
             ...options,
@@ -813,13 +722,9 @@ export const duplicateName2Options = <TStyle extends 'data' | 'fields' = 'fields
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -830,8 +735,8 @@ export const duplicateName2Options = <TStyle extends 'data' | 'fields' = 'fields
 
 export const duplicateName3Mutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DuplicateName3Data>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateName3Data>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateName3Data>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DuplicateName3Data>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DuplicateName3Data>> = {
         mutationFn: async (fnOptions) => {
             const result = await duplicateName3({
                 ...options,
@@ -840,13 +745,9 @@ export const duplicateName3Mutation = <TStyle extends 'data' | 'fields' = 'field
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -858,8 +759,8 @@ export const duplicateName3Mutation = <TStyle extends 'data' | 'fields' = 'field
 
 export const duplicateName4Mutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<DuplicateName4Data>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateName4Data>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<DuplicateName4Data>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DuplicateName4Data>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<DuplicateName4Data>> = {
         mutationFn: async (fnOptions) => {
             const result = await duplicateName4({
                 ...options,
@@ -868,13 +769,9 @@ export const duplicateName4Mutation = <TStyle extends 'data' | 'fields' = 'field
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -888,7 +785,7 @@ export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoCo
 
 export const callWithNoContentResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<CallWithNoContentResponseData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<CallWithNoContentResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<CallWithNoContentResponseResponse, TStyle>, ReturnType<typeof callWithNoContentResponseQueryKey>>({
+}) => queryOptions<ResponseResult<CallWithNoContentResponseResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<CallWithNoContentResponseResponse, TStyle>, ReturnType<typeof callWithNoContentResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await callWithNoContentResponse({
             ...options,
@@ -898,13 +795,9 @@ export const callWithNoContentResponseOptions = <TStyle extends 'data' | 'fields
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -917,7 +810,7 @@ export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<C
 
 export const callWithResponseAndNoContentResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<CallWithResponseAndNoContentResponseData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<CallWithResponseAndNoContentResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<CallWithResponseAndNoContentResponseResponse, TStyle>, ReturnType<typeof callWithResponseAndNoContentResponseQueryKey>>({
+}) => queryOptions<ResponseResult<CallWithResponseAndNoContentResponseResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<CallWithResponseAndNoContentResponseResponse, TStyle>, ReturnType<typeof callWithResponseAndNoContentResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await callWithResponseAndNoContentResponse({
             ...options,
@@ -927,13 +820,9 @@ export const callWithResponseAndNoContentResponseOptions = <TStyle extends 'data
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -946,7 +835,7 @@ export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey(
 
 export const dummyAOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<DummyAData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<DummyAResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<DummyAResponse, TStyle>, ReturnType<typeof dummyAQueryKey>>({
+}) => queryOptions<ResponseResult<DummyAResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<DummyAResponse, TStyle>, ReturnType<typeof dummyAQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await dummyA({
             ...options,
@@ -956,13 +845,9 @@ export const dummyAOptions = <TStyle extends 'data' | 'fields' = 'fields'>(optio
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -975,7 +860,7 @@ export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey(
 
 export const dummyBOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<DummyBData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<DummyBResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<DummyBResponse, TStyle>, ReturnType<typeof dummyBQueryKey>>({
+}) => queryOptions<ResponseResult<DummyBResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<DummyBResponse, TStyle>, ReturnType<typeof dummyBQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await dummyB({
             ...options,
@@ -985,13 +870,9 @@ export const dummyBOptions = <TStyle extends 'data' | 'fields' = 'fields'>(optio
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -1004,7 +885,7 @@ export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>
 
 export const callWithResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<CallWithResponseData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<CallWithResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<CallWithResponseResponse, TStyle>, ReturnType<typeof callWithResponseQueryKey>>({
+}) => queryOptions<ResponseResult<CallWithResponseResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<CallWithResponseResponse, TStyle>, ReturnType<typeof callWithResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await callWithResponse({
             ...options,
@@ -1014,13 +895,9 @@ export const callWithResponseOptions = <TStyle extends 'data' | 'fields' = 'fiel
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -1031,8 +908,8 @@ export const callWithResponseOptions = <TStyle extends 'data' | 'fields' = 'fiel
 
 export const callWithDuplicateResponsesMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithDuplicateResponsesData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<CallWithDuplicateResponsesResponse, TStyle>, ResponseError<CallWithDuplicateResponsesError, TStyle>, Options<CallWithDuplicateResponsesData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<CallWithDuplicateResponsesResponse, TStyle>, ResponseError<CallWithDuplicateResponsesError, TStyle>, Options<CallWithDuplicateResponsesData>> = {
+}): UseMutationOptions<ResponseResult<CallWithDuplicateResponsesResponse, TStyle>, ErrorResult<CallWithDuplicateResponsesError, TStyle>, Options<CallWithDuplicateResponsesData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<CallWithDuplicateResponsesResponse, TStyle>, ErrorResult<CallWithDuplicateResponsesError, TStyle>, Options<CallWithDuplicateResponsesData>> = {
         mutationFn: async (fnOptions) => {
             const result = await callWithDuplicateResponses({
                 ...options,
@@ -1041,13 +918,9 @@ export const callWithDuplicateResponsesMutation = <TStyle extends 'data' | 'fiel
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<CallWithDuplicateResponsesError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<CallWithDuplicateResponsesError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -1059,8 +932,8 @@ export const callWithDuplicateResponsesMutation = <TStyle extends 'data' | 'fiel
 
 export const callWithResponsesMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithResponsesData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<CallWithResponsesResponse, TStyle>, ResponseError<CallWithResponsesError, TStyle>, Options<CallWithResponsesData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<CallWithResponsesResponse, TStyle>, ResponseError<CallWithResponsesError, TStyle>, Options<CallWithResponsesData>> = {
+}): UseMutationOptions<ResponseResult<CallWithResponsesResponse, TStyle>, ErrorResult<CallWithResponsesError, TStyle>, Options<CallWithResponsesData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<CallWithResponsesResponse, TStyle>, ErrorResult<CallWithResponsesError, TStyle>, Options<CallWithResponsesData>> = {
         mutationFn: async (fnOptions) => {
             const result = await callWithResponses({
                 ...options,
@@ -1069,13 +942,9 @@ export const callWithResponsesMutation = <TStyle extends 'data' | 'fields' = 'fi
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<CallWithResponsesError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<CallWithResponsesError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -1089,7 +958,7 @@ export const collectionFormatQueryKey = (options: Options<CollectionFormatData>)
 
 export const collectionFormatOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<CollectionFormatData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof collectionFormatQueryKey>>({
+}) => queryOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<unknown, TStyle>, ReturnType<typeof collectionFormatQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await collectionFormat({
             ...options,
@@ -1099,13 +968,9 @@ export const collectionFormatOptions = <TStyle extends 'data' | 'fields' = 'fiel
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -1118,7 +983,7 @@ export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('ty
 
 export const typesOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<TypesData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<TypesResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<TypesResponse, TStyle>, ReturnType<typeof typesQueryKey>>({
+}) => queryOptions<ResponseResult<TypesResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<TypesResponse, TStyle>, ReturnType<typeof typesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await types({
             ...options,
@@ -1128,13 +993,9 @@ export const typesOptions = <TStyle extends 'data' | 'fields' = 'fields'>(option
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -1145,8 +1006,8 @@ export const typesOptions = <TStyle extends 'data' | 'fields' = 'fields'>(option
 
 export const uploadFileMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<UploadFileData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<UploadFileResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<UploadFileData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<UploadFileResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<UploadFileData>> = {
+}): UseMutationOptions<ResponseResult<UploadFileResponse, TStyle>, ErrorResult<DefaultError, TStyle>, Options<UploadFileData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<UploadFileResponse, TStyle>, ErrorResult<DefaultError, TStyle>, Options<UploadFileData>> = {
         mutationFn: async (fnOptions) => {
             const result = await uploadFile({
                 ...options,
@@ -1155,13 +1016,9 @@ export const uploadFileMutation = <TStyle extends 'data' | 'fields' = 'fields'>(
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -1175,7 +1032,7 @@ export const fileResponseQueryKey = (options: Options<FileResponseData>) => crea
 
 export const fileResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<FileResponseData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<FileResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<FileResponseResponse, TStyle>, ReturnType<typeof fileResponseQueryKey>>({
+}) => queryOptions<ResponseResult<FileResponseResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<FileResponseResponse, TStyle>, ReturnType<typeof fileResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await fileResponse({
             ...options,
@@ -1185,13 +1042,9 @@ export const fileResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -1204,7 +1057,7 @@ export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => crea
 
 export const complexTypesOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options: Options<ComplexTypesData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<ComplexTypesResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<ComplexTypesResponse, TStyle>, ReturnType<typeof complexTypesQueryKey>>({
+}) => queryOptions<ResponseResult<ComplexTypesResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<ComplexTypesResponse, TStyle>, ReturnType<typeof complexTypesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await complexTypes({
             ...options,
@@ -1214,13 +1067,9 @@ export const complexTypesOptions = <TStyle extends 'data' | 'fields' = 'fields'>
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -1233,7 +1082,7 @@ export const multipartResponseQueryKey = (options?: Options<MultipartResponseDat
 
 export const multipartResponseOptions = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Options<MultipartResponseData> & {
     responseStyle?: TStyle;
-}) => queryOptions<ResponseResult<MultipartResponseResponse, TStyle>, ResponseError<DefaultError, TStyle>, ResponseResult<MultipartResponseResponse, TStyle>, ReturnType<typeof multipartResponseQueryKey>>({
+}) => queryOptions<ResponseResult<MultipartResponseResponse, TStyle>, ErrorResult<DefaultError, TStyle>, ResponseResult<MultipartResponseResponse, TStyle>, ReturnType<typeof multipartResponseQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const result = await multipartResponse({
             ...options,
@@ -1243,13 +1092,9 @@ export const multipartResponseOptions = <TStyle extends 'data' | 'fields' = 'fie
             throwOnError: false
         });
         if (result.error !== undefined) {
-            throw (options?.responseStyle === 'fields' ? {
-                error: result.error,
-                request: result.request,
-                response: result.response
-            } : result.error) as ResponseError<DefaultError, TStyle>;
+            throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
         }
-        return (options?.responseStyle === 'fields' ? {
+        return (options?.responseStyle !== 'data' ? {
             data: result.data,
             request: result.request,
             response: result.response
@@ -1260,8 +1105,8 @@ export const multipartResponseOptions = <TStyle extends 'data' | 'fields' = 'fie
 
 export const multipartRequestMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<MultipartRequestData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<MultipartRequestData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<MultipartRequestData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<MultipartRequestData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<MultipartRequestData>> = {
         mutationFn: async (fnOptions) => {
             const result = await multipartRequest({
                 ...options,
@@ -1270,13 +1115,9 @@ export const multipartRequestMutation = <TStyle extends 'data' | 'fields' = 'fie
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -1288,8 +1129,8 @@ export const multipartRequestMutation = <TStyle extends 'data' | 'fields' = 'fie
 
 export const complexParamsMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<ComplexParamsData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<ComplexParamsResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<ComplexParamsData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<ComplexParamsResponse, TStyle>, ResponseError<DefaultError, TStyle>, Options<ComplexParamsData>> = {
+}): UseMutationOptions<ResponseResult<ComplexParamsResponse, TStyle>, ErrorResult<DefaultError, TStyle>, Options<ComplexParamsData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<ComplexParamsResponse, TStyle>, ErrorResult<DefaultError, TStyle>, Options<ComplexParamsData>> = {
         mutationFn: async (fnOptions) => {
             const result = await complexParams({
                 ...options,
@@ -1298,13 +1139,9 @@ export const complexParamsMutation = <TStyle extends 'data' | 'fields' = 'fields
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -1316,8 +1153,8 @@ export const complexParamsMutation = <TStyle extends 'data' | 'fields' = 'fields
 
 export const callWithResultFromHeaderMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<CallWithResultFromHeaderData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithResultFromHeaderData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<CallWithResultFromHeaderData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithResultFromHeaderData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<CallWithResultFromHeaderData>> = {
         mutationFn: async (fnOptions) => {
             const result = await callWithResultFromHeader({
                 ...options,
@@ -1326,13 +1163,9 @@ export const callWithResultFromHeaderMutation = <TStyle extends 'data' | 'fields
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -1344,8 +1177,8 @@ export const callWithResultFromHeaderMutation = <TStyle extends 'data' | 'fields
 
 export const testErrorCodeMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<TestErrorCodeData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<TestErrorCodeData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<TestErrorCodeData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<TestErrorCodeData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<TestErrorCodeData>> = {
         mutationFn: async (fnOptions) => {
             const result = await testErrorCode({
                 ...options,
@@ -1354,13 +1187,9 @@ export const testErrorCodeMutation = <TStyle extends 'data' | 'fields' = 'fields
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -1372,8 +1201,8 @@ export const testErrorCodeMutation = <TStyle extends 'data' | 'fields' = 'fields
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<NonAsciiæøåÆøÅöôêÊ字符串Response, TStyle>, ResponseError<DefaultError, TStyle>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<NonAsciiæøåÆøÅöôêÊ字符串Response, TStyle>, ResponseError<DefaultError, TStyle>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
+}): UseMutationOptions<ResponseResult<NonAsciiæøåÆøÅöôêÊ字符串Response, TStyle>, ErrorResult<DefaultError, TStyle>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<NonAsciiæøåÆøÅöôêÊ字符串Response, TStyle>, ErrorResult<DefaultError, TStyle>, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>> = {
         mutationFn: async (fnOptions) => {
             const result = await nonAsciiæøåÆøÅöôêÊ字符串({
                 ...options,
@@ -1382,13 +1211,9 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = <TStyle extends 'da
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
@@ -1403,8 +1228,8 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = <TStyle extends 'da
  */
 export const putWithFormUrlEncodedMutation = <TStyle extends 'data' | 'fields' = 'fields'>(options?: Partial<Options<PutWithFormUrlEncodedData>> & {
     responseStyle?: TStyle;
-}): UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PutWithFormUrlEncodedData>> => {
-    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ResponseError<DefaultError, TStyle>, Options<PutWithFormUrlEncodedData>> = {
+}): UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PutWithFormUrlEncodedData>> => {
+    const mutationOptions: UseMutationOptions<ResponseResult<unknown, TStyle>, ErrorResult<DefaultError, TStyle>, Options<PutWithFormUrlEncodedData>> = {
         mutationFn: async (fnOptions) => {
             const result = await putWithFormUrlEncoded({
                 ...options,
@@ -1413,13 +1238,9 @@ export const putWithFormUrlEncodedMutation = <TStyle extends 'data' | 'fields' =
                 throwOnError: false
             });
             if (result.error !== undefined) {
-                throw (options?.responseStyle === 'fields' ? {
-                    error: result.error,
-                    request: result.request,
-                    response: result.response
-                } : result.error) as ResponseError<DefaultError, TStyle>;
+                throw (options?.responseStyle !== 'data' ? new ResponseError(result.error, result.request, result.response) : result.error) as ErrorResult<DefaultError, TStyle>;
             }
-            return (options?.responseStyle === 'fields' ? {
+            return (options?.responseStyle !== 'data' ? {
                 data: result.data,
                 request: result.request,
                 response: result.response
