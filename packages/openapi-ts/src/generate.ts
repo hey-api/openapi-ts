@@ -118,8 +118,6 @@ export async function createClient(
       }
     }
 
-    if (inputError) throw error;
-
     throw error;
   }
 }
