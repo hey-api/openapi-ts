@@ -78,7 +78,7 @@
     "lint-staged": "16.4.0",
     "oxfmt": "0.52.0",
     "publint": "0.3.21",
-    "tsdown": "0.22.1",
+    "tsdown": "0.22.2",
     "tsx": "4.21.0",
     "turbo": "2.9.16",
     "typescript": "6.0.3",
