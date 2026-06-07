@@ -17,6 +17,11 @@ type TypeOrDecision =
   | {
       strategy: 'typing';
       unionSymbol: Symbol;
+    }
+  | {
+      optionalSymbol: Symbol;
+      strategy: 'optional';
+      unionSymbol: Symbol;
     };
 
 export class TypeOrPyDsl extends Mixed {
@@ -43,9 +48,19 @@ export class TypeOrPyDsl extends Mixed {
     } else if (this.meta.Version.gte('3.10')) {
       this._decision = { strategy: 'bitor' };
     } else if (this.meta.Version.lte('3.9')) {
-      const unionSymbol = this.meta.symbols.typing.Union;
-      ctx.analyze(unionSymbol);
-      this._decision = { strategy: 'typing', unionSymbol };
+      const hasNone = flat.some((r) => fromRef(r) === 'None');
+
+      if (hasNone) {
+        const optionalSymbol = this.meta.symbols.typing.Optional;
+        const unionSymbol = this.meta.symbols.typing.Union;
+        ctx.analyze(optionalSymbol);
+        ctx.analyze(unionSymbol);
+        this._decision = { optionalSymbol, strategy: 'optional', unionSymbol };
+      } else {
+        const unionSymbol = this.meta.symbols.typing.Union;
+        ctx.analyze(unionSymbol);
+        this._decision = { strategy: 'typing', unionSymbol };
+      }
     }
   }
 
@@ -72,9 +87,15 @@ export class TypeOrPyDsl extends Mixed {
       );
     }
 
+    if (decision.strategy === 'optional') {
+      const inner = flat.filter((_, i) => fromRef(this._types[i]!) !== 'None');
+      const innerType =
+        inner.length === 1 ? inner[0]! : this.$node(f.slice(decision.unionSymbol, ...inner));
+      return this.$node(f.slice(decision.optionalSymbol, innerType));
+    }
+
     if (decision.strategy === 'typing') {
-      const slice = this.$node(f.slice(decision.unionSymbol, ...flat));
-      return slice;
+      return this.$node(f.slice(decision.unionSymbol, ...flat));
     }
 
     throw new Error('Invalid strategy');

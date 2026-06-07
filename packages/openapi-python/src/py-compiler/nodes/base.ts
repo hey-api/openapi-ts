@@ -2,7 +2,7 @@ import type { PyExpression } from './expression';
 import type { PyNodeKind } from './kinds';
 import type { PyStatement } from './statement';
 import type { PyBlock } from './statements/block';
-import type { PySourceFile } from './structure/sourceFile';
+import type { PySourceFile } from './structure/source-file';
 
 export interface PyNodeBase {
   kind: PyNodeKind;

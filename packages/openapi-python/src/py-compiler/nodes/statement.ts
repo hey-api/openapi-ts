@@ -1,8 +1,8 @@
 import type { PyClassDeclaration } from './declarations/class';
 import type { PyFunctionDeclaration } from './declarations/function';
-import type { PyFunctionParameter } from './declarations/functionParameter';
+import type { PyFunctionParameter } from './declarations/function-parameter';
 import type { PyAssignment } from './statements/assignment';
-import type { PyAugmentedAssignment } from './statements/augmentedAssignment';
+import type { PyAugmentedAssignment } from './statements/augmented-assignment';
 import type { PyBreakStatement } from './statements/break';
 import type { PyContinueStatement } from './statements/continue';
 import type { PyEmptyStatement } from './statements/empty';

@@ -23,7 +23,7 @@ import { postProcessors } from './config/output/postprocess';
 import type { Config } from './config/types';
 import { generateOutput } from './generate/output';
 import { PythonRenderer } from './py-dsl';
-import { TYPING } from './symbols';
+import { ENUM, TYPING } from './symbols';
 
 export async function createClient({
   config,
@@ -172,6 +172,7 @@ export async function createClient({
     project.meta.python = {
       Version: new Version(config.output.pythonVersion),
       symbols: {
+        enum: ENUM(symbolFactory),
         typing: TYPING(symbolFactory),
       },
       version: config.output.pythonVersion,

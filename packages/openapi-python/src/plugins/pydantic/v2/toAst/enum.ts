@@ -1,29 +1,36 @@
+import { fromRef } from '@hey-api/codegen-core';
 import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
-import { toCase } from '@hey-api/shared';
+import { pathToJsonPointer, toCase } from '@hey-api/shared';
 
+import type { EnumMember } from '../../../../py-dsl';
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { EnumResolverContext } from '../../resolvers';
-import type { PydanticFinal, PydanticType } from '../../shared/types';
+import type { PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 
 export interface EnumToTypeResult extends PydanticType {
-  enumMembers: Required<PydanticFinal>['enumMembers'];
+  enumMembers: Array<EnumMember>;
   isNullable: boolean;
 }
 
-// TODO: replace with casing utils
-function toEnumMemberName(value: string | number): string {
+// TODO: move to Pydantic enum (member?) DSL, replace with casing utils
+function toEnumMemberName(value: boolean | number | string): string {
+  if (typeof value === 'boolean') {
+    return toCase(String(value), 'SCREAMING_SNAKE_CASE');
+  }
   if (typeof value === 'number') {
-    // For numbers, prefix with underscore if starts with digit
     return `VALUE_${value}`.replace(/-/g, '_NEG_').replace(/\./g, '_DOT_');
   }
-
   return toCase(value, 'SCREAMING_SNAKE_CASE');
 }
 
-function itemsNode(ctx: EnumResolverContext) {
+function itemsNode(ctx: EnumResolverContext): {
+  enumMembers: Array<EnumMember>;
+  isNullable: boolean;
+} {
   const { plugin, schema } = ctx;
-  const enumMembers: Required<PydanticFinal>['enumMembers'] = [];
+  const enumMembers: Array<EnumMember> = [];
   let isNullable = false;
 
   for (const item of schema.items ?? []) {
@@ -34,7 +41,8 @@ function itemsNode(ctx: EnumResolverContext) {
 
     if (
       (item.type === 'string' && typeof item.const === 'string') ||
-      ((item.type === 'integer' || item.type === 'number') && typeof item.const === 'number')
+      ((item.type === 'integer' || item.type === 'number') && typeof item.const === 'number') ||
+      (item.type === 'boolean' && typeof item.const === 'boolean')
     ) {
       enumMembers.push({
         name: plugin.symbol(toEnumMemberName(item.const)),
@@ -52,19 +60,13 @@ function baseNode(ctx: EnumResolverContext): PydanticType {
 
   if (!enumMembers.length) {
     return {
-      type: plugin.symbols.typing.Any,
+      type: $$.constrainedType(plugin.symbols.typing.Any),
     };
   }
 
   const mode = plugin.config.enums ?? 'enum';
 
   if (mode === 'literal') {
-    if (!enumMembers.length) {
-      return {
-        type: plugin.symbols.typing.Any,
-      };
-    }
-
     const literal = plugin.symbols.typing.Literal;
     const values = enumMembers.map((m) =>
       // TODO: replace
@@ -72,11 +74,20 @@ function baseNode(ctx: EnumResolverContext): PydanticType {
     );
 
     return {
-      type: $(literal).slice(...values),
+      type: $$.constrainedType($(literal).slice(...values)),
     };
   }
 
-  return {};
+  const refSymbol = plugin.referenceSymbol({
+    category: 'schema',
+    resource: 'definition',
+    resourceId: pathToJsonPointer(fromRef(ctx.path)),
+    tool: 'pydantic',
+  });
+
+  return {
+    type: $$.constrainedType(refSymbol),
+  };
 }
 
 function enumResolver(ctx: EnumResolverContext): PydanticType {

@@ -8,6 +8,7 @@ import { getClientPlugin } from '../client-core/utils';
 export function sdkSymbols(plugin: PluginInstance) {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const client = getClientPlugin(getTypedConfig(plugin));
+  const factory = plugin.symbolFactory;
 
   return {
     Client: plugin.symbol('Client', {
@@ -24,8 +25,8 @@ export function sdkSymbols(plugin: PluginInstance) {
         tool: client.name,
       },
     }),
-    funcTools: SYMBOLS.FUNC_TOOLS(plugin.symbolFactory),
-    typing: SYMBOLS.TYPING(plugin.symbolFactory),
+    funcTools: SYMBOLS.FUNC_TOOLS(factory),
+    typing: SYMBOLS.TYPING(factory),
   };
 }
 
