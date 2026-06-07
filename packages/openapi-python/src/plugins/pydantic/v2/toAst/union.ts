@@ -1,16 +1,16 @@
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { UnionResolverContext } from '../../resolvers';
 import type { PydanticResult, PydanticType } from '../../shared/types';
-import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: UnionResolverContext): PydanticType {
-  const { applyModifiers, childResults, plugin } = ctx;
+  const { applyModifiers, childResults } = ctx;
 
   const nonNullResults: Array<PydanticResult> = [];
   let isNullable = false;
 
   for (const result of childResults) {
-    if (result.type === 'None') {
+    if (result.type?.type === 'None') {
       isNullable = true;
     } else {
       nonNullResults.push(result);
@@ -20,23 +20,27 @@ function baseNode(ctx: UnionResolverContext): PydanticType {
   isNullable = isNullable || childResults.some((r) => r.meta.nullable);
 
   if (!nonNullResults.length) {
-    return {
-      type: 'None',
-    };
+    return { type: $$.constrainedType('None') };
   }
 
   if (nonNullResults.length === 1 && !isNullable) {
     return applyModifiers(nonNullResults[0]!);
   }
 
-  const itemTypes = nonNullResults.map((r) => applyModifiers(r).type ?? plugin.symbols.typing.Any);
+  const nonNullMembers = nonNullResults.map(
+    (r) => applyModifiers(r).type ?? $$.constrainedType(ctx.plugin.symbols.typing.Any),
+  );
 
-  if (isNullable) {
-    itemTypes.push('None');
-  }
+  const unionMembers = isNullable
+    ? [...nonNullMembers, $$.constrainedType('None')]
+    : nonNullMembers;
+
+  const unionType = $$.constrainedType($.type.or(...unionMembers.map((m) => m.type)));
 
   return {
-    type: $.type.or(...itemTypes),
+    node: { kind: 'rootModel', type: unionType },
+    type: unionType,
+    unionMembers,
   };
 }
 
@@ -60,15 +64,9 @@ export function unionToType({
   UnionResolverContext,
   'applyModifiers' | 'childResults' | 'parentSchema' | 'path' | 'plugin' | 'schemas'
 >): UnionToTypeResult {
-  const constraints: FieldConstraints = {};
-
-  if (parentSchema.description !== undefined) {
-    constraints.description = parentSchema.description;
-  }
-
   let isNullable = false;
   for (const result of childResults) {
-    if (result.type === 'None') {
+    if (result.type?.type === 'None') {
       isNullable = true;
       break;
     }
@@ -90,14 +88,17 @@ export function unionToType({
   };
 
   const resolver = plugin.config['~resolvers']?.union;
-  const resolved = resolver?.(resolverCtx) ?? unionResolver(resolverCtx);
+  let resolved = resolver?.(resolverCtx) ?? unionResolver(resolverCtx);
+
+  if (parentSchema.description !== undefined) {
+    const c = $$.constraints().description(parentSchema.description);
+    const base = resolved.type ?? $$.constrainedType('None');
+    resolved = { ...resolved, type: base.mergeConstraints(c) };
+  }
 
   return {
     ...resolved,
     childResults,
-    fieldConstraints: Object.keys(constraints).length
-      ? { ...constraints, ...resolved.fieldConstraints }
-      : resolved.fieldConstraints,
     isNullable,
   };
 }

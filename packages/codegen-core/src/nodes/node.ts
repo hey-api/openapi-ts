@@ -33,6 +33,7 @@ export interface INode<T = unknown, L extends Language = Language> {
   /** The display name of this node. */
   readonly name: Ref<NodeName> & {
     set(value: NodeName): void;
+    readonly symbol: Symbol | undefined;
     toString(): string;
   };
   /** Optional function to sanitize the node name. */
