@@ -39,6 +39,7 @@ export function webhookToType({
           name: plugin.config.webhooks.payload,
         },
         operation,
+        path,
         plugin,
       }),
     );
@@ -88,6 +89,7 @@ export function webhookToType({
       name: operation.id,
       naming: plugin.config.webhooks,
       operation,
+      path,
       plugin,
     }),
   );

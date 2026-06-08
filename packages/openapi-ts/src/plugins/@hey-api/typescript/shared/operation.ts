@@ -129,6 +129,7 @@ export const operationToType = ({
       name: operation.id,
       naming: plugin.config.requests,
       operation,
+      path,
       plugin,
     }),
   );
@@ -167,6 +168,7 @@ export const operationToType = ({
         name: operation.id,
         naming: plugin.config.errors,
         operation,
+        path,
         plugin,
       }),
     );
@@ -194,6 +196,7 @@ export const operationToType = ({
             name: plugin.config.errors.error,
           },
           operation,
+          path,
           plugin,
         }),
       );
@@ -232,6 +235,7 @@ export const operationToType = ({
         name: operation.id,
         naming: plugin.config.responses,
         operation,
+        path,
         plugin,
       }),
     );
@@ -259,6 +263,7 @@ export const operationToType = ({
             name: plugin.config.responses.response,
           },
           operation,
+          path,
           plugin,
         }),
       );

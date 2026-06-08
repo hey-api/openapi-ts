@@ -99,7 +99,13 @@ export class Planner {
    * First assigns top-level (file-scoped) symbol names, then local symbols.
    */
   private assignLocalNames(): void {
-    this.analyzer.analyze(this.project.nodes.all(), (ctx, node) => {
+    const sorted = [...this.project.nodes.all()].sort((a, b) => {
+      const pa = a.symbol?.priority ?? 0;
+      const pb = b.symbol?.priority ?? 0;
+      return pb - pa;
+    });
+
+    this.analyzer.analyze(sorted, (ctx, node) => {
       const symbol = node.symbol;
       if (!symbol) return;
       this.assignTopLevelName({ ctx, node, symbol });

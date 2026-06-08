@@ -230,6 +230,8 @@ export interface GetNameContext {
   naming?: NamingConfig;
   /** The operation object associated with the symbol. */
   operation?: IROperationObject;
+  /** Path to the resource this symbol represents. */
+  path?: ReadonlyArray<string | number>;
   /** The schema object associated with the symbol. */
   schema?: IRSchemaObject;
 }

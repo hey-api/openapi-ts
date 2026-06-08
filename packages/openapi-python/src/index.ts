@@ -27,20 +27,14 @@ declare module '@hey-api/codegen-core' {
       | 'type'
       | 'utility'
       | AnyString;
-    /**
-     * Path to the resource this symbol represents.
-     */
+    /** Path to the resource this symbol represents. */
     path?: ReadonlyArray<string | number>;
-    /**
-     * Name of the plugin that registered this symbol.
-     */
+    /** Name of the plugin that registered this symbol. */
     pluginName?: string;
     resource?: 'client' | 'definition' | 'operation' | 'webhook' | AnyString;
     resourceId?: string;
     role?: 'data' | 'error' | 'errors' | 'options' | 'response' | 'responses' | AnyString;
-    /**
-     * Tags associated with this symbol.
-     */
+    /** Tags associated with this symbol. */
     tags?: ReadonlyArray<string>;
     tool?: 'pydantic' | 'sdk' | AnyString;
     variant?: 'container' | AnyString;
