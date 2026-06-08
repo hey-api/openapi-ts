@@ -2,6 +2,7 @@
 
 import {
   type Client,
+  type ClientMeta,
   formDataBodySerializer,
   type Options as Options2,
   type RequestResult,
@@ -363,8 +364,11 @@ export type Options<
   /**
    * You can pass arbitrary values through the `meta` object. This can be
    * used to access values that aren't defined as part of the SDK function.
+   *
+   * Augment the `ClientMeta` interface (via `declare module`) to make this
+   * option typesafe.
    */
-  meta?: Record<string, unknown>;
+  meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
 
 class HeyApiClient {
