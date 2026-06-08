@@ -90,17 +90,7 @@ export interface Config {
 }
 
 /**
- * Arbitrary metadata passed through the `meta` request option and read back by
- * interceptors/middleware. This interface is intentionally empty so the `meta`
- * field stays backward compatible. Augment it to make `meta` typesafe:
- *
- * ```ts
- * declare module '@hey-api/client-fetch' {
- *   interface ClientMeta {
- *     timeout?: number;
- *   }
- * }
- * ```
+ * Arbitrary metadata passed through the `meta` request option.
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ClientMeta {}
