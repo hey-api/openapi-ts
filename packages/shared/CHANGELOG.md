@@ -1,5 +1,17 @@
 # @hey-api/shared
 
+## 0.4.8
+
+### Patch Changes
+
+- **types**: update project meta types ([#3984](https://github.com/hey-api/openapi-ts/pull/3984)) ([`f4a0a12`](https://github.com/hey-api/openapi-ts/commit/f4a0a12a3c61b3b0dc8f4b0819fcbc42d20c1c0f)) by [@mrlubos](https://github.com/mrlubos)
+
+- **utils**: expose `SymbolFactory` ([#3991](https://github.com/hey-api/openapi-ts/pull/3991)) ([`e870070`](https://github.com/hey-api/openapi-ts/commit/e8700705c2d613a10c8fb551d95bea826e3a5158)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.9.0
+
 ## 0.4.7
 
 ### Patch Changes
