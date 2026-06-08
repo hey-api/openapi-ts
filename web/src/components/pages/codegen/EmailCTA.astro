@@ -365,9 +365,12 @@ const messageError = "Something went wrong. Please try again.";
   );
 
   const hash = window.location.hash.slice(1);
-  if ((hash === sectionId || sectionAliases.includes(hash)) && window.scrollY === 0) {
+  if (hash === sectionId || sectionAliases.includes(hash)) {
     setTimeout(() => {
       document.getElementById(sectionId!)?.scrollIntoView();
+      setTimeout(() => {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }, 0)
     }, 100);
   }
 
