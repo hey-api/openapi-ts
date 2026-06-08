@@ -12,7 +12,7 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 echo "Checking if generated code is up-to-date..."
 
 # Generate fresh code
-"$SCRIPT_DIR/examples-generate.sh"
+"$SCRIPT_DIR/examples-update.sh"
 
 # Check if there are any changes
 if ! git diff --quiet; then
@@ -25,7 +25,7 @@ if ! git diff --quiet; then
   git diff --name-only
   echo ""
   echo "To fix this, run:"
-  echo "  pnpm examples:generate"
+  echo "  pnpm examples:update"
   echo ""
   echo "Then commit the changes."
   exit 1
