@@ -33,7 +33,7 @@ All examples (except `openapi-ts-sample`) contain generated client code that is 
 After making changes to the core packages, regenerate all example code:
 
 ```bash
-pnpm examples:generate
+pnpm examples:update
 ```
 
 This command will run `openapi-ts` for each example that has an `openapi-ts` script in its `package.json`.
@@ -46,7 +46,7 @@ To check if all examples are up-to-date with the current codebase:
 pnpm examples:check
 ```
 
-This check is also run automatically in CI. If it fails, run `pnpm examples:generate` and commit the changes.
+This check is also run automatically in CI. If it fails, run `pnpm examples:update` and commit the changes.
 
 ## Running Examples
 
@@ -72,7 +72,7 @@ When creating a new example:
 
 1. Create a new directory in `examples/`
 2. Add an `openapi-ts` script to `package.json`
-3. Run `pnpm examples:generate` to create initial generated code
+3. Run `pnpm examples:update` to create initial generated code
 4. Commit both the source and generated code
 5. The example will automatically be included in CI checks
 

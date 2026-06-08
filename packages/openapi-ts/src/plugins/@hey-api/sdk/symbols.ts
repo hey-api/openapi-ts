@@ -19,6 +19,14 @@ export function sdkSymbols(plugin: PluginInstance) {
         tool: client.name,
       },
     }),
+    ClientMeta: plugin.symbol('ClientMeta', {
+      external: clientModule,
+      kind: 'type',
+      meta: {
+        resource: 'client.ClientMeta',
+        tool: client.name,
+      },
+    }),
     Composable: plugin.symbol('Composable', {
       external: clientModule,
       kind: 'type',

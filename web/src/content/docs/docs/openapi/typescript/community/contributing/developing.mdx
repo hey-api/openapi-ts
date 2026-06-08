@@ -20,7 +20,7 @@ The `examples` folder contains various integration examples that demonstrate how
 When you make changes to the core packages that affect code generation, you need to regenerate the client code in all examples:
 
 ```sh
-pnpm examples:generate
+pnpm examples:update
 ```
 
 This command will:
@@ -49,7 +49,7 @@ This check is also run automatically in CI to ensure examples stay in sync with 
 
 1. Make changes to core packages
 2. Build the packages: `pnpm build --filter="@hey-api/**"`
-3. Regenerate examples: `pnpm examples:generate`
+3. Regenerate examples: `pnpm examples:update`
 4. Commit all changes including the updated generated code
 5. The CI will verify that examples are in sync
 
