@@ -1,5 +1,9 @@
 export const GITHUB_URL = 'https://github.com/hey-api/openapi-ts';
 
+export const EMAIL_CTA_ID = 'python';
+
+export const EMAIL_CTA_ID_ALIASES = ['email-cta'];
+
 export const EXAMPLES_URL =
   'https://stackblitz.com/orgs/github/hey-api/collections/openapi-ts-examples';
 
