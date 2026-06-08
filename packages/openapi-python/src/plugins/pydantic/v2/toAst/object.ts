@@ -40,12 +40,19 @@ function fieldsNode(ctx: ObjectResolverContext): Array<ReturnType<typeof $$.fiel
   const { path, plugin, schema } = ctx;
   const fields: Array<ReturnType<typeof $$.field>> = [];
 
-  for (const wireName in schema.properties) {
-    const property = schema.properties[wireName]!;
-    const isRequired = schema.required?.includes(wireName) ?? false;
+  for (const name in schema.properties) {
+    const property = schema.properties[name]!;
+    const isRequired = schema.required?.includes(name) ?? false;
 
-    const result = ctx.walk(property, childContext({ path, plugin }, 'properties', wireName));
+    const result = ctx.walk(property, childContext({ path, plugin }, 'properties', name));
     ctx._childResults.push(result);
+
+    if (property.description !== undefined && result.type) {
+      result.type.mergeConstraints($$.constraints().description(property.description));
+    }
+    if (property.title !== undefined && result.type) {
+      result.type.mergeConstraints($$.constraints().title(property.title));
+    }
 
     const isOptional = !isRequired;
     const nullable = result.meta.nullable || isOptional;
@@ -53,7 +60,7 @@ function fieldsNode(ctx: ObjectResolverContext): Array<ReturnType<typeof $$.fiel
     const hasSchemaDefault = result.meta.default !== undefined;
     const defaultValue = hasSchemaDefault ? result.meta.default : isOptional ? null : undefined;
 
-    const field = $$.field(plugin, wireName)
+    const field = $$.field(plugin, name)
       .$if(result.unionMembers, (f, t) => f.type(t))
       .$if(!result.unionMembers && result.type, (f, t) => f.type(t))
       .$if(result.unionMembers && result.type, (f, t) => f.metadata(t))

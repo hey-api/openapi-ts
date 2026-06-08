@@ -1,8 +1,6 @@
-import type { Symbol } from '@hey-api/codegen-core';
 import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
 import { $ } from '../dsl';
-import { BASE_MODEL_META, createBaseModel } from './base-model';
 import type { ProcessorContext } from './processor';
 import type { PydanticNode } from './types';
 
@@ -43,17 +41,17 @@ export function exportAst({
   }
 
   if (node.kind === 'model') {
-    if (plugin.config.modelType === 'BaseModel') {
-      let baseModelSymbol: Symbol | undefined = plugin.querySymbol(BASE_MODEL_META);
-      if (!baseModelSymbol) {
-        baseModelSymbol = plugin.symbol('BaseModel', {
-          children: [...plugin.symbols.BaseModel.children],
-          meta: BASE_MODEL_META,
-        });
-        const baseModel = createBaseModel(plugin, baseModelSymbol);
-        plugin.node(baseModel);
-      }
-    }
+    // if (plugin.config.modelType === 'BaseModel') {
+    //   let baseModelSymbol: Symbol | undefined = plugin.querySymbol(BASE_MODEL_META);
+    //   if (!baseModelSymbol) {
+    //     baseModelSymbol = plugin.symbol('BaseModel', {
+    //       children: [...plugin.symbols.BaseModel.children],
+    //       meta: BASE_MODEL_META,
+    //     });
+    //     const baseModel = createBaseModel(plugin, baseModelSymbol);
+    //     plugin.node(baseModel);
+    //   }
+    // }
 
     const model = $.model(plugin, symbol)
       .$if(plugin.config.strict, (m) => m.config({ extra: 'forbid' }))

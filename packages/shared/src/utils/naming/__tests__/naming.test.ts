@@ -1,5 +1,5 @@
-import { toCase } from '../naming';
-import type { Casing } from '../types';
+import { applyNaming, resolveNaming, toCase } from '../naming';
+import type { Casing, NamingConfig } from '../types';
 
 const cases: ReadonlyArray<Casing> = [
   'camelCase',
@@ -172,6 +172,33 @@ const scenarios: ReadonlyArray<{
     stripLeadingSeparators: false,
     value: 'MyFoo',
   },
+  {
+    PascalCase: 'ExperimentalOver200K',
+    SCREAMING_SNAKE_CASE: 'EXPERIMENTAL_OVER200K',
+    // SCREAMING_SNAKE_CASE: 'EXPERIMENTAL_OVER_200K',
+    camelCase: 'experimentalOver200K',
+    snake_case: 'experimental_over200k',
+    // snake_case: 'experimental_over_200k',
+    value: 'experimentalOver200K',
+  },
+  {
+    PascalCase: 'ModelCostExperimentalOver200kCache',
+    // PascalCase: 'ModelCostExperimentalOver200KCache',
+    SCREAMING_SNAKE_CASE: 'MODEL_COST_EXPERIMENTAL_OVER200K_CACHE',
+    // SCREAMING_SNAKE_CASE: 'MODEL_COST_EXPERIMENTAL_OVER_200K_CACHE',
+    camelCase: 'modelCostExperimentalOver200kCache',
+    // camelCase: 'modelCostExperimentalOver200KCache',
+    snake_case: 'model_cost_experimental_over200k_cache',
+    // snake_case: 'model_cost_experimental_over_200k_cache',
+    value: 'ModelCostExperimentalOver200KCache',
+  },
+  {
+    PascalCase: 'Z3eNum1Период',
+    SCREAMING_SNAKE_CASE: 'Z3E_NUM_1_ПЕРИОД',
+    camelCase: 'z3eNum1Период',
+    snake_case: 'z3e_num_1_период',
+    value: 'z3e-num_1Период',
+  },
 ];
 
 describe('toCase', () => {
@@ -210,5 +237,110 @@ describe('toCase', () => {
         );
         break;
     }
+  });
+});
+
+describe('resolveNaming', () => {
+  it('returns empty object for undefined', () => {
+    expect(resolveNaming(undefined)).toEqual({});
+  });
+
+  it('wraps a template string into { name }', () => {
+    expect(resolveNaming('z{{name}}')).toEqual({ name: 'z{{name}}' });
+  });
+
+  it('wraps a function into { name }', () => {
+    const fn = (name: string) => `z${name}`;
+    expect(resolveNaming(fn)).toEqual({ name: fn });
+  });
+
+  it('passes through a NamingConfig object unchanged', () => {
+    const config: NamingConfig = { casing: 'camelCase', name: 'z{{name}}' };
+    expect(resolveNaming(config)).toBe(config);
+  });
+
+  it('passes through a NamingConfig with deprecated case field unchanged', () => {
+    const config: NamingConfig = { case: 'PascalCase' };
+    expect(resolveNaming(config)).toBe(config);
+  });
+});
+
+describe('applyNaming', () => {
+  describe('no-op cases', () => {
+    it('returns value unchanged when config is empty', () => {
+      expect(applyNaming('myValue', {})).toBe('myValue');
+    });
+
+    it('preserves casing when casing is preserve', () => {
+      expect(applyNaming('myValue', { casing: 'preserve' })).toBe('myValue');
+    });
+  });
+
+  describe('casing only', () => {
+    it('applies camelCase', () => {
+      expect(applyNaming('my-value', { casing: 'camelCase' })).toBe('myValue');
+    });
+
+    it('applies PascalCase', () => {
+      expect(applyNaming('my-value', { casing: 'PascalCase' })).toBe('MyValue');
+    });
+
+    it('applies snake_case', () => {
+      expect(applyNaming('myValue', { casing: 'snake_case' })).toBe('my_value');
+    });
+
+    it('applies SCREAMING_SNAKE_CASE', () => {
+      expect(applyNaming('myValue', { casing: 'SCREAMING_SNAKE_CASE' })).toBe('MY_VALUE');
+    });
+
+    it('respects deprecated case field', () => {
+      expect(applyNaming('my-value', { case: 'PascalCase' })).toBe('MyValue');
+    });
+
+    it('casing takes precedence over deprecated case', () => {
+      expect(applyNaming('my-value', { case: 'PascalCase', casing: 'camelCase' })).toBe('myValue');
+    });
+  });
+
+  describe('name template', () => {
+    it('substitutes {{name}} with value', () => {
+      expect(applyNaming('value', { name: 'z{{name}}' })).toBe('zvalue');
+    });
+
+    it('applies casing after template substitution', () => {
+      expect(applyNaming('my-value', { casing: 'camelCase', name: 'z{{name}}' })).toBe('zMyValue');
+    });
+
+    it('handles leading-digit name after prefix', () => {
+      expect(applyNaming('3e-num_1Период', { casing: 'camelCase', name: 'z{{name}}' })).toBe(
+        'z3eNum1Период',
+      );
+    });
+
+    it('handles {{name}} in the middle of template', () => {
+      expect(applyNaming('value', { casing: 'camelCase', name: 'pre{{name}}Post' })).toBe(
+        'preValuePost',
+      );
+    });
+
+    it('handles {{name}} with no surrounding text', () => {
+      expect(applyNaming('my-value', { casing: 'camelCase', name: '{{name}}' })).toBe('myValue');
+    });
+  });
+
+  describe('name function', () => {
+    it('applies function transformer', () => {
+      expect(applyNaming('value', { name: (n) => `z${n}` })).toBe('zvalue');
+    });
+
+    it('applies casing after function transformer', () => {
+      expect(applyNaming('my-value', { casing: 'camelCase', name: (n) => `z${n}` })).toBe(
+        'zmyValue',
+      );
+    });
+
+    it('function returning empty string produces empty string', () => {
+      expect(applyNaming('value', { name: () => '' })).toBe('');
+    });
   });
 });
