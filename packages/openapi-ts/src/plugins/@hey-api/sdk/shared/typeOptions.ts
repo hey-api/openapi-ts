@@ -98,9 +98,6 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
               .doc([
                 'You can pass arbitrary values through the `meta` object. This can be',
                 "used to access values that aren't defined as part of the SDK function.",
-                '',
-                'Augment the `ClientMeta` interface (via `declare module`) to make this',
-                'option typesafe.',
               ])
               .optional()
               .type(createMetaType(plugin.symbols.ClientMeta)),
