@@ -8,14 +8,13 @@ import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: BooleanResolverContext): PipeResult {
-  const { symbols } = ctx;
-  const { v } = symbols;
+  const { v } = ctx.plugin.symbols;
   return $(v).attr(identifiers.schemas.boolean).call();
 }
 
 function constNode(ctx: BooleanResolverContext): PipeResult {
-  const { schema, symbols } = ctx;
-  const { v } = symbols;
+  const { schema } = ctx;
+  const { v } = ctx.plugin.symbols;
   if (typeof schema.const !== 'boolean') return;
   return $(v).attr(identifiers.schemas.literal).call($.literal(schema.const));
 }
@@ -55,7 +54,7 @@ export function booleanToPipes({
     plugin,
     schema,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
   };
 

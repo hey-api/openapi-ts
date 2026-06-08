@@ -1,79 +1,94 @@
-import { defineNormalizers, definePluginConfig } from '@hey-api/shared';
+import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from '../../../plugins/@tanstack/query-core/plugin';
+import { tanStackQuerySymbols } from '../query-core/symbols';
 import type { TanStackSolidQueryPlugin } from './types';
 
 const defaultMeta = (): Record<string, unknown> => ({});
 
-const normalizeConfig = defineNormalizers<
-  TanStackSolidQueryPlugin['Types']['resolvedConfig'],
-  TanStackSolidQueryPlugin['Config']['config']
->((c) => {
-  const casing = c.case ?? 'camelCase';
-  return {
+export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
+  config: {
+    $cascade: ['case'],
+    case: 'camelCase',
+    comments: true,
     getQueryData: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}GetQueryData',
     },
+    includeInEntry: false,
     infiniteQueryKeys: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}InfiniteQueryKey',
       tags: false,
     },
     infiniteQueryOptions: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       meta: defaultMeta,
       name: '{{name}}InfiniteOptions',
     },
     mutationKeys: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}MutationKey',
       tags: false,
     },
     mutationOptions: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       exported: true,
       meta: defaultMeta,
       name: '{{name}}Mutation',
     },
     queryKeys: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: '{{name}}QueryKey',
       tags: false,
     },
     queryOptions: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       exported: true,
       meta: defaultMeta,
       name: '{{name}}Options',
     },
     setQueryData: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: false,
       name: '{{name}}SetQueryData',
     },
-  };
-});
-
-export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
-  config: {
-    case: 'camelCase',
-    comments: true,
-    includeInEntry: false,
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
-  handler: handler as TanStackSolidQueryPlugin['Handler'],
+  handler,
   name: '@tanstack/solid-query',
-  resolveConfig: (plugin, context) => {
-    normalizeConfig(plugin.config, context);
-  },
+  symbols: tanStackQuerySymbols,
 };
 
 /**

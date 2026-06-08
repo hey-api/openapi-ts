@@ -18,6 +18,7 @@ const constExports = [
   'Logger',
   'mergeConfigs',
   'nodeBrand',
+  'pythonNameConflictResolver',
   'Project',
   'ref',
   'refs',
@@ -52,7 +53,7 @@ export type _TypeExports = [
   index.NodeScope,
   index.Output,
   index.Project,
-  index.ProjectRenderMeta,
+  index.ProjectMeta,
   index.Ref<any>,
   index.Refs<any>,
   index.RenderContext,
@@ -65,9 +66,12 @@ export type _TypeExports = [
   index.StructureShell,
   index.StructureShellResult,
   index.Symbol,
+  index.SymbolChild,
   index.SymbolIdentifier,
   index.SymbolIn,
+  index.SymbolKind,
   index.SymbolMeta,
+  index.SymbolRegistry,
 ];
 
 describe('index exports', () => {

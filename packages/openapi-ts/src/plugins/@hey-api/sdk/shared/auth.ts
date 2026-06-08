@@ -4,13 +4,19 @@ import type { Auth } from '../../client-core/bundle/auth';
 import type { HeyApiSdkPlugin } from '../types';
 
 // TODO: parser - handle more security types
-const securitySchemeObjectToAuthObject = ({
+function securitySchemeObjectToAuthObject({
   securitySchemeObject,
 }: {
   securitySchemeObject: IR.SecurityObject;
-}): Auth | undefined => {
+}): Auth | undefined {
+  // `key` is set by the parser only when the spec defines two or more
+  // security schemes whose normalized Auth shape would collide; forward it
+  // so the runtime callback can disambiguate.
+  const keyField = securitySchemeObject.key ? { key: securitySchemeObject.key } : {};
+
   if (securitySchemeObject.type === 'openIdConnect') {
     return {
+      ...keyField,
       scheme: 'bearer',
       type: 'http',
     };
@@ -24,6 +30,7 @@ const securitySchemeObjectToAuthObject = ({
       securitySchemeObject.flows.implicit
     ) {
       return {
+        ...keyField,
         scheme: 'bearer',
         type: 'http',
       };
@@ -35,6 +42,7 @@ const securitySchemeObjectToAuthObject = ({
   if (securitySchemeObject.type === 'apiKey') {
     if (securitySchemeObject.in === 'header') {
       return {
+        ...keyField,
         name: securitySchemeObject.name,
         type: 'apiKey',
       };
@@ -42,6 +50,7 @@ const securitySchemeObjectToAuthObject = ({
 
     if (securitySchemeObject.in === 'query' || securitySchemeObject.in == 'cookie') {
       return {
+        ...keyField,
         in: securitySchemeObject.in,
         name: securitySchemeObject.name,
         type: 'apiKey',
@@ -55,6 +64,7 @@ const securitySchemeObjectToAuthObject = ({
     const scheme = securitySchemeObject.scheme.toLowerCase();
     if (scheme === 'bearer' || scheme === 'basic') {
       return {
+        ...keyField,
         scheme: scheme as 'bearer' | 'basic',
         type: 'http',
       };
@@ -64,16 +74,16 @@ const securitySchemeObjectToAuthObject = ({
   }
 
   return;
-};
+}
 
-export const operationAuth = ({
+export function operationAuth({
   operation,
   plugin,
 }: {
   context: Context;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
-}): Array<Auth> => {
+}): Array<Auth> {
   if (!operation.security || !plugin.config.auth) {
     return [];
   }
@@ -94,4 +104,4 @@ export const operationAuth = ({
   }
 
   return auth;
-};
+}

@@ -10,54 +10,6 @@ import { createUseQuery } from './useQuery';
 import { createUseSetQueryData } from './useSetQueryData';
 
 export const handlerV5: PluginHandler = ({ plugin }) => {
-  plugin.symbol('DefaultError', {
-    external: plugin.name,
-    kind: 'type',
-  });
-  plugin.symbol('InfiniteData', {
-    external: plugin.name,
-    kind: 'type',
-  });
-  const mutationsType =
-    plugin.name === '@tanstack/angular-query-experimental' ||
-    plugin.name === '@tanstack/svelte-query' ||
-    plugin.name === '@tanstack/solid-query'
-      ? 'MutationOptions'
-      : 'UseMutationOptions';
-  plugin.symbol(mutationsType, {
-    external: plugin.name,
-    kind: 'type',
-    meta: {
-      resource: `${plugin.name}.MutationOptions`,
-    },
-  });
-  plugin.symbol('infiniteQueryOptions', {
-    external: plugin.name,
-  });
-  plugin.symbol('QueryClient', {
-    external: plugin.name,
-    kind: 'type',
-    meta: {
-      resource: `${plugin.name}.QueryClient`,
-    },
-  });
-  plugin.symbol('queryOptions', {
-    external: plugin.name,
-  });
-  plugin.symbol('useMutation', {
-    external: plugin.name,
-  });
-  plugin.symbol('useQuery', {
-    external: plugin.name,
-  });
-  plugin.symbol('useQueryClient', {
-    external: plugin.name,
-  });
-  plugin.symbol('AxiosError', {
-    external: 'axios',
-    kind: 'type',
-  });
-
   plugin.forEach(
     'operation',
     ({ operation }) => {

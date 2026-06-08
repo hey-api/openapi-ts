@@ -3,7 +3,7 @@ import type { MaybeArray, MaybeFunc } from '@hey-api/types';
 
 export type OutputHeader = MaybeFunc<
   (
-    ctx: Pick<RenderContext, 'meta' | 'project'> &
+    ctx: Pick<RenderContext, 'project'> &
       Pick<Partial<RenderContext>, 'file'> & {
         /** The default header value. */
         defaultValue: ReadonlyArray<string>;

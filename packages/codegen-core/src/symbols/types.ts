@@ -1,4 +1,5 @@
 import type { ISymbolMeta } from '../extensions';
+import type { File } from '../files/file';
 import type { Symbol } from './symbol';
 
 export type BindingKind = 'default' | 'named' | 'namespace';
@@ -7,7 +8,40 @@ export type ISymbolIdentifier = number | ISymbolMeta;
 
 export type SymbolKind = 'class' | 'enum' | 'function' | 'interface' | 'namespace' | 'type' | 'var';
 
+export type SymbolEventMap = {
+  file: (args: { file: File; symbol: Symbol }) => void;
+  finalName: (args: { finalName: string; symbol: Symbol }) => void;
+  import: (args: { symbol: Symbol }) => void;
+};
+
+export interface ISymbolChild {
+  /**
+   * Kind of symbol (class, type, alias, etc.).
+   *
+   * @default 'var'
+   */
+  kind: SymbolKind;
+  /**
+   * User-facing name.
+   *
+   * @example "UserModel"
+   */
+  name: string;
+  /**
+   * When true, subclasses may freely redeclare this name.
+   *
+   * @default false
+   */
+  overridable?: boolean;
+}
+
 export type ISymbolIn = {
+  /**
+   * Child symbol bindings scoped under this symbol.
+   *
+   * @default undefined
+   */
+  children?: Array<ISymbolChild>;
   /**
    * Whether this symbol is exported from its own file.
    *
@@ -59,6 +93,13 @@ export type ISymbolIn = {
    * @example "UserModel"
    */
   name: string;
+  /**
+   * When true, this symbol intentionally overrides another declaration with
+   * the same name in the same scope.
+   *
+   * @default false
+   */
+  override?: boolean;
 };
 
 export interface ISymbolRegistry {

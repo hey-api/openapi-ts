@@ -7,14 +7,13 @@ import type { Chain, ChainResult } from '../../shared/chain';
 import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: BooleanResolverContext): Chain {
-  const { symbols } = ctx;
-  const { z } = symbols;
+  const { z } = ctx.plugin.symbols;
   return $(z).attr(identifiers.boolean).call();
 }
 
 function constNode(ctx: BooleanResolverContext): ChainResult {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
   if (typeof schema.const !== 'boolean') return;
   return $(z).attr(identifiers.literal).call($.literal(schema.const));
 }
@@ -39,7 +38,7 @@ export function booleanToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'boolean'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: BooleanResolverContext = {
     $,
     chain: {

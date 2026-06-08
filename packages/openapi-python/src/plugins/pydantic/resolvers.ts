@@ -1,7 +1,8 @@
 import type { IR, Plugin, SchemaVisitorContext, SchemaWithType, Walker } from '@hey-api/shared';
 
-import type { DollarPyDsl } from '../../py-dsl';
-import type { PydanticField, PydanticFinal, PydanticResult, PydanticType } from './shared/types';
+import type { DollarPyDsl, EnumMember } from '../../py-dsl';
+import type { $ } from './dsl';
+import type { PydanticResult, PydanticType } from './shared/types';
 import type { PydanticPlugin } from './types';
 
 export type PydanticResolvers = Plugin.Resolvers<{
@@ -68,9 +69,7 @@ export type PydanticResolvers = Plugin.Resolvers<{
    *
    * Returning `undefined` will execute the default resolver logic.
    */
-  object?: (
-    ctx: ObjectResolverContext,
-  ) => (PydanticType & { fields?: Array<PydanticField> }) | undefined;
+  object?: (ctx: ObjectResolverContext) => PydanticType | undefined;
   /**
    * Resolver for string schemas.
    *
@@ -129,10 +128,8 @@ export interface ArrayResolverContext
     BaseContext,
     Plugin.ResolverNodes<{
       base: (ctx: ArrayResolverContext) => PydanticType;
-      maxLength: (ctx: ArrayResolverContext) => PydanticType | undefined;
-      minLength: (ctx: ArrayResolverContext) => PydanticType | undefined;
     }> {
-  applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
+  applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticResult;
   childResults: Array<PydanticResult>;
   schema: SchemaWithType<'array'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
@@ -154,7 +151,7 @@ export interface EnumResolverContext
     Plugin.ResolverNodes<{
       base: (ctx: EnumResolverContext) => PydanticType;
       items: (ctx: EnumResolverContext) => {
-        enumMembers: Required<PydanticFinal>['enumMembers'];
+        enumMembers: Array<EnumMember>;
         isNullable: boolean;
       };
     }> {
@@ -167,7 +164,7 @@ export interface IntersectionResolverContext
     Plugin.ResolverNodes<{
       base: (ctx: IntersectionResolverContext) => PydanticType;
     }> {
-  applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
+  applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticResult;
   childResults: Array<PydanticResult>;
   parentSchema: IR.SchemaObject;
   schema: IR.SchemaObject;
@@ -206,11 +203,11 @@ export interface ObjectResolverContext
     BaseContext,
     Plugin.ResolverNodes<{
       additionalProperties: (ctx: ObjectResolverContext) => PydanticType | null | undefined;
-      base: (ctx: ObjectResolverContext) => PydanticType & { fields?: Array<PydanticField> };
-      fields: (ctx: ObjectResolverContext) => Array<PydanticField>;
+      base: (ctx: ObjectResolverContext) => PydanticType;
+      fields: (ctx: ObjectResolverContext) => Array<ReturnType<typeof $.field>>;
     }> {
   _childResults: Array<PydanticResult>;
-  applyModifiers: (result: PydanticResult, opts: { optional?: boolean }) => PydanticFinal;
+  applyModifiers: (result: PydanticResult, opts: { optional?: boolean }) => PydanticResult;
   schema: SchemaWithType<'object'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
 }
@@ -232,7 +229,7 @@ export interface TupleResolverContext
       base: (ctx: TupleResolverContext) => PydanticType;
       const: (ctx: TupleResolverContext) => PydanticType | undefined;
     }> {
-  applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
+  applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticResult;
   childResults: Array<PydanticResult>;
   schema: SchemaWithType<'tuple'>;
   walk: Walker<PydanticResult, PydanticPlugin['Instance']>;
@@ -253,7 +250,7 @@ export interface UnionResolverContext
     Plugin.ResolverNodes<{
       base: (ctx: UnionResolverContext) => PydanticType;
     }> {
-  applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticFinal;
+  applyModifiers: (result: PydanticResult, opts?: { optional?: boolean }) => PydanticResult;
   childResults: Array<PydanticResult>;
   parentSchema: IR.SchemaObject;
   schema: IR.SchemaObject;

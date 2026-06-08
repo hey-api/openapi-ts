@@ -2,7 +2,8 @@ import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { isSymbol, ref } from '@hey-api/codegen-core';
 
 import { py } from '../../py-compiler';
-import { type MaybePyDsl, PyDsl } from '../base';
+import { PyDsl } from '../base';
+import type { SubscriptExpr } from '../expr/subscript';
 import { NewlinePyDsl } from '../layout/newline';
 import { DecoratorMixin } from '../mixins/decorator';
 import { DocMixin } from '../mixins/doc';
@@ -10,7 +11,7 @@ import { LayoutMixin } from '../mixins/layout';
 import { ExportMixin } from '../mixins/modifiers';
 import { safeRuntimeName } from '../utils/name';
 
-type Body = Array<MaybePyDsl<py.Statement>>;
+export type ClassBody = Array<PyDsl<py.Statement>>;
 
 const Mixed = DecoratorMixin(DocMixin(ExportMixin(LayoutMixin(PyDsl<py.ClassDeclaration>))));
 
@@ -18,8 +19,8 @@ export class ClassPyDsl extends Mixed {
   readonly '~dsl' = 'ClassPyDsl';
   override readonly nameSanitizer = safeRuntimeName;
 
-  protected baseClasses: Array<Ref<NodeName>> = [];
-  protected body: Body = [];
+  protected baseClasses: Array<Ref<NodeName | SubscriptExpr>> = [];
+  protected body: ClassBody = [];
 
   constructor(name: NodeName) {
     super();
@@ -37,6 +38,9 @@ export class ClassPyDsl extends Mixed {
     ctx.analyze(this.name);
     ctx.pushScope();
     try {
+      for (const baseClass of this.baseClasses) {
+        ctx.injectChildren(baseClass);
+      }
       for (const item of this.body) {
         ctx.analyze(item);
       }
@@ -56,13 +60,13 @@ export class ClassPyDsl extends Mixed {
   }
 
   /** Adds one or more class members (fields, methods, etc.). */
-  do(...items: Body): this {
+  do(...items: ClassBody): this {
     this.body.push(...items);
     return this;
   }
 
   /** Records base classes to extend from. */
-  extends(...baseClass: ReadonlyArray<NodeName>): this {
+  extends(...baseClass: ReadonlyArray<NodeName | SubscriptExpr>): this {
     this.baseClasses.push(...baseClass.map((item) => ref(item)));
     return this;
   }

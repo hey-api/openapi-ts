@@ -90,6 +90,51 @@ function createResourceMetadata(): ResourceMetadata {
 }
 
 describe('createFilteredDependencies', () => {
+  it('preserves schema order from resourceMetadata when no filters are applied', () => {
+    const filters = createFilters();
+    filters.orphans = true;
+
+    const resourceMetadata = createResourceMetadata();
+    // schemas are inserted as Foo, Baz; add Bar in between
+    resourceMetadata.schemas.set('schema/Bar', {
+      dependencies: new Set(),
+      deprecated: false,
+    });
+
+    const { schemas } = createFilteredDependencies({
+      filters,
+      logger: loggerStub,
+      resourceMetadata,
+    });
+
+    expect([...schemas]).toEqual(['schema/Foo', 'schema/Baz', 'schema/Bar']);
+  });
+
+  it('preserves operation order when tags.exclude filters out some operations', () => {
+    const filters = createFilters();
+    filters.tags.exclude.add('exclude-me');
+
+    const resourceMetadata = createResourceMetadata();
+    resourceMetadata.operations.set('operation/GET /v1/bar', {
+      dependencies: new Set(),
+      deprecated: false,
+      tags: new Set(['exclude-me']),
+    });
+    resourceMetadata.operations.set('operation/GET /v1/baz', {
+      dependencies: new Set(),
+      deprecated: false,
+      tags: new Set(),
+    });
+
+    const { operations } = createFilteredDependencies({
+      filters,
+      logger: loggerStub,
+      resourceMetadata,
+    });
+
+    expect([...operations]).toEqual(['operation/GET /v1/foo', 'operation/GET /v1/baz']);
+  });
+
   it('keeps explicitly included schemas and their dependencies when dropping orphans', () => {
     const filters = createFilters();
     filters.schemas.include.add('schema/Foo');

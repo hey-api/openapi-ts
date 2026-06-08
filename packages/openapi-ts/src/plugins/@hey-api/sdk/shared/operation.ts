@@ -15,7 +15,7 @@ import { getSignatureParameters } from './signature';
 import { createRequestValidator } from './validator';
 
 /** TODO: needs complete refactor */
-export const operationOptionsType = ({
+export function operationOptionsType({
   isDataAllowed = true,
   operation,
   plugin,
@@ -25,7 +25,7 @@ export const operationOptionsType = ({
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
-}): ReturnType<typeof $.type> => {
+}): ReturnType<typeof $.type> {
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
@@ -84,7 +84,7 @@ export const operationOptionsType = ({
   return $.type(symbolOptions).$if(!isDataAllowed || symbolDataType, (t) =>
     t.generic(isDataAllowed ? symbolDataType! : 'never'),
   );
-};
+}
 
 type OperationParameters = {
   argNames: Array<string>;
@@ -166,9 +166,9 @@ export function operationParameters({
  * options are: 'arraybuffer', 'document', 'json', 'text', 'stream'
  * browser only: 'blob'
  */
-const getResponseType = (
+function getResponseType(
   contentType: string | null | undefined,
-): 'arraybuffer' | 'blob' | 'document' | 'json' | 'stream' | 'text' | undefined => {
+): 'arraybuffer' | 'blob' | 'document' | 'json' | 'stream' | 'text' | undefined {
   if (!contentType) {
     return;
   }
@@ -199,7 +199,7 @@ const getResponseType = (
   }
 
   return;
-};
+}
 
 export function operationStatements({
   isRequiredOptions,
@@ -253,7 +253,7 @@ export function operationStatements({
 
     switch (operation.body.type) {
       case 'form-data': {
-        const symbol = plugin.external('client.formDataBodySerializer');
+        const symbol = plugin.symbols.formDataBodySerializer;
         reqOptions.spread(symbol);
         break;
       }
@@ -270,7 +270,7 @@ export function operationStatements({
         reqOptions.prop('bodySerializer', $.literal(null));
         break;
       case 'url-search-params': {
-        const symbol = plugin.external('client.urlSearchParamsBodySerializer');
+        const symbol = plugin.symbols.urlSearchParamsBodySerializer;
         reqOptions.spread(symbol);
         break;
       }
@@ -344,7 +344,7 @@ export function operationStatements({
     reqOptions.prop('responseTransformer', responseHandlers.transformer);
   }
 
-  let hasServerSentEvents = false;
+  const isSse = hasOperationSse({ operation });
   let responseTypeValue: ReturnType<typeof getResponseType> | undefined;
 
   for (const statusCode in operation.responses) {
@@ -361,10 +361,6 @@ export function operationStatements({
           reqOptions.prop('responseType', $.literal(responseTypeValue));
         }
       }
-    }
-
-    if (response.mediaType === 'text/event-stream') {
-      hasServerSentEvents = true;
     }
   }
 
@@ -410,7 +406,7 @@ export function operationStatements({
       }
       config.push(shape);
     }
-    const symbol = plugin.external('client.buildClientParams');
+    const symbol = plugin.symbols.buildClientParams;
     statements.push(
       $.const('params').assign(
         $(symbol).call($.array(...args), $.array($.object().prop('args', $.array(...config)))),
@@ -455,7 +451,7 @@ export function operationStatements({
     clientExpression = optionsClient;
   }
 
-  let functionName = hasServerSentEvents ? clientExpression.attr('sse') : clientExpression;
+  let functionName = isSse ? clientExpression.attr('sse') : clientExpression;
   functionName = functionName.attr(operation.method);
 
   statements.push(
@@ -483,4 +479,51 @@ export function operationStatements({
   );
 
   return statements;
+}
+
+/**
+ * Builds the return type annotation for an SDK operation function.
+ */
+export function operationReturnType({
+  operation,
+  plugin,
+}: {
+  operation: IR.OperationObject;
+  plugin: HeyApiSdkPlugin['Instance'];
+}): ReturnType<typeof $.type> {
+  const client = getClientPlugin(getTypedConfig(plugin));
+  const isNuxt = client.name === '@hey-api/client-nuxt';
+  const isSse = hasOperationSse({ operation });
+
+  const queryType = (role: 'response' | 'responses' | 'error' | 'errors') =>
+    plugin.querySymbol({
+      category: 'type',
+      resource: 'operation',
+      resourceId: operation.id,
+      role,
+    }) ?? 'unknown';
+
+  const requestResult = $.type(plugin.symbols.RequestResult);
+  const sseResult = $.type(plugin.symbols.ServerSentEventsResult);
+
+  if (isNuxt) {
+    const inner = requestResult
+      .generic(nuxtTypeComposable)
+      .generic($.type.or(queryType('response'), nuxtTypeDefault));
+    return isSse
+      ? $.type('Promise').generic(sseResult.generic(inner.generic('unknown')))
+      : inner.generic(nuxtTypeDefault);
+  }
+
+  if (isSse) {
+    return $.type('Promise').generic(sseResult.generic(queryType('responses')));
+  }
+
+  return requestResult
+    .generic(queryType('responses'))
+    .generic(queryType('errors'))
+    .generic('ThrowOnError')
+    .$if(plugin.config.responseStyle === 'data', (t) =>
+      t.generic($.type.literal(plugin.config.responseStyle)),
+    );
 }

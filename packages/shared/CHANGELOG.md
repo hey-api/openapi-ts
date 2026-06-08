@@ -1,5 +1,36 @@
 # @hey-api/shared
 
+## 0.4.7
+
+### Patch Changes
+
+- **plugin**: add generics support to `querySymbol()` and `querySymbols()` ([#3982](https://github.com/hey-api/openapi-ts/pull/3982)) ([`11f9324`](https://github.com/hey-api/openapi-ts/commit/11f9324a729a2db2f37c9f36a19c10b0d695e574)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.4
+
+## 0.4.6
+
+### Patch Changes
+
+- **parser**: fix: preserve sort order when filtering input ([#3953](https://github.com/hey-api/openapi-ts/pull/3953)) ([`f6e8496`](https://github.com/hey-api/openapi-ts/commit/f6e8496626b007341a1c6653dba1d6452ae038ec)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin**: do not stamp external symbols ([#3942](https://github.com/hey-api/openapi-ts/pull/3942)) ([`6448780`](https://github.com/hey-api/openapi-ts/commit/6448780847d7e0748d7894fec7f918e090f470db)) by [@mrlubos](https://github.com/mrlubos)
+
+- **parser**: fix: expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/openapi-ts/pull/3935)) ([`b74539e`](https://github.com/hey-api/openapi-ts/commit/b74539ea0a7e81b40e0c27da68a0f7db6baf449d)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin**: export `coerce`, `defineConfig`, `Coercer`, `CoercerMap`, `ConfigTable`, `PluginSymbols`, `PluginTag`, `TableDirectives`, and `WithCoercers` ([#3927](https://github.com/hey-api/openapi-ts/pull/3927)) ([`d93e1ef`](https://github.com/hey-api/openapi-ts/commit/d93e1efe58ae14ce8e224e8d7c3c0bd716fef181)) by [@mrlubos](https://github.com/mrlubos)
+
+- **config**: `valueToObject` is recursive ([#3927](https://github.com/hey-api/openapi-ts/pull/3927)) ([`d93e1ef`](https://github.com/hey-api/openapi-ts/commit/d93e1efe58ae14ce8e224e8d7c3c0bd716fef181)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: add `symbols` property ([#3942](https://github.com/hey-api/openapi-ts/pull/3942)) ([`6448780`](https://github.com/hey-api/openapi-ts/commit/6448780847d7e0748d7894fec7f918e090f470db)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.3
+- @hey-api/json-schema-ref-parser@1.4.3
+
 ## 0.4.5
 
 ### Patch Changes

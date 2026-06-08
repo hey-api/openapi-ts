@@ -6,8 +6,8 @@ import type { CompositeHandlerResult } from '../../shared/types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: IntersectionResolverContext): PipeResult {
-  const { applyModifiers, childResults, plugin, symbols } = ctx;
-  const { v } = symbols;
+  const { applyModifiers, childResults, plugin } = ctx;
+  const { v } = plugin.symbols;
 
   if (!childResults.length) {
     return $(v).attr(identifiers.schemas.any).call();
@@ -58,7 +58,7 @@ export function intersectionToPipes({
     plugin,
     schema: parentSchema,
     symbols: {
-      v: plugin.external('valibot.v'),
+      v: plugin.symbols.v,
     },
   };
 

@@ -3,7 +3,7 @@ import type { ISymbolMeta } from '../extensions';
 import type { File } from '../files/file';
 import { log } from '../log';
 import type { INode } from '../nodes/node';
-import type { BindingKind, ISymbolIn, SymbolKind } from './types';
+import type { BindingKind, ISymbolChild, ISymbolIn, SymbolEventMap, SymbolKind } from './types';
 
 export class Symbol<Node extends INode = INode> {
   /**
@@ -14,6 +14,12 @@ export class Symbol<Node extends INode = INode> {
    * should defer to the canonical symbol.
    */
   private _canonical?: Symbol;
+  /**
+   * Child symbol bindings scoped under this symbol.
+   *
+   * @default []
+   */
+  private _children: Array<ISymbolChild>;
   /**
    * True if this symbol is exported from its defining file.
    *
@@ -56,11 +62,25 @@ export class Symbol<Node extends INode = INode> {
    */
   private _importKind: BindingKind;
   /**
+   * Per-file imported instances of this symbol.
+   *
+   * @default []
+   */
+  private _imports: Array<Symbol> = [];
+  /**
    * Kind of symbol (class, type, alias, etc.).
    *
    * @default 'var'
    */
   private _kind: SymbolKind;
+  /**
+   * Registered event listeners keyed by event name.
+   *
+   * @default {}
+   */
+  private _listeners: {
+    [K in keyof SymbolEventMap]?: Array<SymbolEventMap[K]>;
+  } = {};
   /**
    * Arbitrary user metadata.
    *
@@ -77,6 +97,12 @@ export class Symbol<Node extends INode = INode> {
    * Node that defines this symbol.
    */
   private _node?: Node;
+  /**
+   * Indicates whether this symbol overrides another declaration.
+   *
+   * @default false
+   */
+  private _override: boolean;
 
   /** Brand used for identifying symbols. */
   readonly '~brand' = symbolBrand;
@@ -84,6 +110,7 @@ export class Symbol<Node extends INode = INode> {
   readonly id: number;
 
   constructor(input: ISymbolIn, id: number) {
+    this._children = input.children ?? [];
     this._exported = input.exported ?? false;
     this._external = input.external;
     this._getExportFromFilePath = input.getExportFromFilePath;
@@ -93,6 +120,7 @@ export class Symbol<Node extends INode = INode> {
     this._kind = input.kind ?? 'var';
     this._meta = input.meta;
     this._name = input.name;
+    this._override = input.override ?? false;
   }
 
   /**
@@ -104,6 +132,13 @@ export class Symbol<Node extends INode = INode> {
    */
   get canonical(): Symbol {
     return this._canonical ?? this;
+  }
+
+  /**
+   * Read-only accessor for child symbol bindings.
+   */
+  get children(): ReadonlyArray<ISymbolChild> {
+    return this.canonical._children;
   }
 
   /**
@@ -163,10 +198,24 @@ export class Symbol<Node extends INode = INode> {
   }
 
   /**
+   * Read-only accessor for the per-file imported instances of this symbol.
+   */
+  get imports(): ReadonlyArray<Symbol> {
+    return this.canonical._imports;
+  }
+
+  /**
    * Indicates whether this is a canonical symbol (not a stub).
    */
   get isCanonical(): boolean {
     return !this._canonical || this._canonical === this;
+  }
+
+  /**
+   * Indicates whether this symbol was renamed during conflict resolution.
+   */
+  get isRenamed(): boolean {
+    return Boolean(this.canonical._finalName) && this.canonical._finalName !== this.canonical._name;
   }
 
   /**
@@ -198,21 +247,63 @@ export class Symbol<Node extends INode = INode> {
   }
 
   /**
+   * Indicates whether this symbol is marked as an override.
+   */
+  get override(): boolean {
+    return this.canonical._override;
+  }
+
+  /**
+   * Registers a per-file imported instance of this symbol.
+   *
+   * @param symbol The imported instance to register.
+   */
+  addImport(symbol: Symbol): void {
+    this.assertCanonical();
+    this._imports.push(symbol);
+    this.emit('import', { symbol });
+  }
+
+  /**
+   * Registers a listener for the given symbol lifecycle event.
+   *
+   * @param event The event to subscribe to.
+   * @param listener Callback invoked when the event is emitted.
+   * @returns `this` for chaining.
+   */
+  on<K extends keyof SymbolEventMap>(event: K, listener: SymbolEventMap[K]): this {
+    (this.canonical._listeners[event] ??= [] as NonNullable<
+      (typeof this.canonical._listeners)[K]
+    >).push(listener);
+    return this;
+  }
+
+  /**
    * Marks this symbol as a stub and assigns its canonical symbol.
    *
    * After calling this, all semantic queries (name, kind, file,
    * meta, etc.) should reflect the canonical symbol's values.
    *
-   * @param symbol — The canonical symbol this stub should resolve to.
+   * @param symbol The canonical symbol this stub should resolve to.
    */
   setCanonical(symbol: Symbol): void {
     this._canonical = symbol;
   }
 
   /**
+   * Assigns the child symbol bindings associated with this symbol.
+   *
+   * @param children Child bindings to associate with the symbol.
+   */
+  setChildren(children: Array<ISymbolChild>): void {
+    this.assertCanonical();
+    this._children = children;
+  }
+
+  /**
    * Marks the symbol as exported from its file.
    *
-   * @param exported — Whether the symbol is exported.
+   * @param exported Whether the symbol is exported.
    */
   setExported(exported: boolean): void {
     this.assertCanonical();
@@ -232,6 +323,7 @@ export class Symbol<Node extends INode = INode> {
       throw new Error(message);
     }
     this._file = file;
+    this.emit('file', { file, symbol: this });
   }
 
   /**
@@ -247,12 +339,13 @@ export class Symbol<Node extends INode = INode> {
       throw new Error(message);
     }
     this._finalName = name;
+    this.emit('finalName', { finalName: name, symbol: this });
   }
 
   /**
    * Sets how this symbol should be imported.
    *
-   * @param kind — The import strategy (named/default/namespace).
+   * @param kind The import strategy (named/default/namespace).
    */
   setImportKind(kind: BindingKind): void {
     this.assertCanonical();
@@ -262,7 +355,7 @@ export class Symbol<Node extends INode = INode> {
   /**
    * Sets the symbol's kind (class, type, alias, variable, etc.).
    *
-   * @param kind — The new symbol kind.
+   * @param kind The new symbol kind.
    */
   setKind(kind: SymbolKind): void {
     this.assertCanonical();
@@ -272,7 +365,7 @@ export class Symbol<Node extends INode = INode> {
   /**
    * Updates the intended user‑facing name for this symbol.
    *
-   * @param name — The new name.
+   * @param name The new name.
    */
   setName(name: string): void {
     this.assertCanonical();
@@ -298,14 +391,28 @@ export class Symbol<Node extends INode = INode> {
   }
 
   /**
+   * Marks whether this symbol should be treated as an override.
+   *
+   * @param override Override marker value.
+   */
+  setOverride(override: boolean): void {
+    this.assertCanonical();
+    this._override = override;
+  }
+
+  /**
    * Returns a debug‑friendly string representation identifying the symbol.
    */
   toString(): string {
-    const canonical = this.canonical;
-    if (canonical._finalName) {
-      return `[Symbol ${canonical._name} → ${canonical._finalName}#${canonical.id}]`;
+    const c = this.canonical;
+    const status = `${this._finalName ? '✓' : '~'} `;
+    let renamed = '';
+    let file = '';
+    if (c._finalName) {
+      renamed = c._finalName !== c._name ? ` → "${c._finalName}"` : '';
+      file = c._file ? ` ${c._file.logicalFilePath}` : '';
     }
-    return `[Symbol ${canonical._name}#${canonical.id}] ${JSON.stringify(canonical._meta ?? {})}`;
+    return `${status}Symbol#${c.id} "${c._name}"${renamed}${file}`;
   }
 
   /**
@@ -323,6 +430,23 @@ export class Symbol<Node extends INode = INode> {
       const message = `Illegal mutation of stub symbol ${this.toString()} → canonical: ${this._canonical.toString()}`;
       log.debug(message, 'symbol');
       throw new Error(message);
+    }
+  }
+
+  /**
+   * Invokes all registered listeners for the given event.
+   *
+   * @param event The event to emit.
+   * @param args Arguments forwarded to each listener.
+   */
+  private emit<K extends keyof SymbolEventMap>(
+    event: K,
+    ...args: Parameters<SymbolEventMap[K]>
+  ): void {
+    const listeners = this._listeners[event];
+    if (!listeners) return;
+    for (const listener of listeners) {
+      (listener as (...args: Parameters<SymbolEventMap[K]>) => void)(...args);
     }
   }
 }

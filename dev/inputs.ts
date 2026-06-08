@@ -7,10 +7,27 @@ export const inputs = {
   clerk: path.resolve(specsPath, '3.0.x', 'clerk-2025-11-10.yaml'),
   cloudflare: path.resolve(specsPath, '3.0.x', 'cloudflare-v4.json'),
   full: path.resolve(specsPath, '3.1.x', 'full.yaml'),
+  'hey-api': 'hey-api/backend',
   local: 'http://localhost:8000/openapi.json',
   opencode: path.resolve(specsPath, '3.1.x', 'opencode.yaml'),
   petstore:
     'https://raw.githubusercontent.com/swagger-api/swagger-petstore/master/src/main/resources/openapi.yaml',
+  raw: {
+    components: {
+      schemas: {
+        Foo: {
+          type: 'string',
+        },
+      },
+    },
+    info: {
+      title: 'Raw Spec',
+      version: '1.0.0',
+    },
+    openapi: '3.1.0',
+  } as const,
+  readme: 'readme:@developers/v2.0#nysezql0wwo236',
+  'readme-uuid': 'readme:nysezql0wwo236',
   redfish:
     'https://raw.githubusercontent.com/DMTF/Redfish-Publications/refs/heads/main/openapi/openapi.yaml',
   scalar: 'scalar:@scalar/access-service',

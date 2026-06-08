@@ -1,191 +1,329 @@
-import { coerce, defineNormalizers, definePluginConfig, mappers } from '@hey-api/shared';
+import { coerce, definePluginConfig, type PluginContext } from '@hey-api/shared';
 import colors from 'ansi-colors';
 
 import { Api } from './api';
 import { handler } from './plugin';
+import { zodSymbols } from './symbols';
 import type { ZodPlugin } from './types';
 
-type CompatibilityVersion = NonNullable<ZodPlugin['Config']['config']['compatibilityVersion']>;
+type CompatibilityVersion = NonNullable<ZodPlugin['Types']['config']['compatibilityVersion']>;
 
-const normalizeConfig = defineNormalizers<
-  ZodPlugin['Types']['resolvedConfig'],
-  ZodPlugin['Config']['config']
->((c, context) => {
-  const casing = c.case ?? 'camelCase';
+export const defaultConfig: ZodPlugin['Config'] = {
+  api: new Api(),
+  config: {
+    $cascade: ['case', 'types'],
+    case: 'camelCase',
+    comments: true,
+    compatibilityVersion: coerce((value, context) => {
+      const packageName = 'zod';
+      const version = (context as PluginContext).package.getVersion(packageName);
 
-  const types = context.valueToObject({
-    defaultValue: {
-      infer: { case: 'PascalCase', enabled: false },
-      input: { case: 'PascalCase', enabled: false },
-      output: { case: 'PascalCase', enabled: false },
-    },
-    // @ts-expect-error
-    mappers,
-    value: c.types,
-  }) as ZodPlugin['Types']['resolvedConfig']['types'];
+      function inferCompatibleVersion(): CompatibilityVersion {
+        if (version && (version.major === 4 || version.major === 3)) {
+          return version.major;
+        }
+        // default compatibility version
+        return 4;
+      }
 
-  return {
+      if (!value) {
+        return inferCompatibleVersion();
+      }
+
+      if (!version) {
+        return value;
+      }
+
+      if (value === 4 || value === 3 || value === 'mini') {
+        if (!(context as PluginContext).package.satisfies(version, '>=3.25.0 <5.0.0')) {
+          const compatibleVersion = inferCompatibleVersion();
+          console.warn(
+            `🔌 ${colors.yellow('Warning:')} Installed ${colors.cyan(packageName)} ${colors.cyan(`v${version.version}`)} does not support compatibility version ${colors.yellow(String(value))}, using ${colors.yellow(String(compatibleVersion))}.`,
+          );
+          return compatibleVersion;
+        }
+      }
+
+      return value;
+    }),
     dates: {
       local: false,
       offset: false,
     },
     definitions: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'z{{name}}',
       types: {
-        infer: { ...types.infer, name: '{{name}}ZodType' },
-        input: { ...types.input, name: '{{name}}ZodInput' },
-        output: { ...types.output, name: '{{name}}ZodOutput' },
+        infer: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ZodType',
+        },
+        input: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ZodInput',
+        },
+        output: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ZodOutput',
+        },
       },
     },
+    includeInEntry: false,
+    metadata: false,
     requests: {
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       body: {
-        case: casing,
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'z{{name}}Body',
         types: {
-          infer: { ...types.infer, name: '{{name}}BodyZodType' },
-          input: { ...types.input, name: '{{name}}BodyZodInput' },
-          output: { ...types.output, name: '{{name}}BodyZodOutput' },
+          infer: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}BodyZodType',
+          },
+          input: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}BodyZodInput',
+          },
+          output: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}BodyZodOutput',
+          },
         },
       },
-      case: casing,
       enabled: true,
       headers: {
-        case: casing,
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'z{{name}}Headers',
         types: {
-          infer: { ...types.infer, name: '{{name}}HeadersZodType' },
-          input: { ...types.input, name: '{{name}}HeadersZodInput' },
-          output: { ...types.output, name: '{{name}}HeadersZodOutput' },
+          infer: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}HeadersZodType',
+          },
+          input: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}HeadersZodInput',
+          },
+          output: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}HeadersZodOutput',
+          },
         },
       },
       name: 'z{{name}}Data',
       path: {
-        case: casing,
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'z{{name}}Path',
         types: {
-          infer: { ...types.infer, name: '{{name}}PathZodType' },
-          input: { ...types.input, name: '{{name}}PathZodInput' },
-          output: { ...types.output, name: '{{name}}PathZodOutput' },
+          infer: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}PathZodType',
+          },
+          input: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}PathZodInput',
+          },
+          output: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}PathZodOutput',
+          },
         },
       },
       query: {
-        case: casing,
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
         enabled: true,
         name: 'z{{name}}Query',
         types: {
-          infer: { ...types.infer, name: '{{name}}QueryZodType' },
-          input: { ...types.input, name: '{{name}}QueryZodInput' },
-          output: { ...types.output, name: '{{name}}QueryZodOutput' },
+          infer: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}QueryZodType',
+          },
+          input: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}QueryZodInput',
+          },
+          output: {
+            $coerceAny: ({ type, value }) => ({
+              enabled: Boolean(value),
+              ...(type === 'string' || type === 'function' ? { name: value } : {}),
+            }),
+            name: '{{name}}QueryZodOutput',
+          },
         },
       },
       shouldExtract: coerce((value) =>
         typeof value === 'function' ? value : () => Boolean(value),
       ),
       types: {
-        infer: { ...types.infer, name: '{{name}}DataZodType' },
-        input: { ...types.input, name: '{{name}}DataZodInput' },
-        output: { ...types.output, name: '{{name}}DataZodOutput' },
+        infer: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}DataZodType',
+        },
+        input: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}DataZodInput',
+        },
+        output: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}DataZodOutput',
+        },
       },
     },
     responses: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'z{{name}}Response',
       types: {
-        infer: { ...types.infer, name: '{{name}}ResponseZodType' },
-        input: { ...types.input, name: '{{name}}ResponseZodInput' },
-        output: { ...types.output, name: '{{name}}ResponseZodOutput' },
+        infer: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ResponseZodType',
+        },
+        input: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ResponseZodInput',
+        },
+        output: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}ResponseZodOutput',
+        },
       },
     },
     types: {
       infer: {
+        $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
       input: {
+        $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
       output: {
+        $coerceAny: ({ value }) => ({ enabled: Boolean(value) }),
         case: 'PascalCase',
         enabled: false,
       },
     },
     webhooks: {
-      case: casing,
+      $coerceAny: ({ type, value }) => ({
+        enabled: Boolean(value),
+        ...(type === 'string' || type === 'function' ? { name: value } : {}),
+      }),
       enabled: true,
       name: 'z{{name}}WebhookRequest',
       types: {
-        infer: { ...types.infer, name: '{{name}}WebhookRequestZodType' },
-        input: { ...types.input, name: '{{name}}WebhookRequestZodInput' },
-        output: { ...types.output, name: '{{name}}WebhookRequestZodOutput' },
+        infer: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}WebhookRequestZodType',
+        },
+        input: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}WebhookRequestZodInput',
+        },
+        output: {
+          $coerceAny: ({ type, value }) => ({
+            enabled: Boolean(value),
+            ...(type === 'string' || type === 'function' ? { name: value } : {}),
+          }),
+          name: '{{name}}WebhookRequestZodOutput',
+        },
       },
     },
-  };
-});
-
-export const defaultConfig: ZodPlugin['Config'] = {
-  api: new Api(),
-  config: {
-    case: 'camelCase',
-    comments: true,
-    includeInEntry: false,
-    metadata: false,
   },
   handler,
   name: 'zod',
-  resolveConfig: (plugin, context) => {
-    const packageName = 'zod';
-    const version = context.package.getVersion(packageName);
-
-    function inferCompatibleVersion(): CompatibilityVersion {
-      if (version && (version.major === 4 || version.major === 3)) {
-        return version.major;
-      }
-
-      // default compatibility version
-      return 4;
-    }
-
-    function ensureCompatibleVersion(
-      compatibilityVersion: CompatibilityVersion | undefined,
-    ): CompatibilityVersion {
-      if (!compatibilityVersion) {
-        return inferCompatibleVersion();
-      }
-
-      if (!version) {
-        return compatibilityVersion;
-      }
-
-      if (
-        compatibilityVersion === 4 ||
-        compatibilityVersion === 3 ||
-        compatibilityVersion === 'mini'
-      ) {
-        if (!context.package.satisfies(version, '>=3.25.0 <5.0.0')) {
-          const compatibleVersion = inferCompatibleVersion();
-          console.warn(
-            `🔌 ${colors.yellow('Warning:')} Installed ${colors.cyan(packageName)} ${colors.cyan(`v${version.version}`)} does not support compatibility version ${colors.yellow(String(compatibilityVersion))}, using ${colors.yellow(String(compatibleVersion))}.`,
-          );
-          return compatibleVersion;
-        }
-      }
-
-      return compatibilityVersion;
-    }
-
-    plugin.config.compatibilityVersion = ensureCompatibleVersion(
-      plugin.config.compatibilityVersion,
-    );
-
-    normalizeConfig(plugin.config, context);
-  },
+  symbols: zodSymbols,
   tags: ['transformer', 'validator'],
 };
 

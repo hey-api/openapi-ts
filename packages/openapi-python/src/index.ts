@@ -5,15 +5,15 @@ import '@hey-api/codegen-core';
 import '@hey-api/shared';
 
 declare module '@hey-api/codegen-core' {
-  interface ProjectRenderMeta {
-    /**
-     * If specified, this will be the file extension used when importing
-     * other modules. By default, we don't add a file extension and let the
-     * runtime resolve it.
-     *
-     * @default null
-     */
-    importFileExtension?: AnyString | null;
+  interface ProjectMeta {
+    python: {
+      Version: Version<PythonVersion>;
+      symbols: {
+        enum: EnumSymbols;
+        typing: TypingSymbols;
+      };
+      version: PythonVersion;
+    };
   }
 
   interface SymbolMeta {
@@ -56,15 +56,19 @@ declare module '@hey-api/shared' {
 }
 // END OVERRIDES
 
+import type { Version } from '@hey-api/codegen-core';
 import type { AnyString, LazyOrAsync, MaybeArray } from '@hey-api/types';
 import colors from 'ansi-colors';
 // @ts-expect-error
 import colorSupport from 'color-support';
 
+import type { PythonVersion } from './config/output/types';
 import type { UserConfig } from './config/types';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 import type { PydanticPlugin, PydanticResolvers } from './plugins/pydantic';
+import type { EnumSymbols } from './symbols/enum';
+import type { TypingSymbols } from './symbols/typing';
 
 colors.enabled = colorSupport().hasBasic;
 
@@ -87,6 +91,10 @@ export { defaultPlugins } from './config/plugins';
 export type { UserConfig } from './config/types';
 export { Logger } from '@hey-api/codegen-core';
 export type {
+  AnyPluginName,
+  Coercer,
+  CoercerMap,
+  ConfigTable,
   DefinePlugin,
   IR,
   OpenApi,
@@ -97,12 +105,19 @@ export type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
   Plugin,
+  PluginContext,
+  PluginInstance,
+  TableDirectives,
 } from '@hey-api/shared';
 export {
+  applyNaming,
+  coerce,
   defaultPaginationKeywords,
+  defineConfig as defineConfigTable,
   definePluginConfig,
   OperationPath,
   OperationStrategy,
+  toCase,
   utils,
 } from '@hey-api/shared';
 

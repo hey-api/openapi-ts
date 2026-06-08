@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import type { IProjectRenderMeta } from '../extensions';
+import type { IProjectMeta } from '../extensions';
 import { FileRegistry } from '../files/registry';
 import { defaultExtensions } from '../languages/extensions';
 import { defaultModuleEntryNames } from '../languages/modules';
@@ -19,6 +19,7 @@ export class Project implements IProject {
   private _isPlanned = false;
 
   readonly files: FileRegistry;
+  readonly meta: IProjectMeta;
   readonly nodes = new NodeRegistry();
   readonly symbols = new SymbolRegistry();
 
@@ -42,8 +43,9 @@ export class Project implements IProject {
       | 'nameConflictResolvers'
       | 'renderers'
     > &
-      Pick<IProject, 'root'>,
+      Pick<IProject, 'root'> & { meta?: IProjectMeta },
   ) {
+    this.meta = args.meta ?? {};
     const fileName = args.fileName;
     this.defaultFileName = args.defaultFileName ?? 'main';
     this.defaultNameConflictResolver =
@@ -66,18 +68,18 @@ export class Project implements IProject {
     this.root = path.resolve(args.root).replace(/[/\\]+$/, '');
   }
 
-  plan(meta?: IProjectRenderMeta): void {
+  plan(): void {
     if (this._isPlanned) return;
-    new Planner(this).plan(meta);
+    new Planner(this).plan();
     this._isPlanned = true;
   }
 
-  render(meta?: IProjectRenderMeta): ReadonlyArray<IOutput> {
-    if (!this._isPlanned) this.plan(meta);
+  render(): ReadonlyArray<IOutput> {
+    if (!this._isPlanned) this.plan();
     const files: Array<IOutput> = [];
     for (const file of this.files.registered()) {
       if (!file.external && file.finalPath && file.renderer) {
-        const content = file.renderer.render({ file, meta, project: this });
+        const content = file.renderer.render({ file, project: this });
         files.push({ content, path: file.finalPath });
       }
     }

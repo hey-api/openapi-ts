@@ -1,5 +1,4 @@
-import { fromRef } from '@hey-api/codegen-core';
-import { pathToJsonPointer, type SchemaVisitorContext, type SchemaWithType } from '@hey-api/shared';
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
@@ -9,8 +8,8 @@ import type { ZodPlugin } from '../../types';
 import { unknownToAst } from './unknown';
 
 function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
-  const { schema, symbols } = ctx;
-  const { z } = symbols;
+  const { schema } = ctx;
+  const { z } = ctx.plugin.symbols;
 
   const enumMembers: Array<ReturnType<typeof $.literal>> = [];
   const literalSchemas: Array<Chain> = [];
@@ -38,34 +37,26 @@ function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['no
 function baseNode(ctx: EnumResolverContext): Chain {
   const { enumMembers, literalSchemas } = ctx.nodes.items(ctx);
   if (!literalSchemas.length) {
-    return unknownToAst({
-      path: ctx.path,
-      plugin: ctx.plugin,
-      schema: {
-        type: 'unknown',
-      },
-    });
+    return unknownToAst({ path: ctx.path, plugin: ctx.plugin });
   }
 
-  const { symbols } = ctx;
-  const { z } = symbols;
+  const { z } = ctx.plugin.symbols;
 
-  const def = ctx.plugin
-    .querySymbols({
-      resource: 'definition', // maybe we shouldn't hardcode definition
-      resourceId: pathToJsonPointer(fromRef(ctx.path)),
-      tool: 'typescript',
-    })
-    // find const or enum, but not const enums, because Zod doesn't support them
-    .filter(
-      (symbol) =>
-        symbol.kind === 'var' ||
-        (symbol.kind === 'enum' &&
-          !(symbol.node as ReturnType<typeof $.enum>).hasModifier('const')),
-    )[0];
-  if (def) {
-    return $(z).attr(identifiers.enum).call(def);
-  }
+  // skip this feature for now, requires knowing whether the enum contains safe values only, which requires special handling that we don't currently support
+  // const def = ctx.plugin.querySymbol<ReturnType<typeof $.enum | typeof $.var>>(
+  //   {
+  //     resource: 'definition', // maybe we shouldn't hardcode definition
+  //     resourceId: pathToJsonPointer(fromRef(ctx.path)),
+  //     tool: 'typescript',
+  //   },
+  //   ['EnumTsDsl', 'VarTsDsl'],
+  //   // skip const enums, not supported by Zod
+  //   // skip enums with default values, requires special handling that we don't currently support
+  //   (symbol) => symbol.node?.['~dsl'] !== 'EnumTsDsl' || (!symbol.node.hasModifier('const') && ctx.schema.default === undefined),
+  // );
+  // if (def) {
+  //   return $(z).attr(identifiers.enum).call(def);
+  // }
 
   if (enumMembers.length > 0 && enumMembers.length === literalSchemas.length) {
     return $(z)
@@ -96,7 +87,7 @@ export function enumToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'enum'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
 
   const ctx: EnumResolverContext = {
     $,

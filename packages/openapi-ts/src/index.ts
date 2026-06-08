@@ -5,7 +5,7 @@ import '@hey-api/codegen-core';
 import '@hey-api/shared';
 
 declare module '@hey-api/codegen-core' {
-  interface ProjectRenderMeta {
+  interface ProjectMeta {
     /**
      * If specified, this will be the file extension used when importing
      * other modules. By default, we don't add a file extension and let the
@@ -175,6 +175,10 @@ export type { ExpressionTransformer, TypeTransformer } from './plugins/@hey-api/
 export * from './ts-dsl';
 export { Logger } from '@hey-api/codegen-core';
 export type {
+  AnyPluginName,
+  Coercer,
+  CoercerMap,
+  ConfigTable,
   DefinePlugin,
   IR,
   OpenApi,
@@ -185,12 +189,19 @@ export type {
   OpenApiResponseObject,
   OpenApiSchemaObject,
   Plugin,
+  PluginContext,
+  PluginInstance,
+  TableDirectives,
 } from '@hey-api/shared';
 export {
+  applyNaming,
+  coerce,
   defaultPaginationKeywords,
+  defineConfig as defineConfigTable,
   definePluginConfig,
   OperationPath,
   OperationStrategy,
+  toCase,
   utils,
 } from '@hey-api/shared';
 

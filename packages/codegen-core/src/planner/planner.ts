@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import type { ExportModule, ImportModule } from '../bindings';
-import type { IProjectRenderMeta } from '../extensions';
 import type { File } from '../files/file';
 import type { INode } from '../nodes/node';
 import { canDeclarationsShareIdentifier } from '../project/namespace';
@@ -13,27 +12,39 @@ import type { SymbolKind } from '../symbols/types';
 import type { AnalysisContext } from './analyzer';
 import { Analyzer } from './analyzer';
 import type { AssignOptions, Scope } from './scope';
-import { createScope } from './scope';
+import { createScope, registerName } from './scope';
 
 const isTypeOnlyKind = (kind: SymbolKind) => kind === 'type' || kind === 'interface';
 
 export class Planner {
-  private readonly analyzer = new Analyzer();
+  private static readonly MAX_ALLOCATION_ROUNDS = 100;
+
+  private readonly analyzer: Analyzer;
   private readonly cacheResolvedNames = new Set<number>();
   private readonly project: IProject;
 
   constructor(project: IProject) {
+    this.analyzer = new Analyzer(project.meta);
     this.project = project;
   }
 
   /**
    * Executes the planning phase for the project.
    */
-  plan(meta?: IProjectRenderMeta) {
+  plan() {
     this.cacheResolvedNames.clear();
-    this.allocateFiles();
-    this.assignLocalNames();
-    this.resolveFilePaths(meta);
+
+    let rounds = 0;
+    while (this.allocateFiles()) {
+      this.assignLocalNames();
+      if (++rounds > Planner.MAX_ALLOCATION_ROUNDS) {
+        throw new Error(
+          `File allocation failed to converge after ${Planner.MAX_ALLOCATION_ROUNDS} rounds`,
+        );
+      }
+    }
+
+    this.resolveFilePaths();
     this.planExports();
     this.planImports();
   }
@@ -42,25 +53,30 @@ export class Planner {
    * Creates and assigns a file to every node, re-export,
    * and external dependency.
    */
-  private allocateFiles(): void {
+  private allocateFiles(): number {
+    let allocated = 0;
     this.analyzer.analyze(this.project.nodes.all(), (ctx, node) => {
       const symbol = node.symbol;
       if (!symbol) return;
 
-      const file = this.project.files.register({
-        external: false,
-        language: node.language,
-        logicalFilePath: symbol.getFilePath?.(symbol) || this.project.defaultFileName,
-      });
-      file.addNode(node);
-      symbol.setFile(file);
-      for (const logicalFilePath of symbol.getExportFromFilePath?.(symbol) ?? []) {
-        this.project.files.register({
+      if (!symbol.file) {
+        const file = this.project.files.register({
           external: false,
-          language: file.language,
-          logicalFilePath,
+          language: node.language,
+          logicalFilePath: symbol.getFilePath?.(symbol) || this.project.defaultFileName,
         });
+        file.addNode(node);
+        symbol.setFile(file);
+        allocated++;
+        for (const logicalFilePath of symbol.getExportFromFilePath?.(symbol) ?? []) {
+          this.project.files.register({
+            external: false,
+            language: file.language,
+            logicalFilePath,
+          });
+        }
       }
+
       ctx.walkScopes((dependency) => {
         const dep = fromRef(dependency);
         if (dep.external && dep.isCanonical && !dep.file) {
@@ -70,9 +86,11 @@ export class Planner {
             logicalFilePath: dep.external,
           });
           dep.setFile(file);
+          allocated++;
         }
       });
     });
+    return allocated;
   }
 
   /**
@@ -93,7 +111,7 @@ export class Planner {
       ctx.walkScopes((dependency) => {
         const dep = fromRef(dependency);
         // top-level or external symbol
-        if (dep.file) return;
+        if (dep.file || dep.external) return;
         // TODO: pass node
         this.assignLocalName({
           ctx,
@@ -112,7 +130,7 @@ export class Planner {
    *
    * Resolves final paths relative to the project's root directory.
    */
-  private resolveFilePaths(meta?: IProjectRenderMeta): void {
+  private resolveFilePaths(): void {
     for (const file of this.project.files.registered()) {
       if (file.external) {
         file.setFinalPath(file.logicalFilePath);
@@ -124,7 +142,7 @@ export class Planner {
       if (finalPath) {
         file.setFinalPath(path.resolve(this.project.root, finalPath));
       }
-      const ctx: RenderContext = { file, meta, project: this.project };
+      const ctx: RenderContext = { file, project: this.project };
       const renderer = this.project.renderers.find((r) => r.supports(ctx));
       if (renderer) file.setRenderer(renderer);
     }
@@ -291,6 +309,7 @@ export class Planner {
             symbol: imp,
           };
           fileMap.set(key, entry);
+          dep.addImport(imp);
         }
         entry.kinds.add(dep.kind);
 
@@ -418,7 +437,13 @@ export class Planner {
     while (true) {
       const language = node?.language || symbol.node?.language || file.language;
 
-      const ok = this.nameIsAvailable({ kind: symbol.kind, language, name: finalName, scope });
+      const ok = this.nameIsAvailable({
+        kind: symbol.kind,
+        language,
+        name: finalName,
+        override: symbol.override,
+        scope,
+      });
       if (ok) break;
 
       const resolver =
@@ -440,7 +465,7 @@ export class Planner {
     this.cacheResolvedNames.add(symbol.id);
     const updateScopes = [scope, ...scopesToUpdate];
     for (const scope of updateScopes) {
-      this.updateScope(symbol, scope);
+      registerName(scope, symbol.finalName, symbol.kind);
     }
   }
 
@@ -455,37 +480,33 @@ export class Planner {
     kind,
     language,
     name,
+    override,
     scope,
   }: {
     kind: SymbolKind;
     language: string | undefined;
     name: string;
+    override?: boolean;
     scope: Scope;
   }): boolean {
-    let current: Scope | undefined = scope;
-    while (current) {
-      const kinds = current.localNames.get(name);
-      if (kinds) {
-        for (const existingKind of kinds) {
-          if (!canDeclarationsShareIdentifier(language, kind, existingKind)) {
-            return false;
-          }
+    function conflicts(kinds: Set<SymbolKind> | undefined): boolean {
+      if (!kinds) return false;
+      for (const existingKind of kinds) {
+        if (!canDeclarationsShareIdentifier(language, kind, existingKind)) {
+          return true;
         }
       }
+      return false;
+    }
+
+    let current: Scope | undefined = scope;
+    while (current) {
+      if (!override && conflicts(current.childNames.get(name))) {
+        return false;
+      }
+      if (conflicts(current.localNames.get(name))) return false;
       current = current.parent;
     }
     return true;
-  }
-
-  /**
-   * Updates the provided name scope with the symbol's final name and kind.
-   *
-   * Ensures the name scope tracks all kinds associated with a given name.
-   */
-  private updateScope(symbol: Symbol, scope: Scope): void {
-    const name = symbol.finalName;
-    const cache = scope.localNames.get(name) ?? new Set();
-    cache.add(symbol.kind);
-    scope.localNames.set(name, cache);
   }
 }

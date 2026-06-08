@@ -1,3 +1,6 @@
+import type { AnyString } from '@hey-api/types';
+
+import type { IProjectMeta } from '../extensions';
 import type { File } from '../files/file';
 import type { Language } from '../languages/types';
 import type { IAnalysisContext } from '../planner/types';
@@ -14,7 +17,7 @@ export type NodeRelationship = 'container' | 'reference';
 
 export type NodeScope = 'type' | 'value';
 
-export interface INode<T = unknown> {
+export interface INode<T = unknown, L extends Language = Language> {
   /** Perform semantic analysis. */
   analyze(ctx: IAnalysisContext): void;
   /** Create a shallow copy of this node. */
@@ -24,10 +27,13 @@ export interface INode<T = unknown> {
   /** The file this node belongs to. */
   file?: File;
   /** The programming language associated with this node */
-  language: Language;
+  language: L;
+  /** Arbitrary language metadata. */
+  meta: IProjectMeta[L];
   /** The display name of this node. */
   readonly name: Ref<NodeName> & {
     set(value: NodeName): void;
+    readonly symbol: Symbol | undefined;
     toString(): string;
   };
   /** Optional function to sanitize the node name. */
@@ -46,4 +52,6 @@ export interface INode<T = unknown> {
   toAst(): T;
   /** Brand used for renderer dispatch. */
   readonly '~brand': string;
+  /** Branding property to identify the DSL class at runtime. */
+  readonly '~dsl'?: AnyString;
 }

@@ -1,5 +1,90 @@
 # @hey-api/openapi-ts
 
+## 0.98.1
+
+### Patch Changes
+
+- **cli**: simplify generate command messages ([#3982](https://github.com/hey-api/openapi-ts/pull/3982)) ([`11f9324`](https://github.com/hey-api/openapi-ts/commit/11f9324a729a2db2f37c9f36a19c10b0d695e574)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(valibot)**: fix: revert referencing TypeScript enums ([#3982](https://github.com/hey-api/openapi-ts/pull/3982)) ([`11f9324`](https://github.com/hey-api/openapi-ts/commit/11f9324a729a2db2f37c9f36a19c10b0d695e574)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(zod)**: fix: revert referencing TypeScript enums ([#3982](https://github.com/hey-api/openapi-ts/pull/3982)) ([`11f9324`](https://github.com/hey-api/openapi-ts/commit/11f9324a729a2db2f37c9f36a19c10b0d695e574)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.8.4
+- @hey-api/shared@0.4.7
+
+## 0.98.0
+
+### Minor Changes
+
+- **BREAKING** **config**: declarative configuration ([#3950](https://github.com/hey-api/openapi-ts/pull/3950)) ([`9b79a56`](https://github.com/hey-api/openapi-ts/commit/9b79a56cf02ad8d6acae15139a9917fe644f1df4)) by [@mrlubos](https://github.com/mrlubos)
+
+This is an internal change that simplifies the configuration and plugin APIs. The generated output should be unaffected, please [open an issue](https://github.com/hey-api/openapi-ts/issues) if that's not the case. If you have custom plugins, refer to the [custom plugin guide](https://heyapi.dev/docs/openapi/typescript/plugins/custom) for the latest instructions.
+
+### Patch Changes
+
+- **parser**: fix: preserve sort order when filtering input ([#3953](https://github.com/hey-api/openapi-ts/pull/3953)) ([`f6e8496`](https://github.com/hey-api/openapi-ts/commit/f6e8496626b007341a1c6653dba1d6452ae038ec)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(valibot)**: fix: improve boolean enum handling ([#3974](https://github.com/hey-api/openapi-ts/pull/3974)) ([`d3e9f13`](https://github.com/hey-api/openapi-ts/commit/d3e9f132588ee33aff90b03b182fc4a4815b36f2)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ky)**: fix: use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973)) ([`9f2f0d2`](https://github.com/hey-api/openapi-ts/commit/9f2f0d2b65f9b0664b2dd4be32dc08102eed5b43)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ofetch)**: fix: use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973)) ([`9f2f0d2`](https://github.com/hey-api/openapi-ts/commit/9f2f0d2b65f9b0664b2dd4be32dc08102eed5b43)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-axios)**: add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880)) ([`9c78271`](https://github.com/hey-api/openapi-ts/commit/9c782713a6619cbec2155dff093d7517b606c549)) by [@tompuric](https://github.com/tompuric)
+
+- **plugin(@hey-api/client-axios)**: fix: use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973)) ([`9f2f0d2`](https://github.com/hey-api/openapi-ts/commit/9f2f0d2b65f9b0664b2dd4be32dc08102eed5b43)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-next)**: fix: improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946)) ([`bebb225`](https://github.com/hey-api/openapi-ts/commit/bebb225b87eb58d6f27985a8c63cab0b3ee7bee2)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@hey-api/client-fetch)**: fix: use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973)) ([`9f2f0d2`](https://github.com/hey-api/openapi-ts/commit/9f2f0d2b65f9b0664b2dd4be32dc08102eed5b43)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ofetch)**: fix: improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946)) ([`bebb225`](https://github.com/hey-api/openapi-ts/commit/bebb225b87eb58d6f27985a8c63cab0b3ee7bee2)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@hey-api/client-nuxt)**: add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880)) ([`9c78271`](https://github.com/hey-api/openapi-ts/commit/9c782713a6619cbec2155dff093d7517b606c549)) by [@tompuric](https://github.com/tompuric)
+
+- **dsl**: track extended class symbols ([#3945](https://github.com/hey-api/openapi-ts/pull/3945)) ([`13c3d7d`](https://github.com/hey-api/openapi-ts/commit/13c3d7d2be7a18ea72dff14e951841c843e3ea9a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-angular)**: fix: use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973)) ([`9f2f0d2`](https://github.com/hey-api/openapi-ts/commit/9f2f0d2b65f9b0664b2dd4be32dc08102eed5b43)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(orpc)**: fix: handle no-content success responses ([#3948](https://github.com/hey-api/openapi-ts/pull/3948)) ([`44672f0`](https://github.com/hey-api/openapi-ts/commit/44672f0eb4382ded975e4119e22d02eaf9d9c4de)) by [@lyzno1](https://github.com/lyzno1)
+
+- **plugin(@hey-api/sdk)**: add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880)) ([`9c78271`](https://github.com/hey-api/openapi-ts/commit/9c782713a6619cbec2155dff093d7517b606c549)) by [@tompuric](https://github.com/tompuric)
+
+- **plugin(@hey-api/client-nuxt)**: fix: use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973)) ([`9f2f0d2`](https://github.com/hey-api/openapi-ts/commit/9f2f0d2b65f9b0664b2dd4be32dc08102eed5b43)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ky)**: fix: improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946)) ([`bebb225`](https://github.com/hey-api/openapi-ts/commit/bebb225b87eb58d6f27985a8c63cab0b3ee7bee2)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@hey-api/client-angular)**: add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880)) ([`9c78271`](https://github.com/hey-api/openapi-ts/commit/9c782713a6619cbec2155dff093d7517b606c549)) by [@tompuric](https://github.com/tompuric)
+
+- **plugin(@hey-api/client-nuxt)**: fix: improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946)) ([`bebb225`](https://github.com/hey-api/openapi-ts/commit/bebb225b87eb58d6f27985a8c63cab0b3ee7bee2)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@hey-api/client-angular)**: fix: improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946)) ([`bebb225`](https://github.com/hey-api/openapi-ts/commit/bebb225b87eb58d6f27985a8c63cab0b3ee7bee2)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@hey-api/sdk)**: fix: expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/openapi-ts/pull/3935)) ([`23d908a`](https://github.com/hey-api/openapi-ts/commit/23d908a2882dd1601072a1cf7ac277802fd06c6d)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/client-fetch)**: fix: improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946)) ([`bebb225`](https://github.com/hey-api/openapi-ts/commit/bebb225b87eb58d6f27985a8c63cab0b3ee7bee2)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@hey-api/client-ky)**: add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880)) ([`9c78271`](https://github.com/hey-api/openapi-ts/commit/9c782713a6619cbec2155dff093d7517b606c549)) by [@tompuric](https://github.com/tompuric)
+
+- **plugin(@hey-api/client-axios)**: fix: improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946)) ([`bebb225`](https://github.com/hey-api/openapi-ts/commit/bebb225b87eb58d6f27985a8c63cab0b3ee7bee2)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@hey-api/client-fetch)**: add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880)) ([`9c78271`](https://github.com/hey-api/openapi-ts/commit/9c782713a6619cbec2155dff093d7517b606c549)) by [@tompuric](https://github.com/tompuric)
+
+- **plugin(@hey-api/client-next)**: fix: use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973)) ([`9f2f0d2`](https://github.com/hey-api/openapi-ts/commit/9f2f0d2b65f9b0664b2dd4be32dc08102eed5b43)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ofetch)**: add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880)) ([`9c78271`](https://github.com/hey-api/openapi-ts/commit/9c782713a6619cbec2155dff093d7517b606c549)) by [@tompuric](https://github.com/tompuric)
+
+- **plugin(@hey-api/client-next)**: add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880)) ([`9c78271`](https://github.com/hey-api/openapi-ts/commit/9c782713a6619cbec2155dff093d7517b606c549)) by [@tompuric](https://github.com/tompuric)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.6
+- @hey-api/codegen-core@0.8.3
+- @hey-api/json-schema-ref-parser@1.4.3
+
 ## 0.97.3
 
 ### Patch Changes

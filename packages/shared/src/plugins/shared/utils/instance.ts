@@ -1,13 +1,6 @@
 import path from 'node:path';
 
-import type {
-  IProject,
-  Node,
-  Symbol,
-  SymbolIdentifier,
-  SymbolIn,
-  SymbolMeta,
-} from '@hey-api/codegen-core';
+import type { IProject, Node, Symbol, SymbolIn } from '@hey-api/codegen-core';
 
 import type { Dependency } from '../../../config/utils/dependencies';
 import { HeyApiError } from '../../../error';
@@ -25,22 +18,13 @@ import type { ExampleIntent } from '../../../ir/intents';
 import type { IR } from '../../../ir/types';
 import type { Hooks } from '../../../parser/hooks';
 import { jsonPointerToPath } from '../../../utils/ref';
-import type { Plugin, PluginConfigMap } from '../../types';
+import type { EventHooks, ResolvedNode } from '../../../utils/symbols';
+import { SymbolFactory } from '../../../utils/symbols';
+import type { AnyPluginName, Plugin, PluginConfigMap } from '../../types';
 import type { BaseEvent, WalkEvent } from '../types/instance';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface PluginInstanceTypes {}
-
-/**
- * Resolves the Node type, falling back to base Node if not augmented.
- */
-type ResolvedNode = 'Node' extends keyof PluginInstanceTypes
-  ? // @ts-expect-error ts cannot resolve conditional types properly here
-    PluginInstanceTypes['Node']
-  : Node;
-
 // TODO: abstract
-const defaultGetFilePath = (symbol: Symbol): string | undefined => {
+function defaultGetFilePath(symbol: Symbol): string | undefined {
   if (!symbol.meta?.pluginName || typeof symbol.meta.pluginName !== 'string') {
     return;
   }
@@ -57,7 +41,7 @@ const defaultGetFilePath = (symbol: Symbol): string | undefined => {
     return symbol.meta.pluginName.split('/')[1];
   }
   return symbol.meta.pluginName;
-};
+}
 
 const defaultGetKind: Required<Required<Hooks>['operations']>['getKind'] = (operation) => {
   switch (operation.method) {
@@ -73,17 +57,11 @@ const defaultGetKind: Required<Required<Hooks>['operations']>['getKind'] = (oper
   }
 };
 
-type EventHooks = {
-  [K in keyof Required<NonNullable<Hooks['events']>>]: Array<
-    NonNullable<NonNullable<Hooks['events']>[K]>
-  >;
-};
-
 export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   api: T['api'];
   config: Omit<T['resolvedConfig'], 'name'>;
   context: Context;
-  dependencies: Required<Plugin.Config<T>>['dependencies'] = [];
+  dependencies: Set<AnyPluginName> = new Set();
   private eventHooks: EventHooks;
   gen: IProject;
   private handler: Plugin.Config<T>['handler'];
@@ -95,35 +73,52 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
    * code generation.
    */
   package: Dependency;
+  /** Factory for creating and managing symbols. */
+  symbolFactory: SymbolFactory;
+  /** Symbols declared in the plugin config. */
+  symbols: T['symbols'];
+
+  readonly external: SymbolFactory['external'];
+  readonly isSymbolRegistered: SymbolFactory['isRegistered'];
+  readonly querySymbol: SymbolFactory['query'];
+  readonly querySymbols: SymbolFactory['queryAll'];
+  readonly referenceSymbol: SymbolFactory['reference'];
 
   constructor(
-    props: Pick<Required<Plugin.Config<T>>, 'config' | 'dependencies' | 'handler'> & {
-      api?: T['api'];
+    props: Pick<Plugin.Config<T>, 'api' | 'handler' | 'name' | 'symbols'> & {
+      config: Omit<T['resolvedConfig'], 'name'>;
       context: Context;
+      dependencies: Set<AnyPluginName>;
       gen: IProject;
-      name: string;
     },
   ) {
     this.api = props.api ?? {};
     this.config = props.config;
     this.context = props.context;
     this.dependencies = props.dependencies;
-    this.eventHooks = this.buildEventHooks();
     this.gen = props.gen;
     this.handler = props.handler;
     this.name = props.name;
     this.package = props.context.package;
-  }
-
-  external(
-    resource: Required<SymbolMeta>['resource'],
-    meta: Omit<SymbolMeta, 'category' | 'resource'> = {},
-  ): Symbol {
-    return this.gen.symbols.reference({
-      ...meta,
-      category: 'external',
-      resource,
+    // buildEventHooks must run after this.name, this.gen, and
+    // this.context are set, as hooks may rely on them
+    this.eventHooks = SymbolFactory.buildEventHooks([
+      this.config['~hooks']?.events,
+      this.context.config.parser.hooks.events,
+    ]);
+    this.symbolFactory = new SymbolFactory({
+      eventHooks: this.eventHooks,
+      plugin: this,
+      project: this.gen,
     });
+    this.external = this.symbolFactory.external.bind(this.symbolFactory);
+    this.isSymbolRegistered = this.symbolFactory.isRegistered.bind(this.symbolFactory);
+    this.querySymbol = this.symbolFactory.query.bind(this.symbolFactory);
+    this.querySymbols = this.symbolFactory.queryAll.bind(this.symbolFactory);
+    this.referenceSymbol = this.symbolFactory.reference.bind(this.symbolFactory);
+    // symbols must be initialized last — the function calls this.symbol() which
+    // requires this.name, this.gen, this.context, and this.eventHooks to be set.
+    this.symbols = props.symbols?.(this) ?? {};
   }
 
   /**
@@ -329,10 +324,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.context.intents.push(intent);
   }
 
-  isSymbolRegistered(identifier: SymbolIdentifier): boolean {
-    return this.gen.symbols.isRegistered(identifier);
-  }
-
   /**
    * Sets or adds a node to the project graph.
    *
@@ -353,18 +344,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       hook({ node, plugin: this as any });
     }
     return result as T extends number ? void : number;
-  }
-
-  querySymbol(filter: SymbolMeta): Symbol<ResolvedNode> | undefined {
-    return this.querySymbols(filter)[0];
-  }
-
-  querySymbols(filter: SymbolMeta): Array<Symbol<ResolvedNode>> {
-    return this.gen.symbols.query(filter) as Array<Symbol<ResolvedNode>>;
-  }
-
-  referenceSymbol(meta: SymbolMeta): Symbol<ResolvedNode> {
-    return this.gen.symbols.reference(meta) as Symbol<ResolvedNode>;
   }
 
   /**
@@ -388,35 +367,19 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   symbol(name: SymbolIn['name'], symbol: Omit<SymbolIn, 'name'> = {}): Symbol<ResolvedNode> {
-    const meta = { ...symbol.meta };
-    if (symbol.external) {
-      if (!meta.category) meta.category = 'external';
-      if (!meta.resource) meta.resource = `${symbol.external}.${name}`;
-      const existing = this.querySymbols(meta).find((s) => s.name === name);
-      if (existing) return existing;
-    }
-    const symbolIn: SymbolIn = {
+    return this.symbolFactory.register(name, {
       ...symbol,
+      getExportFromFilePath:
+        symbol.getExportFromFilePath ?? this.getSymbolExportFromFilePath.bind(this),
+      getFilePath: symbol.getFilePath ?? this.getSymbolFilePath.bind(this),
       meta: {
-        pluginName: path.isAbsolute(this.name) ? 'custom' : this.name,
-        ...meta,
+        // only stamp non-external symbols
+        ...(symbol.external
+          ? {}
+          : { pluginName: path.isAbsolute(this.name) ? 'custom' : this.name }),
+        ...symbol.meta,
       },
-      name,
-    };
-    if (symbolIn.getExportFromFilePath === undefined) {
-      symbolIn.getExportFromFilePath = this.getSymbolExportFromFilePath.bind(this);
-    }
-    if (symbolIn.getFilePath === undefined) {
-      symbolIn.getFilePath = this.getSymbolFilePath.bind(this);
-    }
-    for (const hook of this.eventHooks['symbol:register:before']) {
-      hook({ plugin: this as any, symbol: symbolIn });
-    }
-    const symbolOut = this.gen.symbols.register(symbolIn);
-    for (const hook of this.eventHooks['symbol:register:after']) {
-      hook({ plugin: this as any, symbol: symbolOut });
-    }
-    return symbolOut as Symbol<ResolvedNode>;
+    });
   }
 
   /**
@@ -432,27 +395,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       if (existing) return existing;
     }
     return this.symbol(name, symbol);
-  }
-
-  private buildEventHooks(): EventHooks {
-    const result: EventHooks = {
-      'node:set:after': [],
-      'node:set:before': [],
-      'plugin:handler:after': [],
-      'plugin:handler:before': [],
-      'symbol:register:after': [],
-      'symbol:register:before': [],
-    };
-    const scopes = [this.config['~hooks']?.events, this.context.config.parser.hooks.events];
-    for (const scope of scopes) {
-      if (!scope) continue;
-      for (const [key, value] of Object.entries(scope)) {
-        if (value) {
-          result[key as keyof typeof result].push(value.bind(scope) as any);
-        }
-      }
-    }
-    return result;
   }
 
   private forEachError(error: unknown, event: WalkEvent) {

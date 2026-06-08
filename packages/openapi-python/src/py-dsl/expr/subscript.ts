@@ -2,11 +2,11 @@ import type { AnalysisContext, NodeName, Ref } from '@hey-api/codegen-core';
 import { ref } from '@hey-api/codegen-core';
 
 import { py } from '../../py-compiler';
-import { PyDsl } from '../base';
+import { type MaybePyDsl, PyDsl } from '../base';
 import { LayoutMixin } from '../mixins/layout';
 import { f } from '../utils/factories';
 
-export type SubscriptExpr = NodeName | PyDsl<py.Expression>;
+export type SubscriptExpr = NodeName | MaybePyDsl<py.Expression>;
 export type SubscriptCtor = (
   value: SubscriptExpr,
   ...slices: Array<SubscriptExpr>

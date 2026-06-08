@@ -12,6 +12,7 @@ import type { MaybeFunc } from '@hey-api/types';
 import type { $, DollarTsDsl } from '../../ts-dsl';
 import type { IApi } from './api';
 import type { ValibotResolvers } from './resolvers';
+import type { ValibotSymbols } from './symbols';
 
 export type UserConfig = Plugin.Name<'valibot'> &
   Plugin.Hooks &
@@ -389,4 +390,4 @@ export type Config = Plugin.Name<'valibot'> &
     webhooks: NamingOptions & FeatureToggle;
   };
 
-export type ValibotPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type ValibotPlugin = DefinePlugin<UserConfig, Config, IApi, ValibotSymbols>;

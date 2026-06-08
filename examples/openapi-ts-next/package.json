@@ -16,13 +16,13 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "workspace:*",
-    "@types/node": "24.12.4",
+    "@types/node": "24.13.0",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1",
-    "eslint": "9.39.2",
+    "eslint": "9.39.4",
     "eslint-config-next": "15.1.6",
-    "postcss": "8.4.41",
-    "tailwindcss": "3.4.9",
+    "postcss": "8.5.15",
+    "tailwindcss": "3.4.19",
     "typescript": "6.0.3"
   }
 }

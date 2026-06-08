@@ -1,0 +1,70 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "OpenAPI 3.1.1 security bearer duplicate example",
+    "version": "1"
+  },
+  "paths": {
+    "/data": {
+      "get": {
+        "operationId": "getData",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/refresh": {
+      "get": {
+        "operationId": "refresh",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "refreshAuth": []
+          }
+        ]
+      }
+    },
+    "/unique": {
+      "get": {
+        "operationId": "getUnique",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "refreshAuth": {
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "basicAuth": {
+        "scheme": "basic",
+        "type": "http"
+      }
+    }
+  }
+}

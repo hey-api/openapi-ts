@@ -1,5 +1,19 @@
 # @hey-api/codegen-core
 
+## 0.8.4
+
+### Patch Changes
+
+- **node**: add `~dsl` property ([#3982](https://github.com/hey-api/openapi-ts/pull/3982)) ([`11f9324`](https://github.com/hey-api/openapi-ts/commit/11f9324a729a2db2f37c9f36a19c10b0d695e574)) by [@mrlubos](https://github.com/mrlubos)
+
+## 0.8.3
+
+### Patch Changes
+
+- **symbol**: add `children` and `override` property ([#3945](https://github.com/hey-api/openapi-ts/pull/3945)) ([`13c3d7d`](https://github.com/hey-api/openapi-ts/commit/13c3d7d2be7a18ea72dff14e951841c843e3ea9a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **symbols**: export `pythonNameConflictResolver`, `SymbolChild`, `SymbolKind`, and `SymbolRegistry` ([#3945](https://github.com/hey-api/openapi-ts/pull/3945)) ([`13c3d7d`](https://github.com/hey-api/openapi-ts/commit/13c3d7d2be7a18ea72dff14e951841c843e3ea9a)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.8.2
 
 ### Patch Changes

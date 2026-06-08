@@ -9,6 +9,7 @@ import type {
   NodeNameSanitizer,
   NodeRelationship,
   NodeScope,
+  ProjectMeta,
   Ref,
   Symbol,
 } from '@hey-api/codegen-core';
@@ -18,7 +19,10 @@ import ts from 'typescript';
 
 import type { AccessOptions } from './utils/context';
 
-export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
+export abstract class TsDsl<
+  T extends ts.Node = ts.Node,
+  L extends Language = 'typescript',
+> implements Node<T> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   analyze(_: AnalysisContext): void {}
   clone(): this {
@@ -29,19 +33,24 @@ export abstract class TsDsl<T extends ts.Node = ts.Node> implements Node<T> {
   exported?: boolean;
   file?: File;
   get name(): Node['name'] {
+    const nameRef = this._name;
+    const nameValue = nameRef ? fromRef(nameRef) : undefined;
+    const symbolValue = isSymbol(nameValue) ? nameValue : undefined;
     return {
-      ...this._name,
+      ...nameRef,
       set: (value) => {
         this._name = ref(value);
         if (isSymbol(value)) {
           value.setNode(this);
         }
       },
-      toString: () => (this._name ? this.$name(this._name) : ''),
+      symbol: symbolValue,
+      toString: () => (nameRef ? this.$name(nameRef) : ''),
     } as Node['name'];
   }
   readonly nameSanitizer?: NodeNameSanitizer;
-  language: Language = 'typescript';
+  language: L = 'typescript' as L;
+  meta: Required<ProjectMeta>[L] = {} as Required<ProjectMeta>[L];
   parent?: Node;
   root: boolean = false;
   scope?: NodeScope = 'value';

@@ -1,40 +1,19 @@
 import { childContext } from '@hey-api/shared';
 
-import { $, type VarType } from '../../../../py-dsl';
+import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { TupleResolverContext } from '../../resolvers';
 import type { PydanticResult, PydanticType } from '../../shared/types';
-import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: TupleResolverContext): PydanticType {
-  const { applyModifiers, childResults, plugin } = ctx;
+  const { applyModifiers, childResults } = ctx;
 
-  const tuple = plugin.external('typing.Tuple');
-  const any = plugin.external('typing.Any');
+  const itemTypes = childResults
+    .map((r) => applyModifiers(r).type)
+    .filter((t) => t !== undefined)
+    .map((t) => t!.type);
 
-  if (!childResults.length) {
-    return {
-      type: $(tuple).slice(),
-    };
-  }
-
-  const itemTypes: Array<VarType> = [];
-
-  for (const result of childResults) {
-    const finalResult = applyModifiers(result);
-    if (finalResult.type !== undefined) {
-      itemTypes.push(finalResult.type);
-    }
-  }
-
-  if (!itemTypes.length) {
-    return {
-      type: $(tuple).slice(any, '...'),
-    };
-  }
-
-  return {
-    type: $(tuple).slice(...itemTypes),
-  };
+  return { type: $$.constrainedType($.type.tuple(...itemTypes)) };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,18 +24,14 @@ function constNode(_ctx: TupleResolverContext): PydanticType | undefined {
 function tupleResolver(ctx: TupleResolverContext): PydanticType {
   const baseResult = ctx.nodes.base(ctx);
 
-  const fieldConstraints: FieldConstraints = {
-    ...(baseResult.fieldConstraints ?? {}),
-  };
-
-  if (ctx.schema.description !== undefined) {
-    fieldConstraints.description = ctx.schema.description;
+  if (ctx.schema.description !== undefined && baseResult.type) {
+    return {
+      ...baseResult,
+      type: baseResult.type.mergeConstraints($$.constraints().description(ctx.schema.description)),
+    };
   }
 
-  return {
-    ...baseResult,
-    fieldConstraints: Object.keys(fieldConstraints).length ? fieldConstraints : undefined,
-  };
+  return baseResult;
 }
 
 export interface TupleToTypeResult extends PydanticType {

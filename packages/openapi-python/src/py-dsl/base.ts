@@ -9,6 +9,7 @@ import type {
   NodeNameSanitizer,
   NodeRelationship,
   NodeScope,
+  ProjectMeta,
   Ref,
   Symbol,
 } from '@hey-api/codegen-core';
@@ -18,7 +19,10 @@ import type { AnyString } from '@hey-api/types';
 import { py } from '../py-compiler';
 import type { AccessOptions } from './utils/context';
 
-export abstract class PyDsl<T extends py.Node = py.Node> implements Node<T> {
+export abstract class PyDsl<
+  T extends py.Node = py.Node,
+  L extends Language = 'python',
+> implements Node<T, L> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   analyze(_: AnalysisContext): void {}
   clone(): this {
@@ -29,19 +33,24 @@ export abstract class PyDsl<T extends py.Node = py.Node> implements Node<T> {
   exported?: boolean;
   file?: File;
   get name(): Node['name'] {
+    const nameRef = this._name;
+    const nameValue = nameRef ? fromRef(nameRef) : undefined;
+    const symbolValue = isSymbol(nameValue) ? nameValue : undefined;
     return {
-      ...this._name,
+      ...nameRef,
       set: (value) => {
         this._name = ref(value);
         if (isSymbol(value)) {
           value.setNode(this);
         }
       },
-      toString: () => (this._name ? this.$name(this._name) : ''),
+      symbol: symbolValue,
+      toString: () => (nameRef ? this.$name(nameRef) : ''),
     } as Node['name'];
   }
   readonly nameSanitizer?: NodeNameSanitizer;
-  language: Language = 'python';
+  language: L = 'python' as L;
+  meta: Required<ProjectMeta>[L] = {} as Required<ProjectMeta>[L];
   parent?: Node;
   root: boolean = false;
   scope?: NodeScope = 'value';
@@ -190,33 +199,6 @@ export abstract class PyDsl<T extends py.Node = py.Node> implements Node<T> {
     return this.unwrap(value as any) as NodeOfMaybe<I>;
   }
 
-  // protected $type<I>(value: I, args?: ReadonlyArray<ts.TypeNode>): TypeOfMaybe<I> {
-  //   if (value === undefined) {
-  //     return undefined as TypeOfMaybe<I>;
-  //   }
-  //   // @ts-expect-error
-  //   if (isRef(value)) value = fromRef(value);
-  //   if (isSymbol(value)) {
-  //     return ts.factory.createTypeReferenceNode(value.finalName, args) as TypeOfMaybe<I>;
-  //   }
-  //   if (typeof value === 'string') {
-  //     return ts.factory.createTypeReferenceNode(value, args) as TypeOfMaybe<I>;
-  //   }
-  //   if (typeof value === 'boolean') {
-  //     const literal = value ? ts.factory.createTrue() : ts.factory.createFalse();
-  //     return ts.factory.createLiteralTypeNode(literal) as TypeOfMaybe<I>;
-  //   }
-  //   if (typeof value === 'number') {
-  //     return ts.factory.createLiteralTypeNode(
-  //       ts.factory.createNumericLiteral(value),
-  //     ) as TypeOfMaybe<I>;
-  //   }
-  //   if (value instanceof Array) {
-  //     return value.map((item) => this.$type(item, args)) as TypeOfMaybe<I>;
-  //   }
-  //   return this.unwrap(value as any) as TypeOfMaybe<I>;
-  // }
-
   private _name?: Ref<NodeName>;
 
   /** Unwraps nested nodes into raw Python AST. */
@@ -240,31 +222,10 @@ type NodeOf<I> =
           ? I
           : never;
 
-export type MaybePyDsl<T> =
-  T extends PyDsl<infer U> ? U | PyDsl<U> : T extends py.Node ? T | PyDsl<T> : never;
+export type MaybePyDsl<T> = [T] extends [PyDsl<infer U>]
+  ? U | PyDsl<U>
+  : [T] extends [py.Node]
+    ? T | PyDsl<T>
+    : never;
 
-// export abstract class TypePyDsl<
-//   T extends
-//     | ts.LiteralTypeNode
-//     | ts.QualifiedName
-//     | ts.TypeElement
-//     | ts.TypeNode
-//     | ts.TypeParameterDeclaration = ts.TypeNode,
-// > extends PyDsl<T> {}
-
-// type TypeOfMaybe<I> = undefined extends I
-//   ? TypeOf<NonNullable<FromRef<I>>> | undefined
-//   : TypeOf<FromRef<I>>;
-
-// type TypeOf<I> =
-//   I extends ReadonlyArray<infer U>
-//     ? ReadonlyArray<TypeOf<U>>
-//     : I extends string
-//       ? ts.TypeNode
-//       : I extends boolean
-//         ? ts.LiteralTypeNode
-//         : I extends PyDsl<infer N>
-//           ? N
-//           : I extends ts.TypeNode
-//             ? I
-//             : never;
+// export abstract class TypePyDsl<T extends py.Expression = py.Expression> extends PyDsl<T> {}

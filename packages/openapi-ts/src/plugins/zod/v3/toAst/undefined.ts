@@ -7,8 +7,7 @@ import type { Chain } from '../../shared/chain';
 import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: UndefinedResolverContext): Chain {
-  const { symbols } = ctx;
-  const { z } = symbols;
+  const { z } = ctx.plugin.symbols;
   return $(z).attr(identifiers.undefined).call();
 }
 
@@ -25,7 +24,7 @@ export function undefinedToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'undefined'>;
 }): Chain {
-  const z = plugin.external('zod.z');
+  const z = plugin.symbols.z;
   const ctx: UndefinedResolverContext = {
     $,
     chain: {

@@ -1,6 +1,7 @@
 import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { BooleanResolverContext } from '../../resolvers';
 import type { PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
@@ -9,9 +10,9 @@ function constNode(ctx: BooleanResolverContext): PydanticType | undefined {
   const { plugin, schema } = ctx;
 
   if (typeof schema.const === 'boolean') {
-    const literal = plugin.external('typing.Literal');
+    const literal = plugin.symbols.typing.Literal;
     return {
-      type: $(literal).slice($.literal(schema.const)),
+      type: $$.constrainedType($(literal).slice($.literal(schema.const))),
     };
   }
 }
@@ -19,7 +20,7 @@ function constNode(ctx: BooleanResolverContext): PydanticType | undefined {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function baseNode(_ctx: BooleanResolverContext): PydanticType {
   return {
-    type: 'bool',
+    type: $$.constrainedType('bool'),
   };
 }
 

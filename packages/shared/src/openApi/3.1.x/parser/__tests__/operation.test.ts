@@ -62,6 +62,7 @@ describe('operation', () => {
     };
 
     parsePathOperation({
+      ambiguousSecurityKeys: new Set(),
       context,
       method,
       operation,
@@ -78,5 +79,68 @@ describe('operation', () => {
       security: [{ in: 'header', name: 'Auth', type: 'apiKey' }, oauth2],
       summary: 'Test Operation',
     });
+  });
+
+  it('attaches `key` only to schemes with colliding signatures', () => {
+    const localContext = {
+      config: { plugins: {} },
+      ir: { paths: {}, servers: [] },
+    } as unknown as Context;
+
+    const bearerAuth: OpenAPIV3_1.SecuritySchemeObject = {
+      scheme: 'bearer',
+      type: 'http',
+    };
+    const refreshAuth: OpenAPIV3_1.SecuritySchemeObject = {
+      scheme: 'bearer',
+      type: 'http',
+    };
+    const basicAuth: OpenAPIV3_1.SecuritySchemeObject = {
+      scheme: 'basic',
+      type: 'http',
+    };
+    const securitySchemesMap = new Map<string, OpenAPIV3_1.SecuritySchemeObject>([
+      ['bearerAuth', bearerAuth],
+      ['refreshAuth', refreshAuth],
+      ['basicAuth', basicAuth],
+    ]);
+    const ambiguousSecurityKeys = new Set(['bearerAuth', 'refreshAuth']);
+    const state: ParseOperationProps['state'] = {
+      ids: new Map<string, string>(),
+    };
+
+    parsePathOperation({
+      ambiguousSecurityKeys,
+      context: localContext,
+      method: 'get',
+      operation: {
+        operationId: 'getData',
+        responses: {},
+        security: [{ bearerAuth: [] }],
+      },
+      path: '/data',
+      securitySchemesMap,
+      state,
+    });
+    parsePathOperation({
+      ambiguousSecurityKeys,
+      context: localContext,
+      method: 'get',
+      operation: {
+        operationId: 'getUnique',
+        responses: {},
+        security: [{ basicAuth: [] }],
+      },
+      path: '/unique',
+      securitySchemesMap,
+      state,
+    });
+
+    expect(localContext.ir.paths?.['/data']?.get?.security).toEqual([
+      { key: 'bearerAuth', scheme: 'bearer', type: 'http' },
+    ]);
+    expect(localContext.ir.paths?.['/unique']?.get?.security).toEqual([
+      { scheme: 'basic', type: 'http' },
+    ]);
   });
 });
