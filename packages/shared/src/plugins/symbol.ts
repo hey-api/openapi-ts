@@ -30,12 +30,14 @@ export function buildSymbolIn({
         return {
           meta: ctx.meta,
           name,
+          priority: defaultPriorityFromPath(ctx.path),
         };
       }
     } else if (typeof result === 'string') {
       return {
         meta: ctx.meta,
         name: ctx.naming ? applyNaming(result, ctx.naming) : result,
+        priority: defaultPriorityFromPath(ctx.path),
       };
     }
   }
@@ -43,5 +45,14 @@ export function buildSymbolIn({
   return {
     meta: ctx.meta,
     name: ctx.naming ? applyNaming(ctx.name, ctx.naming) : ctx.name,
+    priority: defaultPriorityFromPath(ctx.path),
   };
+}
+
+/**
+ * Derives naming priority from path depth.
+ */
+function defaultPriorityFromPath(path?: ReadonlyArray<string | number>): number | undefined {
+  if (!path?.length) return;
+  return Math.max(0, 100 - path.length);
 }
