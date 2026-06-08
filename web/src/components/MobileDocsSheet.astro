@@ -9,7 +9,7 @@ const hasToc = tocItems.length > 0;
 
 const pillItems = [
   { label: 'Menu', value: 'sidebar', icon: true },
-  ...(hasToc ? [{ label: 'On this page', value: 'toc' }] : []),
+  ...(hasToc ? [{ label: 'Jump to', value: 'toc' }] : []),
 ];
 ---
 
@@ -25,7 +25,7 @@ const pillItems = [
   {hasToc && (
     <div class="sheet-tabs" role="tablist">
       <button class="sheet-tab" role="tab" aria-selected="false" data-tab="sidebar">Menu</button>
-      <button class="sheet-tab" role="tab" aria-selected="false" data-tab="toc">On this page</button>
+      <button class="sheet-tab" role="tab" aria-selected="false" data-tab="toc">Jump to</button>
     </div>
   )}
 

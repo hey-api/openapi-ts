@@ -89,6 +89,8 @@ const outputOptions = OUTPUT_OPTIONS.map(({ description, downloads, installComma
   link,
   value,
 }));
+
+const scrollTo = announcement?.link?.startsWith('#') ? announcement.link.slice(1) : undefined;
 ---
 
 <section class="landing-hero" data-options={JSON.stringify(outputOptions)}>
@@ -98,8 +100,8 @@ const outputOptions = OUTPUT_OPTIONS.map(({ description, downloads, installComma
         <a
           href={announcement.link ?? '#'}
           class="announcement-pill"
-          {...(announcement.scrollTo ? { 'data-scroll-to': announcement.scrollTo } : {})}
-          {...(!announcement.link && !announcement.scrollTo ? { role: 'presentation' } : {})}
+          {...(scrollTo ? { 'data-scroll-to': scrollTo } : {})}
+          {...(!announcement.link && !scrollTo ? { role: 'presentation' } : {})}
         >
           {announcement.badge && <span class="announcement-badge">{announcement.badge}</span>}
           {announcement.text}

@@ -21,7 +21,7 @@ const isSplash = entry?.data?.template === 'splash';
   ) : null}
 	<div class="sl-flex print:hidden right-group">
     {isSplash ? <GitHubLink /> : <SponsorGoal />}
-    <div>
+    <div class="search-wrapper">
       <Search />
     </div>
 	</div>
@@ -53,6 +53,12 @@ const isSplash = entry?.data?.template === 'splash';
     align-items: center;
     gap: 1rem;
     justify-content: flex-end;
+  }
+
+  @media (max-width: 50rem) {
+    .search-wrapper {
+      display: none;
+    }
   }
 
   @media (min-width: 50rem) {
