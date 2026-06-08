@@ -65,7 +65,7 @@
     "@hey-api/openapi-ts": "workspace:*",
     "@types/node": "24.12.4",
     "@typescript-eslint/eslint-plugin": "8.54.0",
-    "@typescript/native-preview": "7.0.0-dev.20260527.2",
+    "@typescript/native-preview": "7.0.0-dev.20260604.1",
     "@vitest/coverage-v8": "4.1.0",
     "eslint": "9.39.2",
     "eslint-plugin-simple-import-sort": "12.1.1",
