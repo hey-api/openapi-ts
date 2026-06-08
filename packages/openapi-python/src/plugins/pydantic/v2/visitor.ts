@@ -186,13 +186,15 @@ export function createVisitor(
 
       const refSymbol = plugin.referenceSymbol(query);
       const isRegistered = plugin.isSymbolRegistered(query);
+      const type = $$.constrainedType(refSymbol);
 
       return {
         meta: {
           ...defaultMeta(schema),
           hasForwardReference: !isRegistered,
         },
-        type: $$.constrainedType(refSymbol),
+        node: { kind: 'rootModel', type },
+        type,
       };
     },
     string(schema, ctx) {

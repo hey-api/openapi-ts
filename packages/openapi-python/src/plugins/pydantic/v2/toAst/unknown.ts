@@ -8,8 +8,10 @@ import type { PydanticPlugin } from '../../types';
 
 function baseNode(ctx: UnknownResolverContext): PydanticType {
   const { plugin } = ctx;
+  const type = $$.constrainedType(plugin.symbols.typing.Any);
   return {
-    type: $$.constrainedType(plugin.symbols.typing.Any),
+    node: { kind: 'rootModel', type },
+    type,
   };
 }
 

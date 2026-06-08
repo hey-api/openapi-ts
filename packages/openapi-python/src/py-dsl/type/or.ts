@@ -21,7 +21,7 @@ type TypeOrDecision =
   | {
       optionalSymbol: Symbol;
       strategy: 'optional';
-      unionSymbol: Symbol;
+      unionSymbol?: Symbol;
     };
 
 export class TypeOrPyDsl extends Mixed {
@@ -49,13 +49,19 @@ export class TypeOrPyDsl extends Mixed {
       this._decision = { strategy: 'bitor' };
     } else if (this.meta.Version.lte('3.9')) {
       const hasNone = flat.some((r) => fromRef(r) === 'None');
+      const nonNoneCount = flat.length - (hasNone ? 1 : 0);
 
       if (hasNone) {
         const optionalSymbol = this.meta.symbols.typing.Optional;
-        const unionSymbol = this.meta.symbols.typing.Union;
         ctx.analyze(optionalSymbol);
-        ctx.analyze(unionSymbol);
-        this._decision = { optionalSymbol, strategy: 'optional', unionSymbol };
+
+        if (nonNoneCount > 1) {
+          const unionSymbol = this.meta.symbols.typing.Union;
+          ctx.analyze(unionSymbol);
+          this._decision = { optionalSymbol, strategy: 'optional', unionSymbol };
+        } else {
+          this._decision = { optionalSymbol, strategy: 'optional' };
+        }
       } else {
         const unionSymbol = this.meta.symbols.typing.Union;
         ctx.analyze(unionSymbol);
@@ -90,7 +96,7 @@ export class TypeOrPyDsl extends Mixed {
     if (decision.strategy === 'optional') {
       const inner = flat.filter((_, i) => fromRef(this._types[i]!) !== 'None');
       const innerType =
-        inner.length === 1 ? inner[0]! : this.$node(f.slice(decision.unionSymbol, ...inner));
+        inner.length === 1 ? inner[0]! : this.$node(f.slice(decision.unionSymbol!, ...inner));
       return this.$node(f.slice(decision.optionalSymbol, innerType));
     }
 
