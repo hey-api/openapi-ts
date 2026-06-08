@@ -362,6 +362,48 @@ export default {
 
 Learn more about available transformers on the [Validators](/docs/openapi/typescript/validators) page.
 
+## Metadata
+
+Every SDK method accepts an optional `meta` object. You can use it to pass arbitrary values that aren't part of the SDK function and read them back in your [client](/docs/openapi/typescript/clients) interceptors or middleware.
+
+```ts title="app.ts"
+import { addPet } from "./sdk.gen.ts";
+
+await addPet({
+  meta: {
+    timeout: 5000,
+  },
+});
+```
+
+By default `meta` is untyped, so typos and wrong-typed values compile silently. To make it type-safe, augment the `ClientMeta` interface exported by your client. After augmentation, `meta` is fully type-checked at the call site.
+
+<Tabs>
+  <TabItem label="types">
+```ts title="overrides.d.ts"
+declare module '@hey-api/client-fetch' {
+  interface ClientMeta {
+    retry?: boolean;
+    timeout?: number;
+  }
+}
+```
+  </TabItem>
+  <TabItem label="usage">
+```ts title="app.ts"
+import { addPet } from "./sdk.gen.ts";
+
+await addPet({
+  meta: {
+    timeout: 5000, // ✅ correctly typed
+    timeoutt: 5000, // ❌ unknown key
+    retry: '5s', // ❌ wrong type
+  },
+});
+```
+  </TabItem>
+</Tabs>
+
 ## Code Examples
 
 The SDK plugin can generate ready-to-use code examples for each operation, showing how to call the SDK methods with proper parameters and setup.

@@ -71,7 +71,14 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
                 "used to access values that aren't defined as part of the SDK function.",
               ])
               .optional()
-              .type($.type('Record').generics('string', 'unknown')),
+              .type(
+                $.type
+                  .ternary()
+                  .check($.type.operator().keyof($.type(plugin.symbols.ClientMeta)))
+                  .extends('never')
+                  .do($.type('Record').generics('string', 'unknown'))
+                  .otherwise($.type(plugin.symbols.ClientMeta)),
+              ),
           ),
       ),
     );
