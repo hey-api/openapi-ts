@@ -364,32 +364,45 @@ Learn more about available transformers on the [Validators](/docs/openapi/typesc
 
 ## Metadata
 
-Every SDK method accepts an optional `meta` object. You can use it to pass arbitrary values that aren't part of the SDK function and read them back in your [client](/docs/openapi/typescript/clients)'s interceptors/middleware.
+Every SDK method accepts an optional `meta` object. You can use it to pass arbitrary values that aren't part of the SDK function and read them back in your [client](/docs/openapi/typescript/clients) interceptors or middleware.
 
-```ts
-await getFoo({ meta: { timeout: 5000 } });
+```ts title="app.ts"
+import { addPet } from "./sdk.gen.ts";
+
+await addPet({
+  meta: {
+    timeout: 5000,
+  },
+});
 ```
 
-By default `meta` is untyped, so typos and wrong-typed values compile silently. To make it typesafe, augment the `ClientMeta` interface exported by your client. This is a standard TypeScript [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html) extension point, so it applies to every SDK call.
+By default `meta` is untyped, so typos and wrong-typed values compile silently. To make it type-safe, augment the `ClientMeta` interface exported by your client. After augmentation, `meta` is fully type-checked at the call site.
 
-```ts title="client-meta.d.ts"
+<Tabs>
+  <TabItem label="types">
+```ts title="overrides.d.ts"
 declare module '@hey-api/client-fetch' {
   interface ClientMeta {
-    timeout?: number;
     retry?: boolean;
+    timeout?: number;
   }
 }
 ```
+  </TabItem>
+  <TabItem label="usage">
+```ts title="app.ts"
+import { addPet } from "./sdk.gen.ts";
 
-After augmentation, `meta` is fully type-checked at the call site — declared keys get autocomplete, and unknown keys or wrong-typed values are rejected.
-
-```ts
-await getFoo({ meta: { timeout: 5000 } }); // ✅
-await getFoo({ meta: { timeoutt: 5000 } }); // ❌ unknown key
-await getFoo({ meta: { timeout: '5s' } }); // ❌ wrong type
+await addPet({
+  meta: {
+    timeout: 5000, // ✅ correctly typed
+    timeoutt: 5000, // ❌ unknown key
+    retry: '5s', // ❌ wrong type
+  },
+});
 ```
-
-Augment the module that matches your configured client (for example `@hey-api/client-axios`). If you use a [custom client](/docs/openapi/typescript/clients/custom), augment the module you import it from.
+  </TabItem>
+</Tabs>
 
 ## Code Examples
 
