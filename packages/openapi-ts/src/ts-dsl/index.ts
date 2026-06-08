@@ -62,6 +62,7 @@ import { TypeOrTsDsl } from './type/or';
 import { TypeParamTsDsl } from './type/param';
 import { TypeQueryTsDsl } from './type/query';
 import { TypeTemplateTsDsl } from './type/template';
+import { TypeTernaryTsDsl } from './type/ternary';
 import { TypeTupleTsDsl } from './type/tuple';
 import { TypeTupleMemberTsDsl } from './type/tuple-member';
 import { LazyTsDsl } from './utils/lazy';
@@ -290,6 +291,10 @@ const tsDsl = {
       /** Builds a TypeScript template literal *type* (e.g., `${Foo}-${Bar}` as a type). */
       template: (...args: ConstructorParameters<typeof TypeTemplateTsDsl>) =>
         new TypeTemplateTsDsl(...args),
+
+      /** Creates a ternary conditional type (e.g., `T extends U ? X : Y`). */
+      ternary: (...args: ConstructorParameters<typeof TypeTernaryTsDsl>) =>
+        new TypeTernaryTsDsl(...args),
 
       /** Creates a tuple type (e.g., [A, B, C]). */
       tuple: (...args: ConstructorParameters<typeof TypeTupleTsDsl>) => new TypeTupleTsDsl(...args),

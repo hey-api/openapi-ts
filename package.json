@@ -27,7 +27,7 @@
     "changelog:release:tag": "tsx scripts/changelog/release-tag.ts",
     "changeset": "changeset",
     "examples:check": "sh ./scripts/examples-check.sh",
-    "examples:generate": "sh ./scripts/examples-generate.sh",
+    "examples:update": "sh ./scripts/examples-update.sh",
     "format": "oxfmt .",
     "format:next": "oxfmt . && uv run ruff format packages/openapi-python/src/py-compiler/__snapshots__",
     "lint": "oxfmt --check . && eslint .",
