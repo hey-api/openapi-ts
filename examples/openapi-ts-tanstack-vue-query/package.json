@@ -33,7 +33,7 @@
     "@vue/test-utils": "2.4.11",
     "@vue/tsconfig": "0.8.1",
     "autoprefixer": "10.4.20",
-    "eslint": "9.39.2",
+    "eslint": "9.39.4",
     "eslint-plugin-vue": "9.32.0",
     "jsdom": "29.1.1",
     "npm-run-all2": "8.0.4",
