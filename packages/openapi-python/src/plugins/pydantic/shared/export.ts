@@ -30,6 +30,7 @@ export function exportAst({
       },
       name,
       naming,
+      path,
       plugin,
       schema,
     }),

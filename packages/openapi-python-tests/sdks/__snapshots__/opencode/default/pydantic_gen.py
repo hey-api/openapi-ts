@@ -734,7 +734,7 @@ class SessionStatusType(str, Enum):
     IDLE = "idle"
 
 
-class SessionStatus(BaseModel):
+class SessionStatus_(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     type: SessionStatusType
 
@@ -753,7 +753,7 @@ class SessionStatusAction(BaseModel):
     link: Optional[str] = None
 
 
-class SessionStatus_(BaseModel):
+class SessionStatus_2(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     type: SessionStatusType_
     attempt: Annotated[int, Field(ge=0)]
@@ -766,13 +766,13 @@ class SessionStatusType_2(str, Enum):
     BUSY = "busy"
 
 
-class SessionStatus_2(BaseModel):
+class SessionStatus_3(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     type: SessionStatusType_2
 
 
-class SessionStatus_3(RootModel[Union[SessionStatus, SessionStatus_, SessionStatus_2]]):
-    root: Union[SessionStatus, SessionStatus_, SessionStatus_2]
+class SessionStatus(RootModel[Union[SessionStatus_, SessionStatus_2, SessionStatus_3]]):
+    root: Union[SessionStatus_, SessionStatus_2, SessionStatus_3]
 
 
 class PtyStatus(str, Enum):
@@ -807,23 +807,23 @@ class ServerConfig(BaseModel):
     cors: Optional[list[str]] = None
 
 
-class ReferenceConfigEntry(BaseModel):
+class ReferenceConfigEntry_(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     repository: str = Field(..., description="Git repository URL, host/path reference, or GitHub owner/repo shorthand")
     branch: Optional[str] = None
 
 
-class ReferenceConfigEntry_(BaseModel):
+class ReferenceConfigEntry_2(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     path: str = Field(..., description="Absolute path, ~/ path, or workspace-relative path to a local reference directory")
 
 
-class ReferenceConfigEntry_2(RootModel[Union[str, ReferenceConfigEntry, ReferenceConfigEntry_]]):
-    root: Union[str, ReferenceConfigEntry, ReferenceConfigEntry_]
+class ReferenceConfigEntry(RootModel[Union[str, ReferenceConfigEntry_, ReferenceConfigEntry_2]]):
+    root: Union[str, ReferenceConfigEntry_, ReferenceConfigEntry_2]
 
 
-class ReferenceConfig(BaseModel):
-    pass
+class ReferenceConfig(RootModel[dict[str, ReferenceConfigEntry]]):
+    root: dict[str, ReferenceConfigEntry]
 
 
 class PermissionActionConfig(str, Enum):
@@ -832,15 +832,16 @@ class PermissionActionConfig(str, Enum):
     DENY = "deny"
 
 
-class PermissionObjectConfig(BaseModel):
-    pass
+class PermissionObjectConfig(RootModel[dict[str, PermissionActionConfig]]):
+    root: dict[str, PermissionActionConfig]
 
 
 class PermissionRuleConfig(RootModel[Union[PermissionActionConfig, PermissionObjectConfig]]):
     root: Union[PermissionActionConfig, PermissionObjectConfig]
 
 
-class PermissionConfig(BaseModel):
+class PermissionConfig_(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
     read: Optional[PermissionRuleConfig] = None
     edit: Optional[PermissionRuleConfig] = None
     glob: Optional[PermissionRuleConfig] = None
@@ -860,8 +861,8 @@ class PermissionConfig(BaseModel):
     skill: Optional[PermissionRuleConfig] = None
 
 
-class PermissionConfig_(RootModel[Union[PermissionActionConfig, PermissionConfig]]):
-    root: Union[PermissionActionConfig, PermissionConfig]
+class PermissionConfig(RootModel[Union[PermissionActionConfig, PermissionConfig_]]):
+    root: Union[PermissionActionConfig, PermissionConfig_]
 
 
 class AgentConfigMode(str, Enum):
@@ -896,7 +897,7 @@ class AgentConfig(BaseModel):
     color: Optional[Union[Annotated[str, Field(pattern=r"^#[0-9a-fA-F]{6}$")], None]] = Field(default=None, description="Hex color code (e.g., #FF5733) or theme color (e.g., primary)")
     steps: Optional[Annotated[int, Field(gt=0)]] = None
     max_steps: Optional[Annotated[int, Field(gt=0)]] = Field(default=None, alias="maxSteps")
-    permission: Optional[PermissionConfig_] = None
+    permission: Optional[PermissionConfig] = None
 
 
 class ProviderConfigOptionsTimeout(Enum):
@@ -1233,7 +1234,7 @@ class Provider(BaseModel):
     env: list[str]
     key: Optional[str] = None
     options: dict[str, Any]
-    models: dict[str, Any]
+    models: dict[str, Model]
 
 
 class ConsoleState(BaseModel):
@@ -4682,7 +4683,7 @@ class GlobalEventPayloadType_47(str, Enum):
 class GlobalEventPayloadProperties_46(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
-    status: SessionStatus_3
+    status: SessionStatus
 
 
 class GlobalEventPayload_47(BaseModel):
@@ -5255,11 +5256,13 @@ class ConfigAutoupdate(str, Enum):
 
 
 class ConfigMode(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
     build: Optional[AgentConfig] = None
     plan: Optional[AgentConfig] = None
 
 
 class ConfigAgent(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
     plan: Optional[AgentConfig] = None
     build: Optional[AgentConfig] = None
     general: Optional[AgentConfig] = None
@@ -5270,12 +5273,35 @@ class ConfigAgent(BaseModel):
     compaction: Optional[AgentConfig] = None
 
 
+class ConfigMcpValue(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    enabled: bool
+
+
 class ConfigFormatterValue(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     disabled: Optional[bool] = None
     command: Optional[list[str]] = None
     environment: Optional[dict[str, str]] = None
     extensions: Optional[list[str]] = None
+
+
+class ConfigLspValueDisabled(Enum):
+    TRUE = True
+
+
+class ConfigLspValue(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    disabled: ConfigLspValueDisabled
+
+
+class ConfigLspValue_(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    command: list[str]
+    extensions: Optional[list[str]] = None
+    disabled: Optional[bool] = None
+    env: Optional[dict[str, str]] = None
+    initialization: Optional[dict[str, Any]] = None
 
 
 class ConfigEnterprise(BaseModel):
@@ -5332,13 +5358,13 @@ class Config(BaseModel):
     username: Optional[str] = None
     mode: Optional[ConfigMode] = None
     agent: Optional[ConfigAgent] = None
-    provider: Optional[dict[str, Any]] = None
-    mcp: Optional[dict[str, Any]] = None
+    provider: Optional[dict[str, ProviderConfig]] = None
+    mcp: Optional[dict[str, Union[McpLocalConfig, McpRemoteConfig, ConfigMcpValue]]] = None
     formatter: Optional[Union[bool, None]] = Field(default=None, description="Enable or configure formatters. Omit or set to false to disable, true to enable built-ins, or an object to enable built-ins with overrides.")
     lsp: Optional[Union[bool, None]] = Field(default=None, description="Enable or configure LSP servers. Omit or set to false to disable, true to enable built-ins, or an object to enable built-ins with overrides.")
     instructions: Optional[list[str]] = None
     layout: Optional[LayoutConfig] = None
-    permission: Optional[PermissionConfig_] = None
+    permission: Optional[PermissionConfig] = None
     tools: Optional[dict[str, bool]] = None
     attachment: Optional[AttachmentConfig] = None
     enterprise: Optional[ConfigEnterprise] = None
@@ -6936,7 +6962,7 @@ class EventSessionStatusType(str, Enum):
 class EventSessionStatusProperties(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
-    status: SessionStatus_3
+    status: SessionStatus
 
 
 class EventSessionStatus(BaseModel):
