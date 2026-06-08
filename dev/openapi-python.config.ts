@@ -20,6 +20,7 @@ export default defineConfig(() => [
     },
     output: {
       path: path.resolve(__dirname, 'gen', 'python'),
+      pythonVersion: '3.11',
     },
     plugins: [...getPreset()],
   },

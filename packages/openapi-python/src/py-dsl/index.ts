@@ -2,8 +2,8 @@ import type { NodeName } from '@hey-api/codegen-core';
 
 import type { py } from '../py-compiler';
 import { ClassPyDsl } from './decl/class';
+import { EnumPyDsl } from './decl/enum';
 // import { DecoratorPyDsl } from './decl/decorator';
-// import { EnumPyDsl } from './decl/enum';
 import { FieldPyDsl } from './decl/field';
 import { FuncPyDsl } from './decl/func';
 // import { GetterPyDsl } from './decl/getter';
@@ -54,6 +54,7 @@ import { VarPyDsl } from './stmt/var';
 import { WhilePyDsl } from './stmt/while';
 import { WithPyDsl } from './stmt/with';
 import { TypeOrPyDsl } from './type/or';
+import { TypeTuplePyDsl } from './type/tuple';
 // import { TokenPyDsl } from './token';
 // import { TypeAliasPyDsl } from './type/alias';
 // import { TypeAndPyDsl } from './type/and';
@@ -70,7 +71,6 @@ import { TypeOrPyDsl } from './type/or';
 // import { TypeParamPyDsl } from './type/param';
 // import { TypeQueryPyDsl } from './type/query';
 // import { TypeTemplatePyDsl } from './type/template';
-// import { TypeTuplePyDsl } from './type/tuple';
 import { LazyPyDsl } from './utils/lazy';
 
 const pyDsl = {
@@ -113,7 +113,7 @@ const pyDsl = {
   doc: (...args: ConstructorParameters<typeof DocPyDsl>) => new DocPyDsl(...args),
 
   /** Creates an enum declaration. */
-  // enum: (...args: ConstructorParameters<typeof EnumTsDsl>) => new EnumTsDsl(...args),
+  enum: (...args: ConstructorParameters<typeof EnumPyDsl>) => new EnumPyDsl(...args),
 
   /** Creates a general expression node. */
   expr: (...args: ConstructorParameters<typeof ExprPyDsl>) => new ExprPyDsl(...args),
@@ -270,8 +270,10 @@ const pyDsl = {
     /** Creates a type operator node (e.g., `readonly T`, `keyof T`, `unique T`). */
     // operator: (...args: ConstructorParameters<typeof TypeOperatorTsDsl>) =>
     //   new TypeOperatorTsDsl(...args),
+
     /** Creates a union type (e.g., `A | B | C`). */
     or: (...args: ConstructorParameters<typeof TypeOrPyDsl>) => new TypeOrPyDsl(...args),
+
     /** Creates a type parameter (e.g., `<T>`). */
     // param: (...args: ConstructorParameters<typeof TypeParamTsDsl>) => new TypeParamTsDsl(...args),
     /** Creates a type query node (e.g., `typeof Foo`). */
@@ -279,8 +281,9 @@ const pyDsl = {
     /** Builds a TypeScript template literal *type* (e.g., `${Foo}-${Bar}` as a type). */
     // template: (...args: ConstructorParameters<typeof TypeTemplateTsDsl>) =>
     //   new TypeTemplateTsDsl(...args),
+
     /** Creates a tuple type (e.g., [A, B, C]). */
-    // tuple: (...args: ConstructorParameters<typeof TypeTupleTsDsl>) => new TypeTupleTsDsl(...args),
+    tuple: (...args: ConstructorParameters<typeof TypeTuplePyDsl>) => new TypeTuplePyDsl(...args),
   },
   // ),
   /** Creates a `typeof` expression (e.g., `typeof value`). */
@@ -323,8 +326,9 @@ export type DollarPyDsl = {
 
 export type { MaybePyDsl } from './base';
 export { PyDsl } from './base';
+export type { EnumMember } from './decl/enum';
 export type { CallArgs } from './expr/call';
-export type { VarType } from './stmt/var';
+export { KwargPyDsl } from './expr/kwarg';
 export type { ExampleOptions } from './utils/context';
 export { ctx, PyDslContext } from './utils/context';
 export { keywords } from './utils/keywords';

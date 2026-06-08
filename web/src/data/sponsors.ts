@@ -9,6 +9,7 @@ import photonSvg from '@/assets/brands/photon.svg?raw';
 import scalarSvg from '@/assets/brands/scalar.svg?raw';
 import stainlessPng from '@/assets/brands/stainless.png';
 import stainlessSvg from '@/assets/brands/stainless.svg?raw';
+import unblockedSvg from '@/assets/brands/unblocked.svg?raw';
 import vercelSvg from '@/assets/brands/vercel.svg?raw';
 
 export type SponsorTier = 'gold' | 'silver' | 'bronze' | 'friends' | 'platinum';
@@ -23,6 +24,7 @@ export interface Sponsor {
   displayUrl: string;
   logo: SponsorLogo;
   name: string;
+  past?: boolean;
   tagline?: string;
   tier: SponsorTier;
   url: string;
@@ -76,6 +78,17 @@ export const sponsors: Array<Sponsor> = [
     url: 'https://kutt.to/Dr9GuW',
   },
   {
+    class: 'unblocked',
+    displayUrl: 'getunblocked.com',
+    logo: {
+      src: unblockedSvg,
+      type: 'svg',
+    },
+    name: 'Unblocked',
+    tier: 'silver',
+    url: 'https://kutt.to/yZVkdV',
+  },
+  {
     displayUrl: 'kinde.com',
     logo: {
       src: kindeSvg,
@@ -93,6 +106,7 @@ export const sponsors: Array<Sponsor> = [
       type: 'svg',
     },
     name: 'Cella',
+    past: true,
     tier: 'bronze',
     url: 'https://kutt.to/KkqSaw',
   },

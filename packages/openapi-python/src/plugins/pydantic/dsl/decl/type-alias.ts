@@ -1,21 +1,25 @@
 import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 
 import type { py } from '../../../../py-compiler';
-import type { VarType } from '../../../../py-dsl';
 import { $, PyDsl } from '../../../../py-dsl';
 import type { PydanticPlugin } from '../../types';
+import type { PydanticConstrainedTypeDsl } from '../expr/constrained-type';
 
 const Mixed = PyDsl<py.Statement>;
 
-export class PydTypeAliasPyDsl extends Mixed {
-  readonly '~dsl' = 'PydTypeAliasPyDsl';
+export class PydanticTypeAliasDsl extends Mixed {
+  readonly '~dsl' = 'PydanticTypeAliasDsl';
 
-  readonly aliased?: VarType;
+  readonly aliased?: PydanticConstrainedTypeDsl;
 
   protected plugin: PydanticPlugin['Instance'];
   private _dsl?: ReturnType<typeof $.var>;
 
-  constructor(plugin: PydanticPlugin['Instance'], name: NodeName, aliased?: VarType) {
+  constructor(
+    plugin: PydanticPlugin['Instance'],
+    name: NodeName,
+    aliased?: PydanticConstrainedTypeDsl,
+  ) {
     super();
     this.name.set(name);
     this.aliased = aliased;
@@ -29,7 +33,7 @@ export class PydTypeAliasPyDsl extends Mixed {
 
     this._dsl = $.var(this.name)
       .type(plugin.symbols.typing.TypeAlias)
-      .assign(this.aliased ?? plugin.symbols.typing.Any);
+      .assign(this.aliased?.type ?? plugin.symbols.typing.Any);
 
     return this._dsl;
   }

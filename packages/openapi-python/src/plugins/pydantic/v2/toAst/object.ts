@@ -1,10 +1,11 @@
 import { childContext } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { ObjectResolverContext } from '../../resolvers';
-import type { PydanticField, PydanticResult, PydanticType } from '../../shared/types';
+import type { PydanticResult, PydanticType } from '../../shared/types';
 
-export interface ObjectToFieldsResult extends Pick<PydanticResult, 'fields' | 'type'> {
+export interface ObjectToFieldsResult extends PydanticType {
   childResults: Array<PydanticResult>;
 }
 
@@ -13,6 +14,18 @@ function additionalPropertiesNode(ctx: ObjectResolverContext): PydanticType | nu
 
   if (!schema.additionalProperties || !schema.additionalProperties.type) return;
   if (schema.additionalProperties.type === 'never') return null;
+  if (schema.additionalProperties.type === 'unknown') {
+    if (ctx.schema.properties) {
+      return {
+        node: {
+          config: { extra: 'allow' },
+          fields: fieldsNode(ctx),
+          kind: 'model',
+        },
+      };
+    }
+    return;
+  }
 
   const result = ctx.walk(
     schema.additionalProperties,
@@ -20,59 +33,73 @@ function additionalPropertiesNode(ctx: ObjectResolverContext): PydanticType | nu
   );
   ctx._childResults.push(result);
 
-  return {
-    type: result.type,
-  };
+  return { type: result.type };
 }
 
-function fieldsNode(ctx: ObjectResolverContext): Array<PydanticField> {
+function fieldsNode(ctx: ObjectResolverContext): Array<ReturnType<typeof $$.field>> {
   const { path, plugin, schema } = ctx;
-  const fields: Array<PydanticField> = [];
+  const fields: Array<ReturnType<typeof $$.field>> = [];
 
-  for (const name in schema.properties) {
-    const property = schema.properties[name]!;
-    const isOptional = !schema.required?.includes(name);
+  for (const wireName in schema.properties) {
+    const property = schema.properties[wireName]!;
+    const isRequired = schema.required?.includes(wireName) ?? false;
 
-    const propertyResult = ctx.walk(property, childContext({ path, plugin }, 'properties', name));
-    ctx._childResults.push(propertyResult);
+    const result = ctx.walk(property, childContext({ path, plugin }, 'properties', wireName));
+    ctx._childResults.push(result);
 
-    const final = ctx.applyModifiers(propertyResult, { optional: isOptional });
-    fields.push({
-      fieldConstraints: final.fieldConstraints,
-      isOptional,
-      name: plugin.symbol(name),
-      originalName: name,
-      type: final.type,
-    });
+    const isOptional = !isRequired;
+    const nullable = result.meta.nullable || isOptional;
+
+    const hasSchemaDefault = result.meta.default !== undefined;
+    const defaultValue = hasSchemaDefault ? result.meta.default : isOptional ? null : undefined;
+
+    const field = $$.field(plugin, wireName)
+      .$if(result.unionMembers, (f, t) => f.type(t))
+      .$if(!result.unionMembers && result.type, (f, t) => f.type(t))
+      .$if(result.unionMembers && result.type, (f, t) => f.metadata(t))
+      .nullable(nullable)
+      .$if(defaultValue !== undefined, (f) => f.default(defaultValue));
+
+    fields.push(field);
   }
 
   return fields;
 }
 
-function baseNode(ctx: ObjectResolverContext): PydanticType & { fields?: Array<PydanticField> } {
+function baseNode(ctx: ObjectResolverContext): PydanticType {
   const additional = additionalPropertiesNode(ctx);
 
   if (additional === null) {
-    const fields = fieldsNode(ctx);
-    return { fields };
+    return {
+      node: {
+        config: { extra: 'forbid' },
+        fields: fieldsNode(ctx),
+        kind: 'model',
+      },
+    };
   }
 
   if (additional) {
-    const any = ctx.plugin.symbols.typing.Any;
     if (!ctx.schema.properties) {
-      return { type: $('dict').slice('str', any) };
+      return { type: $$.constrainedType($('dict').slice('str', additional.type!.type)) };
     }
-    return { type: $('dict').slice('str', any) };
+    return {
+      node: {
+        config: { extra: 'allow' },
+        fields: fieldsNode(ctx),
+        kind: 'model',
+      },
+    };
   }
 
-  // TODO: consider model_config = ConfigDict(extra='allow')
   if (ctx.schema.properties) {
-    const fields = fieldsNode(ctx);
-    return { fields };
+    return { node: { fields: fieldsNode(ctx), kind: 'model' } };
   }
 
-  const any = ctx.plugin.symbols.typing.Any;
-  return { type: $('dict').slice('str', any) };
+  return {
+    node: { fields: [], kind: 'model' },
+    type: $$.constrainedType($('dict').slice('str', ctx.plugin.symbols.typing.Any)),
+  };
 }
 
 function objectResolver(ctx: ObjectResolverContext): PydanticType {
@@ -103,7 +130,5 @@ export function objectToFields(
   const resolver = plugin.config['~resolvers']?.object;
   const resolved = resolver?.(extendedCtx) ?? objectResolver(extendedCtx);
 
-  const childResultsFinal = extendedCtx._childResults;
-
-  return { childResults: childResultsFinal, ...resolved };
+  return { childResults, ...resolved };
 }

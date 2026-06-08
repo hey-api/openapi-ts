@@ -10,7 +10,7 @@ const DURATION_MS = 25_000;
 const SESSION_KEY = 'hey-api:sponsor-strip-start';
 
 const { activeTiers } = getVisibleSponsorTiers(sponsors);
-const featured = sponsors.filter((s) => activeTiers.includes(s.tier));
+const featured = sponsors.filter((s) => !s.past && activeTiers.includes(s.tier));
 ---
 
 <div class="sponsor-strip">

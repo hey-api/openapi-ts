@@ -1,69 +1,56 @@
 import { childContext, deduplicateSchema } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { ArrayResolverContext } from '../../resolvers';
 import type { PydanticResult, PydanticType } from '../../shared/types';
-import type { FieldConstraints } from '../constants';
 
 function baseNode(ctx: ArrayResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
   const any = plugin.symbols.typing.Any;
 
   if (!childResults.length) {
+    const type = $$.constrainedType($('list').slice(any));
     return {
-      type: $('list').slice(any),
+      node: { kind: 'rootModel', type },
+      type,
     };
   }
 
   if (childResults.length === 1) {
     const itemResult = applyModifiers(childResults[0]!);
+    const type = $$.constrainedType($('list').slice(itemResult.type?.type ?? any));
     return {
-      type: $('list').slice(itemResult.type ?? any),
+      node: { kind: 'rootModel', type },
+      type,
     };
   }
 
-  const itemTypes = childResults.map((r) => applyModifiers(r).type ?? any);
-
+  const itemTypes = childResults.map((r) => applyModifiers(r).type?.type ?? any);
+  const type = $$.constrainedType($('list').slice($.type.or(...itemTypes)));
   return {
-    type: $('list').slice($.type.or(...itemTypes)),
-  };
-}
-
-function minLengthNode(ctx: ArrayResolverContext): PydanticType | undefined {
-  const { schema } = ctx;
-  if (schema.minItems === undefined) return;
-  return {
-    fieldConstraints: { min_length: schema.minItems },
-  };
-}
-
-function maxLengthNode(ctx: ArrayResolverContext): PydanticType | undefined {
-  const { schema } = ctx;
-  if (schema.maxItems === undefined) return;
-  return {
-    fieldConstraints: { max_length: schema.maxItems },
+    node: { kind: 'rootModel', type },
+    type,
   };
 }
 
 function arrayResolver(ctx: ArrayResolverContext): PydanticType {
   const baseResult = ctx.nodes.base(ctx);
-  const minLengthResult = ctx.nodes.minLength(ctx);
-  const maxLengthResult = ctx.nodes.maxLength(ctx);
+  const { schema } = ctx;
+  const c = $$.constraints();
 
-  const fieldConstraints: FieldConstraints = {
-    ...(baseResult.fieldConstraints ?? {}),
-    ...(minLengthResult?.fieldConstraints ?? {}),
-    ...(maxLengthResult?.fieldConstraints ?? {}),
-  };
+  if (schema.minItems !== undefined) c.minLength(schema.minItems);
+  if (schema.maxItems !== undefined) c.maxLength(schema.maxItems);
+  if (schema.description !== undefined) c.description(schema.description);
 
-  if (ctx.schema.description !== undefined) {
-    fieldConstraints.description = ctx.schema.description;
+  if (!c.isEmpty && baseResult.type) {
+    return {
+      node: baseResult.node,
+      type: baseResult.type.mergeConstraints(c),
+    };
   }
 
-  return {
-    ...baseResult,
-    fieldConstraints: Object.keys(fieldConstraints).length ? fieldConstraints : undefined,
-  };
+  return baseResult;
 }
 
 export interface ArrayToTypeResult extends PydanticType {
@@ -93,8 +80,6 @@ export function arrayToType(
     childResults,
     nodes: {
       base: baseNode,
-      maxLength: maxLengthNode,
-      minLength: minLengthNode,
     },
     path,
     plugin,
@@ -106,7 +91,7 @@ export function arrayToType(
   const resolved = resolver?.(resolverCtx) ?? arrayResolver(resolverCtx);
 
   if (!resolved.type) {
-    resolved.type = $('list').slice(any);
+    resolved.type = $$.constrainedType($('list').slice(any));
   }
 
   return {

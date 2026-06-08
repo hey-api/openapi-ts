@@ -1,36 +1,44 @@
-import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
-import { fromRef } from '@hey-api/codegen-core';
-import { toCase } from '@hey-api/shared';
+import type { AnalysisContext, NodeName, Symbol } from '@hey-api/codegen-core';
+import { applyNaming } from '@hey-api/shared';
 
 import type { py } from '../../../../py-compiler';
-import type { VarType } from '../../../../py-dsl';
-import { $, PyDsl } from '../../../../py-dsl';
-import type { CallCallee } from '../../../../py-dsl/expr/call';
+import type { MaybePyDsl } from '../../../../py-dsl';
+import { $, KwargPyDsl, PyDsl } from '../../../../py-dsl';
 import { OptionalMixin } from '../../../../py-dsl/mixins/optional';
 import { safeKeywordName } from '../../../../py-dsl/utils/name';
 import type { PydanticPlugin } from '../../types';
-import { ConstraintsMixin } from '../mixins/constraints';
+import type { PydanticConstrainedTypeDsl } from '../expr/constrained-type';
 import { literalize } from '../utils/literal';
 
-const Mixed = ConstraintsMixin(OptionalMixin(PyDsl<py.Statement>));
+const Mixed = OptionalMixin(PyDsl<py.Statement>);
 
 export class PydanticFieldDsl extends Mixed {
   readonly '~dsl' = 'PydanticFieldDsl';
 
   protected plugin: PydanticPlugin['Instance'];
 
+  private _decision?: { fieldSymbol: Symbol; strategy: 'field' };
+  private _fieldArgs?: Array<ReturnType<typeof $.expr | typeof $.kwarg>>;
+  private _pythonName: string;
+  private _wireName: string;
+
   private _alias?: string;
   private _default: unknown;
   private _defaultFactory?: string;
-  private _description?: string;
+  private _discriminator?: string;
   private _dsl?: ReturnType<typeof $.field>;
-  private _title?: string;
-  private _type?: VarType;
+  private _constrainedType?: PydanticConstrainedTypeDsl;
+  private _nullable?: boolean;
+  private _unionMembers?: Array<PydanticConstrainedTypeDsl>;
 
-  constructor(plugin: PydanticPlugin['Instance'], name: NodeName) {
+  constructor(plugin: PydanticPlugin['Instance'], name: string) {
     super();
-    this.name.set(name);
+    this._wireName = name;
     this.plugin = plugin;
+
+    const snaked = applyNaming(this._wireName, { casing: 'snake_case' });
+    this._pythonName = safeKeywordName(snaked);
+    this.name.set(plugin.symbol(this._pythonName));
   }
 
   alias(name: string): this {
@@ -48,19 +56,59 @@ export class PydanticFieldDsl extends Mixed {
     return this;
   }
 
-  description(text: string): this {
-    this._description = text;
+  discriminator(field: string): this {
+    this._discriminator = field;
     return this;
   }
 
-  title(text: string): this {
-    this._title = text;
+  metadata(constrainedType: PydanticConstrainedTypeDsl): this {
+    this._constrainedType = constrainedType;
     return this;
   }
 
-  type(type: VarType): this {
-    this._type = type;
+  nullable(value: boolean): this {
+    this._nullable = value;
     return this;
+  }
+
+  type(constrainedType: PydanticConstrainedTypeDsl | Array<PydanticConstrainedTypeDsl>): this {
+    if (Array.isArray(constrainedType)) {
+      this._unionMembers = constrainedType;
+    } else {
+      this._constrainedType = constrainedType;
+    }
+    return this;
+  }
+
+  private _buildUnionVarType(): ReturnType<typeof $.field> | undefined {
+    const members = this._unionMembers;
+    if (!members?.length) return undefined;
+
+    const { plugin } = this;
+
+    const itemExprs = members.map((ct) => {
+      if (!ct.constraints.hasValidationConstraints) {
+        return ct.type;
+      }
+
+      const cv = ct.constraints.values;
+      const args: Array<ReturnType<typeof $.kwarg>> = [];
+      if (cv.gt !== undefined) args.push($.kwarg('gt', cv.gt));
+      if (cv.ge !== undefined) args.push($.kwarg('ge', cv.ge));
+      if (cv.lt !== undefined) args.push($.kwarg('lt', cv.lt));
+      if (cv.le !== undefined) args.push($.kwarg('le', cv.le));
+      if (cv.multiple_of !== undefined) args.push($.kwarg('multiple_of', cv.multiple_of));
+      if (cv.min_length !== undefined) args.push($.kwarg('min_length', cv.min_length));
+      if (cv.max_length !== undefined) args.push($.kwarg('max_length', cv.max_length));
+      if (cv.pattern !== undefined) args.push($.kwarg('pattern', cv.pattern));
+
+      return $(plugin.symbols.typing.Annotated).slice(
+        ct.type,
+        $(plugin.symbols.Field).call(...args),
+      );
+    });
+
+    return $.type.or(...itemExprs) as any;
   }
 
   _build(): ReturnType<typeof $.field> {
@@ -68,68 +116,131 @@ export class PydanticFieldDsl extends Mixed {
 
     const { plugin } = this;
 
-    const name = String(fromRef(this.name));
-    const snake = toCase(name, 'snake_case');
-    const safe = safeKeywordName(snake);
-    const runtimeName = safe;
-    const needsAlias = runtimeName !== name;
-    const alias = this._alias ?? (needsAlias ? name : undefined);
+    const isUnion = Boolean(this._unionMembers?.length);
+
+    const cv = this._constrainedType?.constraints.values ?? {};
+    const hasValidationConstraints = this._constrainedType
+      ? this._constrainedType.constraints.hasValidationConstraints
+      : false;
+
+    const metaCv = this._constrainedType?.constraints.values ?? {};
 
     const hasDefault = this._default !== undefined;
 
-    let type = this._type;
-    const needsOptional = this._optional || hasDefault;
-    if (needsOptional && this._type) {
-      type = $(plugin.symbols.typing.Optional).slice(this._type);
+    let varType:
+      | ReturnType<typeof $.expr | typeof $.field | typeof $.type.or>
+      | NodeName
+      | MaybePyDsl<py.Expression>
+      | undefined;
+
+    if (isUnion) {
+      varType = this._buildUnionVarType();
+    } else {
+      const annotatedArgs: Array<ReturnType<typeof $.kwarg>> = [];
+      if (hasValidationConstraints) {
+        if (cv.gt !== undefined) annotatedArgs.push($.kwarg('gt', cv.gt));
+        if (cv.ge !== undefined) annotatedArgs.push($.kwarg('ge', cv.ge));
+        if (cv.lt !== undefined) annotatedArgs.push($.kwarg('lt', cv.lt));
+        if (cv.le !== undefined) annotatedArgs.push($.kwarg('le', cv.le));
+        if (cv.multiple_of !== undefined)
+          annotatedArgs.push($.kwarg('multiple_of', cv.multiple_of));
+        if (cv.min_length !== undefined) annotatedArgs.push($.kwarg('min_length', cv.min_length));
+        if (cv.max_length !== undefined) annotatedArgs.push($.kwarg('max_length', cv.max_length));
+        if (cv.pattern !== undefined) annotatedArgs.push($.kwarg('pattern', cv.pattern));
+      }
+      varType = this._constrainedType?.type;
+      if (hasValidationConstraints && varType) {
+        varType = $(plugin.symbols.typing.Annotated).slice(
+          varType,
+          $(plugin.symbols.Field).call(...annotatedArgs),
+        );
+      }
     }
 
-    const stmt = $.field(plugin.symbol(runtimeName)).$if(type, (v, t) => v.type(t));
+    if ((this._nullable || this._optional) && varType) {
+      varType = $.type.or(
+        // @ts-expect-error
+        varType,
+        'None',
+      );
+    }
 
-    if (
+    const effectiveAlias =
+      this._alias ?? (this._pythonName !== this._wireName ? this._wireName : undefined);
+
+    const stmt = $.field(this.name).$if(varType, (v, t) =>
+      v.type(
+        // @ts-expect-error
+        t,
+      ),
+    );
+
+    const needsField =
       this._defaultFactory !== undefined ||
-      alias !== undefined ||
-      this._title !== undefined ||
-      this._description !== undefined ||
-      this.hasConstraints
-    ) {
-      const args: Array<CallCallee> = [];
+      effectiveAlias !== undefined ||
+      this._discriminator !== undefined ||
+      metaCv.title !== undefined ||
+      metaCv.description !== undefined;
 
-      const isRequired = !needsOptional && !this._defaultFactory;
-      if (isRequired) {
-        args.push($('...') as CallCallee);
-      } else if (hasDefault) {
-        args.push($.kwarg('default', literalize(this._default)));
-      }
+    const args: Array<ReturnType<typeof $.expr | typeof $.kwarg>> = [];
 
+    const isRequired = !this._nullable && !this._optional && !hasDefault && !this._defaultFactory;
+    if (isRequired) {
+      args.push($('...'));
+    } else if (hasDefault) {
+      args.push($.kwarg('default', literalize(this._default)));
+    } else if (this._nullable || this._optional) {
+      args.push($.kwarg('default', literalize(null)));
+    }
+    this._fieldArgs = args;
+
+    if (needsField) {
       if (this._defaultFactory) args.push($.kwarg('default_factory', this._defaultFactory));
-      if (alias !== undefined) args.push($.kwarg('alias', alias));
-      if (this._title !== undefined) args.push($.kwarg('title', this._title));
-      if (this._description !== undefined) args.push($.kwarg('description', this._description));
-
-      for (const [k, v] of Object.entries(this.constraints)) {
-        args.push($.kwarg(k, v));
+      if (effectiveAlias !== undefined) args.push($.kwarg('alias', effectiveAlias));
+      if (metaCv.title !== undefined) args.push($.kwarg('title', metaCv.title));
+      if (metaCv.description !== undefined) args.push($.kwarg('description', metaCv.description));
+      if (this._discriminator !== undefined) {
+        args.push($.kwarg('discriminator', this._discriminator));
       }
 
+      this._fieldArgs = args;
       stmt.assign($(plugin.symbols.Field).call(...args));
     } else if (hasDefault) {
-      stmt.assign(literalize(this._default) as string | number);
-    } else if (this._optional) {
-      stmt.assign('None');
+      stmt.assign(literalize(this._default));
+    } else if (this._nullable || this._optional) {
+      stmt.assign(literalize(null));
     }
 
     this._dsl = stmt;
-
     return this._dsl;
   }
 
   override analyze(ctx: AnalysisContext): void {
     this._build();
     ctx.analyze(this._dsl!);
+    this.name.symbol?.on('finalName', ({ symbol }) => {
+      if (!symbol.isRenamed) return;
+      const fieldSymbol = this.plugin.symbols.Field;
+      const targetFile = ctx.symbol?.file;
+      fieldSymbol.on('import', ({ symbol: importSymbol }) => {
+        if (targetFile && importSymbol.file?.id === targetFile.id) {
+          this._decision = { fieldSymbol: importSymbol, strategy: 'field' };
+        }
+      });
+      ctx.analyze(fieldSymbol);
+    });
     super.analyze(ctx);
   }
 
   override toAst() {
     this._build();
+    if (this._decision?.strategy === 'field') {
+      const args = this._fieldArgs ?? [];
+      if (!args.some((a) => a instanceof KwargPyDsl && a.key === 'alias')) {
+        args.push($.kwarg('alias', this._wireName));
+      }
+      this._dsl!.assign($(this._decision.fieldSymbol).call(...args));
+    }
     return this._dsl!.toAst();
   }
 }

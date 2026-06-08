@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "7.1.0",
-    "@astrojs/starlight": "0.39.2",
+    "@astrojs/starlight": "0.39.3",
     "@astrojs/starlight-docsearch": "0.7.0",
     "@astrojs/vercel": "10.0.6",
     "@hey-api/starlight-llms-txt": "0.10.2",
@@ -22,7 +22,7 @@
     "mdast-util-mdx-jsx": "3.2.0",
     "resend": "6.12.4",
     "starlight-theme-flexoki": "0.2.2",
-    "vite": "8.0.14"
+    "vite": "8.0.16"
   },
   "devDependencies": {
     "@types/hast": "3.0.4",

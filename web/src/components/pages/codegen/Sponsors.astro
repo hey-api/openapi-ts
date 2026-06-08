@@ -8,7 +8,7 @@ const HEADING = 'Sponsors';
 const SUBHEADING = 'They make this possible. We make it worth sponsoring.';
 
 const { activeTiers } = getVisibleSponsorTiers(sponsors);
-const visibleSponsors = sponsors.filter((s) => activeTiers.includes(s.tier));
+const visibleSponsors = sponsors.filter((s) => !s.past && activeTiers.includes(s.tier));
 ---
 
 <div class="homepage-sponsors">

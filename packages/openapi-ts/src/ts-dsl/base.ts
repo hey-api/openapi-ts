@@ -33,15 +33,19 @@ export abstract class TsDsl<
   exported?: boolean;
   file?: File;
   get name(): Node['name'] {
+    const nameRef = this._name;
+    const nameValue = nameRef ? fromRef(nameRef) : undefined;
+    const symbolValue = isSymbol(nameValue) ? nameValue : undefined;
     return {
-      ...this._name,
+      ...nameRef,
       set: (value) => {
         this._name = ref(value);
         if (isSymbol(value)) {
           value.setNode(this);
         }
       },
-      toString: () => (this._name ? this.$name(this._name) : ''),
+      symbol: symbolValue,
+      toString: () => (nameRef ? this.$name(nameRef) : ''),
     } as Node['name'];
   }
   readonly nameSanitizer?: NodeNameSanitizer;
