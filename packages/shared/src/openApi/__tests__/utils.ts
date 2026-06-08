@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import yaml from 'yaml';
+import { load } from 'js-yaml';
 
 export const getSpecsPath = (): string =>
   path.join(__dirname, '..', '..', '..', '..', '..', 'specs');
@@ -9,5 +9,5 @@ export const getSpecsPath = (): string =>
 export const specFileToJson = (file: string) => {
   const raw = fs.readFileSync(file, 'utf8');
   const ext = path.extname(file).toLowerCase();
-  return ext === '.json' ? JSON.parse(raw) : yaml.parse(raw);
+  return ext === '.json' ? JSON.parse(raw) : load(raw);
 };

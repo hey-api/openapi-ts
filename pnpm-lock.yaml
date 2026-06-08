@@ -1360,9 +1360,6 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
-      yaml:
-        specifier: 2.9.0
-        version: 2.9.0
 
   packages/openapi-python-tests/pydantic/v2:
     devDependencies:
@@ -1460,9 +1457,6 @@ importers:
       vue:
         specifier: 3.5.25
         version: 3.5.25(typescript@6.0.3)
-      yaml:
-        specifier: 2.9.0
-        version: 2.9.0
       zone.js:
         specifier: 0.16.0
         version: 0.16.0
@@ -1701,18 +1695,21 @@ importers:
       '@types/cross-spawn':
         specifier: 6.0.6
         version: 6.0.6
+      '@types/js-yaml':
+        specifier: 4.0.9
+        version: 4.0.9
       '@types/semver':
         specifier: 7.7.1
         version: 7.7.1
       eslint:
         specifier: 9.39.4
         version: 9.39.4(jiti@2.6.1)
+      js-yaml:
+        specifier: 4.2.0
+        version: 4.2.0
       typescript:
         specifier: 6.0.3
         version: 6.0.3
-      yaml:
-        specifier: 2.9.0
-        version: 2.9.0
 
   packages/spec-types:
     dependencies:
@@ -17442,7 +17439,7 @@ snapshots:
       github-slugger: 2.0.0
       hast-util-from-html: 2.0.3
       hast-util-to-text: 4.0.2
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       mdast-util-definitions: 6.0.0
       rehype-raw: 7.0.0
       rehype-stringify: 10.0.1
@@ -17468,7 +17465,7 @@ snapshots:
       github-slugger: 2.0.0
       hast-util-from-html: 2.0.3
       hast-util-to-text: 4.0.2
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       mdast-util-definitions: 6.0.0
       rehype-raw: 7.0.0
       rehype-stringify: 10.0.1
@@ -17545,7 +17542,7 @@ snapshots:
       hast-util-to-string: 3.0.1
       hastscript: 9.0.1
       i18next: 26.0.10(typescript@6.0.3)
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       klona: 2.0.6
       magic-string: 0.30.21
       mdast-util-directive: 3.1.0
@@ -19257,7 +19254,7 @@ snapshots:
       globals: 14.0.0
       ignore: 5.3.2
       import-fresh: 3.3.1
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       minimatch: 3.1.5
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
@@ -22952,7 +22949,7 @@ snapshots:
       ajv: 8.20.0
       ajv-draft-04: 1.0.0(ajv@8.20.0)
       ajv-formats: 3.0.1(ajv@8.20.0)
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
 
   '@shikijs/core@4.0.2':
     dependencies:
@@ -25214,7 +25211,7 @@ snapshots:
       github-slugger: 2.0.0
       html-escaper: 3.0.3
       http-cache-semantics: 4.2.0
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       jsonc-parser: 3.3.1
       magic-string: 0.30.21
       magicast: 0.5.2
@@ -26016,7 +26013,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 6.0.3
