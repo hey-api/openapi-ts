@@ -102,6 +102,39 @@ export type UserConfig = Plugin.Name<'pydantic'> &
       | NameTransformer
       | {
           /**
+           * Configuration for request body Pydantic models.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          body?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'PascalCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default '{{name}}Body'
+                 */
+                name?: NameTransformer;
+              };
+          /**
            * Casing convention for generated names.
            *
            * @default 'PascalCase'
@@ -114,11 +147,110 @@ export type UserConfig = Plugin.Name<'pydantic'> &
            */
           enabled?: boolean;
           /**
+           * Configuration for request headers Pydantic models.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          headers?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'PascalCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default '{{name}}Headers'
+                 */
+                name?: NameTransformer;
+              };
+          /**
            * Naming pattern for generated names.
            *
            * @default '{{name}}Request'
            */
           name?: NameTransformer;
+          /**
+           * Configuration for request path parameters Pydantic models.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          path?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'PascalCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default '{{name}}Path'
+                 */
+                name?: NameTransformer;
+              };
+          /**
+           * Configuration for request query parameters Pydantic models.
+           *
+           * Can be:
+           * - `boolean`: Shorthand for `{ enabled: boolean }`
+           * - `string` or `function`: Shorthand for `{ name: string | function }`
+           * - `object`: Full configuration object
+           *
+           * @default true
+           */
+          query?:
+            | boolean
+            | NameTransformer
+            | {
+                /**
+                 * Casing convention for generated names.
+                 *
+                 * @default 'PascalCase'
+                 */
+                case?: Casing;
+                /**
+                 * Whether this feature is enabled.
+                 *
+                 * @default true
+                 */
+                enabled?: boolean;
+                /**
+                 * Naming pattern for generated names.
+                 *
+                 * @default '{{name}}Query'
+                 */
+                name?: NameTransformer;
+              };
         };
     /**
      * Configuration for response-specific Pydantic models.
@@ -223,7 +355,17 @@ export type Config = Plugin.Name<'pydantic'> &
     /** Model type to generate. */
     modelType: 'BaseModel' | 'dataclass';
     /** Configuration for request-specific Pydantic models. */
-    requests: NamingOptions & FeatureToggle;
+    requests: NamingOptions &
+      FeatureToggle & {
+        /** Configuration for request body Zod schemas. */
+        body: NamingOptions & FeatureToggle;
+        /** Configuration for request headers Zod schemas. */
+        headers: NamingOptions & FeatureToggle;
+        /** Configuration for request path parameters Zod schemas. */
+        path: NamingOptions & FeatureToggle;
+        /** Configuration for request query parameters Zod schemas. */
+        query: NamingOptions & FeatureToggle;
+      };
     /** Configuration for response-specific Pydantic models. */
     responses: NamingOptions & FeatureToggle;
     /** Enable strict mode for Pydantic models? */

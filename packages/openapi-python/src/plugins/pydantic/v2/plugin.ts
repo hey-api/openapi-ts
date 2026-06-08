@@ -1,5 +1,7 @@
 import { pathToJsonPointer } from '@hey-api/shared';
 
+import { irOperationToAst } from '../shared/operation';
+import { irWebhookToAst } from '../shared/webhook';
 import type { PydanticPlugin } from '../types';
 import { createProcessor } from './processor';
 
@@ -8,6 +10,15 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
 
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {
     switch (event.type) {
+      case 'operation':
+        irOperationToAst({
+          operation: event.operation,
+          path: event._path,
+          plugin,
+          processor,
+          tags: event.tags,
+        });
+        break;
       case 'parameter':
         processor.process({
           meta: {
@@ -44,6 +55,15 @@ export const handlerV2: PydanticPlugin['Handler'] = ({ plugin }) => {
           path: event._path,
           plugin,
           schema: event.schema,
+          tags: event.tags,
+        });
+        break;
+      case 'webhook':
+        irWebhookToAst({
+          operation: event.operation,
+          path: event._path,
+          plugin,
+          processor,
           tags: event.tags,
         });
         break;

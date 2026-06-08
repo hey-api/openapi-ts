@@ -11,16 +11,20 @@ function constNode(ctx: BooleanResolverContext): PydanticType | undefined {
 
   if (typeof schema.const === 'boolean') {
     const literal = plugin.symbols.typing.Literal;
+    const type = $$.constrainedType($(literal).slice($.literal(schema.const)));
     return {
-      type: $$.constrainedType($(literal).slice($.literal(schema.const))),
+      node: { kind: 'rootModel', type },
+      type,
     };
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function baseNode(_ctx: BooleanResolverContext): PydanticType {
+  const type = $$.constrainedType('bool');
   return {
-    type: $$.constrainedType('bool'),
+    node: { kind: 'rootModel', type },
+    type,
   };
 }
 

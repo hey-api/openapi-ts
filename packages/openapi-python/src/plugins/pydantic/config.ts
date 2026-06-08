@@ -26,8 +26,40 @@ export const defaultConfig: PydanticPlugin['Config'] = {
         enabled: Boolean(value),
         ...(type === 'string' || type === 'function' ? { name: value } : {}),
       }),
+      body: {
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
+        enabled: true,
+        name: '{{name}}Body',
+      },
       enabled: true,
+      headers: {
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
+        enabled: true,
+        name: '{{name}}Headers',
+      },
       name: '{{name}}Request',
+      path: {
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
+        enabled: true,
+        name: '{{name}}Path',
+      },
+      query: {
+        $coerceAny: ({ type, value }) => ({
+          enabled: Boolean(value),
+          ...(type === 'string' || type === 'function' ? { name: value } : {}),
+        }),
+        enabled: true,
+        name: '{{name}}Query',
+      },
     },
     responses: {
       $coerceAny: ({ type, value }) => ({

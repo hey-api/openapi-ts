@@ -349,7 +349,16 @@ export function createPrinter(options?: PyPrinterOptions) {
 
       case PyNodeKind.Literal:
         if (typeof node.value === 'string') {
-          parts.push(createStringLiteral(node.value));
+          if (node.value.includes('\n')) {
+            const { quote } = selectQuote(node.value);
+            const tripleQuote = quote.repeat(3);
+            const escaped = node.value
+              .replaceAll('\\', '\\\\')
+              .replaceAll(tripleQuote, `\\${quote}${quote}${quote}`);
+            parts.push(`${tripleQuote}${escaped}${tripleQuote}`);
+          } else {
+            parts.push(createStringLiteral(node.value));
+          }
         } else if (typeof node.value === 'boolean') {
           parts.push(node.value ? 'True' : 'False');
         } else if (node.value === null) {

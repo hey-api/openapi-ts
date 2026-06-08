@@ -4,18 +4,15 @@ import path from 'node:path';
 import { createClient } from '@hey-api/openapi-python';
 
 import { getFilePaths } from '../../../utils';
-import { createPydanticConfig, getSnapshotsPath, getTempSnapshotsPath } from './utils';
+import { snapshotsDir, tmpDir } from './constants';
+import { createConfigFactory } from './utils';
 
 const version = '3.1.x';
 
-const outputDir = path.join(getTempSnapshotsPath(), version);
-const snapshotsDir = path.join(getSnapshotsPath(), version);
+const outputDir = path.join(tmpDir, version);
 
-describe(`Pydantic: OpenAPI ${version}`, () => {
-  const createConfig = createPydanticConfig({
-    openApiVersion: version,
-    outputDir,
-  });
+describe(`OpenAPI ${version}`, () => {
+  const createConfig = createConfigFactory({ openApiVersion: version, outputDir });
 
   const scenarios = [
     {
@@ -23,20 +20,28 @@ describe(`Pydantic: OpenAPI ${version}`, () => {
         input: 'opencode.yaml',
         output: 'opencode',
       }),
-      description: 'OpenCode spec',
+      description: 'OpenCode',
+    },
+    {
+      config: createConfig({
+        input: 'zoom-video-sdk.json',
+        output: 'zoom-video-sdk',
+      }),
+      description: 'Zoom Video SDK',
     },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
     await createClient(config);
 
-    const filePaths = getFilePaths(config.output);
+    const outputString = config.output as string;
+    const filePaths = getFilePaths(outputString);
 
     await Promise.all(
       filePaths.map(async (filePath) => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         await expect(fileContent).toMatchFileSnapshot(
-          path.join(snapshotsDir, filePath.slice(outputDir.length + 1)),
+          path.join(snapshotsDir, version, filePath.slice(outputDir.length + 1)),
         );
       }),
     );
