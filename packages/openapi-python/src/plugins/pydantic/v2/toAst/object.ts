@@ -12,7 +12,7 @@ export interface ObjectToFieldsResult extends PydanticType {
 function additionalPropertiesNode(ctx: ObjectResolverContext): PydanticType | null | undefined {
   const { path, plugin, schema } = ctx;
 
-  if (!schema.additionalProperties || !schema.additionalProperties.type) return;
+  if (!schema.additionalProperties) return;
   if (schema.additionalProperties.type === 'never') return null;
   if (schema.additionalProperties.type === 'unknown') {
     if (ctx.schema.properties) {
@@ -81,7 +81,11 @@ function baseNode(ctx: ObjectResolverContext): PydanticType {
 
   if (additional) {
     if (!ctx.schema.properties) {
-      return { type: $$.constrainedType($('dict').slice('str', additional.type!.type)) };
+      const type = $$.constrainedType($('dict').slice('str', additional.type!.type));
+      return {
+        node: { kind: 'rootModel', type },
+        type,
+      };
     }
     return {
       node: {

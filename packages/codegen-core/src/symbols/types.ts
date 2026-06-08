@@ -100,6 +100,13 @@ export type ISymbolIn = {
    * @default false
    */
   override?: boolean;
+  /**
+   * Naming priority. Higher value wins the canonical name when
+   * multiple symbols in the same file compete for the same identifier.
+   *
+   * @default 0
+   */
+  priority?: number;
 };
 
 export interface ISymbolRegistry {

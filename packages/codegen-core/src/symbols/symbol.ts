@@ -103,6 +103,13 @@ export class Symbol<Node extends INode = INode> {
    * @default false
    */
   private _override: boolean;
+  /**
+   * Naming priority. Higher value wins the canonical name when
+   * multiple symbols in the same file compete for the same identifier.
+   *
+   * @default 0
+   */
+  private _priority: number;
 
   /** Brand used for identifying symbols. */
   readonly '~brand' = symbolBrand;
@@ -121,6 +128,7 @@ export class Symbol<Node extends INode = INode> {
     this._meta = input.meta;
     this._name = input.name;
     this._override = input.override ?? false;
+    this._priority = input.priority ?? 0;
   }
 
   /**
@@ -251,6 +259,14 @@ export class Symbol<Node extends INode = INode> {
    */
   get override(): boolean {
     return this.canonical._override;
+  }
+
+  /**
+   * Naming priority. Higher value wins the canonical name when
+   * multiple symbols in the same file compete for the same identifier.
+   */
+  get priority(): number {
+    return this.canonical._priority;
   }
 
   /**
