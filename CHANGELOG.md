@@ -1,5 +1,66 @@
 # Changelog
 
+# 2026-06-08
+
+## @hey-api/openapi-ts 0.98.2
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- reassign the result of `HttpHeaders.delete()` back to `opts.headers` ([#3988](https://github.com/hey-api/openapi-ts/pull/3988))
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+
+#### @hey-api/client-axios
+
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+
+#### @hey-api/client-fetch
+
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+
+#### @hey-api/client-ky
+
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+
+#### @hey-api/client-next
+
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+
+#### @hey-api/client-nuxt
+
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+
+#### @hey-api/client-ofetch
+
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+
+#### @hey-api/sdk
+
+- don't expose SSE errors as iterator return types ([#3989](https://github.com/hey-api/openapi-ts/pull/3989))
+- support type-safe `meta` option via augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+
+---
+
+## @hey-api/codegen-core 0.9.0
+
+### Updates
+
+- symbol: add event listeners ([#3998](https://github.com/hey-api/openapi-ts/pull/3998))
+- types: rename `ProjectRenderMeta` to `ProjectMeta` and key it by language ([#3984](https://github.com/hey-api/openapi-ts/pull/3984))
+- utils: expose `Version` class ([#3991](https://github.com/hey-api/openapi-ts/pull/3991))
+
+---
+
+## @hey-api/shared 0.4.8
+
+### Updates
+
+- types: update project meta types ([#3984](https://github.com/hey-api/openapi-ts/pull/3984))
+- utils: expose `SymbolFactory` ([#3991](https://github.com/hey-api/openapi-ts/pull/3991))
+
+---
+
 # 2026-06-01
 
 ## @hey-api/openapi-ts 0.98.1
