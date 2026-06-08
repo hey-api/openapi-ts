@@ -13,7 +13,7 @@ export function createBaseModel(
   plugin: PydanticPlugin['Instance'],
   symbol: Symbol,
 ): ReturnType<typeof $.class> {
-  const configKwargs = resolveBaseModelConfig(plugin);
+  const configKwargs = resolveBaseModelConfig({ populateByName: false });
 
   return $.class(symbol)
     .export()
@@ -27,13 +27,14 @@ export function createBaseModel(
     );
 }
 
-export function resolveBaseModelConfig(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  plugin: PydanticPlugin['Instance'],
-): Array<ReturnType<typeof $.expr | typeof $.kwarg>> {
+export function resolveBaseModelConfig(options: {
+  populateByName: boolean;
+}): Array<ReturnType<typeof $.expr | typeof $.kwarg>> {
   const kwargs: Array<ReturnType<typeof $.expr | typeof $.kwarg>> = [];
 
-  kwargs.push($.kwarg('populate_by_name', true));
+  if (options.populateByName) {
+    kwargs.push($.kwarg('populate_by_name', true));
+  }
 
   return kwargs;
 }

@@ -3,7 +3,7 @@ import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import type { py } from '../../../../py-compiler';
 import { KwargPyDsl, PyDsl } from '../../../../py-dsl';
 import { $ } from '../../../../py-dsl';
-import { BASE_MODEL_META, resolveBaseModelConfig } from '../../shared/base-model';
+import { resolveBaseModelConfig } from '../../shared/base-model';
 import type { PydanticModelConfig } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 import { identifiers } from '../../v2/constants';
@@ -57,14 +57,16 @@ export class PydanticModelDsl extends Mixed {
       return cls;
     }
 
+    const hasAnyAlias = this._fields.some((f) => f.hasAlias);
     const modelKeys = new Set(this._configKwargs.map(([k]) => k));
-    const baseKwargs = resolveBaseModelConfig(plugin).filter(
+    const baseKwargs = resolveBaseModelConfig({ populateByName: hasAnyAlias }).filter(
       (kw) => kw instanceof KwargPyDsl && !modelKeys.has(kw.key),
     );
     const mergedKwargs = [...baseKwargs, ...this._configKwargs.map(([k, v]) => $.kwarg(k, v))];
 
     const cls = $.class(this.name)
-      .extends(plugin.querySymbol(BASE_MODEL_META)!, ...this._bases)
+      // plugin.querySymbol(BASE_MODEL_META)!
+      .extends(plugin.symbols.BaseModel, ...this._bases)
       .$if(this._configKwargs.length, (c) =>
         c.do(
           $.field(identifiers.model_config).assign(
