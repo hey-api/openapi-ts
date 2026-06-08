@@ -5,8 +5,10 @@ import { py } from '../../py-compiler';
 import type { MaybePyDsl } from '../base';
 import { PyDsl } from '../base';
 import { LayoutMixin } from '../mixins/layout';
+import { f } from '../utils/factories';
 
 export type TupleElement = NodeName | MaybePyDsl<py.Expression>;
+export type TupleCtor = (...elements: Array<TupleElement>) => TuplePyDsl;
 
 const Mixed = LayoutMixin(PyDsl<py.TupleExpression>);
 
@@ -42,3 +44,5 @@ export class TuplePyDsl extends Mixed {
     return py.factory.createTupleExpression(astElements);
   }
 }
+
+f.tuple.set((...args) => new TuplePyDsl(...args));

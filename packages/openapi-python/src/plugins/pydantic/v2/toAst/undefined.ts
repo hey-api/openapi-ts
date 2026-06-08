@@ -1,6 +1,7 @@
 import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { UndefinedResolverContext } from '../../resolvers';
 import type { PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
@@ -8,7 +9,7 @@ import type { PydanticPlugin } from '../../types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function baseNode(_ctx: UndefinedResolverContext): PydanticType {
   return {
-    type: 'None',
+    type: $$.constrainedType('None'),
   };
 }
 

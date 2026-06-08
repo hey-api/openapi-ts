@@ -31,6 +31,8 @@ test/generated
 # debug files
 openapi-ts-debug-*
 DEBUG_*
+specs/**/*.debug.json
+specs/**/*.debug.yaml
 # error files
 logs
 openapi-ts-error-*

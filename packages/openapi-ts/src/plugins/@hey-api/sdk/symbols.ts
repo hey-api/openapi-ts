@@ -8,6 +8,8 @@ import { getClientPlugin } from '../client-core/utils';
 export function sdkSymbols(plugin: PluginInstance) {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const client = getClientPlugin(getTypedConfig(plugin));
+  const factory = plugin.symbolFactory;
+
   return {
     Client: plugin.symbol('Client', {
       external: clientModule,
@@ -57,7 +59,7 @@ export function sdkSymbols(plugin: PluginInstance) {
       external: clientModule,
       kind: 'type',
     }),
-    angular: SYMBOLS.ANGULAR(plugin.symbolFactory),
+    angular: SYMBOLS.ANGULAR(factory),
     buildClientParams: plugin.symbol('buildClientParams', {
       external: clientModule,
       meta: {

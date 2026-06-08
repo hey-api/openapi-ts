@@ -4,7 +4,7 @@ import { PyNodeKind } from '../kinds';
 import type { PyStatement } from '../statement';
 import type { PyBlock } from '../statements/block';
 import { createBlock } from '../statements/block';
-import type { PyFunctionParameter } from './functionParameter';
+import type { PyFunctionParameter } from './function-parameter';
 
 export interface PyFunctionDeclaration extends PyNodeBase {
   body: PyBlock;

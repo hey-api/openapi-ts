@@ -1,6 +1,7 @@
 import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { NeverResolverContext } from '../../resolvers';
 import type { PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
@@ -8,7 +9,7 @@ import type { PydanticPlugin } from '../../types';
 function baseNode(ctx: NeverResolverContext): PydanticType {
   const { plugin } = ctx;
   return {
-    type: plugin.symbols.typing.NoReturn,
+    type: $$.constrainedType(plugin.symbols.typing.NoReturn),
   };
 }
 

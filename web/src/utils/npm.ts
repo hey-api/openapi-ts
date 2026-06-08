@@ -37,8 +37,13 @@ export function formatDownloads(downloads: NpmDownloads): string {
 
 function formatCount(n: number): string {
   if (n >= 10_000_000) return `${Math.floor(n / 1_000_000)}M`;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000_000) return formatCompact(n / 1_000_000, 'M');
   if (n >= 10_000) return `${Math.floor(n / 1_000)}K`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  if (n >= 1_000) return formatCompact(n / 1_000, 'K');
   return `${n}`;
+}
+
+function formatCompact(value: number, unit: 'K' | 'M'): string {
+  const rounded = value.toFixed(1);
+  return `${rounded.endsWith('.0') ? rounded.slice(0, -2) : rounded}${unit}`;
 }

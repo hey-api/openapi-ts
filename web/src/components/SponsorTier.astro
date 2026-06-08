@@ -10,18 +10,18 @@ interface Props {
 
 const TIER_HEIGHT: Record<SponsorTier, number> = {
   platinum: 52,
-  gold:     44,
-  silver:   32,
-  bronze:   22,
-  friends:  20,
+  gold: 44,
+  silver: 32,
+  bronze: 22,
+  friends: 20,
 };
 
 const TIER_VARIANT: Record<SponsorTier, 'featured' | 'standard' | 'compact'> = {
   platinum: 'featured',
-  gold:     'featured',
-  silver:   'standard',
-  bronze:   'compact',
-  friends:  'compact',
+  gold: 'featured',
+  silver: 'standard',
+  bronze: 'compact',
+  friends: 'compact',
 };
 
 const { tier, label, sponsors } = Astro.props;
