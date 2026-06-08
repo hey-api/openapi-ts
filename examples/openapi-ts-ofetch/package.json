@@ -24,7 +24,7 @@
     "@vitejs/plugin-vue": "6.0.7",
     "@vitejs/plugin-vue-jsx": "5.1.5",
     "@vue/eslint-config-typescript": "14.6.0",
-    "@vue/test-utils": "2.4.10",
+    "@vue/test-utils": "2.4.11",
     "@vue/tsconfig": "0.8.1",
     "autoprefixer": "10.4.20",
     "eslint": "9.39.2",
