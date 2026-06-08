@@ -41,6 +41,12 @@ export class PydanticFieldDsl extends Mixed {
     this.name.set(plugin.symbol(this._pythonName));
   }
 
+  get hasAlias(): boolean {
+    const effectiveAlias =
+      this._alias ?? (this._pythonName !== this._wireName ? this._wireName : undefined);
+    return effectiveAlias !== undefined;
+  }
+
   alias(name: string): this {
     this._alias = name;
     return this;
