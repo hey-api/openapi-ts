@@ -1,9 +1,38 @@
+import type { AnalysisContext } from '@hey-api/codegen-core';
+import ts from 'typescript';
+
 import { getTypedConfig } from '../../../../config/utils';
 import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
-import { $ } from '../../../../ts-dsl';
+import { $, TsDsl } from '../../../../ts-dsl';
 import type { HeyApiSdkPlugin } from '../types';
 import { isInstance } from '../v1/node';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
+
+function createMetaType(
+  clientMetaSymbol: ReturnType<HeyApiSdkPlugin['Instance']['symbol']>,
+): TsDsl<ts.ConditionalTypeNode> {
+  return new (class extends TsDsl<ts.ConditionalTypeNode> {
+    readonly '~dsl' = 'MetaType' as const;
+    override analyze(ctx: AnalysisContext): void {
+      super.analyze(ctx);
+      ctx.analyze(clientMetaSymbol);
+    }
+    override toAst(): ts.ConditionalTypeNode {
+      return ts.factory.createConditionalTypeNode(
+        ts.factory.createTypeOperatorNode(
+          ts.SyntaxKind.KeyOfKeyword,
+          ts.factory.createTypeReferenceNode(clientMetaSymbol.finalName),
+        ),
+        ts.factory.createKeywordTypeNode(ts.SyntaxKind.NeverKeyword),
+        ts.factory.createTypeReferenceNode('Record', [
+          ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+          ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
+        ]),
+        ts.factory.createTypeReferenceNode(clientMetaSymbol.finalName),
+      );
+    }
+  })();
+}
 
 export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instance'] }) {
   const client = getClientPlugin(getTypedConfig(plugin));
@@ -74,7 +103,7 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
                 'option typesafe.',
               ])
               .optional()
-              .type(plugin.symbols.Meta),
+              .type(createMetaType(plugin.symbols.ClientMeta)),
           ),
       ),
     );

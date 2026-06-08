@@ -2,7 +2,7 @@
 
 import * as z from 'zod/mini';
 
-import type { Client, Meta, Options as Options2, RequestResult, TDataShape } from './client';
+import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
 import type { PostFooData, PostFooResponses } from './types.gen';
 import { zPostFooResponse } from './zod.gen';
@@ -21,7 +21,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      * Augment the `ClientMeta` interface (via `declare module`) to make this
      * option typesafe.
      */
-    meta?: Meta;
+    meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
 
 export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>): RequestResult<PostFooResponses, unknown, ThrowOnError> => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
