@@ -33,6 +33,7 @@ export const inputs = {
   scalar: 'scalar:@scalar/access-service',
   transformers: path.resolve(specsPath, '3.1.x', 'transformers.json'),
   validators: path.resolve(specsPath, '3.1.x', 'validators.yaml'),
+  'zoom-video-sdk': path.resolve(specsPath, '3.1.x', 'zoom-video-sdk.json'),
 } as const;
 
 export type InputKey = keyof typeof inputs;

@@ -11,8 +11,10 @@ function constNode(ctx: StringResolverContext): PydanticType | undefined {
 
   if (typeof schema.const === 'string') {
     const literal = plugin.symbols.typing.Literal;
+    const type = $$.constrainedType($(literal).slice($.literal(schema.const)));
     return {
-      type: $$.constrainedType($(literal).slice($.literal(schema.const))),
+      node: { kind: 'rootModel', type },
+      type,
     };
   }
 }
@@ -27,8 +29,10 @@ function baseNode(ctx: StringResolverContext): PydanticType {
   if (schema.pattern !== undefined) c.pattern(schema.pattern);
   if (schema.description !== undefined) c.description(schema.description);
 
+  const type = $$.constrainedType('str', c.isEmpty ? undefined : c);
   return {
-    type: $$.constrainedType('str', c.isEmpty ? undefined : c),
+    node: { kind: 'rootModel', type },
+    type,
   };
 }
 

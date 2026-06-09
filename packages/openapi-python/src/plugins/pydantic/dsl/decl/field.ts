@@ -25,6 +25,7 @@ export class PydanticFieldDsl extends Mixed {
   private _alias?: string;
   private _default: unknown;
   private _defaultFactory?: string;
+  private _deprecated?: boolean;
   private _discriminator?: string;
   private _dsl?: ReturnType<typeof $.field>;
   private _constrainedType?: PydanticConstrainedTypeDsl;
@@ -59,6 +60,11 @@ export class PydanticFieldDsl extends Mixed {
 
   defaultFactory(factory: string): this {
     this._defaultFactory = factory;
+    return this;
+  }
+
+  deprecated(value: boolean): this {
+    this._deprecated = value;
     return this;
   }
 
@@ -186,7 +192,8 @@ export class PydanticFieldDsl extends Mixed {
       effectiveAlias !== undefined ||
       this._discriminator !== undefined ||
       metaCv.title !== undefined ||
-      metaCv.description !== undefined;
+      metaCv.description !== undefined ||
+      this._deprecated !== undefined;
 
     const args: Array<ReturnType<typeof $.expr | typeof $.kwarg>> = [];
 
@@ -205,6 +212,7 @@ export class PydanticFieldDsl extends Mixed {
       if (effectiveAlias !== undefined) args.push($.kwarg('alias', effectiveAlias));
       if (metaCv.title !== undefined) args.push($.kwarg('title', metaCv.title));
       if (metaCv.description !== undefined) args.push($.kwarg('description', metaCv.description));
+      if (this._deprecated !== undefined) args.push($.kwarg('deprecated', this._deprecated));
       if (this._discriminator !== undefined) {
         args.push($.kwarg('discriminator', this._discriminator));
       }

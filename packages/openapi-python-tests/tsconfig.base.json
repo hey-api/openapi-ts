@@ -8,7 +8,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["vitest/globals"],
+    "types": ["node", "vitest/globals"],
     "useUnknownInCatchVariables": false
   }
 }
