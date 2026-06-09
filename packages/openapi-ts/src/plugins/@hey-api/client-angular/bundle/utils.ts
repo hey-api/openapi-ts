@@ -185,7 +185,7 @@ export async function setAuthParams(
     headers: HttpHeaders;
   },
   security: Pick<Required<RequestOptions>, 'security'>['security'],
-) => {
+) {
   for (const auth of security) {
     const token = await getAuthToken(auth, options.auth);
 
