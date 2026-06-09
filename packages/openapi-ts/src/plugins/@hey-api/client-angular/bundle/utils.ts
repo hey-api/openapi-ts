@@ -180,7 +180,7 @@ export const getParseAs = (
   return;
 };
 
-export const setAuthParams = async (
+export async function setAuthParams(
   options: Pick<RequestOptions, 'auth' | 'query'> & {
     headers: HttpHeaders;
   },
@@ -211,7 +211,7 @@ export const setAuthParams = async (
         break;
     }
   }
-};
+}
 
 export const buildUrl: Client['buildUrl'] = (options) => {
   const url = getUrl({
