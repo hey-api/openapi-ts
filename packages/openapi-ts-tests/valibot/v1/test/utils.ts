@@ -36,7 +36,7 @@ export function createConfigFactory({
             },
       logs: { level: 'silent', path: './logs' },
       output: path.join(outputDir, outputPath),
-    } as UserConfig;
+    } as const satisfies UserConfig;
   };
 }
 

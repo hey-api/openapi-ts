@@ -1,22 +1,25 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { type UserConfig } from '@hey-api/openapi-python';
+import type { UserConfig } from '@hey-api/openapi-python';
 
 import { getSpecsPath } from '../../../utils';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export const createPydanticConfig =
-  ({ openApiVersion, outputDir }: { openApiVersion: string; outputDir: string }) =>
-  (userConfig: UserConfig) => {
+export function createConfigFactory({
+  openApiVersion,
+  outputDir,
+}: {
+  openApiVersion: string;
+  outputDir: string;
+}) {
+  return (userConfig: UserConfig) => {
     const input = userConfig.input instanceof Array ? userConfig.input[0]! : userConfig.input;
     const inputPath = path.join(
       getSpecsPath(),
       openApiVersion,
       typeof input === 'string' ? input : (input.path as string),
     );
+    const output = userConfig.output instanceof Array ? userConfig.output[0]! : userConfig.output;
+    const outputPath = typeof output === 'string' ? output : (output?.path ?? '');
     return {
       plugins: ['pydantic'],
       ...userConfig,
@@ -27,14 +30,8 @@ export const createPydanticConfig =
               ...userConfig.input,
               path: inputPath,
             },
-      logs: {
-        level: 'silent',
-        path: './logs',
-      },
-      output: path.join(outputDir, typeof userConfig.output === 'string' ? userConfig.output : ''),
+      logs: { level: 'silent', path: './logs' },
+      output: path.join(outputDir, outputPath),
     } as const satisfies UserConfig;
   };
-
-export const getSnapshotsPath = (): string => path.join(__dirname, '..', '__snapshots__');
-
-export const getTempSnapshotsPath = (): string => path.join(__dirname, '..', '.gen', 'snapshots');
+}

@@ -31,7 +31,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          globalSetup: ['./src/ts-compiler/__tests__/globalTeardown.ts'],
+          globalSetup: ['./src/ts-compiler/__tests__/global-teardown.ts'],
           name: '@hey-api/openapi-ts',
           root: 'packages/openapi-ts',
           setupFiles: ['./vitest.setup.ts'],
@@ -70,7 +70,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          globalSetup: ['./test/globalTeardown.ts'],
+          globalSetup: ['./test/global-teardown.ts'],
           name: '@test/openapi-ts-orpc-v1',
           root: 'packages/openapi-ts-tests/orpc/v1',
           setupFiles: ['./vitest.setup.ts'],
@@ -87,7 +87,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          globalSetup: ['./test/globalTeardown.ts'],
+          globalSetup: ['./test/global-teardown.ts'],
           name: '@test/openapi-ts-tanstack-query-v5',
           root: 'packages/openapi-ts-tests/tanstack-query/v5',
           setupFiles: ['./vitest.setup.ts'],
@@ -96,7 +96,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          globalSetup: ['./test/globalTeardown.ts'],
+          globalSetup: ['./test/global-teardown.ts'],
           name: '@test/openapi-ts-valibot-v1',
           root: 'packages/openapi-ts-tests/valibot/v1',
           setupFiles: ['./vitest.setup.ts'],
@@ -105,7 +105,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          globalSetup: ['./test/globalTeardown.ts'],
+          globalSetup: ['./test/global-teardown.ts'],
           name: '@test/openapi-ts-zod-v3',
           root: 'packages/openapi-ts-tests/zod/v3',
           setupFiles: ['./vitest.setup.ts'],
@@ -114,7 +114,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          globalSetup: ['./test/globalTeardown.ts'],
+          globalSetup: ['./test/global-teardown.ts'],
           name: '@test/openapi-ts-zod-v4',
           root: 'packages/openapi-ts-tests/zod/v4',
           setupFiles: ['./vitest.setup.ts'],
@@ -131,6 +131,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          globalSetup: ['./test/global-teardown.ts'],
           name: '@test/openapi-python-pydantic-v2',
           root: 'packages/openapi-python-tests/pydantic/v2',
           setupFiles: ['./vitest.setup.ts'],

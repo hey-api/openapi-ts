@@ -7407,3 +7407,1961 @@ class BadRequestErrorData(BaseModel):
 class BadRequestError(BaseModel):
     name: BadRequestErrorName
     data: BadRequestErrorData
+
+
+class AuthRemovePath(BaseModel):
+    provider_id: str = Field(..., alias="providerID")
+
+
+class AuthRemoveResponse(RootModel[bool]):
+    root: bool
+
+
+class AuthSetBody(RootModel[Auth]):
+    root: Auth
+
+
+class AuthSetPath(BaseModel):
+    provider_id: str = Field(..., alias="providerID")
+
+
+class AuthSetResponse(RootModel[bool]):
+    root: bool
+
+
+class AppLogLevel(str, Enum):
+    DEBUG = "debug"
+    INFO = "info"
+    ERROR = "error"
+    WARN = "warn"
+
+
+class AppLogBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    service: str = Field(..., description="Service name for the log entry")
+    level: AppLogLevel = Field(..., description="Log level")
+    message: str = Field(..., description="Log message")
+    extra: Optional[dict[str, Any]] = None
+
+
+class AppLogQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class AppLogResponse(RootModel[bool]):
+    root: bool
+
+
+class GlobalHealthHealthy(Enum):
+    TRUE = True
+
+
+class GlobalHealthResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    healthy: GlobalHealthHealthy
+    version: str
+
+
+class GlobalEventResponse(RootModel[GlobalEvent]):
+    root: GlobalEvent
+
+
+class GlobalConfigGetResponse(RootModel[Config]):
+    root: Config
+
+
+class GlobalConfigUpdateBody(RootModel[Config]):
+    root: Config
+
+
+class GlobalConfigUpdateResponse(RootModel[Config]):
+    root: Config
+
+
+class GlobalDisposeResponse(RootModel[bool]):
+    root: bool
+
+
+class GlobalUpgradeBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    target: Optional[str] = None
+
+
+class GlobalUpgradeSuccess(Enum):
+    TRUE = True
+
+
+class GlobalUpgrade(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    success: GlobalUpgradeSuccess
+    version: str
+
+
+class GlobalUpgradeSuccess_(Enum):
+    FALSE = False
+
+
+class GlobalUpgrade_(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    success: GlobalUpgradeSuccess_
+    error: str
+
+
+class GlobalUpgradeResponse(RootModel[Union[GlobalUpgrade, GlobalUpgrade_]]):
+    root: Union[GlobalUpgrade, GlobalUpgrade_] = Field(..., description="Upgrade result")
+
+
+class EventSubscribeQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class EventSubscribeResponse(RootModel[Event]):
+    root: Event
+
+
+class ConfigGetQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ConfigGetResponse(RootModel[Config]):
+    root: Config
+
+
+class ConfigUpdateBody(RootModel[Config]):
+    root: Config
+
+
+class ConfigUpdateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ConfigUpdateResponse(RootModel[Config]):
+    root: Config
+
+
+class ConfigProvidersQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ConfigProvidersResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    providers: list[Provider]
+    default: dict[str, str]
+
+
+class ExperimentalConsoleGetQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalConsoleGetResponse(RootModel[ConsoleState]):
+    root: ConsoleState
+
+
+class ExperimentalConsoleListOrgsQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalConsoleListOrgsOrgs(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    account_id: str = Field(..., alias="accountID")
+    account_email: str = Field(..., alias="accountEmail")
+    account_url: str = Field(..., alias="accountUrl")
+    org_id: str = Field(..., alias="orgID")
+    org_name: str = Field(..., alias="orgName")
+    active: bool
+
+
+class ExperimentalConsoleListOrgsResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    orgs: list[ExperimentalConsoleListOrgsOrgs]
+
+
+class ExperimentalConsoleSwitchOrgBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    account_id: str = Field(..., alias="accountID")
+    org_id: str = Field(..., alias="orgID")
+
+
+class ExperimentalConsoleSwitchOrgQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalConsoleSwitchOrgResponse(RootModel[bool]):
+    root: bool
+
+
+class ToolListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    provider: str
+    model: str
+
+
+class ToolListResponse(RootModel[ToolList]):
+    root: ToolList
+
+
+class ToolIdsQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ToolIdsResponse(RootModel[ToolIds]):
+    root: ToolIds
+
+
+class WorktreeRemoveBody(RootModel[WorktreeRemoveInput]):
+    root: WorktreeRemoveInput
+
+
+class WorktreeRemoveQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class WorktreeRemoveResponse(RootModel[bool]):
+    root: bool
+
+
+class WorktreeListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class WorktreeListResponse(RootModel[list[str]]):
+    root: list[str] = Field(..., description="List of worktree directories")
+
+
+class WorktreeCreateBody(RootModel[WorktreeCreateInput]):
+    root: WorktreeCreateInput
+
+
+class WorktreeCreateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class WorktreeCreateResponse(RootModel[Worktree]):
+    root: Worktree
+
+
+class WorktreeResetBody(RootModel[WorktreeResetInput]):
+    root: WorktreeResetInput
+
+
+class WorktreeResetQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class WorktreeResetResponse(RootModel[bool]):
+    root: bool
+
+
+class ExperimentalSessionListRoots(str, Enum):
+    TRUE = "true"
+    FALSE = "false"
+
+
+class ExperimentalSessionListArchived(str, Enum):
+    TRUE = "true"
+    FALSE = "false"
+
+
+class ExperimentalSessionListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    roots: Optional[Union[bool, None]] = None
+    start: Optional[float] = None
+    cursor: Optional[float] = None
+    search: Optional[str] = None
+    limit: Optional[float] = None
+    archived: Optional[Union[bool, None]] = None
+
+
+class ExperimentalSessionListResponse(RootModel[list[GlobalSession]]):
+    root: list[GlobalSession] = Field(..., description="List of sessions")
+
+
+class ExperimentalResourceListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalResourceListResponse(RootModel[dict[str, McpResource]]):
+    root: dict[str, McpResource]
+
+
+class FindTextQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    pattern: str
+
+
+class FindTextPath(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    text: str
+
+
+class FindTextLines(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    text: str
+
+
+class FindTextSubmatchesMatch(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    text: str
+
+
+class FindTextSubmatches(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    match: FindTextSubmatchesMatch
+    start: Annotated[int, Field(ge=0)]
+    end: Annotated[int, Field(ge=0)]
+
+
+class FindText(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    path: FindTextPath
+    lines: FindTextLines
+    line_number: Annotated[int, Field(ge=0)]
+    absolute_offset: Annotated[int, Field(ge=0)]
+    submatches: list[FindTextSubmatches]
+
+
+class FindTextResponse(RootModel[list[FindText]]):
+    root: list[FindText] = Field(..., description="Matches")
+
+
+class FindFilesDirs(str, Enum):
+    TRUE = "true"
+    FALSE = "false"
+
+
+class FindFilesType(str, Enum):
+    FILE = "file"
+    DIRECTORY = "directory"
+
+
+class FindFilesQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    query: str
+    dirs: Optional[FindFilesDirs] = None
+    type: Optional[FindFilesType] = None
+    limit: Optional[Annotated[int, Field(ge=1, le=200)]] = None
+
+
+class FindFilesResponse(RootModel[list[str]]):
+    root: list[str] = Field(..., description="File paths")
+
+
+class FindSymbolsQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    query: str
+
+
+class FindSymbolsResponse(RootModel[list[Symbol]]):
+    root: list[Symbol] = Field(..., description="Symbols")
+
+
+class FileListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    path: str
+
+
+class FileListResponse(RootModel[list[FileNode]]):
+    root: list[FileNode] = Field(..., description="Files and directories")
+
+
+class FileReadQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    path: str
+
+
+class FileReadResponse(RootModel[FileContent]):
+    root: FileContent
+
+
+class FileStatusQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class FileStatusResponse(RootModel[list[File]]):
+    root: list[File] = Field(..., description="File status")
+
+
+class InstanceDisposeQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class InstanceDisposeResponse(RootModel[bool]):
+    root: bool
+
+
+class PathGetQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PathGetResponse(RootModel[Path]):
+    root: Path
+
+
+class VcsGetQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class VcsGetResponse(RootModel[VcsInfo]):
+    root: VcsInfo
+
+
+class VcsStatusQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class VcsStatusResponse(RootModel[list[VcsFileStatus]]):
+    root: list[VcsFileStatus] = Field(..., description="VCS status")
+
+
+class VcsDiffMode(str, Enum):
+    GIT = "git"
+    BRANCH = "branch"
+
+
+class VcsDiffQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    mode: VcsDiffMode
+    context: Optional[Annotated[int, Field(ge=0)]] = None
+
+
+class VcsDiffResponse(RootModel[list[VcsFileDiff]]):
+    root: list[VcsFileDiff] = Field(..., description="VCS diff")
+
+
+class VcsDiffRawQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class VcsDiffRawResponse(RootModel[str]):
+    root: str = Field(..., description="Raw VCS diff")
+
+
+class VcsApplyBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    patch: str
+
+
+class VcsApplyQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class VcsApplyResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    applied: bool
+
+
+class CommandListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class CommandListResponse(RootModel[list[Command]]):
+    root: list[Command] = Field(..., description="List of commands")
+
+
+class AppAgentsQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class AppAgentsResponse(RootModel[list[Agent]]):
+    root: list[Agent] = Field(..., description="List of agents")
+
+
+class AppSkillsQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class AppSkills(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    name: str
+    description: Optional[str] = None
+    location: str
+    content: str
+
+
+class AppSkillsResponse(RootModel[list[AppSkills]]):
+    root: list[AppSkills] = Field(..., description="List of skills")
+
+
+class LspStatusQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class LspStatusResponse(RootModel[list[LspStatus]]):
+    root: list[LspStatus] = Field(..., description="LSP server status")
+
+
+class FormatterStatusQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class FormatterStatusResponse(RootModel[list[FormatterStatus]]):
+    root: list[FormatterStatus] = Field(..., description="Formatter status")
+
+
+class McpStatusQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class McpStatusResponse(RootModel[dict[str, McpStatus]]):
+    root: dict[str, McpStatus]
+
+
+class McpAddBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    name: str
+    config: Union[McpLocalConfig, McpRemoteConfig]
+
+
+class McpAddQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class McpAddResponse(RootModel[dict[str, McpStatus]]):
+    root: dict[str, McpStatus]
+
+
+class McpAuthRemovePath(BaseModel):
+    name: str
+
+
+class McpAuthRemoveQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class McpAuthRemoveSuccess(Enum):
+    TRUE = True
+
+
+class McpAuthRemoveResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    success: McpAuthRemoveSuccess
+
+
+class McpAuthStartPath(BaseModel):
+    name: str
+
+
+class McpAuthStartQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class McpAuthStartResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    authorization_url: str = Field(..., alias="authorizationUrl")
+    oauth_state: str = Field(..., alias="oauthState")
+
+
+class McpAuthCallbackBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    code: str
+
+
+class McpAuthCallbackPath(BaseModel):
+    name: str
+
+
+class McpAuthCallbackQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class McpAuthCallbackResponse(RootModel[McpStatus]):
+    root: McpStatus
+
+
+class McpAuthAuthenticatePath(BaseModel):
+    name: str
+
+
+class McpAuthAuthenticateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class McpAuthAuthenticateResponse(RootModel[McpStatus]):
+    root: McpStatus
+
+
+class McpConnectPath(BaseModel):
+    name: str
+
+
+class McpConnectQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class McpConnectResponse(RootModel[bool]):
+    root: bool
+
+
+class McpDisconnectPath(BaseModel):
+    name: str
+
+
+class McpDisconnectQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class McpDisconnectResponse(RootModel[bool]):
+    root: bool
+
+
+class ProjectListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ProjectListResponse(RootModel[list[Project]]):
+    root: list[Project] = Field(..., description="List of projects")
+
+
+class ProjectCurrentQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ProjectCurrentResponse(RootModel[Project]):
+    root: Project
+
+
+class ProjectInitGitQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ProjectInitGitResponse(RootModel[Project]):
+    root: Project
+
+
+class ProjectUpdateIcon(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    url: Optional[str] = None
+    override: Optional[str] = None
+    color: Optional[str] = None
+
+
+class ProjectUpdateCommands(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    start: Optional[str] = Field(default=None, description="Startup script to run when creating a new workspace (worktree)")
+
+
+class ProjectUpdateBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    name: Optional[str] = None
+    icon: Optional[ProjectUpdateIcon] = None
+    commands: Optional[ProjectUpdateCommands] = None
+
+
+class ProjectUpdatePath(BaseModel):
+    project_id: str = Field(..., alias="projectID")
+
+
+class ProjectUpdateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ProjectUpdateResponse(RootModel[Project]):
+    root: Project
+
+
+class PtyShellsQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PtyShells(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    path: str
+    name: str
+    acceptable: bool
+
+
+class PtyShellsResponse(RootModel[list[PtyShells]]):
+    root: list[PtyShells] = Field(..., description="List of shells")
+
+
+class PtyListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PtyListResponse(RootModel[list[Pty]]):
+    root: list[Pty] = Field(..., description="List of sessions")
+
+
+class PtyCreateBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    command: Optional[str] = None
+    args: Optional[list[str]] = None
+    cwd: Optional[str] = None
+    title: Optional[str] = None
+    env: Optional[dict[str, str]] = None
+
+
+class PtyCreateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PtyCreateResponse(RootModel[Pty]):
+    root: Pty
+
+
+class PtyRemovePath(BaseModel):
+    pty_id: Annotated[str, Field(pattern=r"^pty")] = Field(..., alias="ptyID")
+
+
+class PtyRemoveQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PtyRemoveResponse(RootModel[bool]):
+    root: bool
+
+
+class PtyGetPath(BaseModel):
+    pty_id: Annotated[str, Field(pattern=r"^pty")] = Field(..., alias="ptyID")
+
+
+class PtyGetQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PtyGetResponse(RootModel[Pty]):
+    root: Pty
+
+
+class PtyUpdateSize(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    rows: Annotated[int, Field(gt=0)]
+    cols: Annotated[int, Field(gt=0)]
+
+
+class PtyUpdateBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    title: Optional[str] = None
+    size: Optional[PtyUpdateSize] = None
+
+
+class PtyUpdatePath(BaseModel):
+    pty_id: Annotated[str, Field(pattern=r"^pty")] = Field(..., alias="ptyID")
+
+
+class PtyUpdateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PtyUpdateResponse(RootModel[Pty]):
+    root: Pty
+
+
+class PtyConnectTokenPath(BaseModel):
+    pty_id: Annotated[str, Field(pattern=r"^pty")] = Field(..., alias="ptyID")
+
+
+class PtyConnectTokenQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PtyConnectTokenResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    ticket: str
+    expires_in: Annotated[int, Field(gt=0)]
+
+
+class QuestionListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class QuestionListResponse(RootModel[list[QuestionRequest]]):
+    root: list[QuestionRequest] = Field(..., description="List of pending questions")
+
+
+class QuestionReplyBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    answers: list[QuestionAnswer] = Field(..., description="User answers in order of questions (each answer is an array of selected labels)")
+
+
+class QuestionReplyPath(BaseModel):
+    request_id: Annotated[str, Field(pattern=r"^que")] = Field(..., alias="requestID")
+
+
+class QuestionReplyQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class QuestionReplyResponse(RootModel[bool]):
+    root: bool
+
+
+class QuestionRejectPath(BaseModel):
+    request_id: Annotated[str, Field(pattern=r"^que")] = Field(..., alias="requestID")
+
+
+class QuestionRejectQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class QuestionRejectResponse(RootModel[bool]):
+    root: bool
+
+
+class PermissionListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PermissionListResponse(RootModel[list[PermissionRequest]]):
+    root: list[PermissionRequest] = Field(..., description="List of pending permissions")
+
+
+class PermissionReplyReply(str, Enum):
+    ONCE = "once"
+    ALWAYS = "always"
+    REJECT = "reject"
+
+
+class PermissionReplyBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    reply: PermissionReplyReply
+    message: Optional[str] = None
+
+
+class PermissionReplyPath(BaseModel):
+    request_id: Annotated[str, Field(pattern=r"^per")] = Field(..., alias="requestID")
+
+
+class PermissionReplyQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PermissionReplyResponse(RootModel[bool]):
+    root: bool
+
+
+class ProviderListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ProviderListResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    all: list[Provider]
+    default: dict[str, str]
+    connected: list[str]
+
+
+class ProviderAuthQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ProviderAuthResponse(RootModel[dict[str, list[ProviderAuthMethod]]]):
+    root: dict[str, list[ProviderAuthMethod]]
+
+
+class ProviderOauthAuthorizeBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    method: float = Field(..., description="Auth method index")
+    inputs: Optional[dict[str, str]] = None
+
+
+class ProviderOauthAuthorizePath(BaseModel):
+    provider_id: str = Field(..., alias="providerID")
+
+
+class ProviderOauthAuthorizeQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ProviderOauthAuthorizeResponse(RootModel[ProviderAuthAuthorization]):
+    root: ProviderAuthAuthorization
+
+
+class ProviderOauthCallbackBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    method: float = Field(..., description="Auth method index")
+    code: Optional[str] = None
+
+
+class ProviderOauthCallbackPath(BaseModel):
+    provider_id: str = Field(..., alias="providerID")
+
+
+class ProviderOauthCallbackQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ProviderOauthCallbackResponse(RootModel[bool]):
+    root: bool
+
+
+class SessionListScope(str, Enum):
+    PROJECT = "project"
+
+
+class SessionListRoots(str, Enum):
+    TRUE = "true"
+    FALSE = "false"
+
+
+class SessionListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    scope: Optional[SessionListScope] = None
+    path: Optional[str] = None
+    roots: Optional[Union[bool, None]] = None
+    start: Optional[float] = None
+    search: Optional[str] = None
+    limit: Optional[float] = None
+
+
+class SessionListResponse(RootModel[list[Session]]):
+    root: list[Session] = Field(..., description="List of sessions")
+
+
+class SessionCreateModel(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    id: str
+    provider_id: str = Field(..., alias="providerID")
+    variant: Optional[str] = None
+
+
+class SessionCreateBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    parent_id: Optional[Annotated[str, Field(pattern=r"^ses")]] = Field(default=None, alias="parentID")
+    title: Optional[str] = None
+    agent: Optional[str] = None
+    model: Optional[SessionCreateModel] = None
+    metadata: Optional[dict[str, Any]] = None
+    permission: Optional[PermissionRuleset] = None
+    workspace_id: Optional[Annotated[str, Field(pattern=r"^wrk")]] = Field(default=None, alias="workspaceID")
+
+
+class SessionCreateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionCreateResponse(RootModel[Session]):
+    root: Session
+
+
+class SessionStatusQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionStatusResponse(RootModel[dict[str, SessionStatus]]):
+    root: dict[str, SessionStatus]
+
+
+class SessionDeletePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionDeleteQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionDeleteResponse(RootModel[bool]):
+    root: bool
+
+
+class SessionGetPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionGetQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionGetResponse(RootModel[Session]):
+    root: Session
+
+
+class SessionUpdateTime(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    archived: Optional[float] = None
+
+
+class SessionUpdateBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    title: Optional[str] = None
+    metadata: Optional[dict[str, Any]] = None
+    permission: Optional[PermissionRuleset] = None
+    time: Optional[SessionUpdateTime] = None
+
+
+class SessionUpdatePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionUpdateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionUpdateResponse(RootModel[Session]):
+    root: Session
+
+
+class SessionChildrenPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionChildrenQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionChildrenResponse(RootModel[list[Session]]):
+    root: list[Session] = Field(..., description="List of children")
+
+
+class SessionTodoPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionTodoQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionTodoResponse(RootModel[list[Todo]]):
+    root: list[Todo] = Field(..., description="Todo list")
+
+
+class SessionDiffPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionDiffQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    message_id: Optional[Annotated[str, Field(pattern=r"^msg")]] = Field(default=None, alias="messageID")
+
+
+class SessionDiffResponse(RootModel[list[SnapshotFileDiff]]):
+    root: list[SnapshotFileDiff] = Field(..., description="Successfully retrieved diff")
+
+
+class SessionMessagesPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionMessagesQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    limit: Optional[Annotated[int, Field(ge=0, le=9007199254740991)]] = None
+    before: Optional[str] = None
+
+
+class SessionMessages(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    info: Message
+    parts: list[Part]
+
+
+class SessionMessagesResponse(RootModel[list[SessionMessages]]):
+    root: list[SessionMessages] = Field(..., description="List of messages")
+
+
+class SessionPromptModel(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    provider_id: str = Field(..., alias="providerID")
+    model_id: str = Field(..., alias="modelID")
+
+
+class SessionPromptBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    message_id: Optional[Annotated[str, Field(pattern=r"^msg")]] = Field(default=None, alias="messageID")
+    model: Optional[SessionPromptModel] = None
+    agent: Optional[str] = None
+    no_reply: Optional[bool] = Field(default=None, alias="noReply")
+    tools: Optional[dict[str, bool]] = None
+    format: Optional[OutputFormat] = None
+    system: Optional[str] = None
+    variant: Optional[str] = None
+    parts: list[Union[TextPartInput, FilePartInput, AgentPartInput, SubtaskPartInput]]
+
+
+class SessionPromptPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionPromptQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionPromptResponse(BaseModel):
+    info: AssistantMessage
+    parts: list[Part]
+
+
+class SessionDeleteMessagePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+    message_id: Annotated[str, Field(pattern=r"^msg")] = Field(..., alias="messageID")
+
+
+class SessionDeleteMessageQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionDeleteMessageResponse(RootModel[bool]):
+    root: bool
+
+
+class SessionMessagePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+    message_id: Annotated[str, Field(pattern=r"^msg")] = Field(..., alias="messageID")
+
+
+class SessionMessageQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionMessageResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    info: Message
+    parts: list[Part]
+
+
+class SessionForkBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    message_id: Optional[Annotated[str, Field(pattern=r"^msg")]] = Field(default=None, alias="messageID")
+
+
+class SessionForkPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionForkQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionForkResponse(RootModel[Session]):
+    root: Session
+
+
+class SessionAbortPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionAbortQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionAbortResponse(RootModel[bool]):
+    root: bool
+
+
+class SessionInitBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    model_id: str = Field(..., alias="modelID")
+    provider_id: str = Field(..., alias="providerID")
+    message_id: Annotated[str, Field(pattern=r"^msg")] = Field(..., alias="messageID")
+
+
+class SessionInitPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionInitQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionInitResponse(RootModel[bool]):
+    root: bool
+
+
+class SessionUnsharePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionUnshareQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionUnshareResponse(RootModel[Session]):
+    root: Session
+
+
+class SessionSharePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionShareQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionShareResponse(RootModel[Session]):
+    root: Session
+
+
+class SessionSummarizeBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    provider_id: str = Field(..., alias="providerID")
+    model_id: str = Field(..., alias="modelID")
+    auto: Optional[bool] = None
+
+
+class SessionSummarizePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionSummarizeQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionSummarizeResponse(RootModel[bool]):
+    root: bool
+
+
+class SessionPromptAsyncModel(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    provider_id: str = Field(..., alias="providerID")
+    model_id: str = Field(..., alias="modelID")
+
+
+class SessionPromptAsyncBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    message_id: Optional[Annotated[str, Field(pattern=r"^msg")]] = Field(default=None, alias="messageID")
+    model: Optional[SessionPromptAsyncModel] = None
+    agent: Optional[str] = None
+    no_reply: Optional[bool] = Field(default=None, alias="noReply")
+    tools: Optional[dict[str, bool]] = None
+    format: Optional[OutputFormat] = None
+    system: Optional[str] = None
+    variant: Optional[str] = None
+    parts: list[Union[TextPartInput, FilePartInput, AgentPartInput, SubtaskPartInput]]
+
+
+class SessionPromptAsyncPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionPromptAsyncQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionPromptAsyncResponse(RootModel[None]):
+    root: None
+
+
+class SessionCommandPartsType(str, Enum):
+    FILE = "file"
+
+
+class SessionCommandParts(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: Optional[Annotated[str, Field(pattern=r"^prt")]] = None
+    type: SessionCommandPartsType
+    mime: str
+    filename: Optional[str] = None
+    url: str
+    source: Optional[FilePartSource] = None
+
+
+class SessionCommandBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    message_id: Optional[Annotated[str, Field(pattern=r"^msg")]] = Field(default=None, alias="messageID")
+    agent: Optional[str] = None
+    model: Optional[str] = None
+    arguments: str
+    command: str
+    variant: Optional[str] = None
+    parts: Optional[list[SessionCommandParts]] = None
+
+
+class SessionCommandPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionCommandQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionCommandResponse(BaseModel):
+    info: AssistantMessage
+    parts: list[Part]
+
+
+class SessionShellModel(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    provider_id: str = Field(..., alias="providerID")
+    model_id: str = Field(..., alias="modelID")
+
+
+class SessionShellBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    message_id: Optional[Annotated[str, Field(pattern=r"^msg")]] = Field(default=None, alias="messageID")
+    agent: str
+    model: Optional[SessionShellModel] = None
+    command: str
+
+
+class SessionShellPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionShellQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionShellResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    info: Message
+    parts: list[Part]
+
+
+class SessionRevertBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    message_id: Annotated[str, Field(pattern=r"^msg")] = Field(..., alias="messageID")
+    part_id: Optional[Annotated[str, Field(pattern=r"^prt")]] = Field(default=None, alias="partID")
+
+
+class SessionRevertPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionRevertQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionRevertResponse(RootModel[Session]):
+    root: Session
+
+
+class SessionUnrevertPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SessionUnrevertQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SessionUnrevertResponse(RootModel[Session]):
+    root: Session
+
+
+class PermissionRespondResponse_(str, Enum):
+    ONCE = "once"
+    ALWAYS = "always"
+    REJECT = "reject"
+
+
+class PermissionRespondBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    response: PermissionRespondResponse_
+
+
+class PermissionRespondPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+    permission_id: Annotated[str, Field(pattern=r"^per")] = Field(..., alias="permissionID")
+
+
+class PermissionRespondQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PermissionRespondResponse(RootModel[bool]):
+    root: bool
+
+
+class PartDeletePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+    message_id: Annotated[str, Field(pattern=r"^msg")] = Field(..., alias="messageID")
+    part_id: Annotated[str, Field(pattern=r"^prt")] = Field(..., alias="partID")
+
+
+class PartDeleteQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PartDeleteResponse(RootModel[bool]):
+    root: bool
+
+
+class PartUpdateBody(RootModel[Part]):
+    root: Part
+
+
+class PartUpdatePath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+    message_id: Annotated[str, Field(pattern=r"^msg")] = Field(..., alias="messageID")
+    part_id: Annotated[str, Field(pattern=r"^prt")] = Field(..., alias="partID")
+
+
+class PartUpdateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class PartUpdateResponse(RootModel[Part]):
+    root: Part
+
+
+class SyncStartQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SyncStartResponse(RootModel[bool]):
+    root: bool
+
+
+class SyncReplayEvents(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    id: str
+    aggregate_id: str = Field(..., alias="aggregateID")
+    seq: Annotated[int, Field(ge=0)]
+    type: str
+    data: dict[str, Any]
+
+
+class SyncReplayBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    directory: str
+    events: Annotated[list[SyncReplayEvents], Field(min_length=1)]
+
+
+class SyncReplayQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SyncReplayResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    session_id: str = Field(..., alias="sessionID")
+
+
+class SyncStealBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SyncStealQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SyncStealResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class SyncHistoryListBody(RootModel[dict[str, int]]):
+    root: dict[str, int]
+
+
+class SyncHistoryListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class SyncHistoryList(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: str
+    aggregate_id: str
+    seq: Annotated[int, Field(ge=0)]
+    type: str
+    data: dict[str, Any]
+
+
+class SyncHistoryListResponse(RootModel[list[SyncHistoryList]]):
+    root: list[SyncHistoryList] = Field(..., description="Sync events")
+
+
+class V2SessionListOrder(str, Enum):
+    ASC = "asc"
+    DESC = "desc"
+
+
+class V2SessionListRoots(str, Enum):
+    TRUE = "true"
+    FALSE = "false"
+
+
+class V2SessionListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    limit: Optional[float] = None
+    order: Optional[V2SessionListOrder] = None
+    path: Optional[str] = None
+    roots: Optional[Union[bool, None]] = None
+    start: Optional[float] = None
+    search: Optional[str] = None
+    cursor: Optional[str] = Field(default=None, description="Opaque pagination cursor returned as cursor.previous or cursor.next in the previous response. Do not combine with order or filters.")
+
+
+class V2SessionListResponse(RootModel[V2SessionsResponse]):
+    root: V2SessionsResponse
+
+
+class V2SessionPromptBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    prompt: Prompt
+    delivery: Optional[SessionDelivery] = None
+
+
+class V2SessionPromptPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class V2SessionPromptQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class V2SessionPromptResponse(RootModel[SessionMessage]):
+    root: SessionMessage
+
+
+class V2SessionCompactPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class V2SessionCompactQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class V2SessionCompactResponse(RootModel[None]):
+    root: None
+
+
+class V2SessionWaitPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class V2SessionWaitQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class V2SessionWaitResponse(RootModel[None]):
+    root: None
+
+
+class V2SessionContextPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class V2SessionContextQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class V2SessionContextResponse(RootModel[list[SessionMessage]]):
+    root: list[SessionMessage] = Field(..., description="Success")
+
+
+class V2SessionMessagesPath(BaseModel):
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+
+
+class V2SessionMessagesOrder(str, Enum):
+    ASC = "asc"
+    DESC = "desc"
+
+
+class V2SessionMessagesQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    limit: Optional[float] = None
+    order: Optional[V2SessionMessagesOrder] = None
+    cursor: Optional[str] = Field(default=None, description="Opaque pagination cursor returned as cursor.previous or cursor.next in the previous response. Do not combine with order.")
+
+
+class V2SessionMessagesResponse_(RootModel[V2SessionMessagesResponse]):
+    root: V2SessionMessagesResponse
+
+
+class V2ModelListLocation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class V2ModelListQuery(BaseModel):
+    location: Optional[V2ModelListLocation] = None
+
+
+class V2ModelListResponse(RootModel[list[ModelV2Info]]):
+    root: list[ModelV2Info] = Field(..., description="Success")
+
+
+class V2ProviderListLocation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class V2ProviderListQuery(BaseModel):
+    location: Optional[V2ProviderListLocation] = None
+
+
+class V2ProviderListResponse(RootModel[list[ProviderV2Info]]):
+    root: list[ProviderV2Info] = Field(..., description="Success")
+
+
+class V2ProviderGetPath(BaseModel):
+    provider_id: str = Field(..., alias="providerID")
+
+
+class V2ProviderGetLocation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class V2ProviderGetQuery(BaseModel):
+    location: Optional[V2ProviderGetLocation] = None
+
+
+class V2ProviderGetResponse(RootModel[ProviderV2Info]):
+    root: ProviderV2Info
+
+
+class TuiAppendPromptBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    text: str
+
+
+class TuiAppendPromptQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiAppendPromptResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiOpenHelpQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiOpenHelpResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiOpenSessionsQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiOpenSessionsResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiOpenThemesQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiOpenThemesResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiOpenModelsQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiOpenModelsResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiSubmitPromptQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiSubmitPromptResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiClearPromptQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiClearPromptResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiExecuteCommandBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    command: str
+
+
+class TuiExecuteCommandQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiExecuteCommandResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiShowToastVariant(str, Enum):
+    INFO = "info"
+    SUCCESS = "success"
+    WARNING = "warning"
+    ERROR = "error"
+
+
+class TuiShowToastBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    title: Optional[str] = None
+    message: str
+    variant: TuiShowToastVariant
+    duration: Optional[Annotated[int, Field(gt=0)]] = None
+
+
+class TuiShowToastQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiShowToastResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiPublishBody(RootModel[Union[EventTuiPromptAppend, EventTuiCommandExecute, EventTuiToastShow, EventTuiSessionSelect]]):
+    root: Union[EventTuiPromptAppend, EventTuiCommandExecute, EventTuiToastShow, EventTuiSessionSelect]
+
+
+class TuiPublishQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiPublishResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiSelectSessionBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID", description="Session ID to navigate to")
+
+
+class TuiSelectSessionQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiSelectSessionResponse(RootModel[bool]):
+    root: bool
+
+
+class TuiControlNextQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiControlNextResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    path: str
+    body: Any
+
+
+class TuiControlResponseBody(RootModel[Any]):
+    root: Any
+
+
+class TuiControlResponseQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class TuiControlResponseResponse(RootModel[bool]):
+    root: bool
+
+
+class ExperimentalWorkspaceAdapterListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalWorkspaceAdapterList(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    type: str
+    name: str
+    description: str
+
+
+class ExperimentalWorkspaceAdapterListResponse(RootModel[list[ExperimentalWorkspaceAdapterList]]):
+    root: list[ExperimentalWorkspaceAdapterList] = Field(..., description="Workspace adapters")
+
+
+class ExperimentalWorkspaceListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalWorkspaceListResponse(RootModel[list[Workspace]]):
+    root: list[Workspace] = Field(..., description="Workspaces")
+
+
+class ExperimentalWorkspaceCreateBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: Optional[Annotated[str, Field(pattern=r"^wrk")]] = None
+    type: str
+    branch: Optional[Union[str, None]] = None
+    extra: Optional[Union[Any, None]] = None
+
+
+class ExperimentalWorkspaceCreateQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalWorkspaceCreateResponse(RootModel[Workspace]):
+    root: Workspace
+
+
+class ExperimentalWorkspaceSyncListQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalWorkspaceSyncListResponse(RootModel[None]):
+    root: None
+
+
+class ExperimentalWorkspaceStatusQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalWorkspaceStatusStatus(str, Enum):
+    CONNECTED = "connected"
+    CONNECTING = "connecting"
+    DISCONNECTED = "disconnected"
+    ERROR = "error"
+
+
+class ExperimentalWorkspaceStatus(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    workspace_id: Annotated[str, Field(pattern=r"^wrk")] = Field(..., alias="workspaceID")
+    status: ExperimentalWorkspaceStatusStatus
+
+
+class ExperimentalWorkspaceStatusResponse(RootModel[list[ExperimentalWorkspaceStatus]]):
+    root: list[ExperimentalWorkspaceStatus] = Field(..., description="Workspace status")
+
+
+class ExperimentalWorkspaceRemovePath(BaseModel):
+    id: Annotated[str, Field(pattern=r"^wrk")]
+
+
+class ExperimentalWorkspaceRemoveQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalWorkspaceRemoveResponse(RootModel[Workspace]):
+    root: Workspace
+
+
+class ExperimentalWorkspaceWarpBody(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    id: Optional[Union[Annotated[str, Field(pattern=r"^wrk")], None]] = None
+    session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
+    copy_changes: Optional[bool] = Field(default=None, alias="copyChanges")
+
+
+class ExperimentalWorkspaceWarpQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+
+
+class ExperimentalWorkspaceWarpResponse(RootModel[None]):
+    root: None
+
+
+class PtyConnectPath(BaseModel):
+    pty_id: Annotated[str, Field(pattern=r"^pty")] = Field(..., alias="ptyID")
+
+
+class PtyConnectQuery(BaseModel):
+    directory: Optional[str] = None
+    workspace: Optional[str] = None
+    cursor: Optional[str] = None
+    ticket: Optional[str] = None
+
+
+class PtyConnectResponse(RootModel[bool]):
+    root: bool

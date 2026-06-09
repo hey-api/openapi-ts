@@ -65,7 +65,8 @@ function fieldsNode(ctx: ObjectResolverContext): Array<ReturnType<typeof $$.fiel
       .$if(!result.unionMembers && result.type, (f, t) => f.type(t))
       .$if(result.unionMembers && result.type, (f, t) => f.metadata(t))
       .nullable(nullable)
-      .$if(defaultValue !== undefined, (f) => f.default(defaultValue));
+      .$if(defaultValue !== undefined, (f) => f.default(defaultValue))
+      .$if(property.deprecated, (f) => f.deprecated(true));
 
     fields.push(field);
   }
