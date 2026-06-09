@@ -44,6 +44,7 @@
 - [Jo](https://github.com/josh-hemphill)
 - [John Gozde](https://github.com/jgoz)
 - [Jordan Shatford](https://github.com/jordanshatford)
+- [Josh Kaplinsky](https://github.com/joshkaplinsky)
 - [Joshua](https://github.com/Joshua-hypt)
 - [Jostein Stuhaug](https://github.com/josstn)
 - [Juan Ibarra](https://github.com/j-ibarra)
