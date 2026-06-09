@@ -6,8 +6,10 @@ export function pydanticSymbols(plugin: PluginInstance) {
   const factory = plugin.symbolFactory;
   return {
     ...SYMBOLS.PYDANTIC(factory),
+    datetime: SYMBOLS.DATETIME(factory),
     enum: SYMBOLS.ENUM(factory),
     typing: SYMBOLS.TYPING(factory),
+    uuid: SYMBOLS.UUID(factory),
   };
 }
 
