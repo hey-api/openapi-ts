@@ -8,6 +8,7 @@ import { OptionalMixin } from '../../../../py-dsl/mixins/optional';
 import { safeKeywordName } from '../../../../py-dsl/utils/name';
 import type { PydanticPlugin } from '../../types';
 import type { PydanticConstrainedTypeDsl } from '../expr/constrained-type';
+import type { PydanticFieldConstraints } from '../expr/constraints';
 import { literalize } from '../utils/literal';
 
 const Mixed = OptionalMixin(PyDsl<py.Statement>);
@@ -92,9 +93,9 @@ export class PydanticFieldDsl extends Mixed {
     return this;
   }
 
-  private _buildUnionVarType(): ReturnType<typeof $.field> | undefined {
+  private _buildUnionVarType(): ReturnType<typeof $.type.or> | undefined {
     const members = this._unionMembers;
-    if (!members?.length) return undefined;
+    if (!members?.length) return;
 
     const { plugin } = this;
 
@@ -103,24 +104,28 @@ export class PydanticFieldDsl extends Mixed {
         return ct.type;
       }
 
-      const cv = ct.constraints.values;
-      const args: Array<ReturnType<typeof $.kwarg>> = [];
-      if (cv.gt !== undefined) args.push($.kwarg('gt', cv.gt));
-      if (cv.ge !== undefined) args.push($.kwarg('ge', cv.ge));
-      if (cv.lt !== undefined) args.push($.kwarg('lt', cv.lt));
-      if (cv.le !== undefined) args.push($.kwarg('le', cv.le));
-      if (cv.multiple_of !== undefined) args.push($.kwarg('multiple_of', cv.multiple_of));
-      if (cv.min_length !== undefined) args.push($.kwarg('min_length', cv.min_length));
-      if (cv.max_length !== undefined) args.push($.kwarg('max_length', cv.max_length));
-      if (cv.pattern !== undefined) args.push($.kwarg('pattern', cv.pattern));
-
       return $(plugin.symbols.typing.Annotated).slice(
         ct.type,
-        $(plugin.symbols.Field).call(...args),
+        $(plugin.symbols.Field).call(...this._constraintsToKwargs(ct.constraints.values)),
       );
     });
 
-    return $.type.or(...itemExprs) as any;
+    return $.type.or(...itemExprs);
+  }
+
+  private _constraintsToKwargs(
+    cv: Readonly<PydanticFieldConstraints>,
+  ): Array<ReturnType<typeof $.kwarg>> {
+    const args: Array<ReturnType<typeof $.kwarg>> = [];
+    if (cv.gt !== undefined) args.push($.kwarg('gt', cv.gt));
+    if (cv.ge !== undefined) args.push($.kwarg('ge', cv.ge));
+    if (cv.lt !== undefined) args.push($.kwarg('lt', cv.lt));
+    if (cv.le !== undefined) args.push($.kwarg('le', cv.le));
+    if (cv.multiple_of !== undefined) args.push($.kwarg('multiple_of', cv.multiple_of));
+    if (cv.min_length !== undefined) args.push($.kwarg('min_length', cv.min_length));
+    if (cv.max_length !== undefined) args.push($.kwarg('max_length', cv.max_length));
+    if (cv.pattern !== undefined) args.push($.kwarg('pattern', cv.pattern));
+    return args;
   }
 
   _build(): ReturnType<typeof $.field> {
@@ -135,8 +140,6 @@ export class PydanticFieldDsl extends Mixed {
       ? this._constrainedType.constraints.hasValidationConstraints
       : false;
 
-    const metaCv = this._constrainedType?.constraints.values ?? {};
-
     const hasDefault = this._default !== undefined;
 
     let varType:
@@ -148,51 +151,30 @@ export class PydanticFieldDsl extends Mixed {
     if (isUnion) {
       varType = this._buildUnionVarType();
     } else {
-      const annotatedArgs: Array<ReturnType<typeof $.kwarg>> = [];
-      if (hasValidationConstraints) {
-        if (cv.gt !== undefined) annotatedArgs.push($.kwarg('gt', cv.gt));
-        if (cv.ge !== undefined) annotatedArgs.push($.kwarg('ge', cv.ge));
-        if (cv.lt !== undefined) annotatedArgs.push($.kwarg('lt', cv.lt));
-        if (cv.le !== undefined) annotatedArgs.push($.kwarg('le', cv.le));
-        if (cv.multiple_of !== undefined)
-          annotatedArgs.push($.kwarg('multiple_of', cv.multiple_of));
-        if (cv.min_length !== undefined) annotatedArgs.push($.kwarg('min_length', cv.min_length));
-        if (cv.max_length !== undefined) annotatedArgs.push($.kwarg('max_length', cv.max_length));
-        if (cv.pattern !== undefined) annotatedArgs.push($.kwarg('pattern', cv.pattern));
-      }
       varType = this._constrainedType?.type;
       if (hasValidationConstraints && varType) {
         varType = $(plugin.symbols.typing.Annotated).slice(
           varType,
-          $(plugin.symbols.Field).call(...annotatedArgs),
+          $(plugin.symbols.Field).call(...this._constraintsToKwargs(cv)),
         );
       }
     }
 
     if ((this._nullable || this._optional) && varType) {
-      varType = $.type.or(
-        // @ts-expect-error
-        varType,
-        'None',
-      );
+      varType = $.type.or(varType, 'None');
     }
 
     const effectiveAlias =
       this._alias ?? (this._pythonName !== this._wireName ? this._wireName : undefined);
 
-    const stmt = $.field(this.name).$if(varType, (v, t) =>
-      v.type(
-        // @ts-expect-error
-        t,
-      ),
-    );
+    const stmt = $.field(this.name).$if(varType, (v, t) => v.type(t));
 
     const needsField =
       this._defaultFactory !== undefined ||
       effectiveAlias !== undefined ||
       this._discriminator !== undefined ||
-      metaCv.title !== undefined ||
-      metaCv.description !== undefined ||
+      cv.title !== undefined ||
+      cv.description !== undefined ||
       this._deprecated !== undefined;
 
     const args: Array<ReturnType<typeof $.expr | typeof $.kwarg>> = [];
@@ -210,8 +192,8 @@ export class PydanticFieldDsl extends Mixed {
     if (needsField) {
       if (this._defaultFactory) args.push($.kwarg('default_factory', this._defaultFactory));
       if (effectiveAlias !== undefined) args.push($.kwarg('alias', effectiveAlias));
-      if (metaCv.title !== undefined) args.push($.kwarg('title', metaCv.title));
-      if (metaCv.description !== undefined) args.push($.kwarg('description', metaCv.description));
+      if (cv.title !== undefined) args.push($.kwarg('title', cv.title));
+      if (cv.description !== undefined) args.push($.kwarg('description', cv.description));
       if (this._deprecated !== undefined) args.push($.kwarg('deprecated', this._deprecated));
       if (this._discriminator !== undefined) {
         args.push($.kwarg('discriminator', this._discriminator));

@@ -128,12 +128,16 @@ export class TypeOrPyDsl extends Mixed {
 
   private $flattenRefs(types: Array<Ref<Type>>): Array<Ref<Type>> {
     const flat: Array<Ref<Type>> = [];
+    const seen = new Set<Type>();
     for (const t of types) {
       const node = fromRef(t);
       if (node instanceof TypeOrPyDsl) {
         flat.push(...this.$flattenRefs(node._types));
       } else {
-        flat.push(t);
+        if (!seen.has(node)) {
+          seen.add(node);
+          flat.push(t);
+        }
       }
     }
     return flat;

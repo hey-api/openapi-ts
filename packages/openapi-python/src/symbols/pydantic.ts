@@ -116,11 +116,13 @@ export function PYDANTIC(factory: SymbolFactory) {
   ] as const satisfies ReadonlyArray<SymbolChild>;
 
   return {
+    AnyUrl: factory.register('AnyUrl', { external: 'pydantic' }),
     BaseModel: factory.register('BaseModel', {
       children: [...BASE_MODEL_CHILDREN],
       external: 'pydantic',
     }),
     ConfigDict: factory.register('ConfigDict', { external: 'pydantic' }),
+    EmailStr: factory.register('EmailStr', { external: 'pydantic' }),
     Field: factory.register('Field', { external: 'pydantic' }),
     RootModel: factory.register('RootModel', {
       children: [...BASE_MODEL_CHILDREN, { kind: 'var', name: 'root' }],
