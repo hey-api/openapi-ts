@@ -5,7 +5,7 @@ import { deduplicateSchema } from './schema';
 import type { IR } from './types';
 import { addItemsToSchema } from './utils';
 
-export const hasOperationDataRequired = (operation: IR.OperationObject): boolean => {
+export function hasOperationDataRequired(operation: IR.OperationObject): boolean {
   if (hasParametersObjectRequired(operation.parameters)) {
     return true;
   }
@@ -15,18 +15,19 @@ export const hasOperationDataRequired = (operation: IR.OperationObject): boolean
   }
 
   return false;
-};
+}
 
-export const createOperationKey = ({ method, path }: { method: string; path: string }) =>
-  `${method.toUpperCase()} ${path}`;
+export function createOperationKey({ method, path }: { method: string; path: string }) {
+  return `${method.toUpperCase()} ${path}`;
+}
 
-export const operationPagination = ({
+export function operationPagination({
   context,
   operation,
 }: {
   context: Context;
   operation: IR.OperationObject;
-}): Pagination | undefined => {
+}): Pagination | undefined {
   const body = operation.body;
 
   if (!body || !body.pagination) {
@@ -64,11 +65,11 @@ export const operationPagination = ({
     name: body.pagination,
     schema: paginationProp,
   };
-};
+}
 
 type StatusGroup = '1XX' | '2XX' | '3XX' | '4XX' | '5XX' | 'default';
 
-export const statusCodeToGroup = ({ statusCode }: { statusCode: string }): StatusGroup => {
+export function statusCodeToGroup({ statusCode }: { statusCode: string }): StatusGroup {
   switch (statusCode) {
     case '1XX':
       return '1XX';
@@ -85,7 +86,7 @@ export const statusCodeToGroup = ({ statusCode }: { statusCode: string }): Statu
     default:
       return `${statusCode[0]}XX` as StatusGroup;
   }
-};
+}
 
 interface OperationResponsesMap {
   /**
@@ -106,7 +107,7 @@ interface OperationResponsesMap {
   responses?: IR.SchemaObject;
 }
 
-export const operationResponsesMap = (operation: IR.OperationObject): OperationResponsesMap => {
+export function operationResponsesMap(operation: IR.OperationObject): OperationResponsesMap {
   const result: OperationResponsesMap = {};
 
   if (!operation.responses) {
@@ -217,4 +218,4 @@ export const operationResponsesMap = (operation: IR.OperationObject): OperationR
   }
 
   return result;
-};
+}
