@@ -218,6 +218,7 @@ export interface StringResolverContext
     Plugin.ResolverNodes<{
       base: (ctx: StringResolverContext) => PydanticType;
       const: (ctx: StringResolverContext) => PydanticType | undefined;
+      format: (ctx: StringResolverContext) => PydanticType | undefined;
     }> {
   schema: SchemaWithType<'string'>;
 }
