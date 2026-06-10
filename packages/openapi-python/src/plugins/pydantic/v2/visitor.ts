@@ -3,8 +3,7 @@ import { fromRef } from '@hey-api/codegen-core';
 import type { SchemaExtractor, SchemaVisitor } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
 
-import { $ } from '../../../py-dsl';
-import { $ as $$ } from '../../pydantic/dsl';
+import { $ } from '../../pydantic/dsl';
 import { composeMeta, defaultMeta, inheritMeta } from '../shared/meta';
 import type { ProcessorContext } from '../shared/processor';
 import type { PydanticResult } from '../shared/types';
@@ -37,33 +36,8 @@ export function createVisitor(
   const { plugin, schemaExtractor } = config;
 
   return {
-    applyModifiers(result, ctx, options = {}): PydanticResult {
-      const { optional } = options;
-
-      const needsDefault = result.meta.default !== undefined;
-      const needsOptional = optional || needsDefault;
-      const needsNullable = result.meta.nullable;
-
-      if (!needsOptional && !needsNullable) {
-        return result;
-      }
-
-      const inner = result.type?.type ?? $(plugin.symbols.typing.Any);
-      const wrappedType = $(plugin.symbols.typing.Optional).slice(inner);
-
-      const existingConstraints = result.type?.constraints ?? $$.constraints();
-      const updatedConstraints = needsOptional ? existingConstraints : existingConstraints;
-
-      return {
-        meta: result.meta ?? {
-          default: undefined,
-          hasForwardReference: false,
-          nullable: false,
-          readonly: false,
-        },
-        node: result.node,
-        type: $$.constrainedType(wrappedType, updatedConstraints),
-      };
+    applyModifiers(result): PydanticResult {
+      return result;
     },
     array(schema, ctx, walk) {
       const result = arrayToType({
@@ -186,7 +160,7 @@ export function createVisitor(
 
       const refSymbol = plugin.referenceSymbol(query);
       const isRegistered = plugin.isSymbolRegistered(query);
-      const type = $$.constrainedType(refSymbol);
+      const type = $.constrainedType(refSymbol);
 
       return {
         meta: {
