@@ -299,7 +299,7 @@ class AssistantMessage(BaseModel):
     session_id: Annotated[str, Field(pattern=r"^ses")] = Field(..., alias="sessionID")
     role: AssistantMessageRole
     time: AssistantMessageTime
-    error: Optional[Union[ProviderAuthError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError, None]] = None
+    error: Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError]] = None
     parent_id: Annotated[str, Field(pattern=r"^msg")] = Field(..., alias="parentID")
     model_id: str = Field(..., alias="modelID")
     provider_id: str = Field(..., alias="providerID")
@@ -895,7 +895,7 @@ class AgentConfig(BaseModel):
     mode: Optional[AgentConfigMode] = None
     hidden: Optional[bool] = None
     options: Optional[dict[str, Any]] = None
-    color: Optional[Union[Annotated[str, Field(pattern=r"^#[0-9a-fA-F]{6}$")], None]] = Field(default=None, description="Hex color code (e.g., #FF5733) or theme color (e.g., primary)")
+    color: Optional[Union[Annotated[str, Field(pattern=r"^#[0-9a-fA-F]{6}$")], AgentConfigColor]] = Field(default=None, description="Hex color code (e.g., #FF5733) or theme color (e.g., primary)")
     steps: Optional[Annotated[int, Field(gt=0)]] = None
     max_steps: Optional[Annotated[int, Field(gt=0)]] = Field(default=None, alias="maxSteps")
     permission: Optional[PermissionConfig] = None
@@ -915,8 +915,8 @@ class ProviderConfigOptions(BaseModel):
     base_url: Optional[str] = Field(default=None, alias="baseURL")
     enterprise_url: Optional[str] = Field(default=None, alias="enterpriseUrl")
     set_cache_key: Optional[bool] = Field(default=None, alias="setCacheKey")
-    timeout: Optional[Union[Annotated[int, Field(gt=0)], None]] = Field(default=None, description="Timeout in milliseconds for full requests to this provider. Set to false to disable timeout.")
-    header_timeout: Optional[Union[Annotated[int, Field(gt=0)], None]] = Field(default=None, alias="headerTimeout", description="Timeout in milliseconds to wait for response headers. Provider integrations may set defaults. Set to false to disable timeout.")
+    timeout: Optional[Union[Annotated[int, Field(gt=0)], ProviderConfigOptionsTimeout]] = Field(default=None, description="Timeout in milliseconds for full requests to this provider. Set to false to disable timeout.")
+    header_timeout: Optional[Union[Annotated[int, Field(gt=0)], ProviderConfigOptionsHeaderTimeout]] = Field(default=None, alias="headerTimeout", description="Timeout in milliseconds to wait for response headers. Provider integrations may set defaults. Set to false to disable timeout.")
     chunk_timeout: Optional[Annotated[int, Field(gt=0)]] = Field(default=None, alias="chunkTimeout")
 
 
@@ -1008,7 +1008,7 @@ class ProviderConfigModelsValue(BaseModel):
     reasoning: Optional[bool] = None
     temperature: Optional[bool] = None
     tool_call: Optional[bool] = None
-    interleaved: Optional[Union[ProviderConfigModelsValueInterleaved, None]] = None
+    interleaved: Optional[Union[ProviderConfigModelsValueInterleaved, ProviderConfigModelsValueInterleaved_]] = None
     cost: Optional[ProviderConfigModelsValueCost] = None
     limit: Optional[ProviderConfigModelsValueLimit] = None
     modalities: Optional[ProviderConfigModelsValueModalities] = None
@@ -1073,7 +1073,7 @@ class McpRemoteConfig(BaseModel):
     url: str = Field(..., description="URL of the remote MCP server")
     enabled: Optional[bool] = None
     headers: Optional[dict[str, str]] = None
-    oauth: Optional[Union[McpOAuthConfig, None]] = Field(default=None, description="OAuth authentication configuration for the MCP server. Set to false to disable OAuth auto-detection.")
+    oauth: Optional[Union[McpOAuthConfig, McpRemoteConfigOauth]] = Field(default=None, description="OAuth authentication configuration for the MCP server. Set to false to disable OAuth auto-detection.")
     timeout: Optional[Annotated[int, Field(gt=0)]] = None
 
 
@@ -2455,7 +2455,7 @@ class ModelV2InfoEndpoint_2(BaseModel):
     model_config = ConfigDict(extra="forbid")
     type: ModelV2InfoEndpointType_2
     url: str
-    reasoning: Optional[Union[ModelV2InfoEndpointReasoning, None]] = None
+    reasoning: Optional[Union[ModelV2InfoEndpointReasoning, ModelV2InfoEndpointReasoning_]] = None
 
 
 class ModelV2InfoEndpointType_3(str, Enum):
@@ -4602,7 +4602,7 @@ class GlobalEventPayloadType_42(str, Enum):
 class GlobalEventPayloadProperties_41(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     session_id: Optional[Annotated[str, Field(pattern=r"^ses")]] = Field(default=None, alias="sessionID")
-    error: Optional[Union[ProviderAuthError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError, None]] = None
+    error: Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError]] = None
 
 
 class GlobalEventPayload_42(BaseModel):
@@ -5356,7 +5356,7 @@ class Config(BaseModel):
     plugin: Optional[list[Union[str, tuple[str, dict[str, Any]]]]] = None
     share: Optional[ConfigShare] = None
     autoshare: Optional[bool] = None
-    autoupdate: Optional[Union[bool, None]] = Field(default=None, description="Automatically update to the latest version. Set to true to auto-update, false to disable, or 'notify' to show update notifications")
+    autoupdate: Optional[Union[bool, ConfigAutoupdate]] = Field(default=None, description="Automatically update to the latest version. Set to true to auto-update, false to disable, or 'notify' to show update notifications")
     disabled_providers: Optional[list[str]] = None
     enabled_providers: Optional[list[str]] = None
     model: Optional[str] = None
@@ -5367,8 +5367,8 @@ class Config(BaseModel):
     agent: Optional[ConfigAgent] = None
     provider: Optional[dict[str, ProviderConfig]] = None
     mcp: Optional[dict[str, Union[McpLocalConfig, McpRemoteConfig, ConfigMcpValue]]] = None
-    formatter: Optional[Union[bool, None]] = Field(default=None, description="Enable or configure formatters. Omit or set to false to disable, true to enable built-ins, or an object to enable built-ins with overrides.")
-    lsp: Optional[Union[bool, None]] = Field(default=None, description="Enable or configure LSP servers. Omit or set to false to disable, true to enable built-ins, or an object to enable built-ins with overrides.")
+    formatter: Optional[Union[bool, dict[str, ConfigFormatterValue]]] = Field(default=None, description="Enable or configure formatters. Omit or set to false to disable, true to enable built-ins, or an object to enable built-ins with overrides.")
+    lsp: Optional[Union[bool, dict[str, Union[ConfigLspValue, ConfigLspValue_]]]] = Field(default=None, description="Enable or configure LSP servers. Omit or set to false to disable, true to enable built-ins, or an object to enable built-ins with overrides.")
     instructions: Optional[list[str]] = None
     layout: Optional[LayoutConfig] = None
     permission: Optional[PermissionConfig] = None
@@ -5815,7 +5815,7 @@ class ProviderV2InfoEndpoint_2(BaseModel):
     model_config = ConfigDict(extra="forbid")
     type: ProviderV2InfoEndpointType_2
     url: str
-    reasoning: Optional[Union[ProviderV2InfoEndpointReasoning, None]] = None
+    reasoning: Optional[Union[ProviderV2InfoEndpointReasoning, ProviderV2InfoEndpointReasoning_]] = None
 
 
 class ProviderV2InfoEndpointType_3(str, Enum):
@@ -5935,7 +5935,7 @@ class ModelV2Info1Endpoint_2(BaseModel):
     model_config = ConfigDict(extra="forbid")
     type: ModelV2Info1EndpointType_2
     url: str
-    reasoning: Optional[Union[ModelV2Info1EndpointReasoning, None]] = None
+    reasoning: Optional[Union[ModelV2Info1EndpointReasoning, ModelV2Info1EndpointReasoning_]] = None
 
 
 class ModelV2Info1EndpointType_3(str, Enum):
@@ -6881,7 +6881,7 @@ class EventSessionErrorType(str, Enum):
 class EventSessionErrorProperties(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
     session_id: Optional[Annotated[str, Field(pattern=r"^ses")]] = Field(default=None, alias="sessionID")
-    error: Optional[Union[ProviderAuthError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError, None]] = None
+    error: Optional[Union[ProviderAuthError, UnknownError, MessageOutputLengthError, MessageAbortedError, StructuredOutputError, ContextOverflowError, ApiError]] = None
 
 
 class EventSessionError(BaseModel):
@@ -7736,12 +7736,12 @@ class ExperimentalSessionListArchived(str, Enum):
 class ExperimentalSessionListQuery(BaseModel):
     directory: Optional[str] = None
     workspace: Optional[str] = None
-    roots: Optional[Union[bool, None]] = None
+    roots: Optional[Union[bool, ExperimentalSessionListRoots]] = None
     start: Optional[float] = None
     cursor: Optional[float] = None
     search: Optional[str] = None
     limit: Optional[float] = None
-    archived: Optional[Union[bool, None]] = None
+    archived: Optional[Union[bool, ExperimentalSessionListArchived]] = None
 
 
 class ExperimentalSessionListResponse(RootModel[list[GlobalSession]]):
@@ -8514,7 +8514,7 @@ class SessionListQuery(BaseModel):
     workspace: Optional[str] = None
     scope: Optional[SessionListScope] = None
     path: Optional[str] = None
-    roots: Optional[Union[bool, None]] = None
+    roots: Optional[Union[bool, SessionListRoots]] = None
     start: Optional[float] = None
     search: Optional[str] = None
     limit: Optional[float] = None
@@ -9173,7 +9173,7 @@ class V2SessionListQuery(BaseModel):
     limit: Optional[float] = None
     order: Optional[V2SessionListOrder] = None
     path: Optional[str] = None
-    roots: Optional[Union[bool, None]] = None
+    roots: Optional[Union[bool, V2SessionListRoots]] = None
     start: Optional[float] = None
     search: Optional[str] = None
     cursor: Optional[str] = Field(default=None, description="Opaque pagination cursor returned as cursor.previous or cursor.next in the previous response. Do not combine with order or filters.")
