@@ -77,8 +77,8 @@ export function createPrinter(options?: PyPrinterOptions) {
     if (lines.length === 1) {
       parts.push(printLine(`"""${lines[0]}"""`), '');
     } else {
-      parts.push(printLine(`"""`));
-      parts.push(...lines.map((line) => printLine(line)));
+      parts.push(printLine(`"""${lines[0]}`));
+      parts.push(...lines.slice(1).map((line) => printLine(line)));
       parts.push(printLine(`"""`), '');
     }
     return parts;

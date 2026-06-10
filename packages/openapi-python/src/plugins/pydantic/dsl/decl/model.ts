@@ -3,13 +3,14 @@ import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 import type { py } from '../../../../py-compiler';
 import { KwargPyDsl, PyDsl } from '../../../../py-dsl';
 import { $ } from '../../../../py-dsl';
+import { DocMixin } from '../../../../py-dsl/mixins/doc';
 import { resolveBaseModelConfig } from '../../shared/base-model';
 import type { PydanticModelConfig } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 import { identifiers } from '../../v2/constants';
 import type { PydanticFieldDsl } from './field';
 
-const Mixed = PyDsl<py.ClassDeclaration>;
+const Mixed = DocMixin(PyDsl<py.ClassDeclaration>);
 
 export class PydanticModelDsl extends Mixed {
   readonly '~dsl' = 'PydanticModelDsl';
@@ -67,6 +68,7 @@ export class PydanticModelDsl extends Mixed {
     const cls = $.class(this.name)
       // plugin.querySymbol(BASE_MODEL_META)!
       .extends(plugin.symbols.BaseModel, ...this._bases)
+      .$if(this.$docs(), (c, v) => c.doc(v))
       .$if(this._configKwargs.length, (c) =>
         c.do(
           $.field(identifiers.model_config).assign(

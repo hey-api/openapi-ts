@@ -2,7 +2,7 @@ import { ref } from '@hey-api/codegen-core';
 import type { SchemaExtractor } from '@hey-api/shared';
 import { createSchemaProcessor, createSchemaWalker, pathToJsonPointer } from '@hey-api/shared';
 
-import { $ as $$ } from '../dsl';
+import { $ } from '../dsl';
 import { exportAst } from '../shared/export';
 import type { ProcessorContext, ProcessorResult } from '../shared/processor';
 import type { PydanticNode, PydanticResult } from '../shared/types';
@@ -13,7 +13,7 @@ function toNode(result: PydanticResult, plugin: PydanticPlugin['Instance']): Pyd
   if (result.node) {
     return result.node;
   }
-  return { kind: 'alias', type: result.type ?? $$.constrainedType(plugin.symbols.typing.Any) };
+  return { kind: 'alias', type: result.type ?? $.constrainedType(plugin.symbols.typing.Any) };
 }
 
 export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorResult {

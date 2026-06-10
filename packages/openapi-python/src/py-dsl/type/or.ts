@@ -94,7 +94,9 @@ export class TypeOrPyDsl extends Mixed {
     }
 
     if (decision.strategy === 'optional') {
-      const inner = flat.filter((_, i) => fromRef(this._types[i]!) !== 'None');
+      const flatRefs = this.$flattenRefs(this._types);
+      const innerRefs = flatRefs.filter((r) => fromRef(r) !== 'None');
+      const inner = innerRefs.map((r) => this.$node(r));
       const innerType =
         inner.length === 1 ? inner[0]! : this.$node(f.slice(decision.unionSymbol!, ...inner));
       return this.$node(f.slice(decision.optionalSymbol, innerType));
@@ -128,12 +130,16 @@ export class TypeOrPyDsl extends Mixed {
 
   private $flattenRefs(types: Array<Ref<Type>>): Array<Ref<Type>> {
     const flat: Array<Ref<Type>> = [];
+    const seen = new Set<Type>();
     for (const t of types) {
       const node = fromRef(t);
       if (node instanceof TypeOrPyDsl) {
         flat.push(...this.$flattenRefs(node._types));
       } else {
-        flat.push(t);
+        if (!seen.has(node)) {
+          seen.add(node);
+          flat.push(t);
+        }
       }
     }
     return flat;
