@@ -1,8 +1,17 @@
 import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
+import type { DocLines } from '../../../py-dsl/layout/doc';
 import { $ } from '../dsl';
 import type { ProcessorContext } from './processor';
 import type { PydanticNode } from './types';
+
+// TODO: move this somewhere else, maybe Python utils?
+export function toDocLines(title?: string, description?: string): DocLines {
+  if (title && description) return [title, '', description];
+  if (title) return title;
+  if (description) return description;
+  return [];
+}
 
 export function exportAst({
   meta,
@@ -34,8 +43,12 @@ export function exportAst({
     }),
   );
 
+  const docLines = toDocLines(schema.title, schema.description);
+
   if (node.kind === 'enum') {
-    const enumNode = $.enum(symbol).members(...node.members);
+    const enumNode = $.enum(symbol)
+      .members(...node.members)
+      .doc(docLines);
     plugin.node(enumNode);
     return;
   }
@@ -54,6 +67,7 @@ export function exportAst({
     // }
 
     const model = $.model(plugin, symbol)
+      .doc(docLines)
       .$if(plugin.config.strict, (m) => m.config({ extra: 'forbid' }))
       .$if(node.config, (m, c) => m.config(c))
       .fields(...node.fields);
@@ -63,6 +77,7 @@ export function exportAst({
 
   if (node.kind === 'rootModel') {
     const rootModel = $.rootModel(plugin, symbol)
+      .doc(docLines)
       .type(node.type)
       .$if(node.discriminator, (m, d) => m.discriminator(d));
     plugin.node(rootModel);

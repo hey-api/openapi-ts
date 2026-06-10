@@ -31,10 +31,7 @@ function baseNode(ctx: UnionResolverContext): PydanticType {
     (r) => applyModifiers(r).type ?? $$.constrainedType(ctx.plugin.symbols.typing.Any),
   );
 
-  const unionMembers = isNullable
-    ? [...nonNullMembers, $$.constrainedType('None')]
-    : nonNullMembers;
-
+  const unionMembers = nonNullMembers;
   const unionType = $$.constrainedType($.type.or(...unionMembers.map((m) => m.type)));
 
   return {
