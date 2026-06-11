@@ -1,8 +1,12 @@
+import type { SymbolMeta } from '@hey-api/codegen-core';
+import type { IR } from '@hey-api/shared';
+import { buildDiscriminatedUnion } from '@hey-api/shared';
+
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { UnionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
-import { tryBuildDiscriminatedUnion } from '../../shared/discriminated-union';
+import { shouldFallBackToUnion } from '../../shared/discriminator';
 import type { ZodResult } from '../../shared/types';
 
 function baseNode(ctx: UnionResolverContext): Chain {
@@ -21,51 +25,100 @@ function baseNode(ctx: UnionResolverContext): Chain {
     }
   });
 
-  let chain: Chain;
   if (!nonNullItems.length) {
-    chain = $(z).attr(identifiers.null).call();
-  } else if (nonNullItems.length === 1) {
-    chain = nonNullItems[0]!.chain;
-  } else {
-    const discriminatedExpression = tryBuildDiscriminatedUnion({
-      items: childResults,
-      parentSchema,
-      plugin,
-      schemas,
-    });
+    return $(z).attr(identifiers.null).call();
+  }
 
-    if (discriminatedExpression) {
-      const unionMembers = discriminatedExpression.members.map((member) =>
-        member.refExpression
-          .attr(identifiers.extend)
-          .call(
-            $.object().prop(
-              discriminatedExpression.discriminatorKey,
-              $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
-            ),
-          ),
-      );
+  if (nonNullItems.length === 1) {
+    return nonNullItems[0]!.chain;
+  }
 
-      chain = $(z)
+  const discriminatedData = buildDiscriminatedUnion({
+    parentSchema,
+    resolveIrRef: (ref) => {
+      try {
+        return plugin.context.resolveIrRef<IR.SchemaObject>(ref);
+      } catch {
+        return;
+      }
+    },
+    schemas,
+  });
+
+  if (discriminatedData) {
+    if (!shouldFallBackToUnion({ childResults, parentSchema, plugin, schemas })) {
+      const unionMembers = discriminatedData.members.map((member) => {
+        const query: SymbolMeta = {
+          category: 'schema',
+          resource: 'definition',
+          resourceId: member.ref,
+          tool: 'zod',
+        };
+        const refExpr = $(plugin.referenceSymbol(query));
+        return member.needsExtend
+          ? refExpr
+              .attr(identifiers.extend)
+              .call(
+                $.object().prop(
+                  discriminatedData.discriminatorKey,
+                  $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+                ),
+              )
+          : refExpr;
+      });
+
+      return $(z)
         .attr(identifiers.discriminatedUnion)
         .call(
-          $.literal(discriminatedExpression.discriminatorKey),
+          $.literal(discriminatedData.discriminatorKey),
           $.array()
             .pretty()
             .elements(...unionMembers),
         );
-    } else {
-      chain = $(z)
-        .attr(identifiers.union)
-        .call(
-          $.array()
-            .pretty()
-            .elements(...nonNullItems.map((item) => item.chain)),
-        );
     }
+
+    const refToChildChain = new Map<string, Chain>();
+    for (let i = 0; i < schemas.length; i++) {
+      const schema = schemas[i]!;
+      if (schema.type !== 'null' && schema.const !== null && schema.$ref) {
+        refToChildChain.set(schema.$ref, childResults[i]!.chain);
+      }
+    }
+
+    const unionMembers = discriminatedData.members.map((member) => {
+      const childChain = refToChildChain.get(member.ref)!;
+      return member.needsExtend
+        ? $(z)
+            .attr(identifiers.object)
+            .call(
+              $.object()
+                .pretty()
+                .prop(
+                  discriminatedData.discriminatorKey,
+                  $(z).attr(identifiers.literal).call($.fromValue(member.discriminatedValue)),
+                ),
+            )
+            .attr(identifiers.and)
+            .call(childChain)
+        : childChain;
+    });
+
+    return $(z)
+      .attr(identifiers.union)
+      .call(
+        $.array()
+          .pretty()
+          .elements(...unionMembers),
+      );
   }
 
-  return chain;
+  return $(z)
+    .attr(identifiers.union)
+    .call(
+      $.array()
+        .pretty()
+        .elements(...nonNullItems.map((item) => item.chain)),
+    );
 }
 
 function unionResolver(ctx: UnionResolverContext): Chain {

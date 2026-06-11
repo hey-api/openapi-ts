@@ -3,6 +3,8 @@ import type { $ } from '../dsl';
 
 /** Return type for toType converters. */
 export interface PydanticType {
+  /** Discriminator property name, present when this type is a discriminated union. */
+  discriminator?: string;
   /** Pre-resolved node. */
   node?: PydanticNode;
   type?: ReturnType<typeof $.constrainedType>;
