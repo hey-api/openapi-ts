@@ -467,6 +467,33 @@ export class $RefParser {
           out[k] = cloneAndRewrite(v as any, refMap, tagMap, opIdPrefix, basePath);
         }
       }
+
+      // Rewrite discriminator.mapping values using the same ref rewriting logic as $ref keys.
+      // discriminator.mapping values are $ref-like strings but stored as plain values,
+      // so the generic $ref handling above doesn't catch them.
+      if (
+        out.discriminator &&
+        typeof out.discriminator === 'object' &&
+        out.discriminator.mapping &&
+        typeof out.discriminator.mapping === 'object'
+      ) {
+        for (const [mk, mv] of Object.entries(out.discriminator.mapping)) {
+          if (typeof mv === 'string') {
+            if ((mv as string).startsWith('#')) {
+              const rewritten = rewriteRef(mv as string, refMap);
+              if (rewritten !== mv) {
+                out.discriminator.mapping[mk] = rewritten;
+              }
+            } else {
+              const proto = url.getProtocol(mv as string);
+              if (proto === undefined) {
+                out.discriminator.mapping[mk] = url.resolve(basePath + '#', mv as string);
+              }
+            }
+          }
+        }
+      }
+
       return out;
     };
 

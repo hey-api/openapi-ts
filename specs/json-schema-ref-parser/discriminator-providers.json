@@ -1,0 +1,35 @@
+{
+  "JetBrainsProviderConfigResponse": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": ["jetbrains"]
+      }
+    },
+    "required": ["type"]
+  },
+  "OpenAIProviderConfigResponse": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": ["openai"]
+      }
+    },
+    "required": ["type"]
+  },
+  "AIProviderConfigResponse": {
+    "oneOf": [
+      { "$ref": "#/JetBrainsProviderConfigResponse" },
+      { "$ref": "#/OpenAIProviderConfigResponse" }
+    ],
+    "discriminator": {
+      "propertyName": "type",
+      "mapping": {
+        "jetbrains": "#/JetBrainsProviderConfigResponse",
+        "openai": "#/OpenAIProviderConfigResponse"
+      }
+    }
+  }
+}
