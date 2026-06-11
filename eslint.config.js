@@ -70,6 +70,7 @@ export default tseslint.config(
   {
     ignores: [
       '**/.tsdown/',
+      '**/debug/',
       '**/dist/',
       '**/node_modules/',
       'temp/',
