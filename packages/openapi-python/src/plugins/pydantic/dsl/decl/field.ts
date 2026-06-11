@@ -93,7 +93,7 @@ export class PydanticFieldDsl extends Mixed {
     return this;
   }
 
-  private _buildUnionVarType(): ReturnType<typeof $.type.or> | undefined {
+  private _buildUnionVarType(): ReturnType<typeof $.subscript | typeof $.type.or> | undefined {
     const members = this._unionMembers;
     if (!members?.length) return;
 
@@ -110,7 +110,16 @@ export class PydanticFieldDsl extends Mixed {
       );
     });
 
-    return $.type.or(...itemExprs);
+    const unionType = $.type.or(...itemExprs);
+
+    if (this._discriminator) {
+      return $(plugin.symbols.typing.Annotated).slice(
+        unionType,
+        $(plugin.symbols.Field).call($.kwarg('discriminator', this._discriminator)),
+      );
+    }
+
+    return unionType;
   }
 
   private _constraintsToKwargs(
@@ -150,6 +159,7 @@ export class PydanticFieldDsl extends Mixed {
 
     if (isUnion) {
       varType = this._buildUnionVarType();
+      if (this._discriminator) this._discriminator = undefined;
     } else {
       varType = this._constrainedType?.type;
       if (hasValidationConstraints && varType) {

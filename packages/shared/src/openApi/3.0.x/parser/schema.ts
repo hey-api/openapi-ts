@@ -775,46 +775,12 @@ function parseAnyOf({
 
   const compositionSchemas = schema.anyOf;
 
-  const discriminatorPropertyType = schema.discriminator
-    ? findDiscriminatorPropertyType({
-        context,
-        propertyName: schema.discriminator.propertyName,
-        schemas: compositionSchemas,
-      })
-    : undefined;
-
   for (const compositionSchema of compositionSchemas) {
-    let irCompositionSchema = schemaToIrSchema({
+    const irCompositionSchema = schemaToIrSchema({
       context,
       schema: compositionSchema,
       state,
     });
-
-    // `$ref` should be defined with discriminators
-    if (schema.discriminator && irCompositionSchema.$ref) {
-      const values = discriminatorValues(irCompositionSchema.$ref, schema.discriminator.mapping);
-
-      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
-        convertDiscriminatorValue(value, discriminatorPropertyType!),
-      );
-      const irDiscriminatorSchema: IR.SchemaObject = {
-        properties: {
-          [schema.discriminator.propertyName]:
-            valueSchemas.length > 1
-              ? {
-                  items: valueSchemas,
-                  logicalOperator: 'or',
-                }
-              : valueSchemas[0]!,
-        },
-        type: 'object',
-      };
-      irCompositionSchema = {
-        items: [irDiscriminatorSchema, irCompositionSchema],
-        logicalOperator: 'and',
-      };
-    }
-
     schemaItems.push(irCompositionSchema);
   }
 
@@ -848,7 +814,10 @@ function parseAnyOf({
   }
 
   if (schema.discriminator && irSchema.logicalOperator === 'or') {
-    irSchema.discriminator = { propertyName: schema.discriminator.propertyName };
+    irSchema.discriminator = {
+      ...(schema.discriminator.mapping && { mapping: schema.discriminator.mapping }),
+      propertyName: schema.discriminator.propertyName,
+    };
   }
 
   return irSchema;
@@ -953,46 +922,12 @@ function parseOneOf({
 
   const compositionSchemas = schema.oneOf;
 
-  const discriminatorPropertyType = schema.discriminator
-    ? findDiscriminatorPropertyType({
-        context,
-        propertyName: schema.discriminator.propertyName,
-        schemas: compositionSchemas,
-      })
-    : undefined;
-
   for (const compositionSchema of compositionSchemas) {
-    let irCompositionSchema = schemaToIrSchema({
+    const irCompositionSchema = schemaToIrSchema({
       context,
       schema: compositionSchema,
       state,
     });
-
-    // `$ref` should be defined with discriminators
-    if (schema.discriminator && irCompositionSchema.$ref) {
-      const values = discriminatorValues(irCompositionSchema.$ref, schema.discriminator.mapping);
-
-      const valueSchemas: ReadonlyArray<IR.SchemaObject> = values.map((value) =>
-        convertDiscriminatorValue(value, discriminatorPropertyType!),
-      );
-      const irDiscriminatorSchema: IR.SchemaObject = {
-        properties: {
-          [schema.discriminator.propertyName]:
-            valueSchemas.length > 1
-              ? {
-                  items: valueSchemas,
-                  logicalOperator: 'or',
-                }
-              : valueSchemas[0]!,
-        },
-        required: [schema.discriminator.propertyName],
-        type: 'object',
-      };
-      irCompositionSchema = {
-        items: [irDiscriminatorSchema, irCompositionSchema],
-        logicalOperator: 'and',
-      };
-    }
 
     // since we know oneOf will be using "or" logical operator, if the parsed
     // composition schema also has an "or" operator, we can bring it up
@@ -1038,7 +973,10 @@ function parseOneOf({
   }
 
   if (schema.discriminator && irSchema.logicalOperator === 'or') {
-    irSchema.discriminator = { propertyName: schema.discriminator.propertyName };
+    irSchema.discriminator = {
+      ...(schema.discriminator.mapping && { mapping: schema.discriminator.mapping }),
+      propertyName: schema.discriminator.propertyName,
+    };
   }
 
   return irSchema;
