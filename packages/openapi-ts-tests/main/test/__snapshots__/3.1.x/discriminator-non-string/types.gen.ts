@@ -21,9 +21,9 @@ export type CustomConfig = {
 };
 
 export type BooleanAnyOf = ({
-    use_custom?: false;
+    use_custom: false;
 } & AutoConfig) | ({
-    use_custom?: true;
+    use_custom: true;
 } & CustomConfig);
 
 export type IntegerOneOf = ({
@@ -73,9 +73,9 @@ export type IntegerAllOfChildB = Omit<IntegerAllOfBase, 'kind'> & {
 };
 
 export type NullableIntegerOneOf = ({
-    tag: 10;
+    tag: '10';
 } & NullableVariantX) | ({
-    tag: 20;
+    tag: '20';
 } & NullableVariantY);
 
 export type NullableVariantX = {

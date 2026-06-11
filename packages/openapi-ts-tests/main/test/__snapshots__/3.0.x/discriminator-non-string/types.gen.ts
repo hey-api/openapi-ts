@@ -21,9 +21,9 @@ export type CustomConfig = {
 };
 
 export type BooleanAnyOf = ({
-    use_custom?: false;
+    use_custom: false;
 } & AutoConfig) | ({
-    use_custom?: true;
+    use_custom: true;
 } & CustomConfig);
 
 export type IntegerOneOf = ({
