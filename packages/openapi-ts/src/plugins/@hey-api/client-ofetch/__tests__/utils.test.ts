@@ -247,6 +247,33 @@ describe('buildOfetchOptions', () => {
     expect(result.credentials).toBeUndefined();
   });
 
+  it('defaults ignoreResponseError to false when not set in opts', () => {
+    const opts: ResolvedRequestOptions = {
+      baseUrl: 'https://api.example.com',
+      headers: new Headers(),
+      method: 'GET',
+      url: '/test',
+    };
+
+    const result = buildOfetchOptions(opts, null, undefined);
+
+    expect(result.ignoreResponseError).toBe(false);
+  });
+
+  it('passes through ignoreResponseError: true when explicitly set', () => {
+    const opts: ResolvedRequestOptions = {
+      baseUrl: 'https://api.example.com',
+      headers: new Headers(),
+      ignoreResponseError: true,
+      method: 'GET',
+      url: '/test',
+    };
+
+    const result = buildOfetchOptions(opts, null, undefined);
+
+    expect(result.ignoreResponseError).toBe(true);
+  });
+
   it('passes through different credential values', () => {
     const testCases: Array<RequestCredentials> = ['omit', 'same-origin', 'include'];
 

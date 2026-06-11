@@ -297,7 +297,8 @@ export const buildOfetchOptions = (
     credentials: opts.credentials as OfetchOptions['credentials'],
     dispatcher: opts.dispatcher as OfetchOptions['dispatcher'],
     headers: opts.headers as Headers,
-    ignoreResponseError: (opts.ignoreResponseError as OfetchOptions['ignoreResponseError']) ?? true,
+    ignoreResponseError:
+      (opts.ignoreResponseError as OfetchOptions['ignoreResponseError']) ?? false,
     method: opts.method,
     onRequest: opts.onRequest as OfetchOptions['onRequest'],
     onRequestError: opts.onRequestError as OfetchOptions['onRequestError'],
@@ -497,7 +498,7 @@ export const createConfig = <T extends ClientOptions = ClientOptions>(
 ): Config<Omit<ClientOptions, keyof T> & T> => ({
   ...jsonBodySerializer,
   headers: defaultHeaders,
-  ignoreResponseError: true,
+  ignoreResponseError: false,
   parseAs: 'auto',
   querySerializer: defaultQuerySerializer,
   ...override,

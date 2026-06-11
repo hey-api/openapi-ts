@@ -177,7 +177,19 @@ export const createClient = (config: Config = {}): Client => {
       // build ofetch options and perform the request (.raw keeps the Response)
       const responseOptions = buildNetworkOptions(opts, networkBody, ofetchResponseType);
 
-      response = await $ofetch.raw(finalUrl, responseOptions);
+      try {
+        response = await $ofetch.raw(finalUrl, responseOptions);
+      } catch (fetchError: unknown) {
+        // When ignoreResponseError is false (default), ofetch throws FetchError for non-2xx.
+        // Extract the response so response interceptors can still process it before we
+        // decide whether to throw or return the error.
+        const maybeFetchError = fetchError as { response?: typeof response };
+        if (maybeFetchError?.response) {
+          response = maybeFetchError.response;
+        } else {
+          throw fetchError;
+        }
+      }
 
       for (const fn of interceptors.response.fns) {
         if (fn) {
