@@ -63,9 +63,9 @@
     "@eslint/js": "9.39.4",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
-    "@types/node": "24.13.0",
+    "@types/node": "24.13.1",
     "@typescript-eslint/eslint-plugin": "8.54.0",
-    "@typescript/native-preview": "7.0.0-dev.20260604.1",
+    "@typescript/native-preview": "7.0.0-dev.20260607.1",
     "@vitest/coverage-v8": "4.1.8",
     "eslint": "9.39.4",
     "eslint-plugin-simple-import-sort": "12.1.1",
@@ -88,5 +88,5 @@
   "engines": {
     "node": ">=22.18.0"
   },
-  "packageManager": "pnpm@11.5.1"
+  "packageManager": "pnpm@11.5.2"
 }
