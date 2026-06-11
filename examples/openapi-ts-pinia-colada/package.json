@@ -26,7 +26,7 @@
     "@rushstack/eslint-patch": "1.10.5",
     "@tsconfig/node24": "24.0.4",
     "@types/jsdom": "28.0.3",
-    "@types/node": "24.13.0",
+    "@types/node": "24.13.1",
     "@vitejs/plugin-vue": "6.0.7",
     "@vitejs/plugin-vue-jsx": "5.1.5",
     "@vue/eslint-config-typescript": "14.6.0",
