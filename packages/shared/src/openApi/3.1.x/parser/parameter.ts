@@ -96,13 +96,17 @@ const parameterToIrParameter = ({
 }): IR.ParameterObject => {
   // TODO: parser - fix
   let schema = parameter.schema;
+  let contentType: string | undefined;
 
-  if (!schema) {
+  if (parameter.content) {
     const contents = mediaTypeObjects({ content: parameter.content });
     // TODO: add support for multiple content types, for now prefer JSON
     const content = contents.find((content) => content.type === 'json') || contents[0];
     if (content) {
-      schema = content.schema;
+      contentType = content.mediaType;
+      if (!schema) {
+        schema = content.schema;
+      }
     }
   }
 
@@ -155,6 +159,10 @@ const parameterToIrParameter = ({
 
   if (parameter.required) {
     irParameter.required = parameter.required;
+  }
+
+  if (contentType) {
+    irParameter.contentType = contentType;
   }
 
   parseExtensions({
