@@ -84,6 +84,7 @@ function createContractExpression(
           query: { whenEmpty: 'omit' },
         },
         operation,
+        outerOptional: true,
         // @ts-expect-error
         plugin: validator,
       });
