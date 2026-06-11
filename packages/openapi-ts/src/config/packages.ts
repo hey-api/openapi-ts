@@ -9,7 +9,7 @@ import path from 'node:path';
  * @param configFilePath - The path to the configuration file (e.g., openapi-ts.config.ts)
  * @returns An object containing all project dependencies (dependencies, devDependencies, peerDependencies, optionalDependencies)
  */
-export const getProjectDependencies = (configFilePath?: string): Record<string, string> => {
+export function getProjectDependencies(configFilePath?: string): Record<string, string> {
   let currentDir = configFilePath ? path.dirname(configFilePath) : process.cwd();
 
   while (currentDir !== path.dirname(currentDir)) {
@@ -37,4 +37,4 @@ export const getProjectDependencies = (configFilePath?: string): Record<string, 
   }
 
   return {};
-};
+}
