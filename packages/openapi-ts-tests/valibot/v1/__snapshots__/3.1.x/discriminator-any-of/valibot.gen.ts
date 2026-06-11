@@ -14,21 +14,21 @@ export const vBaz = vQux;
 export const vBar = vQux;
 
 export const vFoo = v.union([v.intersect([v.object({
-            type: v.optional(v.literal('Bar'))
+            type: v.literal('Bar')
         }), vBar]), v.intersect([v.object({
-            type: v.optional(v.literal('Baz'))
+            type: v.literal('Baz')
         }), vBaz])]);
 
 export const vSpæcial = vQux;
 
 export const vQuuz = v.union([
     v.intersect([v.object({
-            type: v.optional(v.literal('bar'))
+            type: v.literal('bar')
         }), vBar]),
     v.intersect([v.object({
-            type: v.optional(v.literal('baz'))
+            type: v.literal('baz')
         }), vBaz]),
     v.intersect([v.object({
-            type: v.optional(v.literal('non-ascii'))
+            type: v.literal('non-ascii')
         }), vSpæcial])
 ]);

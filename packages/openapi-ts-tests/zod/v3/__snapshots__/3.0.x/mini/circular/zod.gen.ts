@@ -18,7 +18,7 @@ export const zBaz = z.object({
 export const zQux = z.union([
     z.intersection(z.object({
         type: z.literal('struct')
-    }), z.lazy(() => z.lazy((): any => zCorge))),
+    }), z.lazy((): any => zCorge)),
     z.intersection(z.object({
         type: z.literal('array')
     }), zFoo)

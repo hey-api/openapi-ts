@@ -18,7 +18,7 @@ export const zBaz = z.object({
 export const zQux = z.union([
     z.object({
         type: z.literal('struct')
-    }).and(z.lazy(() => z.lazy((): any => zCorge))),
+    }).and(z.lazy((): any => zCorge)),
     z.object({
         type: z.literal('array')
     }).and(zFoo)

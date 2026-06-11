@@ -91,6 +91,16 @@ export { parseV3_1_X } from './openApi/3.1.x';
 export type { OperationsStrategy } from './openApi/shared/locations';
 export type { OperationPathStrategy, OperationStructureStrategy } from './openApi/shared/locations';
 export { OperationPath, OperationStrategy } from './openApi/shared/locations';
+export type {
+  DiscriminatedUnionData,
+  DiscriminatedUnionMember,
+  DiscriminatorPropertyType,
+} from './openApi/shared/utils/discriminator';
+export {
+  buildDiscriminatedUnion,
+  convertDiscriminatorValue,
+  discriminatorValues,
+} from './openApi/shared/utils/discriminator';
 export { buildGraph } from './openApi/shared/utils/graph';
 export { patchOpenApiSpec } from './openApi/shared/utils/patch';
 export type {

@@ -34,10 +34,15 @@ function baseNode(ctx: UnionResolverContext): PydanticType {
   const unionMembers = nonNullMembers;
   const unionType = $$.constrainedType($.type.or(...unionMembers.map((m) => m.type)));
 
+  const discriminator =
+    ctx.parentSchema.discriminator?.propertyName ??
+    (nonNullResults.length === 1 ? nonNullResults[0]!.discriminator : undefined);
+
   return {
     node: { kind: 'rootModel', type: unionType },
     type: unionType,
     unionMembers,
+    ...(discriminator && { discriminator }),
   };
 }
 
