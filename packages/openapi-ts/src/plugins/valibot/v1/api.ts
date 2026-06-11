@@ -49,6 +49,7 @@ function compositeNode(ctx: RequestValidatorResolverContext): Pipe | undefined {
   const { v } = ctx.symbols;
   const obj = $.object();
 
+  let allOptional = true;
   const defaultValues = getDefaultRequestValidatorLayers(ctx.operation);
   for (const key of requestValidatorLayers) {
     const layer = resolveValidatorLayer(ctx.layers, key, defaultValues);
@@ -63,6 +64,9 @@ function compositeNode(ctx: RequestValidatorResolverContext): Pipe | undefined {
 
     if (layerSchema) {
       obj.prop(layer.as, ctx.nodes.optional({ ...ctx, layer, schema: $(layerSchema) }));
+      if (!layer.optional) {
+        allOptional = false;
+      }
       continue;
     }
 
@@ -72,13 +76,20 @@ function compositeNode(ctx: RequestValidatorResolverContext): Pipe | undefined {
 
     const empty = ctx.nodes.empty({ ...ctx, layer });
     obj.prop(layer.as, ctx.nodes.optional({ ...ctx, layer, schema: empty }));
+    if (!layer.optional) {
+      allOptional = false;
+    }
   }
 
   if (obj.isEmpty) {
     return;
   }
 
-  return $(v).attr(identifiers.schemas.object).call(obj);
+  let result: Pipe = $(v).attr(identifiers.schemas.object).call(obj);
+  if (allOptional && ctx.outerOptional) {
+    result = $(v).attr(identifiers.schemas.optional).call(result);
+  }
+  return result;
 }
 
 function requestValidatorResolver(
