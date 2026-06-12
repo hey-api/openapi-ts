@@ -14,7 +14,7 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
+const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<TOptions>, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
@@ -39,7 +39,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getMembersQueryKey = (options?: Options<GetMembersData>) => createQueryKey('getMembers', options);
+export const getMembersQueryKey = (options?: Partial<Options<GetMembersData>>) => createQueryKey('getMembers', options);
 
 export const getMembersOptions = (options?: Options<GetMembersData>) => queryOptions<GetMembersResponse, DefaultError, GetMembersResponse, ReturnType<typeof getMembersQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -54,7 +54,7 @@ export const getMembersOptions = (options?: Options<GetMembersData>) => queryOpt
     queryKey: getMembersQueryKey(options)
 });
 
-export const getMembersOptionsQueryKey = (options?: Options<GetMembersOptionsData>) => createQueryKey('getMembersOptions', options);
+export const getMembersOptionsQueryKey = (options?: Partial<Options<GetMembersOptionsData>>) => createQueryKey('getMembersOptions', options);
 
 export const getMembersOptionsOptions = (options?: Options<GetMembersOptionsData>) => queryOptions<GetMembersOptionsResponse, DefaultError, GetMembersOptionsResponse, ReturnType<typeof getMembersOptionsQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {

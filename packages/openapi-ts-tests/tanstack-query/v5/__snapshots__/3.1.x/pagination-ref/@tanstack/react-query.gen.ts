@@ -14,7 +14,7 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
+const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<TOptions>, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
@@ -39,7 +39,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const getFooQueryKey = (options: Options<GetFooData>) => createQueryKey('getFoo', options);
+export const getFooQueryKey = (options?: Partial<Options<GetFooData>>) => createQueryKey('getFoo', options);
 
 export const getFooOptions = (options: Options<GetFooData>) => queryOptions<GetFooResponse, DefaultError, GetFooResponse, ReturnType<typeof getFooQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -83,7 +83,7 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
     return params as unknown as typeof page;
 };
 
-export const getFooInfiniteQueryKey = (options: Options<GetFooData>): QueryKey<Options<GetFooData>> => createQueryKey('getFoo', options, true);
+export const getFooInfiniteQueryKey = (options?: Partial<Options<GetFooData>>): QueryKey<Options<GetFooData>> => createQueryKey('getFoo', options, true);
 
 export const getFooInfiniteOptions = (options: Options<GetFooData>) => infiniteQueryOptions<GetFooResponse, DefaultError, InfiniteData<GetFooResponse>, QueryKey<Options<GetFooData>>, number | null | Pick<QueryKey<Options<GetFooData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
 // @ts-ignore

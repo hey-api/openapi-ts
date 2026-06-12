@@ -14,7 +14,7 @@ export type QueryKey<TOptions extends Options> = [
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
+const createQueryKey = <TOptions extends Options>(id: string, options?: Partial<TOptions>, infinite?: boolean, tags?: ReadonlyArray<string>): [
     QueryKey<TOptions>[0]
 ] => {
     const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
@@ -39,7 +39,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const createQueryKey2 = (options?: Options<CreateData>) => createQueryKey('create', options);
+export const createQueryKey2 = (options?: Partial<Options<CreateData>>) => createQueryKey('create', options);
 
 export const createOptions = (options?: Options<CreateData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof createQueryKey2>>({
     queryFn: async ({ queryKey, signal }) => {

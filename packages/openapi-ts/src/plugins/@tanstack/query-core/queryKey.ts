@@ -1,6 +1,6 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
-import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
+import { applyNaming } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
 import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
@@ -42,11 +42,12 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
   });
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
+  const partialType = $.type('Partial').generic(TOptionsType);
 
   const fn = $.const(symbolCreateQueryKey).assign(
     $.func()
       .param('id', (p) => p.type('string'))
-      .param('options', (p) => p.optional().type(TOptionsType))
+      .param('options', (p) => p.optional().type(partialType))
       .param('infinite', (p) => p.optional().type('boolean'))
       .param('tags', (p) => p.optional().type('ReadonlyArray<string>'))
       .generic(TOptionsType, (g) => g.extends(symbolOptions))
@@ -172,11 +173,12 @@ export function queryKeyStatement({
   typeQueryKey?: ReturnType<typeof $.type>;
 }): ReturnType<typeof $.const> {
   const typeData = useTypeData({ operation, plugin });
+  const partialType = $.type('Partial').generic(typeData);
   const statement = $.const(symbol)
     .export()
     .assign(
       $.func()
-        .param('options', (p) => p.required(hasOperationDataRequired(operation)).type(typeData))
+        .param('options', (p) => p.optional().type(partialType))
         .$if(isInfinite && typeQueryKey, (f, v) => f.returns(v))
         .do(
           createQueryKeyLiteral({
