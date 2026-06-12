@@ -22,7 +22,7 @@
     "@swc-node/register": "1.10.10",
     "@swc/core": "1.11.29",
     "eslint": "9.39.4",
-    "oxfmt": "0.53.0",
+    "oxfmt": "0.54.0",
     "typescript": "6.0.3",
     "unplugin-swc": "1.5.9",
     "vite": "8.0.16",
