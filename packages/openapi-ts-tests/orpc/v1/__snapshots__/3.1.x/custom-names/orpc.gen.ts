@@ -15,7 +15,7 @@ export const getUsersRpc = oc.route({
     path: '/users',
     summary: 'Get all users',
     tags: ['users']
-}).input(v.object({ query: v.optional(vGetUsersQuery) })).output(vGetUsersResponse);
+}).input(v.optional(v.object({ query: v.optional(vGetUsersQuery) }))).output(vGetUsersResponse);
 
 /**
  * Create a new user
@@ -77,7 +77,7 @@ export const getPostsRpc = oc.route({
     path: '/posts',
     summary: 'Get all posts',
     tags: ['posts']
-}).input(v.object({ query: v.optional(vGetPostsQuery) })).output(vGetPostsResponse);
+}).input(v.optional(v.object({ query: v.optional(vGetPostsQuery) }))).output(vGetPostsResponse);
 
 /**
  * Create a new post

@@ -15,7 +15,7 @@ export const GetUsers = oc.route({
     path: '/users',
     summary: 'Get all users',
     tags: ['users']
-}).input(z.object({ query: zGetUsersQuery.optional() })).output(zGetUsersResponse);
+}).input(z.object({ query: zGetUsersQuery.optional() }).optional()).output(zGetUsersResponse);
 
 /**
  * Create a new user
@@ -85,7 +85,7 @@ export const GetPosts = oc.route({
     path: '/posts',
     summary: 'Get all posts',
     tags: ['posts']
-}).input(z.object({ query: zGetPostsQuery.optional() })).output(zGetPostsResponse);
+}).input(z.object({ query: zGetPostsQuery.optional() }).optional()).output(zGetPostsResponse);
 
 /**
  * Create a new post
