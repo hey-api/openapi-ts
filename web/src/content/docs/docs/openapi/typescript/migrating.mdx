@@ -9,6 +9,12 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 While we try to avoid breaking changes, sometimes it's unavoidable in order to offer you the latest features. This page lists changes that require updates to your code. If you run into a problem with migration, please [open an issue](https://github.com/hey-api/openapi-ts/issues).
 
+## v0.99.0
+
+### Plugin duplicates behavior
+
+If you specified the same plugin multiple times, only the last instance would be used. We eventually added a warning for this behavior, but that didn't treat the root issue. This release changes that by merging duplicate plugin configurations.
+
 ## v0.98.0
 
 ### Declarative configuration
