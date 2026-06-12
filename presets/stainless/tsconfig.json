@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declarationMap": false,
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["vitest/globals", "node"]
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../../packages/types" },
+    { "path": "../../packages/codegen-core" },
+    { "path": "../../packages/shared" },
+    { "path": "../../packages/json-schema-ref-parser" },
+    { "path": "../../packages/openapi-python" },
+    { "path": "../../packages/openapi-ts" }
+  ]
+}
