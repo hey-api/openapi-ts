@@ -7,10 +7,12 @@ import {
   isOperationOptionsRequired,
 } from '../../../../plugins/shared/utils/operation';
 import { $ } from '../../../../ts-dsl';
-import { useTypeData } from '../shared/useType';
+import { createUseQueryParamsType } from '../shared/useQueryParams';
 import type { PluginInstance } from '../types';
 
 const optionsParamName = 'options';
+const queryOptionsKey = 'queryOptions';
+const sdkOptionsName = 'sdkOptions';
 
 export function createUseQuery({
   operation,
@@ -23,6 +25,16 @@ export function createUseQuery({
 
   if (!('useQuery' in plugin.config)) return;
 
+  if (
+    !plugin.querySymbol({
+      category: 'utility',
+      resource: 'UseQueryParams',
+      tool: plugin.name,
+    })
+  ) {
+    createUseQueryParamsType({ plugin });
+  }
+
   const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useQuery));
 
   const symbolUseQuery = plugin.symbols.useQuery;
@@ -31,7 +43,6 @@ export function createUseQuery({
     context: plugin.context,
     operation,
   });
-  const typeData = useTypeData({ operation, plugin });
 
   const symbolQueryOptionsFn = plugin.referenceSymbol({
     category: 'hook',
@@ -40,13 +51,32 @@ export function createUseQuery({
     role: 'queryOptions',
     tool: plugin.name,
   });
+
+  const symbolUseQueryParams = plugin.referenceSymbol({
+    category: 'utility',
+    resource: 'UseQueryParams',
+    tool: plugin.name,
+  });
+
+  const mergedParamType = $.type(symbolUseQueryParams).generic($.type.query(symbolQueryOptionsFn));
+
+  const func = $.func().param(optionsParamName, (p) =>
+    p.required(isRequiredOptions).type(mergedParamType),
+  );
+
+  func.do(
+    $.const()
+      .object(queryOptionsKey)
+      .spread(sdkOptionsName)
+      .assign(isRequiredOptions ? $(optionsParamName) : $(optionsParamName).coalesce($.object())),
+    $(symbolUseQuery)
+      .call($.object().spread($(symbolQueryOptionsFn).call(sdkOptionsName)).spread(queryOptionsKey))
+      .return(),
+  );
+
   const statement = $.const(symbolUseQueryFn)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
-    .assign(
-      $.func()
-        .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
-        .do($(symbolUseQuery).call($(symbolQueryOptionsFn).call(optionsParamName)).return()),
-    );
+    .assign(func);
   plugin.node(statement);
 }
