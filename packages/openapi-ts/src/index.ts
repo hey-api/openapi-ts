@@ -160,12 +160,12 @@ export async function defineConfig<T extends MaybeArray<UserConfig>>(
   return typeof config === 'function' ? await config() : config;
 }
 
-export { defaultPlugins } from './config/plugins';
 export type { UserConfig } from './config/types';
 export { clientDefaultConfig, clientDefaultMeta } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
 export type { ExpressionTransformer, TypeTransformer } from './plugins/@hey-api/transformers/types';
+export { defaultPlugins } from './plugins/config';
 export * from './ts-dsl';
 export { Logger } from '@hey-api/codegen-core';
 export type {
