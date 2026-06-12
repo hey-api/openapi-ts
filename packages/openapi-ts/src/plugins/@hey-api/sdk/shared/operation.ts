@@ -287,50 +287,54 @@ export function operationStatements({
   // content type. currently impossible because successes do not contain
   // header information
 
-  const paramSerializers = $.object();
+  if (plugin.config.querySerializer) {
+    const paramSerializers = $.object();
 
-  for (const name in operation.parameters?.query) {
-    const parameter = operation.parameters.query[name]!;
+    for (const name in operation.parameters?.query) {
+      const parameter = operation.parameters.query[name]!;
 
-    if (parameter.schema.type === 'array' || parameter.schema.type === 'tuple') {
-      if (parameter.style !== 'form' || !parameter.explode) {
-        // override the default settings for array serialization
-        paramSerializers.prop(
-          parameter.name,
-          $.object().prop(
-            'array',
-            $.object()
-              .$if(parameter.explode === false, (o) =>
-                o.prop('explode', $.literal(parameter.explode)),
-              )
-              .$if(parameter.style !== 'form', (o) => o.prop('style', $.literal(parameter.style))),
-          ),
-        );
-      }
-    } else if (parameter.schema.type === 'object') {
-      if (parameter.style !== 'deepObject' || !parameter.explode) {
-        // override the default settings for object serialization
-        paramSerializers.prop(
-          parameter.name,
-          $.object().prop(
-            'object',
-            $.object()
-              .$if(parameter.explode === false, (o) =>
-                o.prop('explode', $.literal(parameter.explode)),
-              )
-              .$if(parameter.style !== 'deepObject', (o) =>
-                o.prop('style', $.literal(parameter.style)),
-              ),
-          ),
-        );
+      if (parameter.schema.type === 'array' || parameter.schema.type === 'tuple') {
+        if (parameter.style !== 'form' || !parameter.explode) {
+          // override the default settings for array serialization
+          paramSerializers.prop(
+            parameter.name,
+            $.object().prop(
+              'array',
+              $.object()
+                .$if(parameter.explode === false, (o) =>
+                  o.prop('explode', $.literal(parameter.explode)),
+                )
+                .$if(parameter.style !== 'form', (o) =>
+                  o.prop('style', $.literal(parameter.style)),
+                ),
+            ),
+          );
+        }
+      } else if (parameter.schema.type === 'object') {
+        if (parameter.style !== 'deepObject' || !parameter.explode) {
+          // override the default settings for object serialization
+          paramSerializers.prop(
+            parameter.name,
+            $.object().prop(
+              'object',
+              $.object()
+                .$if(parameter.explode === false, (o) =>
+                  o.prop('explode', $.literal(parameter.explode)),
+                )
+                .$if(parameter.style !== 'deepObject', (o) =>
+                  o.prop('style', $.literal(parameter.style)),
+                ),
+            ),
+          );
+        }
       }
     }
-  }
 
-  if (paramSerializers.hasProps()) {
-    // TODO: if all parameters have the same serialization,
-    // apply it globally to reduce output size
-    reqOptions.prop('querySerializer', $.object().prop('parameters', paramSerializers));
+    if (paramSerializers.hasProps()) {
+      // TODO: if all parameters have the same serialization,
+      // apply it globally to reduce output size
+      reqOptions.prop('querySerializer', $.object().prop('parameters', paramSerializers));
+    }
   }
 
   const requestValidator = createRequestValidator({ operation, plugin });

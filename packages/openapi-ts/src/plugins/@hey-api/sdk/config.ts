@@ -140,6 +140,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       strategyDefaultTag: 'default',
     },
     paramsStructure: 'grouped',
+    querySerializer: true,
     responseStyle: 'fields',
     transformer: {
       $coerceAny: ({ type, value }) => ({
