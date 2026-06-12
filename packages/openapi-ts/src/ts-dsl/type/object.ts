@@ -20,6 +20,11 @@ export class TypeObjectTsDsl extends Mixed {
     }
   }
 
+  /** Returns all properties and index signatures. */
+  getProps(): Array<TypePropTsDsl | TypeIdxSigTsDsl> {
+    return [...this._props.values()];
+  }
+
   /** Returns true if object has at least one property or index signature. */
   hasProps(): boolean {
     return this._props.size > 0;
