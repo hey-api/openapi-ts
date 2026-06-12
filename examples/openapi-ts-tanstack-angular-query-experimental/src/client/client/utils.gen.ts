@@ -18,7 +18,7 @@ interface PathSerializer {
 
 const PATH_PARAM_RE = /\{[^{}]+\}/g;
 
-type ArrayStyle = 'form' | 'spaceDelimited' | 'pipeDelimited';
+type ArrayStyle = 'deepObject' | 'form' | 'spaceDelimited' | 'pipeDelimited';
 type MatrixStyle = 'label' | 'matrix' | 'simple';
 type ArraySeparatorStyle = ArrayStyle | MatrixStyle;
 
