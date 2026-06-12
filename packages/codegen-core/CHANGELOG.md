@@ -1,5 +1,17 @@
 # @hey-api/codegen-core
 
+## 0.9.0
+
+### Minor Changes
+
+- **types**: rename `ProjectRenderMeta` to `ProjectMeta` and key it by language ([#3984](https://github.com/hey-api/openapi-ts/pull/3984)) ([`f4a0a12`](https://github.com/hey-api/openapi-ts/commit/f4a0a12a3c61b3b0dc8f4b0819fcbc42d20c1c0f)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- **symbol**: add event listeners ([#3998](https://github.com/hey-api/openapi-ts/pull/3998)) ([`88f7e9c`](https://github.com/hey-api/openapi-ts/commit/88f7e9c116397f0e76648d9a26bfc63003f01fc1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **utils**: expose `Version` class ([#3991](https://github.com/hey-api/openapi-ts/pull/3991)) ([`e870070`](https://github.com/hey-api/openapi-ts/commit/e8700705c2d613a10c8fb551d95bea826e3a5158)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.8.4
 
 ### Patch Changes

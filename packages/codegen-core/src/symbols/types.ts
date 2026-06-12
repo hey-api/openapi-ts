@@ -1,4 +1,5 @@
 import type { ISymbolMeta } from '../extensions';
+import type { File } from '../files/file';
 import type { Symbol } from './symbol';
 
 export type BindingKind = 'default' | 'named' | 'namespace';
@@ -6,6 +7,12 @@ export type BindingKind = 'default' | 'named' | 'namespace';
 export type ISymbolIdentifier = number | ISymbolMeta;
 
 export type SymbolKind = 'class' | 'enum' | 'function' | 'interface' | 'namespace' | 'type' | 'var';
+
+export type SymbolEventMap = {
+  file: (args: { file: File; symbol: Symbol }) => void;
+  finalName: (args: { finalName: string; symbol: Symbol }) => void;
+  import: (args: { symbol: Symbol }) => void;
+};
 
 export interface ISymbolChild {
   /**
@@ -93,6 +100,13 @@ export type ISymbolIn = {
    * @default false
    */
   override?: boolean;
+  /**
+   * Naming priority. Higher value wins the canonical name when
+   * multiple symbols in the same file compete for the same identifier.
+   *
+   * @default 0
+   */
+  priority?: number;
 };
 
 export interface ISymbolRegistry {

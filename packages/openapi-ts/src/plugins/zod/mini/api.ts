@@ -49,6 +49,7 @@ function compositeNode(ctx: RequestValidatorResolverContext): Chain | undefined 
   const { z } = ctx.symbols;
   const obj = $.object();
 
+  let allOptional = true;
   const defaultValues = getDefaultRequestValidatorLayers(ctx.operation);
   for (const key of requestValidatorLayers) {
     const layer = resolveValidatorLayer(ctx.layers, key, defaultValues);
@@ -63,6 +64,9 @@ function compositeNode(ctx: RequestValidatorResolverContext): Chain | undefined 
 
     if (layerSchema) {
       obj.prop(layer.as, ctx.nodes.optional({ ...ctx, layer, schema: $(layerSchema) }));
+      if (!layer.optional) {
+        allOptional = false;
+      }
       continue;
     }
 
@@ -72,13 +76,20 @@ function compositeNode(ctx: RequestValidatorResolverContext): Chain | undefined 
 
     const empty = ctx.nodes.empty({ ...ctx, layer });
     obj.prop(layer.as, ctx.nodes.optional({ ...ctx, layer, schema: empty }));
+    if (!layer.optional) {
+      allOptional = false;
+    }
   }
 
   if (obj.isEmpty) {
     return;
   }
 
-  return $(z).attr(identifiers.object).call(obj);
+  let result: Chain = $(z).attr(identifiers.object).call(obj);
+  if (allOptional && ctx.outerOptional) {
+    result = $(z).attr(identifiers.optional).call(result);
+  }
+  return result;
 }
 
 function requestValidatorResolver(

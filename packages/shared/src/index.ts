@@ -91,6 +91,16 @@ export { parseV3_1_X } from './openApi/3.1.x';
 export type { OperationsStrategy } from './openApi/shared/locations';
 export type { OperationPathStrategy, OperationStructureStrategy } from './openApi/shared/locations';
 export { OperationPath, OperationStrategy } from './openApi/shared/locations';
+export type {
+  DiscriminatedUnionData,
+  DiscriminatedUnionMember,
+  DiscriminatorPropertyType,
+} from './openApi/shared/utils/discriminator';
+export {
+  buildDiscriminatedUnion,
+  convertDiscriminatorValue,
+  discriminatorValues,
+} from './openApi/shared/utils/discriminator';
 export { buildGraph } from './openApi/shared/utils/graph';
 export { patchOpenApiSpec } from './openApi/shared/utils/patch';
 export type {
@@ -103,9 +113,9 @@ export type {
   OpenApiSchemaObject,
 } from './openApi/types';
 export type { GetNameContext, Hooks } from './parser/hooks';
-export { warnOnConflictingDuplicatePlugins } from './plugins/duplicate';
+export type { PluginResolutionInput, PluginResolutionResult } from './plugins/config';
+export { definePluginConfig, resolvePlugins } from './plugins/config';
 export type { SchemaWithType } from './plugins/shared/types/schema';
-export { definePluginConfig } from './plugins/shared/utils/config';
 export { PluginInstance } from './plugins/shared/utils/instance';
 export { buildSymbolIn } from './plugins/symbol';
 export type {
@@ -139,7 +149,7 @@ export { heyApiRegistryBaseUrl } from './utils/input/heyApi';
 export { MinHeap } from './utils/minHeap';
 export { applyNaming, resolveNaming, toCase } from './utils/naming/naming';
 export type { Casing, NameTransformer, NamingConfig, NamingRule } from './utils/naming/types';
-export { isPlainObject } from './utils/object';
+export { deepMerge, isPlainObject } from './utils/object';
 export { pathToName } from './utils/path';
 export {
   encodeJsonPointerSegment,

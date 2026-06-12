@@ -1,5 +1,34 @@
 # @hey-api/openapi-ts
 
+## 0.98.2
+
+### Patch Changes
+
+- **plugin(@hey-api/client-ofetch)**: export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996)) ([`f02246b`](https://github.com/hey-api/openapi-ts/commit/f02246bad34f9c46b2fb099edb98eca8dd16c5a5)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/sdk)**: fix: don't expose SSE errors as iterator return types ([#3989](https://github.com/hey-api/openapi-ts/pull/3989)) ([`ffbd82e`](https://github.com/hey-api/openapi-ts/commit/ffbd82e898f239956324938ad6563b5c266c6dec)) by [@frastefanini](https://github.com/frastefanini)
+
+- **plugin(@hey-api/client-next)**: export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996)) ([`f02246b`](https://github.com/hey-api/openapi-ts/commit/f02246bad34f9c46b2fb099edb98eca8dd16c5a5)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/client-ky)**: export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996)) ([`f02246b`](https://github.com/hey-api/openapi-ts/commit/f02246bad34f9c46b2fb099edb98eca8dd16c5a5)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/client-fetch)**: export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996)) ([`f02246b`](https://github.com/hey-api/openapi-ts/commit/f02246bad34f9c46b2fb099edb98eca8dd16c5a5)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/client-nuxt)**: export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996)) ([`f02246b`](https://github.com/hey-api/openapi-ts/commit/f02246bad34f9c46b2fb099edb98eca8dd16c5a5)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/client-angular)**: fix: reassign the result of `HttpHeaders.delete()` back to `opts.headers` ([#3988](https://github.com/hey-api/openapi-ts/pull/3988)) ([`b9390d7`](https://github.com/hey-api/openapi-ts/commit/b9390d74071c07cbc65e8e8055fe7e4b4e350ca3)) by [@joshkaplinsky](https://github.com/joshkaplinsky)
+
+- **plugin(@hey-api/client-angular)**: export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996)) ([`f02246b`](https://github.com/hey-api/openapi-ts/commit/f02246bad34f9c46b2fb099edb98eca8dd16c5a5)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/client-axios)**: export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996)) ([`f02246b`](https://github.com/hey-api/openapi-ts/commit/f02246bad34f9c46b2fb099edb98eca8dd16c5a5)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/sdk)**: support type-safe `meta` option via augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996)) ([`b7ee3fd`](https://github.com/hey-api/openapi-ts/commit/b7ee3fda897398817abff7f16388c62a5ead7a8c)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.4.8
+- @hey-api/codegen-core@0.9.0
+
 ## 0.98.1
 
 ### Patch Changes

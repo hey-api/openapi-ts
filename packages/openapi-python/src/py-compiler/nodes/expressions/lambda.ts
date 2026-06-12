@@ -1,5 +1,5 @@
 import type { PyNodeBase } from '../base';
-import type { PyFunctionParameter } from '../declarations/functionParameter';
+import type { PyFunctionParameter } from '../declarations/function-parameter';
 import type { PyExpression } from '../expression';
 import { PyNodeKind } from '../kinds';
 

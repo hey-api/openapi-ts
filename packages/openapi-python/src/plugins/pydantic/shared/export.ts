@@ -1,20 +1,29 @@
 import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
+import type { DocLines } from '../../../py-dsl/layout/doc';
 import { $ } from '../dsl';
 import type { ProcessorContext } from './processor';
-import type { PydanticFinal } from './types';
+import type { PydanticNode } from './types';
+
+// TODO: move this somewhere else, maybe Python utils?
+export function toDocLines(title?: string, description?: string): DocLines {
+  if (title && description) return [title, '', description];
+  if (title) return title;
+  if (description) return description;
+  return [];
+}
 
 export function exportAst({
-  final,
   meta,
   naming,
   namingAnchor,
+  node,
   path,
   plugin,
   schema,
   tags,
 }: ProcessorContext & {
-  final: PydanticFinal;
+  node: PydanticNode;
 }): void {
   const name = pathToName(path, { anchor: namingAnchor });
   const symbol = plugin.registerSymbol(
@@ -28,71 +37,52 @@ export function exportAst({
       },
       name,
       naming,
+      path,
       plugin,
       schema,
     }),
   );
 
-  if (final.enumMembers) {
-    plugin.node($.enum(plugin, symbol, final.enumMembers));
+  const docLines = toDocLines(schema.title, schema.description);
+
+  if (node.kind === 'enum') {
+    const enumNode = $.enum(symbol)
+      .members(...node.members)
+      .doc(docLines);
+    plugin.node(enumNode);
     return;
   }
 
-  if (final.fields) {
-    const model = $(plugin, symbol);
-    if (plugin.config.strict) model.config({ extra: 'forbid' });
+  if (node.kind === 'model') {
+    // if (plugin.config.modelType === 'BaseModel') {
+    //   let baseModelSymbol: Symbol | undefined = plugin.querySymbol(BASE_MODEL_META);
+    //   if (!baseModelSymbol) {
+    //     baseModelSymbol = plugin.symbol('BaseModel', {
+    //       children: [...plugin.symbols.BaseModel.children],
+    //       meta: BASE_MODEL_META,
+    //     });
+    //     const baseModel = createBaseModel(plugin, baseModelSymbol);
+    //     plugin.node(baseModel);
+    //   }
+    // }
 
-    for (const f of final.fields) {
-      const field = $.field(plugin, f.originalName ?? f.name.name)
-        .$if(f.type, (v, t) => v.type(t))
-        .optional(f.isOptional);
-      if (f.fieldConstraints) {
-        if (f.fieldConstraints.alias !== undefined) {
-          field.alias(f.fieldConstraints.alias);
-        }
-        if (f.fieldConstraints.default !== undefined) {
-          field.default(f.fieldConstraints.default);
-        }
-        if (f.fieldConstraints.default_factory !== undefined) {
-          field.defaultFactory(f.fieldConstraints.default_factory);
-        }
-        if (f.fieldConstraints.description !== undefined) {
-          field.description(f.fieldConstraints.description);
-        }
-        if (f.fieldConstraints.title !== undefined) {
-          field.title(f.fieldConstraints.title);
-        }
-        if (f.fieldConstraints.gt !== undefined) {
-          field.gt(f.fieldConstraints.gt);
-        }
-        if (f.fieldConstraints.ge !== undefined) {
-          field.ge(f.fieldConstraints.ge);
-        }
-        if (f.fieldConstraints.lt !== undefined) {
-          field.lt(f.fieldConstraints.lt);
-        }
-        if (f.fieldConstraints.le !== undefined) {
-          field.le(f.fieldConstraints.le);
-        }
-        if (f.fieldConstraints.multiple_of !== undefined) {
-          field.multipleOf(f.fieldConstraints.multiple_of);
-        }
-        if (f.fieldConstraints.min_length !== undefined) {
-          field.minLength(f.fieldConstraints.min_length);
-        }
-        if (f.fieldConstraints.max_length !== undefined) {
-          field.maxLength(f.fieldConstraints.max_length);
-        }
-        if (f.fieldConstraints.pattern !== undefined) {
-          field.pattern(f.fieldConstraints.pattern);
-        }
-      }
-      model.field(field);
-    }
-
+    const model = $.model(plugin, symbol)
+      .doc(docLines)
+      .$if(plugin.config.strict, (m) => m.config({ extra: 'forbid' }))
+      .$if(node.config, (m, c) => m.config(c))
+      .fields(...node.fields);
     plugin.node(model);
     return;
   }
 
-  plugin.node($.typeAlias(plugin, symbol, final.type));
+  if (node.kind === 'rootModel') {
+    const rootModel = $.rootModel(plugin, symbol)
+      .doc(docLines)
+      .type(node.type)
+      .$if(node.discriminator, (m, d) => m.discriminator(d));
+    plugin.node(rootModel);
+    return;
+  }
+
+  plugin.node($.typeAlias(plugin, symbol, node.type));
 }

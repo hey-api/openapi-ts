@@ -1,14 +1,17 @@
 import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
 import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { VoidResolverContext } from '../../resolvers';
 import type { PydanticType } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function baseNode(_ctx: VoidResolverContext): PydanticType {
+  const type = $$.constrainedType('None');
   return {
-    type: 'None',
+    node: { kind: 'rootModel', type },
+    type,
   };
 }
 

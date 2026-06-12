@@ -213,6 +213,8 @@ export class File<Node extends INode = INode> {
    * Returns a debug‑friendly string representation identifying the file.
    */
   toString(): string {
-    return `[File ${this._logicalFilePath}#${this.id}]`;
+    const finalPath = this._finalPath ? ` → ${this._finalPath}` : '';
+    const status = `${this._finalPath ? '✓' : '~'} `;
+    return `${status}File#${this.id} ${this._logicalFilePath}${finalPath}`;
   }
 }

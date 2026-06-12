@@ -17,6 +17,11 @@ type TypeOrDecision =
   | {
       strategy: 'typing';
       unionSymbol: Symbol;
+    }
+  | {
+      optionalSymbol: Symbol;
+      strategy: 'optional';
+      unionSymbol?: Symbol;
     };
 
 export class TypeOrPyDsl extends Mixed {
@@ -43,9 +48,25 @@ export class TypeOrPyDsl extends Mixed {
     } else if (this.meta.Version.gte('3.10')) {
       this._decision = { strategy: 'bitor' };
     } else if (this.meta.Version.lte('3.9')) {
-      const unionSymbol = this.meta.symbols.typing.Union;
-      ctx.analyze(unionSymbol);
-      this._decision = { strategy: 'typing', unionSymbol };
+      const hasNone = flat.some((r) => fromRef(r) === 'None');
+      const nonNoneCount = flat.length - (hasNone ? 1 : 0);
+
+      if (hasNone) {
+        const optionalSymbol = this.meta.symbols.typing.Optional;
+        ctx.analyze(optionalSymbol);
+
+        if (nonNoneCount > 1) {
+          const unionSymbol = this.meta.symbols.typing.Union;
+          ctx.analyze(unionSymbol);
+          this._decision = { optionalSymbol, strategy: 'optional', unionSymbol };
+        } else {
+          this._decision = { optionalSymbol, strategy: 'optional' };
+        }
+      } else {
+        const unionSymbol = this.meta.symbols.typing.Union;
+        ctx.analyze(unionSymbol);
+        this._decision = { strategy: 'typing', unionSymbol };
+      }
     }
   }
 
@@ -72,9 +93,17 @@ export class TypeOrPyDsl extends Mixed {
       );
     }
 
+    if (decision.strategy === 'optional') {
+      const flatRefs = this.$flattenRefs(this._types);
+      const innerRefs = flatRefs.filter((r) => fromRef(r) !== 'None');
+      const inner = innerRefs.map((r) => this.$node(r));
+      const innerType =
+        inner.length === 1 ? inner[0]! : this.$node(f.slice(decision.unionSymbol!, ...inner));
+      return this.$node(f.slice(decision.optionalSymbol, innerType));
+    }
+
     if (decision.strategy === 'typing') {
-      const slice = this.$node(f.slice(decision.unionSymbol, ...flat));
-      return slice;
+      return this.$node(f.slice(decision.unionSymbol, ...flat));
     }
 
     throw new Error('Invalid strategy');
@@ -101,12 +130,16 @@ export class TypeOrPyDsl extends Mixed {
 
   private $flattenRefs(types: Array<Ref<Type>>): Array<Ref<Type>> {
     const flat: Array<Ref<Type>> = [];
+    const seen = new Set<Type>();
     for (const t of types) {
       const node = fromRef(t);
       if (node instanceof TypeOrPyDsl) {
         flat.push(...this.$flattenRefs(node._types));
       } else {
-        flat.push(t);
+        if (!seen.has(node)) {
+          seen.add(node);
+          flat.push(t);
+        }
       }
     }
     return flat;

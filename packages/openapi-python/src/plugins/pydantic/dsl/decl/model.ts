@@ -1,13 +1,16 @@
 import type { AnalysisContext, NodeName } from '@hey-api/codegen-core';
 
 import type { py } from '../../../../py-compiler';
-import { PyDsl } from '../../../../py-dsl';
+import { KwargPyDsl, PyDsl } from '../../../../py-dsl';
 import { $ } from '../../../../py-dsl';
+import { DocMixin } from '../../../../py-dsl/mixins/doc';
+import { resolveBaseModelConfig } from '../../shared/base-model';
+import type { PydanticModelConfig } from '../../shared/types';
 import type { PydanticPlugin } from '../../types';
 import { identifiers } from '../../v2/constants';
 import type { PydanticFieldDsl } from './field';
 
-const Mixed = PyDsl<py.ClassDeclaration>;
+const Mixed = DocMixin(PyDsl<py.ClassDeclaration>);
 
 export class PydanticModelDsl extends Mixed {
   readonly '~dsl' = 'PydanticModelDsl';
@@ -25,8 +28,10 @@ export class PydanticModelDsl extends Mixed {
     this.name.set(name);
   }
 
-  config(opts: Record<string, string | number | boolean>): this {
-    for (const [k, v] of Object.entries(opts)) this._configKwargs.push([k, v]);
+  config(options: PydanticModelConfig): this {
+    for (const [key, value] of Object.entries(options)) {
+      this._configKwargs.push([key, value]);
+    }
     return this;
   }
 
@@ -35,8 +40,8 @@ export class PydanticModelDsl extends Mixed {
     return this;
   }
 
-  field(field: PydanticFieldDsl): this {
-    this._fields.push(field);
+  fields(...fields: ReadonlyArray<PydanticFieldDsl>): this {
+    this._fields.push(...fields);
     return this;
   }
 
@@ -48,21 +53,30 @@ export class PydanticModelDsl extends Mixed {
     if (plugin.config.modelType === 'dataclass') {
       const cls = $.class(this.name)
         .decorator(plugin.symbols.dataclass)
-        .do(...this._fields.map((f) => f._build()));
+        .do(...this._fields);
       this._dsl = cls;
       return cls;
     }
 
+    const hasAnyAlias = this._fields.some((f) => f.hasAlias);
+    const modelKeys = new Set(this._configKwargs.map(([k]) => k));
+    const baseKwargs = resolveBaseModelConfig({ populateByName: hasAnyAlias }).filter(
+      (kw) => kw instanceof KwargPyDsl && !modelKeys.has(kw.key),
+    );
+    const mergedKwargs = [...baseKwargs, ...this._configKwargs.map(([k, v]) => $.kwarg(k, v))];
+
     const cls = $.class(this.name)
+      // plugin.querySymbol(BASE_MODEL_META)!
       .extends(plugin.symbols.BaseModel, ...this._bases)
-      .do(...this._fields.map((f) => f._build()))
+      .$if(this.$docs(), (c, v) => c.doc(v))
       .$if(this._configKwargs.length, (c) =>
         c.do(
           $.field(identifiers.model_config).assign(
-            $(plugin.symbols.ConfigDict).call(...this._configKwargs.map(([k, v]) => $.kwarg(k, v))),
+            $(plugin.symbols.ConfigDict).call(...mergedKwargs),
           ),
         ),
-      );
+      )
+      .do(...this._fields);
 
     this._dsl = cls;
     return cls;

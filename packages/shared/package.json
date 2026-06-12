@@ -1,6 +1,6 @@
 {
   "name": "@hey-api/shared",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Temporary home for cross-package utilities. Contents will migrate to proper packages as architecture stabilizes.",
   "homepage": "https://heyapi.dev/",
   "bugs": {
@@ -46,15 +46,16 @@
     "ansi-colors": "4.1.3",
     "cross-spawn": "7.0.6",
     "open": "11.0.0",
-    "semver": "7.7.4"
+    "semver": "7.8.2"
   },
   "devDependencies": {
     "@types/bun": "1.3.14",
     "@types/cross-spawn": "6.0.6",
+    "@types/js-yaml": "4.0.9",
     "@types/semver": "7.7.1",
-    "eslint": "9.39.2",
-    "typescript": "6.0.3",
-    "yaml": "2.9.0"
+    "eslint": "9.39.4",
+    "js-yaml": "4.2.0",
+    "typescript": "6.0.3"
   },
   "engines": {
     "node": ">=22.18.0"

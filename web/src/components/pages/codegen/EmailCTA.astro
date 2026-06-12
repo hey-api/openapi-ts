@@ -1,4 +1,7 @@
 ---
+import { EMAIL_CTA_ID, EMAIL_CTA_ID_ALIASES } from '@/data/constants';
+
+const sectionId = EMAIL_CTA_ID;
 const eyebrow = "Coming soon";
 const title = "Python is next.";
 const description =
@@ -11,7 +14,7 @@ const messageSuccess = "We'll reach out as Python support launches.";
 const messageError = "Something went wrong. Please try again.";
 ---
 
-<div class="email-cta" id="email-cta">
+<div class="email-cta" id={sectionId} data-section-id={sectionId} data-section-aliases={JSON.stringify(EMAIL_CTA_ID_ALIASES)}>
   <div class="hex-bg" aria-hidden="true"></div>
   <div class="glow-orb" aria-hidden="true"></div>
   <div class="smoke" aria-hidden="true">
@@ -355,6 +358,21 @@ const messageError = "Something went wrong. Please try again.";
 <script>
   import { subscribeEmail } from '@/utils/email';
   import { preloadSound } from '@/utils/sound';
+
+  const sectionId = document.querySelector<HTMLDivElement>('.email-cta')?.dataset.sectionId;
+  const sectionAliases: Array<string> = JSON.parse(
+    document.querySelector<HTMLDivElement>('.email-cta')?.dataset.sectionAliases ?? '[]',
+  );
+
+  const hash = window.location.hash.slice(1);
+  if (hash === sectionId || sectionAliases.includes(hash)) {
+    setTimeout(() => {
+      document.getElementById(sectionId!)?.scrollIntoView();
+      setTimeout(() => {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }, 0)
+    }, 100);
+  }
 
   const successSound = preloadSound('ui-success');
 

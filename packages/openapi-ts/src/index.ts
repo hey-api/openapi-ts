@@ -27,20 +27,14 @@ declare module '@hey-api/codegen-core' {
       | 'type'
       | 'utility'
       | AnyString;
-    /**
-     * Path to the resource this symbol represents.
-     */
+    /** Path to the resource this symbol represents. */
     path?: ReadonlyArray<string | number>;
-    /**
-     * Name of the plugin that registered this symbol.
-     */
+    /** Name of the plugin that registered this symbol. */
     pluginName?: string;
     resource?: 'client' | 'definition' | 'operation' | 'webhook' | AnyString;
     resourceId?: string;
     role?: 'data' | 'error' | 'errors' | 'options' | 'response' | 'responses' | AnyString;
-    /**
-     * Tags associated with this symbol.
-     */
+    /** Tags associated with this symbol. */
     tags?: ReadonlyArray<string>;
     tool?:
       | 'angular'
@@ -166,12 +160,12 @@ export async function defineConfig<T extends MaybeArray<UserConfig>>(
   return typeof config === 'function' ? await config() : config;
 }
 
-export { defaultPlugins } from './config/plugins';
 export type { UserConfig } from './config/types';
 export { clientDefaultConfig, clientDefaultMeta } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';
 export type { ExpressionTransformer, TypeTransformer } from './plugins/@hey-api/transformers/types';
+export { defaultPlugins } from './plugins/config';
 export * from './ts-dsl';
 export { Logger } from '@hey-api/codegen-core';
 export type {

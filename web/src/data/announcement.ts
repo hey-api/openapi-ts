@@ -1,3 +1,5 @@
+import { EMAIL_CTA_ID } from './constants';
+
 type Announcement = {
   badge?: 'soon';
   link?: string;
@@ -7,7 +9,6 @@ type Announcement = {
 
 export const announcement: Announcement = {
   badge: 'soon',
-  link: '#email-cta',
-  scrollTo: 'email-cta',
+  link: `#${EMAIL_CTA_ID}`,
   text: 'Python code generator',
 };

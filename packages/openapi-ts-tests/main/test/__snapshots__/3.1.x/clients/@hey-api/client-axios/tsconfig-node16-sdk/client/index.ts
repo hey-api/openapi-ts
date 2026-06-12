@@ -10,6 +10,7 @@ export {
 export { buildClientParams } from '../core/params.gen.js';
 export { serializeQueryKeyValue } from '../core/queryKeySerializer.gen.js';
 export type { ServerSentEventsResult } from '../core/serverSentEvents.gen.js';
+export type { ClientMeta } from '../core/types.gen.js';
 export { createClient } from './client.gen.js';
 export type {
   Client,

@@ -9,6 +9,7 @@ declare module '@hey-api/codegen-core' {
     python: {
       Version: Version<PythonVersion>;
       symbols: {
+        enum: EnumSymbols;
         typing: TypingSymbols;
       };
       version: PythonVersion;
@@ -26,20 +27,14 @@ declare module '@hey-api/codegen-core' {
       | 'type'
       | 'utility'
       | AnyString;
-    /**
-     * Path to the resource this symbol represents.
-     */
+    /** Path to the resource this symbol represents. */
     path?: ReadonlyArray<string | number>;
-    /**
-     * Name of the plugin that registered this symbol.
-     */
+    /** Name of the plugin that registered this symbol. */
     pluginName?: string;
     resource?: 'client' | 'definition' | 'operation' | 'webhook' | AnyString;
     resourceId?: string;
     role?: 'data' | 'error' | 'errors' | 'options' | 'response' | 'responses' | AnyString;
-    /**
-     * Tags associated with this symbol.
-     */
+    /** Tags associated with this symbol. */
     tags?: ReadonlyArray<string>;
     tool?: 'pydantic' | 'sdk' | AnyString;
     variant?: 'container' | AnyString;
@@ -66,6 +61,7 @@ import type { UserConfig } from './config/types';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 import type { PydanticPlugin, PydanticResolvers } from './plugins/pydantic';
+import type { EnumSymbols } from './symbols/enum';
 import type { TypingSymbols } from './symbols/typing';
 
 colors.enabled = colorSupport().hasBasic;
@@ -85,8 +81,8 @@ export async function defineConfig<T extends MaybeArray<UserConfig>>(
   return typeof config === 'function' ? await config() : config;
 }
 
-export { defaultPlugins } from './config/plugins';
 export type { UserConfig } from './config/types';
+export { defaultPlugins } from './plugins/config';
 export { Logger } from '@hey-api/codegen-core';
 export type {
   AnyPluginName,

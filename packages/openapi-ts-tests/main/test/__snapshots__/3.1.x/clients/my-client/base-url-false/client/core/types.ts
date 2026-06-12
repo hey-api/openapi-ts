@@ -72,3 +72,16 @@ export interface Config {
    */
   responseValidator?: (data: unknown) => Promise<unknown>;
 }
+
+/**
+ * Arbitrary metadata passed through the `meta` request option.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ClientMeta {}
+
+/**
+ * Resolved type of the `meta` request option. While {@link ClientMeta} is left
+ * unaugmented it falls back to `Record<string, unknown>` (backward compatible);
+ * once you augment {@link ClientMeta} with keys, `meta` becomes strictly typed.
+ */
+export type Meta = keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;

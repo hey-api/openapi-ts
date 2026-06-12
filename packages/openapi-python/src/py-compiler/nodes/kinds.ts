@@ -29,6 +29,7 @@ export enum PyNodeKind {
   ListExpression = 'ListExpression',
   Literal = 'Literal',
   MemberExpression = 'MemberExpression',
+  RStringExpression = 'RStringExpression',
   RaiseStatement = 'RaiseStatement',
   ReturnStatement = 'ReturnStatement',
   SetComprehension = 'SetComprehension',

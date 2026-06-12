@@ -7,8 +7,7 @@ from .client import Client
 
 class Auth(Client):
     def remove(self):
-        """
-        Remove auth credentials
+        """Remove auth credentials
 
         Remove authentication credentials
         """
@@ -16,8 +15,7 @@ class Auth(Client):
         return self.client.delete("/auth/{providerID}")
 
     def set(self):
-        """
-        Set auth credentials
+        """Set auth credentials
 
         Set authentication credentials
         """
@@ -27,8 +25,7 @@ class Auth(Client):
 
 class App(Client):
     def log(self):
-        """
-        Write log
+        """Write log
 
         Write a log entry to the server logs with specified level and metadata.
         """
@@ -36,8 +33,7 @@ class App(Client):
         return self.client.post("/log")
 
     def agents(self):
-        """
-        List agents
+        """List agents
 
         Get a list of all available AI agents in the OpenCode system.
         """
@@ -45,8 +41,7 @@ class App(Client):
         return self.client.get("/agent")
 
     def skills(self):
-        """
-        List skills
+        """List skills
 
         Get a list of all available skills in the OpenCode system.
         """
@@ -56,8 +51,7 @@ class App(Client):
 
 class Config(Client):
     def get(self):
-        """
-        Get global configuration
+        """Get global configuration
 
         Retrieve the current global OpenCode configuration settings and preferences.
         """
@@ -65,8 +59,7 @@ class Config(Client):
         return self.client.get("/global/config")
 
     def update(self):
-        """
-        Update global configuration
+        """Update global configuration
 
         Update global OpenCode configuration settings and preferences.
         """
@@ -76,8 +69,7 @@ class Config(Client):
 
 class Global(Client):
     def health(self):
-        """
-        Get health
+        """Get health
 
         Get health information about the OpenCode server.
         """
@@ -85,8 +77,7 @@ class Global(Client):
         return self.client.get("/global/health")
 
     def event(self):
-        """
-        Get global events
+        """Get global events
 
         Subscribe to global events from the OpenCode system using server-sent events.
         """
@@ -94,8 +85,7 @@ class Global(Client):
         return self.client.get("/global/event")
 
     def dispose(self):
-        """
-        Dispose instance
+        """Dispose instance
 
         Clean up and dispose all OpenCode instances, releasing all resources.
         """
@@ -103,8 +93,7 @@ class Global(Client):
         return self.client.post("/global/dispose")
 
     def upgrade(self):
-        """
-        Upgrade opencode
+        """Upgrade opencode
 
         Upgrade opencode to the specified version or latest if not specified.
         """
@@ -118,8 +107,7 @@ class Global(Client):
 
 class Event(Client):
     def subscribe(self):
-        """
-        Subscribe to events
+        """Subscribe to events
 
         Get events
         """
@@ -129,8 +117,7 @@ class Event(Client):
 
 class Config_(Client):
     def get(self):
-        """
-        Get configuration
+        """Get configuration
 
         Retrieve the current OpenCode configuration settings and preferences.
         """
@@ -138,8 +125,7 @@ class Config_(Client):
         return self.client.get("/config")
 
     def update(self):
-        """
-        Update configuration
+        """Update configuration
 
         Update OpenCode configuration settings and preferences.
         """
@@ -147,8 +133,7 @@ class Config_(Client):
         return self.client.patch("/config")
 
     def providers(self):
-        """
-        List config providers
+        """List config providers
 
         Get a list of all configured AI providers and their default models.
         """
@@ -158,8 +143,7 @@ class Config_(Client):
 
 class Console(Client):
     def get(self):
-        """
-        Get active Console provider metadata
+        """Get active Console provider metadata
 
         Get the active Console org name and the set of provider IDs managed by that Console org.
         """
@@ -167,8 +151,7 @@ class Console(Client):
         return self.client.get("/experimental/console")
 
     def list_orgs(self):
-        """
-        List switchable Console orgs
+        """List switchable Console orgs
 
         Get the available Console orgs across logged-in accounts, including the current active org.
         """
@@ -176,8 +159,7 @@ class Console(Client):
         return self.client.get("/experimental/console/orgs")
 
     def switch_org(self):
-        """
-        Switch active Console org
+        """Switch active Console org
 
         Persist a new active Console account/org selection for the current local OpenCode state.
         """
@@ -187,8 +169,7 @@ class Console(Client):
 
 class Session(Client):
     def list(self):
-        """
-        List sessions
+        """List sessions
 
         Get a list of all OpenCode sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.
         """
@@ -198,8 +179,7 @@ class Session(Client):
 
 class Resource(Client):
     def list(self):
-        """
-        Get MCP resources
+        """Get MCP resources
 
         Get all available MCP resources from connected servers. Optionally filter by name.
         """
@@ -209,8 +189,7 @@ class Resource(Client):
 
 class Adapter(Client):
     def list(self):
-        """
-        List workspace adapters
+        """List workspace adapters
 
         List all available workspace adapters for the current project.
         """
@@ -220,8 +199,7 @@ class Adapter(Client):
 
 class Workspace(Client):
     def list(self):
-        """
-        List workspaces
+        """List workspaces
 
         List all workspaces.
         """
@@ -229,8 +207,7 @@ class Workspace(Client):
         return self.client.get("/experimental/workspace")
 
     def create(self):
-        """
-        Create workspace
+        """Create workspace
 
         Create a workspace for the current project.
         """
@@ -238,8 +215,7 @@ class Workspace(Client):
         return self.client.post("/experimental/workspace")
 
     def sync_list(self):
-        """
-        Sync workspace list
+        """Sync workspace list
 
         Register missing workspaces returned by workspace adapters.
         """
@@ -247,8 +223,7 @@ class Workspace(Client):
         return self.client.post("/experimental/workspace/sync-list")
 
     def status(self):
-        """
-        Workspace status
+        """Workspace status
 
         Get connection status for workspaces in the current project.
         """
@@ -256,8 +231,7 @@ class Workspace(Client):
         return self.client.get("/experimental/workspace/status")
 
     def remove(self):
-        """
-        Remove workspace
+        """Remove workspace
 
         Remove an existing workspace.
         """
@@ -265,8 +239,7 @@ class Workspace(Client):
         return self.client.delete("/experimental/workspace/{id}")
 
     def warp(self):
-        """
-        Warp session into workspace
+        """Warp session into workspace
 
         Move a session's sync history into the target workspace, or detach it to the local project.
         """
@@ -298,8 +271,7 @@ class Experimental(Client):
 
 class Tool(Client):
     def list(self):
-        """
-        List tools
+        """List tools
 
         Get a list of available tools with their JSON schema parameters for a specific provider and model combination.
         """
@@ -307,8 +279,7 @@ class Tool(Client):
         return self.client.get("/experimental/tool")
 
     def ids(self):
-        """
-        List tool IDs
+        """List tool IDs
 
         Get a list of all available tool IDs, including both built-in tools and dynamically registered tools.
         """
@@ -318,8 +289,7 @@ class Tool(Client):
 
 class Worktree(Client):
     def remove(self):
-        """
-        Remove worktree
+        """Remove worktree
 
         Remove a git worktree and delete its branch.
         """
@@ -327,8 +297,7 @@ class Worktree(Client):
         return self.client.delete("/experimental/worktree")
 
     def list(self):
-        """
-        List worktrees
+        """List worktrees
 
         List all sandbox worktrees for the current project.
         """
@@ -336,8 +305,7 @@ class Worktree(Client):
         return self.client.get("/experimental/worktree")
 
     def create(self):
-        """
-        Create worktree
+        """Create worktree
 
         Create a new git worktree for the current project and run any configured startup scripts.
         """
@@ -345,8 +313,7 @@ class Worktree(Client):
         return self.client.post("/experimental/worktree")
 
     def reset(self):
-        """
-        Reset worktree
+        """Reset worktree
 
         Reset a worktree branch to the primary default branch.
         """
@@ -356,8 +323,7 @@ class Worktree(Client):
 
 class Find(Client):
     def text(self):
-        """
-        Find text
+        """Find text
 
         Search for text patterns across files in the project using ripgrep.
         """
@@ -365,8 +331,7 @@ class Find(Client):
         return self.client.get("/find")
 
     def files(self):
-        """
-        Find files
+        """Find files
 
         Search for files or directories by name or pattern in the project directory.
         """
@@ -374,8 +339,7 @@ class Find(Client):
         return self.client.get("/find/file")
 
     def symbols(self):
-        """
-        Find symbols
+        """Find symbols
 
         Search for workspace symbols like functions, classes, and variables using LSP.
         """
@@ -385,8 +349,7 @@ class Find(Client):
 
 class File(Client):
     def list(self):
-        """
-        List files
+        """List files
 
         List files and directories in a specified path.
         """
@@ -394,8 +357,7 @@ class File(Client):
         return self.client.get("/file")
 
     def read(self):
-        """
-        Read file
+        """Read file
 
         Read the content of a specified file.
         """
@@ -403,8 +365,7 @@ class File(Client):
         return self.client.get("/file/content")
 
     def status(self):
-        """
-        Get file status
+        """Get file status
 
         Get the git status of all files in the project.
         """
@@ -414,8 +375,7 @@ class File(Client):
 
 class Instance(Client):
     def dispose(self):
-        """
-        Dispose instance
+        """Dispose instance
 
         Clean up and dispose the current OpenCode instance, releasing all resources.
         """
@@ -425,8 +385,7 @@ class Instance(Client):
 
 class Path(Client):
     def get(self):
-        """
-        Get paths
+        """Get paths
 
         Retrieve the current working directory and related path information for the OpenCode instance.
         """
@@ -436,8 +395,7 @@ class Path(Client):
 
 class Diff(Client):
     def raw(self):
-        """
-        Get raw VCS diff
+        """Get raw VCS diff
 
         Retrieve a raw patch for current uncommitted changes.
         """
@@ -447,8 +405,7 @@ class Diff(Client):
 
 class Vcs(Client):
     def get(self):
-        """
-        Get VCS info
+        """Get VCS info
 
         Retrieve version control system (VCS) information for the current project, such as git branch.
         """
@@ -456,8 +413,7 @@ class Vcs(Client):
         return self.client.get("/vcs")
 
     def status(self):
-        """
-        Get VCS status
+        """Get VCS status
 
         Retrieve changed files in the current working tree without patches.
         """
@@ -465,8 +421,7 @@ class Vcs(Client):
         return self.client.get("/vcs/status")
 
     def diff(self):
-        """
-        Get VCS diff
+        """Get VCS diff
 
         Retrieve the current git diff for the working tree or against the default branch.
         """
@@ -474,8 +429,7 @@ class Vcs(Client):
         return self.client.get("/vcs/diff")
 
     def apply(self):
-        """
-        Apply VCS patch
+        """Apply VCS patch
 
         Apply a raw patch to the current working tree.
         """
@@ -489,8 +443,7 @@ class Vcs(Client):
 
 class Command(Client):
     def list(self):
-        """
-        List commands
+        """List commands
 
         Get a list of all available commands in the OpenCode system.
         """
@@ -500,8 +453,7 @@ class Command(Client):
 
 class Lsp(Client):
     def status(self):
-        """
-        Get LSP status
+        """Get LSP status
 
         Get LSP server status
         """
@@ -511,8 +463,7 @@ class Lsp(Client):
 
 class Formatter(Client):
     def status(self):
-        """
-        Get formatter status
+        """Get formatter status
 
         Get formatter status
         """
@@ -522,8 +473,7 @@ class Formatter(Client):
 
 class Auth_(Client):
     def remove(self):
-        """
-        Remove MCP OAuth
+        """Remove MCP OAuth
 
         Remove OAuth credentials for an MCP server.
         """
@@ -531,8 +481,7 @@ class Auth_(Client):
         return self.client.delete("/mcp/{name}/auth")
 
     def start(self):
-        """
-        Start MCP OAuth
+        """Start MCP OAuth
 
         Start OAuth authentication flow for a Model Context Protocol (MCP) server.
         """
@@ -540,8 +489,7 @@ class Auth_(Client):
         return self.client.post("/mcp/{name}/auth")
 
     def callback(self):
-        """
-        Complete MCP OAuth
+        """Complete MCP OAuth
 
         Complete OAuth authentication for a Model Context Protocol (MCP) server using the authorization code.
         """
@@ -549,8 +497,7 @@ class Auth_(Client):
         return self.client.post("/mcp/{name}/auth/callback")
 
     def authenticate(self):
-        """
-        Authenticate MCP OAuth
+        """Authenticate MCP OAuth
 
         Start OAuth flow and wait for callback (opens browser).
         """
@@ -560,8 +507,7 @@ class Auth_(Client):
 
 class Mcp(Client):
     def status(self):
-        """
-        Get MCP status
+        """Get MCP status
 
         Get the status of all Model Context Protocol (MCP) servers.
         """
@@ -569,8 +515,7 @@ class Mcp(Client):
         return self.client.get("/mcp")
 
     def add(self):
-        """
-        Add MCP server
+        """Add MCP server
 
         Dynamically add a new Model Context Protocol (MCP) server to the system.
         """
@@ -594,8 +539,7 @@ class Mcp(Client):
 
 class Project(Client):
     def list(self):
-        """
-        List all projects
+        """List all projects
 
         Get a list of projects that have been opened with OpenCode.
         """
@@ -603,8 +547,7 @@ class Project(Client):
         return self.client.get("/project")
 
     def current(self):
-        """
-        Get current project
+        """Get current project
 
         Retrieve the currently active project that OpenCode is working with.
         """
@@ -612,8 +555,7 @@ class Project(Client):
         return self.client.get("/project/current")
 
     def init_git(self):
-        """
-        Initialize git repository
+        """Initialize git repository
 
         Create a git repository for the current project and return the refreshed project info.
         """
@@ -621,8 +563,7 @@ class Project(Client):
         return self.client.post("/project/git/init")
 
     def update(self):
-        """
-        Update project
+        """Update project
 
         Update project properties such as name, icon, and commands.
         """
@@ -632,8 +573,7 @@ class Project(Client):
 
 class Pty(Client):
     def shells(self):
-        """
-        List available shells
+        """List available shells
 
         Get a list of available shells on the system.
         """
@@ -641,8 +581,7 @@ class Pty(Client):
         return self.client.get("/pty/shells")
 
     def list(self):
-        """
-        List PTY sessions
+        """List PTY sessions
 
         Get a list of all active pseudo-terminal (PTY) sessions managed by OpenCode.
         """
@@ -650,8 +589,7 @@ class Pty(Client):
         return self.client.get("/pty")
 
     def create(self):
-        """
-        Create PTY session
+        """Create PTY session
 
         Create a new pseudo-terminal (PTY) session for running shell commands and processes.
         """
@@ -659,8 +597,7 @@ class Pty(Client):
         return self.client.post("/pty")
 
     def remove(self):
-        """
-        Remove PTY session
+        """Remove PTY session
 
         Remove and terminate a specific pseudo-terminal (PTY) session.
         """
@@ -668,8 +605,7 @@ class Pty(Client):
         return self.client.delete("/pty/{ptyID}")
 
     def get(self):
-        """
-        Get PTY session
+        """Get PTY session
 
         Retrieve detailed information about a specific pseudo-terminal (PTY) session.
         """
@@ -677,8 +613,7 @@ class Pty(Client):
         return self.client.get("/pty/{ptyID}")
 
     def update(self):
-        """
-        Update PTY session
+        """Update PTY session
 
         Update properties of an existing pseudo-terminal (PTY) session.
         """
@@ -686,8 +621,7 @@ class Pty(Client):
         return self.client.put("/pty/{ptyID}")
 
     def connect_token(self):
-        """
-        Create PTY WebSocket token
+        """Create PTY WebSocket token
 
         Create a short-lived ticket for opening a PTY WebSocket connection.
         """
@@ -695,8 +629,7 @@ class Pty(Client):
         return self.client.post("/pty/{ptyID}/connect-token")
 
     def connect(self):
-        """
-        Connect to PTY session
+        """Connect to PTY session
 
         Establish a WebSocket connection to interact with a pseudo-terminal (PTY) session in real-time.
         """
@@ -706,8 +639,7 @@ class Pty(Client):
 
 class Question(Client):
     def list(self):
-        """
-        List pending questions
+        """List pending questions
 
         Get all pending question requests across all sessions.
         """
@@ -715,8 +647,7 @@ class Question(Client):
         return self.client.get("/question")
 
     def reply(self):
-        """
-        Reply to question request
+        """Reply to question request
 
         Provide answers to a question request from the AI assistant.
         """
@@ -724,8 +655,7 @@ class Question(Client):
         return self.client.post("/question/{requestID}/reply")
 
     def reject(self):
-        """
-        Reject question request
+        """Reject question request
 
         Reject a question request from the AI assistant.
         """
@@ -735,8 +665,7 @@ class Question(Client):
 
 class Permission(Client):
     def list(self):
-        """
-        List pending permissions
+        """List pending permissions
 
         Get all pending permission requests across all sessions.
         """
@@ -744,8 +673,7 @@ class Permission(Client):
         return self.client.get("/permission")
 
     def reply(self):
-        """
-        Respond to permission request
+        """Respond to permission request
 
         Approve or deny a permission request from the AI assistant.
         """
@@ -753,8 +681,7 @@ class Permission(Client):
         return self.client.post("/permission/{requestID}/reply")
 
     def respond(self):
-        """
-        Respond to permission
+        """Respond to permission
 
         Approve or deny a permission request from the AI assistant.
 
@@ -766,8 +693,7 @@ class Permission(Client):
 
 class Oauth(Client):
     def authorize(self):
-        """
-        Start OAuth authorization
+        """Start OAuth authorization
 
         Start the OAuth authorization flow for a provider.
         """
@@ -775,8 +701,7 @@ class Oauth(Client):
         return self.client.post("/provider/{providerID}/oauth/authorize")
 
     def callback(self):
-        """
-        Handle OAuth callback
+        """Handle OAuth callback
 
         Handle the OAuth callback from a provider after user authorization.
         """
@@ -786,8 +711,7 @@ class Oauth(Client):
 
 class Provider(Client):
     def list(self):
-        """
-        List providers
+        """List providers
 
         Get a list of all available AI providers, including both available and connected ones.
         """
@@ -795,8 +719,7 @@ class Provider(Client):
         return self.client.get("/provider")
 
     def auth(self):
-        """
-        Get provider auth methods
+        """Get provider auth methods
 
         Retrieve available authentication methods for all AI providers.
         """
@@ -810,8 +733,7 @@ class Provider(Client):
 
 class Session_(Client):
     def list(self):
-        """
-        List sessions
+        """List sessions
 
         Get a list of all OpenCode sessions, sorted by most recently updated.
         """
@@ -819,8 +741,7 @@ class Session_(Client):
         return self.client.get("/session")
 
     def create(self):
-        """
-        Create session
+        """Create session
 
         Create a new OpenCode session for interacting with AI assistants and managing conversations.
         """
@@ -828,8 +749,7 @@ class Session_(Client):
         return self.client.post("/session")
 
     def status(self):
-        """
-        Get session status
+        """Get session status
 
         Retrieve the current status of all sessions, including active, idle, and completed states.
         """
@@ -837,8 +757,7 @@ class Session_(Client):
         return self.client.get("/session/status")
 
     def delete(self):
-        """
-        Delete session
+        """Delete session
 
         Delete a session and permanently remove all associated data, including messages and history.
         """
@@ -846,8 +765,7 @@ class Session_(Client):
         return self.client.delete("/session/{sessionID}")
 
     def get(self):
-        """
-        Get session
+        """Get session
 
         Retrieve detailed information about a specific OpenCode session.
         """
@@ -855,8 +773,7 @@ class Session_(Client):
         return self.client.get("/session/{sessionID}")
 
     def update(self):
-        """
-        Update session
+        """Update session
 
         Update properties of an existing session, such as title or other metadata.
         """
@@ -864,8 +781,7 @@ class Session_(Client):
         return self.client.patch("/session/{sessionID}")
 
     def children(self):
-        """
-        Get session children
+        """Get session children
 
         Retrieve all child sessions that were forked from the specified parent session.
         """
@@ -873,8 +789,7 @@ class Session_(Client):
         return self.client.get("/session/{sessionID}/children")
 
     def todo(self):
-        """
-        Get session todos
+        """Get session todos
 
         Retrieve the todo list associated with a specific session, showing tasks and action items.
         """
@@ -882,8 +797,7 @@ class Session_(Client):
         return self.client.get("/session/{sessionID}/todo")
 
     def diff(self):
-        """
-        Get message diff
+        """Get message diff
 
         Get the file changes (diff) that resulted from a specific user message in the session.
         """
@@ -891,8 +805,7 @@ class Session_(Client):
         return self.client.get("/session/{sessionID}/diff")
 
     def messages(self):
-        """
-        Get session messages
+        """Get session messages
 
         Retrieve all messages in a session, including user prompts and AI responses.
         """
@@ -900,8 +813,7 @@ class Session_(Client):
         return self.client.get("/session/{sessionID}/message")
 
     def prompt(self):
-        """
-        Send message
+        """Send message
 
         Create and send a new message to a session, streaming the AI response.
         """
@@ -909,8 +821,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/message")
 
     def delete_message(self):
-        """
-        Delete message
+        """Delete message
 
         Permanently delete a specific message and all of its parts from a session without reverting file changes.
         """
@@ -918,8 +829,7 @@ class Session_(Client):
         return self.client.delete("/session/{sessionID}/message/{messageID}")
 
     def message(self):
-        """
-        Get message
+        """Get message
 
         Retrieve a specific message from a session by its message ID.
         """
@@ -927,8 +837,7 @@ class Session_(Client):
         return self.client.get("/session/{sessionID}/message/{messageID}")
 
     def fork(self):
-        """
-        Fork session
+        """Fork session
 
         Create a new session by forking an existing session at a specific message point.
         """
@@ -936,8 +845,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/fork")
 
     def abort(self):
-        """
-        Abort session
+        """Abort session
 
         Abort an active session and stop any ongoing AI processing or command execution.
         """
@@ -945,8 +853,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/abort")
 
     def init(self):
-        """
-        Initialize session
+        """Initialize session
 
         Analyze the current application and create an AGENTS.md file with project-specific agent configurations.
         """
@@ -954,8 +861,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/init")
 
     def unshare(self):
-        """
-        Unshare session
+        """Unshare session
 
         Remove the shareable link for a session, making it private again.
         """
@@ -963,8 +869,7 @@ class Session_(Client):
         return self.client.delete("/session/{sessionID}/share")
 
     def share(self):
-        """
-        Share session
+        """Share session
 
         Create a shareable link for a session, allowing others to view the conversation.
         """
@@ -972,8 +877,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/share")
 
     def summarize(self):
-        """
-        Summarize session
+        """Summarize session
 
         Generate a concise summary of the session using AI compaction to preserve key information.
         """
@@ -981,8 +885,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/summarize")
 
     def prompt_async(self):
-        """
-        Send async message
+        """Send async message
 
         Create and send a new message to a session asynchronously, starting the session if needed and returning immediately.
         """
@@ -990,8 +893,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/prompt_async")
 
     def command(self):
-        """
-        Send command
+        """Send command
 
         Send a new command to a session for execution by the AI assistant.
         """
@@ -999,8 +901,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/command")
 
     def shell(self):
-        """
-        Run shell command
+        """Run shell command
 
         Execute a shell command within the session context and return the AI's response.
         """
@@ -1008,8 +909,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/shell")
 
     def revert(self):
-        """
-        Revert message
+        """Revert message
 
         Revert a specific message in a session, undoing its effects and restoring the previous state.
         """
@@ -1017,8 +917,7 @@ class Session_(Client):
         return self.client.post("/session/{sessionID}/revert")
 
     def unrevert(self):
-        """
-        Restore reverted messages
+        """Restore reverted messages
 
         Restore all previously reverted messages in a session.
         """
@@ -1040,8 +939,7 @@ class Part(Client):
 
 class History(Client):
     def list(self):
-        """
-        List sync events
+        """List sync events
 
         List sync events for all aggregates. Keys are aggregate IDs the client already knows about, values are the last known sequence ID. Events with seq > value are returned for those aggregates. Aggregates not listed in the input get their full history.
         """
@@ -1051,8 +949,7 @@ class History(Client):
 
 class Sync(Client):
     def start(self):
-        """
-        Start workspace sync
+        """Start workspace sync
 
         Start sync loops for workspaces in the current project that have active sessions.
         """
@@ -1060,8 +957,7 @@ class Sync(Client):
         return self.client.post("/sync/start")
 
     def replay(self):
-        """
-        Replay sync events
+        """Replay sync events
 
         Validate and replay a complete sync event history.
         """
@@ -1069,8 +965,7 @@ class Sync(Client):
         return self.client.post("/sync/replay")
 
     def steal(self):
-        """
-        Steal session into workspace
+        """Steal session into workspace
 
         Update a session to belong to the current workspace through the sync event system.
         """
@@ -1084,8 +979,7 @@ class Sync(Client):
 
 class Session_2(Client):
     def list(self):
-        """
-        List v2 sessions
+        """List v2 sessions
 
         Retrieve sessions in the requested order. Items keep that order across pages; use cursor.next or cursor.previous to move through the ordered list.
         """
@@ -1093,8 +987,7 @@ class Session_2(Client):
         return self.client.get("/api/session")
 
     def prompt(self):
-        """
-        Send v2 message
+        """Send v2 message
 
         Create a v2 session message and queue it for the agent loop.
         """
@@ -1102,8 +995,7 @@ class Session_2(Client):
         return self.client.post("/api/session/{sessionID}/prompt")
 
     def compact(self):
-        """
-        Compact v2 session
+        """Compact v2 session
 
         Compact a v2 session conversation.
         """
@@ -1111,8 +1003,7 @@ class Session_2(Client):
         return self.client.post("/api/session/{sessionID}/compact")
 
     def wait(self):
-        """
-        Wait for v2 session
+        """Wait for v2 session
 
         Wait for a v2 session agent loop to become idle.
         """
@@ -1120,8 +1011,7 @@ class Session_2(Client):
         return self.client.post("/api/session/{sessionID}/wait")
 
     def context(self):
-        """
-        Get v2 session context
+        """Get v2 session context
 
         Retrieve the active context messages for a v2 session (all messages after the last compaction).
         """
@@ -1129,8 +1019,7 @@ class Session_2(Client):
         return self.client.get("/api/session/{sessionID}/context")
 
     def messages(self):
-        """
-        Get v2 session messages
+        """Get v2 session messages
 
         Retrieve projected v2 messages for a session. Items keep the requested order across pages; use cursor.next or cursor.previous to move through the ordered timeline.
         """
@@ -1140,8 +1029,7 @@ class Session_2(Client):
 
 class Model(Client):
     def list(self):
-        """
-        List v2 models
+        """List v2 models
 
         Retrieve available v2 models ordered by release date.
         """
@@ -1151,8 +1039,7 @@ class Model(Client):
 
 class Provider_(Client):
     def list(self):
-        """
-        List v2 providers
+        """List v2 providers
 
         Retrieve active v2 AI providers so clients can show provider availability and configuration.
         """
@@ -1160,8 +1047,7 @@ class Provider_(Client):
         return self.client.get("/api/provider")
 
     def get(self):
-        """
-        Get v2 provider
+        """Get v2 provider
 
         Retrieve a single v2 AI provider so clients can inspect its availability and endpoint settings.
         """
@@ -1185,8 +1071,7 @@ class V2(Client):
 
 class Control(Client):
     def next(self):
-        """
-        Get next TUI request
+        """Get next TUI request
 
         Retrieve the next TUI request from the queue for processing.
         """
@@ -1194,8 +1079,7 @@ class Control(Client):
         return self.client.get("/tui/control/next")
 
     def response(self):
-        """
-        Submit TUI response
+        """Submit TUI response
 
         Submit a response to the TUI request queue to complete a pending request.
         """
@@ -1205,8 +1089,7 @@ class Control(Client):
 
 class Tui(Client):
     def append_prompt(self):
-        """
-        Append TUI prompt
+        """Append TUI prompt
 
         Append prompt to the TUI.
         """
@@ -1214,8 +1097,7 @@ class Tui(Client):
         return self.client.post("/tui/append-prompt")
 
     def open_help(self):
-        """
-        Open help dialog
+        """Open help dialog
 
         Open the help dialog in the TUI to display user assistance information.
         """
@@ -1223,8 +1105,7 @@ class Tui(Client):
         return self.client.post("/tui/open-help")
 
     def open_sessions(self):
-        """
-        Open sessions dialog
+        """Open sessions dialog
 
         Open the session dialog.
         """
@@ -1232,8 +1113,7 @@ class Tui(Client):
         return self.client.post("/tui/open-sessions")
 
     def open_themes(self):
-        """
-        Open themes dialog
+        """Open themes dialog
 
         Open the theme dialog.
         """
@@ -1241,8 +1121,7 @@ class Tui(Client):
         return self.client.post("/tui/open-themes")
 
     def open_models(self):
-        """
-        Open models dialog
+        """Open models dialog
 
         Open the model dialog.
         """
@@ -1250,8 +1129,7 @@ class Tui(Client):
         return self.client.post("/tui/open-models")
 
     def submit_prompt(self):
-        """
-        Submit TUI prompt
+        """Submit TUI prompt
 
         Submit the prompt.
         """
@@ -1259,8 +1137,7 @@ class Tui(Client):
         return self.client.post("/tui/submit-prompt")
 
     def clear_prompt(self):
-        """
-        Clear TUI prompt
+        """Clear TUI prompt
 
         Clear the prompt.
         """
@@ -1268,8 +1145,7 @@ class Tui(Client):
         return self.client.post("/tui/clear-prompt")
 
     def execute_command(self):
-        """
-        Execute TUI command
+        """Execute TUI command
 
         Execute a TUI command.
         """
@@ -1277,8 +1153,7 @@ class Tui(Client):
         return self.client.post("/tui/execute-command")
 
     def show_toast(self):
-        """
-        Show TUI toast
+        """Show TUI toast
 
         Show a toast notification in the TUI.
         """
@@ -1286,8 +1161,7 @@ class Tui(Client):
         return self.client.post("/tui/show-toast")
 
     def publish(self):
-        """
-        Publish TUI event
+        """Publish TUI event
 
         Publish a TUI event.
         """
@@ -1295,8 +1169,7 @@ class Tui(Client):
         return self.client.post("/tui/publish")
 
     def select_session(self):
-        """
-        Select session
+        """Select session
 
         Navigate the TUI to display the specified session.
         """

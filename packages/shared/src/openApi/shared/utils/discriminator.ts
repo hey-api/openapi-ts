@@ -14,10 +14,10 @@ export type DiscriminatorPropertyType = 'boolean' | 'integer' | 'number' | 'stri
  * property may be a boolean, number, or integer. This function converts the string
  * key to the correct runtime value and IR type.
  */
-export const convertDiscriminatorValue = (
+export function convertDiscriminatorValue(
   value: string,
   propertyType: DiscriminatorPropertyType,
-): { const: IR.SchemaObject['const']; type: IR.SchemaObject['type'] } => {
+): { const: IR.SchemaObject['const']; type: IR.SchemaObject['type'] } {
   switch (propertyType) {
     case 'boolean': {
       const lowerValue = value.toLowerCase();
@@ -76,13 +76,13 @@ export const convertDiscriminatorValue = (
         type: 'string',
       };
   }
-};
+}
 
-export const discriminatorValues = (
+export function discriminatorValues(
   $ref: string,
   mapping?: Record<string, string>,
   shouldUseRefAsValue?: () => boolean,
-): ReadonlyArray<string> => {
+): ReadonlyArray<string> {
   const values: Array<string> = [];
 
   for (const name in mapping) {
@@ -96,4 +96,89 @@ export const discriminatorValues = (
   }
 
   return values;
-};
+}
+
+export interface DiscriminatedUnionMember {
+  /** The discriminator value for this member. */
+  discriminatedValue: unknown;
+  /**
+   * True when the referenced schema does not already define the discriminator
+   * property as a const/literal. The plugin must inject it explicitly.
+   */
+  needsExtend: boolean;
+  /** The resolved $ref string for this member. */
+  ref: string;
+}
+
+export interface DiscriminatedUnionData {
+  discriminatorKey: string;
+  members: Array<DiscriminatedUnionMember>;
+}
+
+export function buildDiscriminatedUnion({
+  parentSchema,
+  resolveIrRef,
+  schemas,
+}: {
+  parentSchema: IR.SchemaObject;
+  resolveIrRef: (ref: string) => IR.SchemaObject | undefined;
+  schemas: ReadonlyArray<IR.SchemaObject>;
+}): DiscriminatedUnionData | null {
+  const discriminatorKey = parentSchema.discriminator?.propertyName;
+  if (!discriminatorKey) return null;
+
+  const members: Array<DiscriminatedUnionMember> = [];
+
+  for (const schema of schemas) {
+    if (schema.type === 'null' || schema.const === null) continue;
+
+    const ref = schema.$ref;
+    if (!ref) return null;
+
+    let resolved: IR.SchemaObject | undefined;
+    try {
+      resolved = resolveIrRef(ref);
+    } catch {
+      return null;
+    }
+    if (!resolved) return null;
+
+    let effective = resolved;
+    while (effective.$ref && !effective.type && !effective.properties && !effective.items) {
+      try {
+        const next = resolveIrRef(effective.$ref);
+        if (!next) break;
+        effective = next;
+      } catch {
+        break;
+      }
+    }
+
+    const discriminatorProp = effective.properties?.[discriminatorKey];
+    const needsExtend = discriminatorProp?.const === undefined;
+    const isObjectLike = effective.type === 'object' || effective.logicalOperator === 'and';
+    if (needsExtend && !isObjectLike) return null;
+
+    const values = discriminatorValues(ref, parentSchema.discriminator!.mapping);
+    if (!values.length) return null;
+
+    const propType = discriminatorProp?.type as DiscriminatorPropertyType | undefined;
+
+    for (const value of values) {
+      const discriminatedValue =
+        propType && propType !== 'string'
+          ? convertDiscriminatorValue(value, propType).const
+          : value;
+
+      members.push({
+        discriminatedValue,
+        needsExtend,
+        ref,
+      });
+    }
+  }
+
+  if (!members.length) return null;
+
+  return { discriminatorKey, members };
+}

@@ -3,6 +3,7 @@ import type { BinaryCtor } from '../expr/binary';
 import type { CallCtor } from '../expr/call';
 import type { ExprCtor } from '../expr/expr';
 import type { SubscriptCtor } from '../expr/subscript';
+import type { TupleCtor } from '../expr/tuple';
 import type { ReturnCtor } from '../stmt/return';
 
 type Ctor = (...args: Array<any>) => any;
@@ -46,4 +47,7 @@ export const f = {
 
   /** Factory for creating slice expressions. */
   slice: createFactory<SubscriptCtor>('slice'),
+
+  /** Factory for creating tuple expressions. */
+  tuple: createFactory<TupleCtor>('tuple'),
 };

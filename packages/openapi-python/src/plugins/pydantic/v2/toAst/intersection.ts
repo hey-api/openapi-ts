@@ -1,69 +1,41 @@
-import { $, type VarType } from '../../../../py-dsl';
+import { isSymbol } from '@hey-api/codegen-core';
+
+import { $ } from '../../../../py-dsl';
+import { $ as $$ } from '../../dsl';
 import type { IntersectionResolverContext } from '../../resolvers';
-import type { PydanticField, PydanticResult, PydanticType } from '../../shared/types';
-import type { FieldConstraints } from '../constants';
+import type { PydanticResult, PydanticType } from '../../shared/types';
+
+function isReferenceResult(result: PydanticResult): boolean {
+  // A reference result has no pre-resolved node and its type is a Symbol
+  // (set by the visitor's reference() handler via plugin.referenceSymbol()).
+  return !result.node && result.type !== undefined && isSymbol(result.type.type);
+}
 
 function baseNode(ctx: IntersectionResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
 
   if (!childResults.length) {
-    return {
-      type: plugin.symbols.typing.Any,
-    };
+    return { type: $$.constrainedType(plugin.symbols.typing.Any) };
   }
 
   if (childResults.length === 1) {
-    const finalResult = applyModifiers(childResults[0]!);
-    return finalResult;
+    return applyModifiers(childResults[0]!);
   }
 
-  const baseClasses: Array<string> = [];
-  const mergedFields: Array<PydanticField> = [];
-  const seenFieldIds = new Set<number>();
+  const baseClasses: Array<ReturnType<typeof $$.constrainedType>> = [];
 
   for (const result of childResults) {
-    const finalResult = applyModifiers(result);
-
-    // TODO: replace
-    const typeStr = String(finalResult.type);
-    const isReference =
-      !finalResult.fields &&
-      typeStr !== '' &&
-      !typeStr.startsWith('dict[') &&
-      !typeStr.startsWith('Dict[') &&
-      typeStr !== String(plugin.symbols.typing.Any);
-
-    if (isReference) {
-      const baseName = typeStr.replace(/^'|'$/g, '');
-      if (baseName && !baseClasses.includes(baseName)) {
-        baseClasses.push(baseName);
-      }
-    }
-
-    if (finalResult.fields) {
-      for (const field of finalResult.fields) {
-        if (!seenFieldIds.has(field.name.id)) {
-          seenFieldIds.add(field.name.id);
-          mergedFields.push(field);
-        }
-      }
+    if (isReferenceResult(result)) {
+      const t = result.type!;
+      if (!baseClasses.includes(t)) baseClasses.push(t);
     }
   }
 
-  let type: VarType;
-
-  if (baseClasses.length && !mergedFields.length) {
-    type = baseClasses[0]!;
-  } else if (mergedFields.length) {
-    // TODO: replace
-    type = '__INTERSECTION_PLACEHOLDER__';
-  } else {
-    type = plugin.symbols.typing.Any;
+  if (baseClasses.length) {
+    return { type: baseClasses[0]! };
   }
 
-  return {
-    type,
-  };
+  return { type: $$.constrainedType(plugin.symbols.typing.Any) };
 }
 
 function intersectionResolver(ctx: IntersectionResolverContext): PydanticType {
@@ -71,9 +43,9 @@ function intersectionResolver(ctx: IntersectionResolverContext): PydanticType {
 }
 
 export interface IntersectionToTypeResult extends PydanticType {
-  baseClasses?: Array<string>;
+  baseClasses?: Array<ReturnType<typeof $$.constrainedType>>;
   childResults: Array<PydanticResult>;
-  mergedFields?: Array<PydanticField>;
+  mergedFields?: Array<ReturnType<typeof $$.field>>;
 }
 
 export function intersectionToType({
@@ -86,19 +58,11 @@ export function intersectionToType({
   IntersectionResolverContext,
   'applyModifiers' | 'childResults' | 'parentSchema' | 'path' | 'plugin'
 >): IntersectionToTypeResult {
-  const constraints: FieldConstraints = {};
-
-  if (parentSchema.description !== undefined) {
-    constraints.description = parentSchema.description;
-  }
-
   const resolverCtx: IntersectionResolverContext = {
     $,
     applyModifiers,
     childResults,
-    nodes: {
-      base: baseNode,
-    },
+    nodes: { base: baseNode },
     parentSchema,
     path,
     plugin,
@@ -106,35 +70,32 @@ export function intersectionToType({
   };
 
   const resolver = plugin.config['~resolvers']?.intersection;
-  const resolved = resolver?.(resolverCtx) ?? intersectionResolver(resolverCtx);
+  let resolved = resolver?.(resolverCtx) ?? intersectionResolver(resolverCtx);
 
-  const baseClasses: Array<string> = [];
-  const mergedFields: Array<PydanticField> = [];
-  const seenFieldIds = new Set<number>();
+  if (parentSchema.description !== undefined && resolved.type) {
+    resolved = {
+      ...resolved,
+      type: resolved.type.mergeConstraints($$.constraints().description(parentSchema.description)),
+    };
+  }
+
+  const baseClasses: Array<ReturnType<typeof $$.constrainedType>> = [];
+  const mergedFields: Array<ReturnType<typeof $$.field>> = [];
+  const seenFieldNames = new Set<object>();
 
   for (const result of childResults) {
-    const finalResult = applyModifiers(result);
-
-    // TODO: replace
-    const typeStr = String(finalResult.type);
-    const isReference =
-      !finalResult.fields &&
-      typeStr !== '' &&
-      !typeStr.startsWith('dict[') &&
-      !typeStr.startsWith('Dict[') &&
-      typeStr !== String(plugin.symbols.typing.Any);
-
-    if (isReference) {
-      const baseName = typeStr.replace(/^'|'$/g, '');
-      if (baseName && !baseClasses.includes(baseName)) {
-        baseClasses.push(baseName);
-      }
+    if (isReferenceResult(result)) {
+      const t = result.type!;
+      if (!baseClasses.includes(t)) baseClasses.push(t);
+      continue;
     }
 
-    if (finalResult.fields) {
-      for (const field of finalResult.fields) {
-        if (!seenFieldIds.has(field.name.id)) {
-          seenFieldIds.add(field.name.id);
+    const finalResult = applyModifiers(result);
+
+    if (finalResult.node?.kind === 'model') {
+      for (const field of finalResult.node.fields) {
+        if (!seenFieldNames.has(field.name as object)) {
+          seenFieldNames.add(field.name as object);
           mergedFields.push(field);
         }
       }
@@ -145,9 +106,6 @@ export function intersectionToType({
     ...resolved,
     baseClasses: baseClasses.length ? baseClasses : undefined,
     childResults,
-    fieldConstraints: Object.keys(constraints).length
-      ? { ...constraints, ...resolved.fieldConstraints }
-      : resolved.fieldConstraints,
     mergedFields: mergedFields.length ? mergedFields : undefined,
   };
 }

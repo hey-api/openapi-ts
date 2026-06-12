@@ -1,5 +1,6 @@
 ---
 import menuSvg from '@/assets/icons/menu.svg?raw';
+import searchSvg from '@/assets/icons/search.svg?raw';
 
 interface PillItem {
   icon?: boolean;
@@ -31,6 +32,15 @@ const { items } = Astro.props;
       </button>
     </>
   ))}
+  <div class="pill-divider" aria-hidden="true" />
+  <button
+    class="floating-pill"
+    data-value="search"
+    aria-label="Open search"
+    aria-expanded="false"
+  >
+    <span class="pill-icon" set:html={searchSvg} aria-hidden="true" />
+  </button>
 </hey-api-pill>
 
 <style>
@@ -137,6 +147,11 @@ const { items } = Astro.props;
     connectedCallback() {
       this.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((btn) => {
         btn.addEventListener('click', () => {
+          if (btn.dataset.value === 'search') {
+            document.querySelector<HTMLButtonElement>('.DocSearch-Button')?.click();
+            return;
+          }
+
           this.querySelectorAll<HTMLButtonElement>('button[data-value]').forEach((b) => {
             b.setAttribute('aria-expanded', String(b === btn));
           });

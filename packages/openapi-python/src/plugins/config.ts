@@ -4,6 +4,11 @@ import { defaultConfig as heyApiClientHttpx } from '../plugins/@hey-api/client-h
 import { defaultConfig as heyApiSdk } from '../plugins/@hey-api/sdk';
 import { defaultConfig as pydantic } from '../plugins/pydantic';
 
+/**
+ * Default plugins used to generate artifacts if plugins aren't specified.
+ */
+export const defaultPlugins = ['@hey-api/python-sdk'] as const satisfies ReadonlyArray<PluginNames>;
+
 export const defaultPluginConfigs: {
   [K in PluginNames]: Plugin.Config<PluginConfigMap[K]>;
 } = {
