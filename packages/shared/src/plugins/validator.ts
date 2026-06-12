@@ -93,6 +93,11 @@ export interface RequestSchemaContext<Plugin extends PluginInstance = PluginInst
   layers?: RequestValidatorLayers;
   /** The operation object. */
   operation: IR.OperationObject;
+  /**
+   * When `true` and every non-omitted layer is optional, wrap the entire
+   * composite schema in an outer optional wrapper.
+   */
+  outerOptional?: boolean;
   /** The plugin instance. */
   plugin: Plugin;
 }
