@@ -165,14 +165,14 @@ export function resolvePlugins<TPluginNames extends string = string>({
   const userPluginsConfig: Record<string, Plugin.Config<Plugin.Types<any>>> = {};
 
   const rawPresetPlugins = (userConfig.presets ?? []).flatMap((preset) => preset.plugins ?? []);
-  const rawUserPlugins = (userConfig.plugins ?? []).filter(
-    (plugin) =>
-      (typeof plugin === 'string' && plugin) || (typeof plugin !== 'string' && plugin.name),
-  );
+  const rawUserPlugins = userConfig.plugins ?? [];
   const rawPlugins = [
     ...rawPresetPlugins,
     ...(rawUserPlugins.length ? rawUserPlugins : defaultPlugins),
-  ];
+  ].filter(
+    (plugin) =>
+      (typeof plugin === 'string' && plugin) || (typeof plugin !== 'string' && plugin.name),
+  );
 
   const mergedPlugins: Array<string | AnyObject> = [];
   const seenNames = new Map<string, { index: number; value: string | AnyObject }>();
