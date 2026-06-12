@@ -1,6 +1,7 @@
 import { log } from '@hey-api/codegen-core';
 import type { AnyObject } from '@hey-api/types';
 
+import type { Preset } from '../config/presets';
 import { dependencyFactory } from '../config/utils/dependencies';
 import { defineConfig } from '../normalize/config';
 import { collectDeps } from '../normalize/value';
@@ -31,6 +32,7 @@ export interface PluginResolutionInput {
   /** Raw user configuration (only the `plugins` field is read). */
   userConfig: {
     plugins?: ReadonlyArray<string | { name: string }>;
+    presets?: ReadonlyArray<Preset>;
   };
 }
 
@@ -162,24 +164,20 @@ export function resolvePlugins<TPluginNames extends string = string>({
 }: PluginResolutionInput): PluginResolutionResult<TPluginNames> {
   const userPluginsConfig: Record<string, Plugin.Config<Plugin.Types<any>>> = {};
 
-  let definedPlugins: PluginResolutionInput['userConfig']['plugins'] = [...defaultPlugins];
-
-  if (userConfig.plugins) {
-    const filtered = userConfig.plugins.filter(
-      (plugin) =>
-        (typeof plugin === 'string' && plugin) || (typeof plugin !== 'string' && plugin.name),
-    );
-    if (filtered.length === 1 && isPluginClient(filtered[0]!)) {
-      definedPlugins = [...defaultPlugins, ...filtered];
-    } else if (filtered.length) {
-      definedPlugins = filtered;
-    }
-  }
+  const rawPresetPlugins = (userConfig.presets ?? []).flatMap((preset) => preset.plugins ?? []);
+  const rawUserPlugins = (userConfig.plugins ?? []).filter(
+    (plugin) =>
+      (typeof plugin === 'string' && plugin) || (typeof plugin !== 'string' && plugin.name),
+  );
+  const rawPlugins = [
+    ...rawPresetPlugins,
+    ...(rawUserPlugins.length ? rawUserPlugins : defaultPlugins),
+  ];
 
   const mergedPlugins: Array<string | AnyObject> = [];
   const seenNames = new Map<string, { index: number; value: string | AnyObject }>();
 
-  for (const plugin of definedPlugins) {
+  for (const plugin of rawPlugins) {
     if (typeof plugin === 'string') {
       if (!seenNames.has(plugin)) {
         seenNames.set(plugin, { index: mergedPlugins.length, value: plugin });
@@ -207,6 +205,19 @@ export function resolvePlugins<TPluginNames extends string = string>({
     const mergedObj = deepMerge(prev.value, plugin);
     seenNames.set(name, { index: prev.index, value: mergedObj });
     mergedPlugins[prev.index] = mergedObj;
+  }
+
+  if (
+    mergedPlugins.length > 0 &&
+    mergedPlugins.every((plugin) =>
+      isPluginClient(plugin as string | (AnyObject & { name: string })),
+    )
+  ) {
+    for (const name of [...defaultPlugins].reverse()) {
+      if (!seenNames.has(name)) {
+        mergedPlugins.unshift(name);
+      }
+    }
   }
 
   const userPlugins = mergedPlugins

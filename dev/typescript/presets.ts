@@ -9,6 +9,10 @@ export const presets = {
       name: '@angular/common',
     },
   ],
+  client: () => [
+    /** Just the client */
+    '@hey-api/client-axios',
+  ],
   full: () => [
     /** Full kitchen sink for comprehensive testing */
     '@hey-api/typescript',
@@ -30,6 +34,9 @@ export const presets = {
         tags: true,
       },
     },
+  ],
+  none: () => [
+    /** No plugins at all */
   ],
   rpc: () => [
     /** RPC-style SDK with Zod validation */
