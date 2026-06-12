@@ -226,7 +226,7 @@ export function createInfiniteQueryOptions({
       $.func()
         .param('options', (p) => p.required(isRequiredOptions).type(typeData))
         .do(
-          $.return(
+          $.const('opts').assign(
             $(symbolInfiniteQueryOptions)
               .call(
                 $.object()
@@ -251,6 +251,17 @@ export function createInfiniteQueryOptions({
                 typeQueryKey,
                 $.type.or(type, typePageObjectParam),
               ),
+          ),
+          // The suppressed overload mismatch above makes TypeScript resolve
+          // the call against the defined-initial-data overload, so the
+          // inferred type carries a phantom required `initialData`. Strip it
+          // so spreading the result into useInfiniteQuery() selects the
+          // undefined-initial-data overload and consumers get honest result
+          // types (`data` may be undefined, `isPending` is a real boolean).
+          $.return(
+            $('opts').as(
+              $.type('Omit').generics($('opts').typeofType(), $.type.literal('initialData')),
+            ),
           ),
         ),
     );
