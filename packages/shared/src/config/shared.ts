@@ -9,6 +9,7 @@ import type { PostProcessor } from './output/postprocess';
 import type { SourceConfig, UserSourceConfig } from './output/source/types';
 import type { OutputHeader } from './output/types';
 import type { Parser, UserParser } from './parser/types';
+import type { Preset } from './presets';
 
 export type FeatureToggle = {
   /**
@@ -271,6 +272,8 @@ export type BaseUserConfig<TOutput extends BaseUserOutput> = {
   /**
    * Path to the config file. Set this value if you don't use the default
    * config file name, or it's not located in the project root.
+   *
+   * @default undefined
    */
   configFile?: string;
   /**
@@ -318,8 +321,16 @@ export type BaseUserConfig<TOutput extends BaseUserOutput> = {
   /**
    * Customize how the input is parsed and transformed before it's passed to
    * plugins.
+   *
+   * @default undefined
    */
   parser?: UserParser;
+  /**
+   * Configuration presets.
+   *
+   * @default []
+   */
+  presets?: ReadonlyArray<Preset>;
   /**
    * @deprecated use `input.watch` instead
    */
