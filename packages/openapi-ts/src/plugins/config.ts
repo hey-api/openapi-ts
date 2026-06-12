@@ -28,6 +28,14 @@ import { defaultConfig as swr } from '../plugins/swr';
 import { defaultConfig as valibot } from '../plugins/valibot';
 import { defaultConfig as zod } from '../plugins/zod';
 
+/**
+ * Default plugins used to generate artifacts if plugins aren't specified.
+ */
+export const defaultPlugins = [
+  '@hey-api/typescript',
+  '@hey-api/sdk',
+] as const satisfies ReadonlyArray<PluginNames>;
+
 export const defaultPluginConfigs: {
   [K in PluginNames]: Plugin.Config<PluginConfigMap[K]>;
 } = {
