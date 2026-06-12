@@ -1,9 +1,13 @@
 import type { AnyObject } from '@hey-api/types';
 
-function isPlainObject(value: unknown): value is AnyObject {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+// TODO: move to @hey-api/utils
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== 'object' || value === null) return false;
+  const proto = Object.getPrototypeOf(value);
+  return proto === Object.prototype || proto === null;
 }
 
+// TODO: move to @hey-api/utils
 export function mergeConfigs<T extends AnyObject>(
   configA: T | undefined,
   configB: T | undefined,

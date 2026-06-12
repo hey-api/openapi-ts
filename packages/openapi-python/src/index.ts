@@ -81,8 +81,8 @@ export async function defineConfig<T extends MaybeArray<UserConfig>>(
   return typeof config === 'function' ? await config() : config;
 }
 
-export { defaultPlugins } from './config/plugins';
 export type { UserConfig } from './config/types';
+export { defaultPlugins } from './plugins/config';
 export { Logger } from '@hey-api/codegen-core';
 export type {
   AnyPluginName,

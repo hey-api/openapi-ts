@@ -1,9 +1,9 @@
 import { detectInteractiveSession } from '@hey-api/codegen-core';
-import { ConfigError, getInput, getLogs, getParser } from '@hey-api/shared';
+import { ConfigError, getInput, getLogs, getParser, resolvePlugins } from '@hey-api/shared';
 import colors from 'ansi-colors';
 
+import { defaultPluginConfigs, defaultPlugins } from '../plugins/config';
 import { getOutput } from './output/config';
-import { getPlugins } from './plugins';
 import type { Config } from './types';
 import type { ValidationResult } from './validate';
 
@@ -25,7 +25,12 @@ export function resolveConfig(
   let plugins: Pick<Config, 'plugins' | 'pluginOrder'>;
 
   try {
-    plugins = getPlugins({ dependencies, userConfig: validated.job.config });
+    plugins = resolvePlugins({
+      defaultPluginConfigs,
+      defaultPlugins,
+      dependencies,
+      userConfig: validated.job.config,
+    });
   } catch (error) {
     if (error instanceof ConfigError) {
       validated.errors.push(error);
