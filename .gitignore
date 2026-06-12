@@ -35,6 +35,8 @@ debug/
 specs/**/*.debug.json
 specs/**/*.debug.yaml
 specs/**/*.debug.yml
+presets/**/*
+!presets/.keep
 # error files
 logs
 openapi-ts-error-*

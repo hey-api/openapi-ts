@@ -3,6 +3,13 @@ import type { UserConfig } from '@hey-api/openapi-python';
 export type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number]>;
 
 export const presets = {
+  client: () => [
+    /** Just the client */
+    '@hey-api/client-httpx',
+  ],
+  none: () => [
+    /** No plugins at all */
+  ],
   sdk: () => [
     /** SDK */
     {

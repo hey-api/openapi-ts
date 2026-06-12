@@ -29,8 +29,7 @@
   "funding": "https://github.com/sponsors/hey-api",
   "files": [
     "src",
-    "dist",
-    "cjs"
+    "dist"
   ],
   "type": "module",
   "main": "./dist/index.mjs",
