@@ -9,6 +9,12 @@ import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
 import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
 import { handleMeta } from '../shared/meta';
+import {
+  ensureFieldsResponseTypes,
+  fieldsResultStatements,
+  fieldsStyleParamName,
+  fieldsStyleUnion,
+} from '../shared/responseTypes';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -169,6 +175,30 @@ export function createInfiniteQueryOptions({
   });
   plugin.node(node);
 
+  const typeError = useTypeError({ operation, plugin });
+  const isFields = plugin.config.responseStyle === 'fields';
+
+  const fieldsTypes = isFields ? ensureFieldsResponseTypes(plugin) : undefined;
+  const wrappedResponse = fieldsTypes
+    ? $.type(fieldsTypes.symbolResponseResult).generic(typeResponse).generic(fieldsStyleParamName)
+    : typeResponse;
+  const wrappedError = fieldsTypes
+    ? $.type(fieldsTypes.symbolErrorResult).generic(typeError).generic(fieldsStyleParamName)
+    : typeError;
+
+  const sdkCallObject = isFields
+    ? $.object()
+        .spread('options')
+        .spread('params')
+        .prop('responseStyle', $.literal('fields'))
+        .prop('signal', $('signal'))
+        .prop('throwOnError', $.literal(false))
+    : $.object()
+        .spread('options')
+        .spread('params')
+        .prop('signal', $('signal'))
+        .prop('throwOnError', $.literal(true));
+
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
@@ -178,13 +208,7 @@ export function createInfiniteQueryOptions({
           resourceId: operation.id,
         }),
       )
-      .call(
-        $.object()
-          .spread('options')
-          .spread('params')
-          .prop('signal', $('signal'))
-          .prop('throwOnError', $.literal(true)),
-      )
+      .call(sdkCallObject)
       .await(),
   );
 
@@ -210,7 +234,17 @@ export function createInfiniteQueryOptions({
     $.const('params').assign($(symbolCreateInfiniteParams).call('queryKey', 'page')),
   ];
 
-  if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
+  if (fieldsTypes) {
+    statements.push(
+      ...fieldsResultStatements({
+        awaitSdkFn,
+        fieldsTypes,
+        optionsName: 'options',
+        wrappedError,
+        wrappedResponse,
+      }),
+    );
+  } else if (plugin.getPluginOrThrow('@hey-api/sdk').config.responseStyle === 'data') {
     statements.push($.return(awaitSdkFn));
   } else {
     statements.push($.const().object('data').assign(awaitSdkFn), $.return('data'));
@@ -224,7 +258,22 @@ export function createInfiniteQueryOptions({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func()
-        .param('options', (p) => p.required(isRequiredOptions).type(typeData))
+        .$if(isFields, (f) =>
+          f.generic(fieldsStyleParamName, (g) =>
+            g.extends(fieldsStyleUnion()).default($.type.literal('fields')),
+          ),
+        )
+        .param('options', (p) => {
+          const optionsType = isFields
+            ? $.type.and(
+                typeData,
+                $.type
+                  .object()
+                  .prop('responseStyle', (op) => op.type(fieldsStyleParamName).optional()),
+              )
+            : typeData;
+          return p.required(isRequiredOptions).type(optionsType);
+        })
         .do(
           $.const('opts').assign(
             $(symbolInfiniteQueryOptions)
@@ -245,9 +294,9 @@ export function createInfiniteQueryOptions({
                   ),
               )
               .generics(
-                typeResponse,
-                useTypeError({ operation, plugin }),
-                $.type(symbolInfiniteDataType).generic(typeResponse),
+                wrappedResponse,
+                wrappedError,
+                $.type(symbolInfiniteDataType).generic(wrappedResponse),
                 typeQueryKey,
                 $.type.or(type, typePageObjectParam),
               ),
