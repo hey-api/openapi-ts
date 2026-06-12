@@ -1,0 +1,68 @@
+{
+  "name": "@hey-api/preset-stainless",
+  "version": "0.0.1",
+  "description": "♻️ Stainless preset for Hey API.",
+  "keywords": [
+    "api",
+    "codegen",
+    "generator",
+    "hey",
+    "hey-api",
+    "http",
+    "javascript",
+    "json",
+    "node",
+    "openapi",
+    "preset",
+    "rest",
+    "stainless",
+    "swagger",
+    "typescript",
+    "yaml"
+  ],
+  "homepage": "https://heyapi.dev/",
+  "bugs": {
+    "url": "https://github.com/hey-api/openapi-ts/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Hey API",
+    "email": "lubos@heyapi.dev",
+    "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/openapi-ts.git"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "prepublishOnly": "pnpm build",
+    "typecheck": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@hey-api/shared": "workspace:*",
+    "js-yaml": "4.2.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "4.0.9",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  }
+}
