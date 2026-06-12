@@ -13,6 +13,7 @@ export { defaultPaginationKeywords, getParser } from './config/parser/config';
 export type { Filters } from './config/parser/filters';
 export type { Patch } from './config/parser/patch';
 export type { Parser, UserParser } from './config/parser/types';
+export type { Preset, PresetPlugin } from './config/presets';
 export type {
   AnyConfig,
   BaseConfig,

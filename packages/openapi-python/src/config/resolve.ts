@@ -51,6 +51,7 @@ export function resolveConfig(
     parser,
     pluginOrder: plugins.pluginOrder,
     plugins: plugins.plugins,
+    presets: validated.job.config.presets ?? [],
   };
 
   if (logs.level === 'debug') {
