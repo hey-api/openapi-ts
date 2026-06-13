@@ -5,6 +5,8 @@ import {
   buildDynamicScope,
   buildGenericRef,
   containsRefTo,
+  findDynamicAnchorInComponents,
+  getDynamicAnchorName,
   getDynamicDefsBindings,
   getTemplateParams,
   hasDynamicRefBindings,
@@ -952,5 +954,111 @@ describe('containsRefTo', () => {
 
   it('returns false for schema without composites', () => {
     expect(containsRefTo({ type: 'string' }, targetRef)).toBe(false);
+  });
+});
+
+describe('getDynamicAnchorName', () => {
+  it('extracts anchor from #anchor format', () => {
+    expect(getDynamicAnchorName('#itemType')).toBe('itemType');
+  });
+
+  it('returns undefined for external ref', () => {
+    expect(getDynamicAnchorName('other.json#node')).toBeUndefined();
+  });
+
+  it('returns undefined for JSON pointer fragment', () => {
+    expect(getDynamicAnchorName('#/defs/itemType')).toBeUndefined();
+  });
+
+  it('returns undefined for non-# ref', () => {
+    expect(getDynamicAnchorName('itemType')).toBeUndefined();
+  });
+
+  it('returns undefined for bare #', () => {
+    expect(getDynamicAnchorName('#')).toBeUndefined();
+  });
+});
+
+describe('findDynamicAnchorInComponents', () => {
+  it('returns $ref when exactly one schema declares the anchor', () => {
+    expect(
+      findDynamicAnchorInComponents({
+        anchorName: 'itemType',
+        schemas: {
+          Bar: { type: 'string' },
+          Foo: { $dynamicAnchor: 'itemType', type: 'object' },
+        },
+      }),
+    ).toBe('#/components/schemas/Foo');
+  });
+
+  it('returns undefined when no schema declares the anchor', () => {
+    expect(
+      findDynamicAnchorInComponents({
+        anchorName: 'missing',
+        schemas: {
+          Foo: { $dynamicAnchor: 'itemType', type: 'object' },
+        },
+      }),
+    ).toBeUndefined();
+  });
+
+  it('returns undefined when multiple schemas declare the same anchor (ambiguous)', () => {
+    expect(
+      findDynamicAnchorInComponents({
+        anchorName: 'itemType',
+        schemas: {
+          Bar: { $dynamicAnchor: 'itemType', type: 'string' },
+          Foo: { $dynamicAnchor: 'itemType', type: 'object' },
+        },
+      }),
+    ).toBeUndefined();
+  });
+
+  it('prefers schema whose key name matches anchor when multiple declare it', () => {
+    expect(
+      findDynamicAnchorInComponents({
+        anchorName: 'itemType',
+        schemas: {
+          Foo: { $dynamicAnchor: 'itemType', type: 'object' },
+          itemType: { $dynamicAnchor: 'itemType', type: 'string' },
+        },
+      }),
+    ).toBe('#/components/schemas/itemType');
+  });
+
+  it('ignores non-object schemas', () => {
+    expect(
+      findDynamicAnchorInComponents({
+        anchorName: 'itemType',
+        schemas: {
+          Foo: { $dynamicAnchor: 'itemType', type: 'object' },
+          a: null as any,
+          b: 'string' as any,
+          c: 42 as any,
+        },
+      }),
+    ).toBe('#/components/schemas/Foo');
+  });
+
+  it('handles schemas with no $dynamicAnchor', () => {
+    expect(
+      findDynamicAnchorInComponents({
+        anchorName: 'itemType',
+        schemas: {
+          Bar: { type: 'string' },
+          Foo: { type: 'object' },
+        },
+      }),
+    ).toBeUndefined();
+  });
+
+  it('handles empty schemas object', () => {
+    expect(
+      findDynamicAnchorInComponents({
+        anchorName: 'itemType',
+        schemas: {},
+      }),
+    ).toBeUndefined();
   });
 });

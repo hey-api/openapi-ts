@@ -149,6 +149,14 @@ export function buildCurrentDynamicScope({
   };
 }
 
+export function getDynamicAnchorName(dynamicRef: string): string | undefined {
+  if (!dynamicRef.startsWith('#') || dynamicRef.includes('/') || dynamicRef.length <= 1) {
+    return;
+  }
+
+  return dynamicRef.slice(1);
+}
+
 export function resolveDynamicRef({
   dynamicRef,
   dynamicScope,
@@ -156,16 +164,34 @@ export function resolveDynamicRef({
   dynamicRef: string;
   dynamicScope?: Record<string, string>;
 }): string | undefined {
-  if (!dynamicRef.startsWith('#') || dynamicRef.includes('/')) {
-    return;
-  }
-
-  const anchorName = dynamicRef.slice(1);
+  const anchorName = getDynamicAnchorName(dynamicRef);
   if (!anchorName) {
     return;
   }
 
   return dynamicScope?.[anchorName];
+}
+
+export function findDynamicAnchorInComponents({
+  anchorName,
+  schemas,
+}: {
+  anchorName: string;
+  schemas: Record<string, OpenAPIV3_1.SchemaObject>;
+}): string | undefined {
+  const matches: string[] = [];
+  for (const [name, schema] of Object.entries(schemas)) {
+    if (isSchemaObject(schema) && schema.$dynamicAnchor === anchorName) {
+      matches.push(name);
+    }
+  }
+
+  if (matches.length === 1) {
+    return `#/components/schemas/${matches[0]}`;
+  }
+
+  const nameMatch = matches.find((m) => m === anchorName);
+  return nameMatch ? `#/components/schemas/${nameMatch}` : undefined;
 }
 
 export function materializeDynamicRefBinding({
