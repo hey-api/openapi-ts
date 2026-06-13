@@ -20,6 +20,8 @@ import {
   buildDynamicScope,
   buildGenericRef,
   containsRefTo,
+  findDynamicAnchorInComponents,
+  getDynamicAnchorName,
   getDynamicDefsBindings,
   getTemplateParams,
   materializeDynamicRefBinding,
@@ -1397,10 +1399,26 @@ export function schemaToIrSchema({
   }
 
   if (schema.$dynamicRef) {
-    const resolvedRef = resolveDynamicRef({
+    const anchorName = getDynamicAnchorName(schema.$dynamicRef);
+
+    if (currentState.typeParams && anchorName) {
+      const param = currentState.typeParams.find((p) => p.anchor === anchorName);
+      if (param) {
+        return { $ref: `#typeParam/${param.paramName}` };
+      }
+    }
+
+    let resolvedRef = resolveDynamicRef({
       dynamicRef: schema.$dynamicRef,
       dynamicScope: currentState.dynamicScope,
     });
+
+    if (!resolvedRef && anchorName && context.spec.components?.schemas) {
+      resolvedRef = findDynamicAnchorInComponents({
+        anchorName,
+        schemas: context.spec.components.schemas,
+      });
+    }
 
     if (resolvedRef) {
       return parseRef({
@@ -1411,19 +1429,6 @@ export function schemaToIrSchema({
         } as SchemaWithRequired<OpenAPIV3_1.SchemaObject, '$ref'>,
         state: currentState,
       });
-    }
-
-    if (currentState.typeParams) {
-      const anchorName =
-        schema.$dynamicRef.startsWith('#') && !schema.$dynamicRef.includes('/')
-          ? schema.$dynamicRef.slice(1)
-          : null;
-      if (anchorName) {
-        const param = currentState.typeParams.find((p) => p.anchor === anchorName);
-        if (param) {
-          return { $ref: `#typeParam/${param.paramName}` };
-        }
-      }
     }
 
     return parseUnknown({ context, schema });

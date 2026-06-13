@@ -1086,6 +1086,13 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'emits interface extends for circular $dynamicRef without allOf',
     },
+    {
+      config: createConfig({
+        input: 'dynamicref-fallback.yaml',
+        output: 'dynamicref-fallback',
+      }),
+      description: 'falls back to components.schemas scan for unscoped $dynamicRef',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {
