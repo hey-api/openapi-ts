@@ -34,6 +34,7 @@
 - [Gergan Penkov](https://github.com/gergan)
 - [Hector Ayala](https://github.com/bombillazo)
 - [Hiram Chirino](https://github.com/chirino)
+- [Horcrux](https://github.com/magicismight)
 - [Idan Ben Ami](https://github.com/idbenami)
 - [Inas Sirhan](https://github.com/inas-sirhan)
 - [Jan](https://github.com/JanST123)
