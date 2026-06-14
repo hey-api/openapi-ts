@@ -11,6 +11,11 @@ export const defaultConfig: HeyApiSchemasPlugin['Config'] = {
   },
   handler,
   name: '@hey-api/schemas',
+  symbolMeta() {
+    return {
+      tool: 'schemas',
+    };
+  },
 };
 
 /**

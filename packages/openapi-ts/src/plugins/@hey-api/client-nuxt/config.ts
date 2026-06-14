@@ -12,6 +12,11 @@ export const defaultConfig: HeyApiClientNuxtPlugin['Config'] = {
   config: clientDefaultConfig,
   handler: clientPluginHandler as unknown as HeyApiClientNuxtPlugin['Handler'],
   name: '@hey-api/client-nuxt',
+  symbolMeta() {
+    return {
+      tool: 'client',
+    };
+  },
 };
 
 /**

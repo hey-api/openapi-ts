@@ -2,6 +2,7 @@ import { definePluginConfig } from '@hey-api/shared';
 
 import { bigIntExpressions, dateExpressions, temporalExpressions } from './expressions';
 import { handler } from './plugin';
+import { transformersSymbols } from './symbols';
 import type { HeyApiTransformersPlugin } from './types';
 
 export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
@@ -25,6 +26,12 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: '@hey-api/transformers',
+  symbolMeta() {
+    return {
+      tool: 'transformers',
+    };
+  },
+  symbols: transformersSymbols,
   tags: ['transformer'],
 };
 

@@ -88,6 +88,11 @@ export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: '@tanstack/solid-query',
+  symbolMeta() {
+    return {
+      tool: '@tanstack/solid-query',
+    };
+  },
   symbols: tanStackQuerySymbols,
 };
 

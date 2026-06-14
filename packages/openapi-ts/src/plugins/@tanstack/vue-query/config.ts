@@ -88,6 +88,11 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: '@tanstack/vue-query',
+  symbolMeta() {
+    return {
+      tool: '@tanstack/vue-query',
+    };
+  },
   symbols: tanStackQuerySymbols,
 };
 

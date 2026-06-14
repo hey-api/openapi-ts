@@ -8,6 +8,8 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
+import type { SwrSymbols } from './symbols';
+
 export type UserConfig = Plugin.Name<'swr'> &
   Plugin.Hooks &
   Plugin.UserComments &
@@ -476,4 +478,4 @@ export type Config = Plugin.Name<'swr'> &
     useSwr: NamingOptions & FeatureToggle;
   };
 
-export type SwrPlugin = DefinePlugin<UserConfig, Config>;
+export type SwrPlugin = DefinePlugin<UserConfig, Config, never, SwrSymbols>;

@@ -3,11 +3,9 @@ import type { PluginInstance } from '@hey-api/shared';
 import { getTypedConfig } from '../../../config/utils';
 import { clientFolderAbsolutePath } from '../../../generate/client';
 import * as SYMBOLS from '../../../symbols';
-import { getClientPlugin } from '../client-core/utils';
 
 export function sdkSymbols(plugin: PluginInstance) {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
-  const client = getClientPlugin(getTypedConfig(plugin));
   const factory = plugin.symbolFactory;
 
   return {
@@ -16,7 +14,6 @@ export function sdkSymbols(plugin: PluginInstance) {
       kind: 'type',
       meta: {
         resource: 'client.Client',
-        tool: client.name,
       },
     }),
     ClientMeta: plugin.symbol('ClientMeta', {
@@ -24,7 +21,6 @@ export function sdkSymbols(plugin: PluginInstance) {
       kind: 'type',
       meta: {
         resource: 'client.ClientMeta',
-        tool: client.name,
       },
     }),
     Composable: plugin.symbol('Composable', {
@@ -32,7 +28,6 @@ export function sdkSymbols(plugin: PluginInstance) {
       kind: 'type',
       meta: {
         resource: 'client.Composable',
-        tool: client.name,
       },
     }),
     Options: plugin.symbol('Options', {
@@ -44,7 +39,6 @@ export function sdkSymbols(plugin: PluginInstance) {
       kind: 'type',
       meta: {
         resource: 'client.RequestResult',
-        tool: client.name,
       },
     }),
     ServerSentEventsResult: plugin.symbol('ServerSentEventsResult', {
@@ -52,7 +46,6 @@ export function sdkSymbols(plugin: PluginInstance) {
       kind: 'type',
       meta: {
         resource: 'client.ServerSentEventsResult',
-        tool: client.name,
       },
     }),
     TDataShape: plugin.symbol('TDataShape', {
@@ -64,21 +57,18 @@ export function sdkSymbols(plugin: PluginInstance) {
       external: clientModule,
       meta: {
         resource: 'client.buildClientParams',
-        tool: client.name,
       },
     }),
     formDataBodySerializer: plugin.symbol('formDataBodySerializer', {
       external: clientModule,
       meta: {
         resource: 'client.formDataBodySerializer',
-        tool: client.name,
       },
     }),
     urlSearchParamsBodySerializer: plugin.symbol('urlSearchParamsBodySerializer', {
       external: clientModule,
       meta: {
         resource: 'client.urlSearchParamsBodySerializer',
-        tool: client.name,
       },
     }),
   };

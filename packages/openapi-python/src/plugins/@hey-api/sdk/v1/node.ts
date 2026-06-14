@@ -54,7 +54,6 @@ function createFnSymbol(
       resource: 'operation',
       resourceId: operation.id,
       tags,
-      tool: 'sdk',
     },
   });
 }

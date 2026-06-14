@@ -31,7 +31,6 @@ export function webhookToType({
           resourceId: operation.id,
           role: 'payload',
           tags,
-          tool: 'typescript',
         },
         name: operation.id,
         naming: {
@@ -84,7 +83,6 @@ export function webhookToType({
         resourceId: operation.id,
         role: 'data',
         tags,
-        tool: 'typescript',
       },
       name: operation.id,
       naming: plugin.config.webhooks,

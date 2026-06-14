@@ -35,7 +35,7 @@ export function operationOptionsType({
         resource: 'operation',
         resourceId: operation.id,
         role: 'data',
-        tool: 'typescript',
+        tool: 'types',
       })
     : undefined;
 

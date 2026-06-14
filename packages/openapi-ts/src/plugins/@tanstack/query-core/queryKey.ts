@@ -19,7 +19,6 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
       meta: {
         category: 'utility',
         resource: 'createQueryKey',
-        tool: plugin.name,
       },
     },
   );
@@ -134,7 +133,6 @@ export function createQueryKeyType({ plugin }: { plugin: PluginInstance }): void
     meta: {
       category: 'type',
       resource: 'QueryKey',
-      tool: plugin.name,
     },
   });
   const queryKeyType = $.type

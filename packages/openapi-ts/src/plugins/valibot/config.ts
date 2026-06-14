@@ -83,6 +83,11 @@ export const defaultConfig: ValibotPlugin['Config'] = {
   },
   handler,
   name: 'valibot',
+  symbolMeta() {
+    return {
+      tool: 'valibot',
+    };
+  },
   symbols: valibotSymbols,
   tags: ['transformer', 'validator'],
 };

@@ -47,7 +47,6 @@ export function createGetQueryData({
       resource: 'operation',
       resourceId: operation.id,
       role: 'getQueryData',
-      tool: plugin.name,
     },
   });
 

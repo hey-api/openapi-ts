@@ -38,7 +38,7 @@ export function irSchemaToAst({
 
   let ast: Partial<Ast> = {};
 
-  // const type = plugin.external('arktype.type');
+  // const type = plugin.symbols.type;
 
   if (schema.$ref) {
     const query: SymbolMeta = {
@@ -255,7 +255,6 @@ function handleComponent({
       resource: 'definition',
       resourceId: $ref,
       tags: fromRef(state.tags),
-      tool: 'arktype',
     },
   });
   const typeInferSymbol = plugin.config.definitions.types.infer.enabled
@@ -265,7 +264,6 @@ function handleComponent({
           path: fromRef(state.path),
           resource: 'definition',
           resourceId: $ref,
-          tool: 'arktype',
           variant: 'infer',
         },
       })
@@ -280,10 +278,6 @@ function handleComponent({
 }
 
 export const handlerV2: ArktypePlugin['Handler'] = ({ plugin }) => {
-  plugin.symbol('type', {
-    external: 'arktype',
-  });
-
   plugin.forEach('operation', 'parameter', 'requestBody', 'schema', 'webhook', (event) => {
     const state = refs<PluginState>({
       hasLazyExpression: false,

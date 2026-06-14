@@ -73,6 +73,11 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   dependencies: ['pydantic'],
   handler,
   name: '@hey-api/python-sdk',
+  symbolMeta() {
+    return {
+      tool: 'sdk',
+    };
+  },
   symbols: sdkSymbols,
 };
 

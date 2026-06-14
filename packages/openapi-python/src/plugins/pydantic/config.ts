@@ -81,6 +81,11 @@ export const defaultConfig: PydanticPlugin['Config'] = {
   },
   handler,
   name: 'pydantic',
+  symbolMeta() {
+    return {
+      tool: 'pydantic',
+    };
+  },
   symbols: pydanticSymbols,
   tags: ['validator'],
 };

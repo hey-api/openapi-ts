@@ -2,6 +2,7 @@ import { definePluginConfig } from '@hey-api/shared';
 
 import { Api } from './api';
 import { handler } from './plugin';
+import { typescriptSymbols } from './symbols';
 import type { EnumsType, HeyApiTypeScriptPlugin } from './types';
 
 export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
@@ -58,6 +59,12 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   },
   handler,
   name: '@hey-api/typescript',
+  symbolMeta() {
+    return {
+      tool: 'types',
+    };
+  },
+  symbols: typescriptSymbols,
 };
 
 /**

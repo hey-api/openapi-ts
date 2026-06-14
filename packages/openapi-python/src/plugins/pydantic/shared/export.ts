@@ -32,7 +32,6 @@ export function exportAst({
         category: 'schema',
         path,
         tags,
-        tool: 'pydantic',
         ...meta,
       },
       name,

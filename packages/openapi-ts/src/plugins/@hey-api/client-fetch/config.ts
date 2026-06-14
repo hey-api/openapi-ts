@@ -15,6 +15,11 @@ export const defaultConfig: HeyApiClientFetchPlugin['Config'] = {
   },
   handler: clientPluginHandler as unknown as HeyApiClientFetchPlugin['Handler'],
   name: '@hey-api/client-fetch',
+  symbolMeta() {
+    return {
+      tool: 'client',
+    };
+  },
 };
 
 /**

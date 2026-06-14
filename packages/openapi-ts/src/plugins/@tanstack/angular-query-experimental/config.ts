@@ -88,6 +88,11 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: '@tanstack/angular-query-experimental',
+  symbolMeta() {
+    return {
+      tool: '@tanstack/angular-query-experimental',
+    };
+  },
   symbols: tanStackQuerySymbols,
 };
 

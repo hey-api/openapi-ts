@@ -88,6 +88,11 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: '@tanstack/svelte-query',
+  symbolMeta() {
+    return {
+      tool: '@tanstack/svelte-query',
+    };
+  },
   symbols: tanStackQuerySymbols,
 };
 

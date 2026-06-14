@@ -1,6 +1,7 @@
 import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
+import { piniaColadaSymbols } from './symbols';
 import type { PiniaColadaPlugin } from './types';
 
 const defaultMeta = (): Record<string, unknown> => ({});
@@ -42,6 +43,12 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
   dependencies: ['@hey-api/typescript', '@hey-api/sdk'],
   handler,
   name: '@pinia/colada',
+  symbolMeta() {
+    return {
+      tool: '@pinia/colada',
+    };
+  },
+  symbols: piniaColadaSymbols,
 };
 
 /**

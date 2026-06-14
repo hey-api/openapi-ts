@@ -26,7 +26,6 @@ function createShellMeta(node: StructureNode): SymbolMeta {
     category: 'contract',
     resource: 'container',
     resourceId: node.getPath().join('.'),
-    tool: 'orpc',
   };
 }
 
@@ -44,7 +43,6 @@ function createContractSymbol(
       resourceId: operation.id,
       role: 'contract',
       tags,
-      tool: plugin.name,
     },
   });
 }
@@ -56,7 +54,7 @@ function createContractExpression(
   const successResponse = getSuccessResponse(operation);
   const tags = getTags(operation, plugin.config.contracts.strategyDefaultTag);
 
-  let expression = $(plugin.external('@orpc/contract.oc'))
+  let expression = $(plugin.symbols.contract.oc)
     .attr('route')
     .call(
       $.object()

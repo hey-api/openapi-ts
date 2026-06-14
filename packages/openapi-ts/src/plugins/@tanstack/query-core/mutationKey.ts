@@ -19,7 +19,6 @@ export function createMutationKeyFunction({ plugin }: { plugin: PluginInstance }
       meta: {
         category: 'utility',
         resource: 'createMutationKey',
-        tool: plugin.name,
       },
     },
   );
@@ -128,7 +127,6 @@ export function createMutationKeyType({ plugin }: { plugin: PluginInstance }): v
     meta: {
       category: 'type',
       resource: 'MutationKey',
-      tool: plugin.name,
     },
   });
   const mutationKeyType = $.type

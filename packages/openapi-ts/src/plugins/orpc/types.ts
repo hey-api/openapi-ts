@@ -2,6 +2,7 @@ import type { DefinePlugin, OperationsStrategy, Plugin } from '@hey-api/shared';
 
 import type { PluginValidatorNames } from '../types';
 import type { ContractsConfig, UserContractsConfig } from './contracts/types';
+import type { OrpcSymbols } from './symbols';
 
 export type UserConfig = Plugin.Name<'orpc'> &
   Plugin.Hooks &
@@ -64,4 +65,4 @@ export type Config = Plugin.Name<'orpc'> &
     };
   };
 
-export type OrpcPlugin = DefinePlugin<UserConfig, Config>;
+export type OrpcPlugin = DefinePlugin<UserConfig, Config, never, OrpcSymbols>;

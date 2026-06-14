@@ -22,6 +22,11 @@ export const defaultConfig: FakerJsFakerPlugin['Config'] = {
   // handler,
   handler: () => {},
   name: '@faker-js/faker',
+  symbolMeta() {
+    return {
+      tool: '@faker-js/faker',
+    };
+  },
   tags: ['mocker'],
 };
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import type { Symbol } from '@hey-api/codegen-core';
+import type { Symbol, SymbolIn, SymbolMeta } from '@hey-api/codegen-core';
 import type { AnyString } from '@hey-api/types';
 
 import type {
@@ -92,9 +92,9 @@ export namespace Plugin {
     dependencies?: ReadonlyArray<AnyPluginName>;
     handler: (args: { plugin: PluginInstance<T> }) => void;
     name: T['config']['name'];
-    /**
-     * Symbols this plugin registers at construction time.
-     */
+    /** Metadata merged into every non-external symbol this plugin creates. */
+    symbolMeta?: (symbol: Omit<SymbolIn, 'name'>) => SymbolMeta;
+    /** Symbols this plugin registers at construction time. */
     symbols?: (plugin: PluginInstance<T>) => T['symbols'];
     /**
      * Tags can be used to help with deciding plugin order and resolving

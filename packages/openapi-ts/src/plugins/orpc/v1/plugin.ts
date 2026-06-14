@@ -6,10 +6,6 @@ import { createShell, resolveStrategy, source, toNode } from '../contracts';
 import type { OrpcPlugin } from '../types';
 
 export const handlerV1: OrpcPlugin['Handler'] = ({ plugin }) => {
-  plugin.symbol('oc', {
-    external: '@orpc/contract',
-  });
-
   const structure = new StructureModel();
   const shell = createShell(plugin);
   const strategy = resolveStrategy(plugin);

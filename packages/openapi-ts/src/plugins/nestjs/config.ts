@@ -10,6 +10,11 @@ export const defaultConfig: NestJsPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: 'nestjs',
+  symbolMeta() {
+    return {
+      tool: 'nestjs',
+    };
+  },
 };
 
 /**

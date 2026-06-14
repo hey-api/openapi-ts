@@ -45,7 +45,7 @@ export const temporalExpressions: ExpressionTransformer = ({ dataExpression, plu
     return;
   }
 
-  const temporal = plugin.symbolOnce('Temporal', { external: 'temporal-polyfill' });
+  const temporal = plugin.symbols.temporalPolyfill.Temporal;
   const memberName = schema.format === 'date' ? 'PlainDate' : 'Instant';
 
   if (typeof dataExpression === 'string') {

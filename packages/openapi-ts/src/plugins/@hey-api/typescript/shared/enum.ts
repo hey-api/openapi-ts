@@ -13,7 +13,6 @@ function createSymbolMeta(
   return {
     ...args,
     resource: 'definition',
-    tool: 'typescript',
   };
 }
 

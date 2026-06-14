@@ -68,7 +68,6 @@ function createFnSymbol(
       resource: 'operation',
       resourceId: operation.id,
       tags,
-      tool: 'sdk',
     },
   });
 }
@@ -174,7 +173,6 @@ function enrichRootClass(args: {
       category: 'utility',
       resource: 'class',
       resourceId: 'HeyApiClient',
-      tool: 'sdk',
     },
   });
   dependencies.push(createClientClass({ plugin, symbol: symbolClient }));
@@ -183,7 +181,6 @@ function enrichRootClass(args: {
       category: 'utility',
       resource: 'class',
       resourceId: 'HeyApiRegistry',
-      tool: 'sdk',
     },
   });
   dependencies.push(

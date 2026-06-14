@@ -47,7 +47,7 @@ function baseNode(ctx: EnumResolverContext): Chain {
   //   {
   //     resource: 'definition', // maybe we shouldn't hardcode definition
   //     resourceId: pathToJsonPointer(fromRef(ctx.path)),
-  //     tool: 'typescript',
+  //     tool: 'types',
   //   },
   //   ['EnumTsDsl', 'VarTsDsl'],
   //   // skip const enums, not supported by Zod

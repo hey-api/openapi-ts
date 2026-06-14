@@ -51,7 +51,6 @@ export const createClientOptions = ({
         category: 'type',
         resource: 'client',
         role: 'options',
-        tool: 'typescript',
       },
       name: 'ClientOptions',
       naming: {

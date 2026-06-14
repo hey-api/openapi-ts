@@ -131,6 +131,11 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: '@tanstack/react-query',
+  symbolMeta() {
+    return {
+      tool: '@tanstack/react-query',
+    };
+  },
   symbols: tanStackQuerySymbols,
 };
 

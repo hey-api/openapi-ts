@@ -88,7 +88,6 @@ export function createMutationOptions({
         resource: 'operation',
         resourceId: operation.id,
         role: 'mutationOptions',
-        tool: plugin.name,
       },
     },
   );

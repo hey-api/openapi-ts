@@ -10,15 +10,13 @@ import type { PiniaColadaPlugin } from './types';
 import { useTypeError, useTypeResponse } from './useType';
 import { getPublicTypeData } from './utils';
 
-export const createMutationOptions = ({
+export function createMutationOptions({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
-}): void => {
-  const symbolMutationOptionsType = plugin.external(`${plugin.name}.UseMutationOptions`);
-
+}): void {
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
@@ -72,7 +70,7 @@ export const createMutationOptions = ({
       $.func()
         .param(options, (p) => p.optional().type($.type('Partial').generic(typeData)))
         .returns(
-          $.type(symbolMutationOptionsType)
+          $.type(plugin.symbols.UseMutationOptions)
             .generic(useTypeResponse({ operation, plugin }))
             .generic(typeData)
             .generic(useTypeError({ operation, plugin })),
@@ -80,4 +78,4 @@ export const createMutationOptions = ({
         .do($.return(mutationOpts)),
     );
   plugin.node(statement);
-};
+}
