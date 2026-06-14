@@ -11,7 +11,7 @@ import { identifiers } from '../constants';
 
 function baseNode(ctx: NumberResolverContext): PipeResult {
   const { schema } = ctx;
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
 
   if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
     return [
@@ -42,7 +42,7 @@ function baseNode(ctx: NumberResolverContext): PipeResult {
 
 function constNode(ctx: NumberResolverContext): PipeResult {
   const { schema } = ctx;
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
 
   if (schema.const === undefined) {
     return;
@@ -55,7 +55,7 @@ function constNode(ctx: NumberResolverContext): PipeResult {
 
 function maxNode(ctx: NumberResolverContext): PipeResult {
   const { schema } = ctx;
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
 
   if (schema.exclusiveMaximum !== undefined) {
     return $(v)
@@ -79,7 +79,7 @@ function maxNode(ctx: NumberResolverContext): PipeResult {
 
 function minNode(ctx: NumberResolverContext): PipeResult {
   const { schema } = ctx;
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
 
   if (schema.exclusiveMinimum !== undefined) {
     return $(v)
@@ -148,7 +148,7 @@ export function numberToPipes({
     plugin,
     schema,
     symbols: {
-      v: plugin.symbols.v,
+      v: plugin.imports.v,
     },
     utils: {
       getIntegerLimit,

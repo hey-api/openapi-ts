@@ -17,11 +17,11 @@ export function createBaseModel(
 
   return $.class(symbol)
     .export()
-    .extends(plugin.symbols.BaseModel)
+    .extends(plugin.imports.BaseModel)
     .$if(configKwargs.length, (c) =>
       c.do(
         $.field(identifiers.model_config).assign(
-          $(plugin.symbols.ConfigDict).call(...configKwargs),
+          $(plugin.imports.ConfigDict).call(...configKwargs),
         ),
       ),
     );

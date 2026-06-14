@@ -42,7 +42,7 @@ export function createVisitor(
 ): SchemaVisitor<ValibotResult, ValibotPlugin['Instance']> {
   const { plugin, schemaExtractor } = config;
 
-  const v = plugin.symbols.v;
+  const v = plugin.imports.v;
 
   function applyModifiers(
     result: ValibotResult,

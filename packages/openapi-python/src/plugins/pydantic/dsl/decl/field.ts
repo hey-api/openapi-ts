@@ -104,18 +104,18 @@ export class PydanticFieldDsl extends Mixed {
         return ct.type;
       }
 
-      return $(plugin.symbols.typing.Annotated).slice(
+      return $(plugin.imports.typing.Annotated).slice(
         ct.type,
-        $(plugin.symbols.Field).call(...this._constraintsToKwargs(ct.constraints.values)),
+        $(plugin.imports.Field).call(...this._constraintsToKwargs(ct.constraints.values)),
       );
     });
 
     const unionType = $.type.or(...itemExprs);
 
     if (this._discriminator) {
-      return $(plugin.symbols.typing.Annotated).slice(
+      return $(plugin.imports.typing.Annotated).slice(
         unionType,
-        $(plugin.symbols.Field).call($.kwarg('discriminator', this._discriminator)),
+        $(plugin.imports.Field).call($.kwarg('discriminator', this._discriminator)),
       );
     }
 
@@ -163,9 +163,9 @@ export class PydanticFieldDsl extends Mixed {
     } else {
       varType = this._constrainedType?.type;
       if (hasValidationConstraints && varType) {
-        varType = $(plugin.symbols.typing.Annotated).slice(
+        varType = $(plugin.imports.typing.Annotated).slice(
           varType,
-          $(plugin.symbols.Field).call(...this._constraintsToKwargs(cv)),
+          $(plugin.imports.Field).call(...this._constraintsToKwargs(cv)),
         );
       }
     }
@@ -210,7 +210,7 @@ export class PydanticFieldDsl extends Mixed {
       }
 
       this._fieldArgs = args;
-      stmt.assign($(plugin.symbols.Field).call(...args));
+      stmt.assign($(plugin.imports.Field).call(...args));
     } else if (hasDefault) {
       stmt.assign(literalize(this._default));
     } else if (this._nullable || this._optional) {
@@ -226,7 +226,7 @@ export class PydanticFieldDsl extends Mixed {
     ctx.analyze(this._dsl!);
     this.name.symbol?.on('finalName', ({ symbol }) => {
       if (!symbol.isRenamed) return;
-      const fieldSymbol = this.plugin.symbols.Field;
+      const fieldSymbol = this.plugin.imports.Field;
       const targetFile = ctx.symbol?.file;
       fieldSymbol.on('import', ({ symbol: importSymbol }) => {
         if (targetFile && importSymbol.file?.id === targetFile.id) {

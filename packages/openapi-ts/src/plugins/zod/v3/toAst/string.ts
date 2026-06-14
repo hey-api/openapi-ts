@@ -13,7 +13,7 @@ function baseNode(ctx: StringResolverContext): Chain {
 
 function constNode(ctx: StringResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (typeof schema.const !== 'string') return;
   return $(z).attr(identifiers.literal).call($.literal(schema.const));
 }
@@ -108,7 +108,7 @@ export function stringToNode({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: StringResolverContext = {
     $,
     chain: {

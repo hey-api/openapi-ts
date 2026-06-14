@@ -125,8 +125,8 @@ export type {
   Plugin,
   PluginConfigMap,
   PluginContext,
+  PluginImports,
   PluginNames,
-  PluginSymbols,
   PluginTag,
 } from './plugins/types';
 export type {

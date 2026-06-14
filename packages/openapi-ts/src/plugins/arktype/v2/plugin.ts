@@ -38,7 +38,7 @@ export function irSchemaToAst({
 
   let ast: Partial<Ast> = {};
 
-  // const type = plugin.symbols.type;
+  // const type = plugin.imports.type;
 
   if (schema.$ref) {
     const query: SymbolMeta = {

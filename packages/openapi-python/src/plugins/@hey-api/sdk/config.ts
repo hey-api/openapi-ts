@@ -1,9 +1,9 @@
 import type { PluginContext } from '@hey-api/shared';
 import { coerce, definePluginConfig } from '@hey-api/shared';
 
+import { sdkImports } from './imports';
 import type { UserOperationsConfig } from './operations';
 import { handler } from './plugin';
-import { sdkSymbols } from './symbols';
 import type { HeyApiSdkPlugin } from './types';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
@@ -72,13 +72,13 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   },
   dependencies: ['pydantic'],
   handler,
+  imports: sdkImports,
   name: '@hey-api/python-sdk',
   symbolMeta() {
     return {
       tool: 'sdk',
     };
   },
-  symbols: sdkSymbols,
 };
 
 /**

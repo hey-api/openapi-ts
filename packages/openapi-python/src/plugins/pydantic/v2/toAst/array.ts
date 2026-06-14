@@ -7,7 +7,7 @@ import type { PydanticResult, PydanticType } from '../../shared/types';
 
 function baseNode(ctx: ArrayResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
-  const any = plugin.symbols.typing.Any;
+  const any = plugin.imports.typing.Any;
 
   if (!childResults.length) {
     const type = $$.constrainedType($('list').slice(any));
@@ -61,7 +61,7 @@ export function arrayToType(
   ctx: Pick<ArrayResolverContext, 'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'>,
 ): ArrayToTypeResult {
   const { applyModifiers, path, plugin, schema, walk } = ctx;
-  const any = plugin.symbols.typing.Any;
+  const any = plugin.imports.typing.Any;
 
   const childResults: Array<PydanticResult> = [];
 

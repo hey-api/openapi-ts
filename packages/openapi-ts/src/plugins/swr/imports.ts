@@ -2,11 +2,11 @@ import type { PluginInstance } from '@hey-api/shared';
 
 import * as SYMBOLS from '../../symbols';
 
-export function arktypeSymbols(plugin: PluginInstance) {
+export function swrImports(plugin: PluginInstance) {
   const factory = plugin.symbolFactory;
   return {
-    ...SYMBOLS.ARKTYPE(factory),
+    ...SYMBOLS.SWR(factory),
   };
 }
 
-export type ArktypeSymbols = ReturnType<typeof arktypeSymbols>;
+export type SwrImports = ReturnType<typeof swrImports>;

@@ -108,9 +108,9 @@ export class Context<Spec extends Record<string, any> = any, Config extends AnyC
       dependencies: plugin.dependencies ?? new Set(),
       gen: this.gen,
       handler: plugin.handler,
+      imports: plugin.imports,
       name: plugin.name,
       symbolMeta: plugin.symbolMeta,
-      symbols: plugin.symbols,
     });
     (this.plugins as Record<string, any>)[instance.name] = instance;
     return instance as T extends keyof PluginConfigMap

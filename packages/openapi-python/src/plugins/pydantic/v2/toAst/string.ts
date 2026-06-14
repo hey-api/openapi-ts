@@ -21,7 +21,7 @@ function constNode(ctx: StringResolverContext): PydanticType | undefined {
   const { plugin, schema } = ctx;
 
   if (typeof schema.const === 'string') {
-    const literal = plugin.symbols.typing.Literal;
+    const literal = plugin.imports.typing.Literal;
     const c = collectConstraints(schema);
     const type = $$.constrainedType(
       $(literal).slice($.literal(schema.const)),
@@ -56,31 +56,31 @@ function formatNode(ctx: StringResolverContext): PydanticType | undefined {
       return { node: { kind: 'rootModel', type }, type };
     }
     case 'date': {
-      const type = $$.constrainedType(plugin.symbols.datetime.date, c.isEmpty ? undefined : c);
+      const type = $$.constrainedType(plugin.imports.datetime.date, c.isEmpty ? undefined : c);
       return { node: { kind: 'rootModel', type }, type };
     }
     case 'date-time': {
-      const type = $$.constrainedType(plugin.symbols.datetime.datetime, c.isEmpty ? undefined : c);
+      const type = $$.constrainedType(plugin.imports.datetime.datetime, c.isEmpty ? undefined : c);
       return { node: { kind: 'rootModel', type }, type };
     }
     case 'duration': {
-      const type = $$.constrainedType(plugin.symbols.datetime.timedelta, c.isEmpty ? undefined : c);
+      const type = $$.constrainedType(plugin.imports.datetime.timedelta, c.isEmpty ? undefined : c);
       return { node: { kind: 'rootModel', type }, type };
     }
     case 'email': {
-      const type = $$.constrainedType(plugin.symbols.EmailStr, c.isEmpty ? undefined : c);
+      const type = $$.constrainedType(plugin.imports.EmailStr, c.isEmpty ? undefined : c);
       return { node: { kind: 'rootModel', type }, type };
     }
     case 'time': {
-      const type = $$.constrainedType(plugin.symbols.datetime.time, c.isEmpty ? undefined : c);
+      const type = $$.constrainedType(plugin.imports.datetime.time, c.isEmpty ? undefined : c);
       return { node: { kind: 'rootModel', type }, type };
     }
     case 'uri': {
-      const type = $$.constrainedType(plugin.symbols.AnyUrl, c.isEmpty ? undefined : c);
+      const type = $$.constrainedType(plugin.imports.AnyUrl, c.isEmpty ? undefined : c);
       return { node: { kind: 'rootModel', type }, type };
     }
     case 'uuid': {
-      const type = $$.constrainedType(plugin.symbols.uuid.UUID, c.isEmpty ? undefined : c);
+      const type = $$.constrainedType(plugin.imports.uuid.UUID, c.isEmpty ? undefined : c);
       return { node: { kind: 'rootModel', type }, type };
     }
     default:

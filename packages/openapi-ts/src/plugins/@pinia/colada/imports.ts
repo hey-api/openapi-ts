@@ -2,7 +2,7 @@ import type { PluginInstance } from '@hey-api/shared';
 
 import * as SYMBOLS from '../../../symbols';
 
-export function piniaColadaSymbols(plugin: PluginInstance) {
+export function piniaColadaImports(plugin: PluginInstance) {
   const factory = plugin.symbolFactory;
   return {
     ...SYMBOLS.PINIA_COLADA(factory),
@@ -10,4 +10,4 @@ export function piniaColadaSymbols(plugin: PluginInstance) {
   };
 }
 
-export type PiniaColadaSymbols = ReturnType<typeof piniaColadaSymbols>;
+export type PiniaColadaImports = ReturnType<typeof piniaColadaImports>;

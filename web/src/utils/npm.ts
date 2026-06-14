@@ -44,6 +44,7 @@ function formatCount(n: number): string {
 }
 
 function formatCompact(value: number, unit: 'K' | 'M'): string {
-  const rounded = value.toFixed(1);
-  return `${rounded.endsWith('.0') ? rounded.slice(0, -2) : rounded}${unit}`;
+  const floored = Math.floor(value * 10) / 10;
+  const compact = floored.toFixed(1);
+  return `${compact.endsWith('.0') ? compact.slice(0, -2) : compact}${unit}`;
 }

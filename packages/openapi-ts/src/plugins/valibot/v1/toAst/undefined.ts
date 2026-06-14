@@ -8,7 +8,7 @@ import type { ValibotPlugin } from '../../types';
 import { identifiers } from '../constants';
 
 function baseNode(ctx: UndefinedResolverContext): PipeResult {
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
   return $(v).attr(identifiers.schemas.undefined).call();
 }
 
@@ -38,7 +38,7 @@ export function undefinedToPipes({
     plugin,
     schema,
     symbols: {
-      v: plugin.symbols.v,
+      v: plugin.imports.v,
     },
   };
 

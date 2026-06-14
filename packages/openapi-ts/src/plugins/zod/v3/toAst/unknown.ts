@@ -7,7 +7,7 @@ import type { Chain } from '../../shared/chain';
 import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: UnknownResolverContext): Chain {
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   return $(z).attr(identifiers.unknown).call();
 }
 
@@ -24,7 +24,7 @@ export function unknownToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema?: SchemaWithType<'unknown'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: UnknownResolverContext = {
     $,
     chain: {

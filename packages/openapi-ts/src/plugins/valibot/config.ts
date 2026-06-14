@@ -1,8 +1,8 @@
 import { coerce, definePluginConfig } from '@hey-api/shared';
 
 import { Api } from './api';
+import { valibotImports } from './imports';
 import { handler } from './plugin';
-import { valibotSymbols } from './symbols';
 import type { ValibotPlugin } from './types';
 
 export const defaultConfig: ValibotPlugin['Config'] = {
@@ -82,13 +82,13 @@ export const defaultConfig: ValibotPlugin['Config'] = {
     },
   },
   handler,
+  imports: valibotImports,
   name: 'valibot',
   symbolMeta() {
     return {
       tool: 'valibot',
     };
   },
-  symbols: valibotSymbols,
   tags: ['transformer', 'validator'],
 };
 

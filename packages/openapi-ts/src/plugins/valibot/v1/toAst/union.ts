@@ -10,7 +10,7 @@ import { identifiers } from '../constants';
 
 function baseNode(ctx: UnionResolverContext): PipeResult {
   const { childResults, parentSchema, plugin, schemas } = ctx;
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
 
   const nonNullItems: Array<ValibotResult> = [];
   childResults.forEach((item, index) => {
@@ -129,7 +129,7 @@ export function unionToPipes({
     schema: parentSchema,
     schemas,
     symbols: {
-      v: plugin.symbols.v,
+      v: plugin.imports.v,
     },
   };
 

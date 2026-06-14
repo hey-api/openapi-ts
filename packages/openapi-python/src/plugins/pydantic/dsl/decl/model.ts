@@ -52,7 +52,7 @@ export class PydanticModelDsl extends Mixed {
 
     if (plugin.config.modelType === 'dataclass') {
       const cls = $.class(this.name)
-        .decorator(plugin.symbols.dataclass)
+        .decorator(plugin.imports.dataclass)
         .do(...this._fields);
       this._dsl = cls;
       return cls;
@@ -67,12 +67,12 @@ export class PydanticModelDsl extends Mixed {
 
     const cls = $.class(this.name)
       // plugin.querySymbol(BASE_MODEL_META)!
-      .extends(plugin.symbols.BaseModel, ...this._bases)
+      .extends(plugin.imports.BaseModel, ...this._bases)
       .$if(this.$docs(), (c, v) => c.doc(v))
       .$if(this._configKwargs.length, (c) =>
         c.do(
           $.field(identifiers.model_config).assign(
-            $(plugin.symbols.ConfigDict).call(...mergedKwargs),
+            $(plugin.imports.ConfigDict).call(...mergedKwargs),
           ),
         ),
       )

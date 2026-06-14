@@ -78,7 +78,7 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
               .as(returnType),
           ),
         $.if('tags').do(
-          $('params').attr('tags').assign($('tags').as('unknown').as(plugin.symbols._JSONValue)),
+          $('params').attr('tags').assign($('tags').as('unknown').as(plugin.imports._JSONValue)),
         ),
         $.if($('options').attr('body').optional().neq($.id('undefined'))).do(
           $.const('normalizedBody').assign(
@@ -157,11 +157,11 @@ export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Inst
             .object()
             .prop('_id', (p) => p.type('string'))
             .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) =>
-              p.optional().type(plugin.symbols._JSONValue),
+              p.optional().type(plugin.imports._JSONValue),
             )
-            .prop('body', (p) => p.optional().type(plugin.symbols._JSONValue))
-            .prop('query', (p) => p.optional().type(plugin.symbols._JSONValue))
-            .prop('tags', (p) => p.optional().type(plugin.symbols._JSONValue)),
+            .prop('body', (p) => p.optional().type(plugin.imports._JSONValue))
+            .prop('query', (p) => p.optional().type(plugin.imports._JSONValue))
+            .prop('tags', (p) => p.optional().type(plugin.imports._JSONValue)),
         ),
       ),
     );

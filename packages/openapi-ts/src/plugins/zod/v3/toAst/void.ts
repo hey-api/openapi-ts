@@ -7,7 +7,7 @@ import type { Chain } from '../../shared/chain';
 import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: VoidResolverContext): Chain {
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   return $(z).attr(identifiers.void).call();
 }
 
@@ -24,7 +24,7 @@ export function voidToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'void'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: VoidResolverContext = {
     $,
     chain: {

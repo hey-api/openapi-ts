@@ -2,7 +2,7 @@ import type { PluginInstance } from '@hey-api/shared';
 
 import * as SYMBOLS from '../../../symbols';
 
-export function tanStackQuerySymbols(plugin: PluginInstance) {
+export function tanStackQueryImports(plugin: PluginInstance) {
   const factory = plugin.symbolFactory;
   return {
     ...SYMBOLS.TANSTACK_QUERY(plugin),
@@ -10,4 +10,4 @@ export function tanStackQuerySymbols(plugin: PluginInstance) {
   };
 }
 
-export type TanStackQuerySymbols = ReturnType<typeof tanStackQuerySymbols>;
+export type TanStackQueryImports = ReturnType<typeof tanStackQueryImports>;

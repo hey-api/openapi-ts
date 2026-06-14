@@ -6,7 +6,7 @@ import type { ZodResult } from '../../shared/types';
 
 function baseNode(ctx: IntersectionResolverContext): Chain {
   const { childResults, schemas } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
 
   if (!childResults.length) {
     return $(z).attr(identifiers.never).call();
@@ -56,7 +56,7 @@ export function intersectionToAst({
   chain: Chain;
   childResults: Array<ZodResult>;
 } {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
 
   const ctx: IntersectionResolverContext = {
     $,

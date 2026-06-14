@@ -3,8 +3,8 @@ import { coerce, definePluginConfig } from '@hey-api/shared';
 
 import type { HttpRequestsConfig } from './httpRequests';
 import type { HttpResourcesConfig } from './httpResources';
+import { angularImports } from './imports';
 import { handler } from './plugin';
-import { angularSymbols } from './symbols';
 import type { AngularCommonPlugin } from './types';
 
 export const defaultConfig: AngularCommonPlugin['Config'] = {
@@ -118,13 +118,13 @@ export const defaultConfig: AngularCommonPlugin['Config'] = {
   },
   dependencies: ['@hey-api/client-angular', '@hey-api/sdk'],
   handler,
+  imports: angularImports,
   name: '@angular/common',
   symbolMeta() {
     return {
       tool: '@angular/common',
     };
   },
-  symbols: angularSymbols,
 };
 
 /**

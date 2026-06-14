@@ -15,6 +15,14 @@ While we try to avoid breaking changes, sometimes it's unavoidable in order to o
 
 If you specified the same plugin multiple times, only the last instance would be used. We eventually added a warning for this behavior, but that didn't treat the root issue. This release changes that by merging duplicate plugin configurations.
 
+### Renamed `plugin.symbols` to `plugin.imports`
+
+To better represent its functionality, the `plugin.symbols` property has been renamed to `plugin.imports`.
+
+### Removed `plugin.external()` function
+
+This function was used to reference external symbols. All plugins now use the Imports API, which allows you to reference external symbols in a type-safe way through `plugin.imports`.
+
 ## v0.98.0
 
 ### Declarative configuration

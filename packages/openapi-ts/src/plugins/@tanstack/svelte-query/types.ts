@@ -8,7 +8,7 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
-import type { TanStackQuerySymbols } from '../query-core/symbols';
+import type { TanStackQueryImports } from '../query-core/imports';
 
 export type UserConfig = Plugin.Name<'@tanstack/svelte-query'> &
   Plugin.Hooks &
@@ -466,5 +466,5 @@ export type TanStackSvelteQueryPlugin = DefinePlugin<
   UserConfig,
   Config,
   never,
-  TanStackQuerySymbols
+  TanStackQueryImports
 >;

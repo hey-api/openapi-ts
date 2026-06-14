@@ -20,8 +20,6 @@ export function exportAst({
   symbol: Symbol;
   typeInferSymbol: Symbol | undefined;
 }): void {
-  const type = plugin.external('arktype.type');
-
   const statement = $.const(symbol)
     .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
@@ -33,7 +31,7 @@ export function exportAst({
     //       }) as unknown as ts.TypeNode)
     //     : undefined,
     // )
-    .assign($(type).call(ast.def ? $.literal(ast.def) : ast.expression));
+    .assign($(plugin.imports.type).call(ast.def ? $.literal(ast.def) : ast.expression));
   plugin.node(statement);
 
   if (typeInferSymbol) {

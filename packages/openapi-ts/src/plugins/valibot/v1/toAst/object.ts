@@ -95,7 +95,7 @@ export function objectToPipes(
     plugin,
     schema,
     symbols: {
-      v: plugin.symbols.v,
+      v: plugin.imports.v,
     },
     walk,
   };

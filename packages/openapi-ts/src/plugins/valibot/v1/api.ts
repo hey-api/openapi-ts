@@ -142,7 +142,7 @@ function createRequestSchemaContext(
   ctx: RequestSchemaContext<ValibotPlugin['Instance']>,
 ): RequestValidatorResolverContext {
   const { plugin } = ctx;
-  const v = plugin.symbols.v;
+  const v = plugin.imports.v;
 
   return {
     ...ctx,
@@ -224,7 +224,7 @@ export function createResponseValidatorV1({
   });
   if (!symbol) return;
 
-  const v = plugin.symbols.v;
+  const v = plugin.imports.v;
   const resolverCtx: ResponseValidatorResolverContext = {
     $,
     operation,

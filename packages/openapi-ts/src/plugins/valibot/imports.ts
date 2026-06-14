@@ -2,11 +2,11 @@ import type { PluginInstance } from '@hey-api/shared';
 
 import * as SYMBOLS from '../../symbols';
 
-export function fastifySymbols(plugin: PluginInstance) {
+export function valibotImports(plugin: PluginInstance) {
   const factory = plugin.symbolFactory;
   return {
-    ...SYMBOLS.FASTIFY(factory),
+    ...SYMBOLS.VALIBOT(factory),
   };
 }
 
-export type FastifySymbols = ReturnType<typeof fastifySymbols>;
+export type ValibotImports = ReturnType<typeof valibotImports>;

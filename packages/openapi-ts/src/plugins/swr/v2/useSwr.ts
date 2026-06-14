@@ -44,7 +44,7 @@ export function createUseSwr({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func().do(
-        $(plugin.symbols.useSWR)
+        $(plugin.imports.useSWR)
           .call(
             $.literal(operation.path),
             $.func()

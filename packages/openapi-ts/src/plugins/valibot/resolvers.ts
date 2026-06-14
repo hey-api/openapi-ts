@@ -174,6 +174,9 @@ export interface BaseContext extends DollarTsDsl, SchemaVisitorContext<ValibotPl
    * Provides access to commonly used symbols within the plugin.
    */
   symbols: {
+    /**
+     * @deprecated The `v` symbol is now available via `plugin.imports.v` and should be accessed from there.
+     */
     v: Symbol;
   };
 }

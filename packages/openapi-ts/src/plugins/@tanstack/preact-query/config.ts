@@ -1,7 +1,7 @@
 import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from '../../../plugins/@tanstack/query-core/plugin';
-import { tanStackQuerySymbols } from '../query-core/symbols';
+import { tanStackQueryImports } from '../query-core/imports';
 import type { TanStackPreactQueryPlugin } from './types';
 
 const defaultMeta = (): Record<string, unknown> => ({});
@@ -130,13 +130,13 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
+  imports: tanStackQueryImports,
   name: '@tanstack/preact-query',
   symbolMeta() {
     return {
       tool: '@tanstack/preact-query',
     };
   },
-  symbols: tanStackQuerySymbols,
 };
 
 /**

@@ -24,24 +24,24 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
       (t) =>
         t
           .generic('TComposable', (g) =>
-            g.extends(plugin.symbols.Composable).default($.type.literal('$fetch')),
+            g.extends(plugin.imports.Composable).default($.type.literal('$fetch')),
           )
           .generic('TData', (g) =>
-            g.extends(plugin.symbols.TDataShape).default(plugin.symbols.TDataShape),
+            g.extends(plugin.imports.TDataShape).default(plugin.imports.TDataShape),
           )
           .generic(nuxtTypeResponse, (g) => g.default('unknown'))
           .generic(nuxtTypeDefault, (g) => g.default('undefined')),
       (t) =>
         t
           .generic('TData', (g) =>
-            g.extends(plugin.symbols.TDataShape).default(plugin.symbols.TDataShape),
+            g.extends(plugin.imports.TDataShape).default(plugin.imports.TDataShape),
           )
           .generic('ThrowOnError', (g) => g.extends('boolean').default('boolean'))
           .generic('TResponse', (g) => g.default('unknown')),
     )
     .type(
       $.type.and(
-        $.type(plugin.symbols.Options).$if(
+        $.type(plugin.imports.Options).$if(
           isNuxtClient,
           (t) =>
             t
@@ -61,7 +61,7 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
                 'custom client.',
               ])
               .required(!plugin.config.client && !isInstance(plugin))
-              .type(plugin.symbols.Client),
+              .type(plugin.imports.Client),
           )
           .prop('meta', (p) =>
             p
@@ -73,10 +73,10 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
               .type(
                 $.type
                   .ternary()
-                  .check($.type.operator().keyof($.type(plugin.symbols.ClientMeta)))
+                  .check($.type.operator().keyof($.type(plugin.imports.ClientMeta)))
                   .extends('never')
                   .do($.type('Record').generics('string', 'unknown'))
-                  .otherwise($.type(plugin.symbols.ClientMeta)),
+                  .otherwise($.type(plugin.imports.ClientMeta)),
               ),
           ),
       ),

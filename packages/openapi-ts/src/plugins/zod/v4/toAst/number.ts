@@ -10,7 +10,7 @@ import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: NumberResolverContext): Chain {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
     return $(z).attr(identifiers.coerce).attr(identifiers.bigint).call();
   }
@@ -23,7 +23,7 @@ function baseNode(ctx: NumberResolverContext): Chain {
 
 function constNode(ctx: NumberResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.const === undefined) return;
   return $(z).attr(identifiers.literal).call(ctx.utils.maybeBigInt(schema.const, schema.format));
 }
@@ -102,7 +102,7 @@ export function numberToNode({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: NumberResolverContext = {
     $,
     chain: {

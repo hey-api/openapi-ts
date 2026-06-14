@@ -37,7 +37,7 @@ function additionalPropertiesNode(ctx: ExtendedContext): Chain | null | undefine
 
 function baseNode(ctx: ExtendedContext): Chain {
   const { nodes } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
 
   const additional = nodes.additionalProperties(ctx);
   const shape = nodes.shape(ctx);
@@ -77,7 +77,7 @@ function shapeNode(ctx: ExtendedContext): ReturnType<typeof $.object> {
 export function objectToAst(options: ObjectToAstOptions): CompositeHandlerResult {
   const { applyModifiers, path, plugin, schema, walk } = options;
   const childResults: Array<ZodResult> = [];
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: ExtendedContext = {
     $,
     _childResults: childResults,

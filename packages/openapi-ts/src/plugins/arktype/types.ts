@@ -8,7 +8,7 @@ import type {
 } from '@hey-api/shared';
 
 import type { IApi } from './api';
-import type { ArktypeSymbols } from './symbols';
+import type { ArktypeImports } from './imports';
 
 export type UserConfig = Plugin.Name<'arktype'> &
   Plugin.Hooks &
@@ -478,4 +478,4 @@ export type Config = Plugin.Name<'arktype'> &
       };
   };
 
-export type ArktypePlugin = DefinePlugin<UserConfig, Config, IApi, ArktypeSymbols>;
+export type ArktypePlugin = DefinePlugin<UserConfig, Config, IApi, ArktypeImports>;

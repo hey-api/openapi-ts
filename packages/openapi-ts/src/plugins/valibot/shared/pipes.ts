@@ -36,13 +36,13 @@ function toNode(pipes: Pipes | Pipe, plugin: ValibotPlugin['Instance']): Pipe {
     return pipes;
   }
   if (!pipes.length) {
-    const v = plugin.symbols.v;
+    const v = plugin.imports.v;
     return $(v).attr(identifiers.schemas.unknown).call();
   }
   if (pipes.length === 1) {
     return pipes[0]!;
   }
-  const v = plugin.symbols.v;
+  const v = plugin.imports.v;
   return $(v)
     .attr(identifiers.methods.pipe)
     .call(...pipes);

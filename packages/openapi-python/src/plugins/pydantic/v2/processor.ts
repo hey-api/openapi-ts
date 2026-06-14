@@ -13,7 +13,7 @@ function toNode(result: PydanticResult, plugin: PydanticPlugin['Instance']): Pyd
   if (result.node) {
     return result.node;
   }
-  return { kind: 'alias', type: result.type ?? $.constrainedType(plugin.symbols.typing.Any) };
+  return { kind: 'alias', type: result.type ?? $.constrainedType(plugin.imports.typing.Any) };
 }
 
 export function createProcessor(plugin: PydanticPlugin['Instance']): ProcessorResult {

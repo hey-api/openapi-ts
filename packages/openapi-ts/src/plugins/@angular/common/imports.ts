@@ -2,11 +2,11 @@ import type { PluginInstance } from '@hey-api/shared';
 
 import * as SYMBOLS from '../../../symbols';
 
-export function angularSymbols(plugin: PluginInstance) {
+export function angularImports(plugin: PluginInstance) {
   const factory = plugin.symbolFactory;
   return {
     ...SYMBOLS.ANGULAR(factory),
   };
 }
 
-export type AngularSymbols = ReturnType<typeof angularSymbols>;
+export type AngularImports = ReturnType<typeof angularImports>;

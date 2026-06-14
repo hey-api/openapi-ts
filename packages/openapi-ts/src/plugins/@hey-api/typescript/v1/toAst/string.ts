@@ -28,7 +28,7 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
     const dates = plugin.getPlugin('@hey-api/transformers')?.config.dates;
     if (dates) {
       if (dates === 'temporal') {
-        return $.type(plugin.symbols.temporalPolyfill.Temporal).attr(
+        return $.type(plugin.imports.temporalPolyfill.Temporal).attr(
           format === 'date' ? 'PlainDate' : 'Instant',
         );
       }

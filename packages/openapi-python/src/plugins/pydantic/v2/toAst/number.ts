@@ -10,7 +10,7 @@ function constNode(ctx: NumberResolverContext): PydanticType | undefined {
   const { plugin, schema } = ctx;
 
   if (typeof schema.const === 'number') {
-    const literal = plugin.symbols.typing.Literal;
+    const literal = plugin.imports.typing.Literal;
     return {
       type: $$.constrainedType($(literal).slice($.literal(schema.const))),
     };

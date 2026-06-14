@@ -20,7 +20,7 @@ export function exportAst({
   final: ZodFinal;
   meta?: Record<string, unknown>;
 }): Symbol {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
 
   const name = pathToName(path, { anchor: namingAnchor });
 

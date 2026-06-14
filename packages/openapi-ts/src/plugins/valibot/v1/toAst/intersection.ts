@@ -7,7 +7,7 @@ import { identifiers } from '../constants';
 
 function baseNode(ctx: IntersectionResolverContext): PipeResult {
   const { applyModifiers, childResults, plugin } = ctx;
-  const { v } = plugin.symbols;
+  const { v } = plugin.imports;
 
   if (!childResults.length) {
     return $(v).attr(identifiers.schemas.any).call();
@@ -58,7 +58,7 @@ export function intersectionToPipes({
     plugin,
     schema: parentSchema,
     symbols: {
-      v: plugin.symbols.v,
+      v: plugin.imports.v,
     },
   };
 

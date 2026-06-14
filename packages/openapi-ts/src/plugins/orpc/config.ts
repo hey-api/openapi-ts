@@ -2,8 +2,8 @@ import type { PluginContext } from '@hey-api/shared';
 import { coerce, definePluginConfig } from '@hey-api/shared';
 
 import type { UserContractsConfig } from './contracts';
+import { orpcImports } from './imports';
 import { handler } from './plugin';
-import { orpcSymbols } from './symbols';
 import type { Config, OrpcPlugin } from './types';
 
 const validatorInferWarn =
@@ -84,13 +84,13 @@ export const defaultConfig: OrpcPlugin['Config'] = {
     },
   },
   handler,
+  imports: orpcImports,
   name: 'orpc',
   symbolMeta() {
     return {
       tool: 'orpc',
     };
   },
-  symbols: orpcSymbols,
 };
 
 /**

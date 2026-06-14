@@ -25,8 +25,6 @@ export function createUseQuery({
 
   const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useQuery));
 
-  const symbolUseQuery = plugin.symbols.useQuery;
-
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
@@ -46,7 +44,9 @@ export function createUseQuery({
     .assign(
       $.func()
         .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))
-        .do($(symbolUseQuery).call($(symbolQueryOptionsFn).call(optionsParamName)).return()),
+        .do(
+          $(plugin.imports.useQuery).call($(symbolQueryOptionsFn).call(optionsParamName)).return(),
+        ),
     );
   plugin.node(statement);
 }

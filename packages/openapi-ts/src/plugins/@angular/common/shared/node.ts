@@ -153,7 +153,7 @@ export function createHttpRequestShell(plugin: AngularCommonPlugin['Instance']):
       const c = $.class(symbol)
         .export()
         .$if(isAngularClient && node.isRoot, (c) =>
-          c.decorator(plugin.symbols.Injectable, $.object().prop('providedIn', $.literal('root'))),
+          c.decorator(plugin.imports.Injectable, $.object().prop('providedIn', $.literal('root'))),
         );
 
       return { dependencies: [], node: c };
@@ -182,7 +182,7 @@ export function createHttpResourceShell(plugin: AngularCommonPlugin['Instance'])
       const c = $.class(symbol)
         .export()
         .$if(isAngularClient && node.isRoot, (c) =>
-          c.decorator(plugin.symbols.Injectable, $.object().prop('providedIn', $.literal('root'))),
+          c.decorator(plugin.imports.Injectable, $.object().prop('providedIn', $.literal('root'))),
         );
 
       return { dependencies: [], node: c };
@@ -230,7 +230,7 @@ function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.me
       ),
     )
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
-    .returns($.type(plugin.symbols.HttpRequest).generic(symbolResponseType ?? 'unknown'))
+    .returns($.type(plugin.imports.HttpRequest).generic(symbolResponseType ?? 'unknown'))
     .do(
       $.return(
         $('options')
@@ -297,7 +297,7 @@ function implementHttpResourceFn<T extends ReturnType<typeof $.func | typeof $.m
     .generic('ThrowOnError', (g) => g.extends('boolean').default(false))
     .do(
       $.return(
-        $(plugin.symbols.httpResource)
+        $(plugin.imports.httpResource)
           .call(
             $.func().do(
               $.const('opts').assign(
@@ -312,7 +312,7 @@ function implementHttpResourceFn<T extends ReturnType<typeof $.func | typeof $.m
                           transform: (node, index) =>
                             index === 0
                               ? node['~dsl'] === 'ClassTsDsl'
-                                ? $(plugin.symbols.inject).call($(node.name))
+                                ? $(plugin.imports.inject).call($(node.name))
                                 : $(node.name)
                               : node,
                         })

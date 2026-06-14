@@ -113,7 +113,7 @@ function operationToRouteHandler({
 
   return {
     name: operation.id,
-    type: $.type(plugin.symbols.RouteHandler, (t) => t.generic(type)),
+    type: $.type(plugin.imports.RouteHandler, (t) => t.generic(type)),
   };
 }
 

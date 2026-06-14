@@ -2,7 +2,7 @@ import type { PluginInstance } from '@hey-api/shared';
 
 import * as SYMBOLS from '../../symbols';
 
-export function pydanticSymbols(plugin: PluginInstance) {
+export function pydanticImports(plugin: PluginInstance) {
   const factory = plugin.symbolFactory;
   return {
     ...SYMBOLS.PYDANTIC(factory),
@@ -13,4 +13,4 @@ export function pydanticSymbols(plugin: PluginInstance) {
   };
 }
 
-export type PydanticSymbols = ReturnType<typeof pydanticSymbols>;
+export type PydanticImports = ReturnType<typeof pydanticImports>;

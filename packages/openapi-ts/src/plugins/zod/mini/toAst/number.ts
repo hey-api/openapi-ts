@@ -10,7 +10,7 @@ import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: NumberResolverContext): Chain {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (ctx.utils.shouldCoerceToBigInt(schema.format)) {
     return $(z).attr(identifiers.coerce).attr(identifiers.bigint).call();
   }
@@ -23,14 +23,14 @@ function baseNode(ctx: NumberResolverContext): Chain {
 
 function constNode(ctx: NumberResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.const === undefined) return;
   return $(z).attr(identifiers.literal).call(ctx.utils.maybeBigInt(schema.const, schema.format));
 }
 
 function maxNode(ctx: NumberResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.exclusiveMaximum !== undefined) {
     return $(z)
       .attr(identifiers.lt)
@@ -53,7 +53,7 @@ function maxNode(ctx: NumberResolverContext): ChainResult {
 
 function minNode(ctx: NumberResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.exclusiveMinimum !== undefined) {
     return $(z)
       .attr(identifiers.gt)
@@ -106,7 +106,7 @@ export function numberToNode({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'integer' | 'number'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: NumberResolverContext = {
     $,
     chain: {

@@ -15,7 +15,7 @@ function baseNode(ctx: TupleResolverContext): PipeResult {
     return unknownToPipes({ path, plugin });
   }
 
-  const { v } = plugin.symbols;
+  const { v } = plugin.imports;
   const childResults: Array<ValibotResult> = [];
 
   for (let i = 0; i < schema.items.length; i++) {
@@ -36,7 +36,7 @@ function baseNode(ctx: TupleResolverContext): PipeResult {
 
 function constNode(ctx: TupleResolverContext): PipeResult {
   const { schema } = ctx;
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
 
   if (!schema.const || !Array.isArray(schema.const)) return;
 
@@ -95,7 +95,7 @@ export function tupleToPipes(
     plugin,
     schema,
     symbols: {
-      v: plugin.symbols.v,
+      v: plugin.imports.v,
     },
     walk,
   };
