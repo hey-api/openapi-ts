@@ -10,7 +10,7 @@ function constNode(ctx: BooleanResolverContext): PydanticType | undefined {
   const { plugin, schema } = ctx;
 
   if (typeof schema.const === 'boolean') {
-    const literal = plugin.symbols.typing.Literal;
+    const literal = plugin.imports.typing.Literal;
     const type = $$.constrainedType($(literal).slice($.literal(schema.const)));
     return {
       node: { kind: 'rootModel', type },

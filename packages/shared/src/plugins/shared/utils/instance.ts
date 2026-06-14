@@ -65,6 +65,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   private eventHooks: EventHooks;
   gen: IProject;
   private handler: Plugin.Config<T>['handler'];
+  /** External symbols imported from other modules. */
+  imports: T['imports'];
   name: T['resolvedConfig']['name'];
   /**
    * The package metadata and utilities for the current context, constructed
@@ -75,19 +77,16 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   package: Dependency;
   /** Factory for creating and managing symbols. */
   symbolFactory: SymbolFactory;
-  /** Metadata merged into every non-external symbol this plugin creates. */
+  /** Metadata merged into every symbol this plugin creates. */
   symbolMeta: Plugin.Config<T>['symbolMeta'];
-  /** Symbols declared in the plugin config. */
-  symbols: T['symbols'];
 
-  readonly external: SymbolFactory['external'];
   readonly isSymbolRegistered: SymbolFactory['isRegistered'];
   readonly querySymbol: SymbolFactory['query'];
   readonly querySymbols: SymbolFactory['queryAll'];
   readonly referenceSymbol: SymbolFactory['reference'];
 
   constructor(
-    props: Pick<Plugin.Config<T>, 'api' | 'handler' | 'name' | 'symbolMeta' | 'symbols'> & {
+    props: Pick<Plugin.Config<T>, 'api' | 'handler' | 'imports' | 'name' | 'symbolMeta'> & {
       config: Omit<T['resolvedConfig'], 'name'>;
       context: Context;
       dependencies: Set<AnyPluginName>;
@@ -114,14 +113,13 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
       plugin: this,
       project: this.gen,
     });
-    this.external = this.symbolFactory.external.bind(this.symbolFactory);
     this.isSymbolRegistered = this.symbolFactory.isRegistered.bind(this.symbolFactory);
     this.querySymbol = this.symbolFactory.query.bind(this.symbolFactory);
     this.querySymbols = this.symbolFactory.queryAll.bind(this.symbolFactory);
     this.referenceSymbol = this.symbolFactory.reference.bind(this.symbolFactory);
-    // symbols must be initialized last — the function calls this.symbol() which
+    // imports must be initialized last — the function calls this.symbol() which
     // requires this.name, this.gen, this.context, and this.eventHooks to be set.
-    this.symbols = props.symbols?.(this) ?? {};
+    this.imports = props.imports?.(this) ?? {};
   }
 
   /**

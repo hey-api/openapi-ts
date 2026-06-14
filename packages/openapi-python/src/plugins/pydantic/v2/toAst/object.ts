@@ -111,7 +111,7 @@ function baseNode(ctx: ObjectResolverContext): PydanticType {
 
   return {
     node: { fields: [], kind: 'model' },
-    type: $$.constrainedType($('dict').slice('str', ctx.plugin.symbols.typing.Any)),
+    type: $$.constrainedType($('dict').slice('str', ctx.plugin.imports.typing.Any)),
   };
 }
 

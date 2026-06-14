@@ -26,7 +26,6 @@ export function createUseSetQueryData({
     operation,
   });
 
-  const symbolUseQueryClient = plugin.symbols.useQueryClient;
   const symbolQueryOptionsFn = plugin.referenceSymbol({
     category: 'hook',
     resource: 'operation',
@@ -72,7 +71,7 @@ export function createUseSetQueryData({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func().do(
-        $.const(queryClientVar).assign($(symbolUseQueryClient).call()),
+        $.const(queryClientVar).assign($(plugin.imports.useQueryClient).call()),
         $.return(
           $.func()
             .param(optionsParam, (p) => p.type(optionsType))

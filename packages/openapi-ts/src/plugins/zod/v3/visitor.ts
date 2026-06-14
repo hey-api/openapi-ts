@@ -223,7 +223,7 @@ export function createVisitor(
       return result;
     },
     reference($ref, schema) {
-      const z = plugin.symbols.z;
+      const z = plugin.imports.z;
       const query: SymbolMeta = {
         category: 'schema',
         resource: 'definition',

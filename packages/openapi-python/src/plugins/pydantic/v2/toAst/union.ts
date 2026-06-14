@@ -28,7 +28,7 @@ function baseNode(ctx: UnionResolverContext): PydanticType {
   }
 
   const nonNullMembers = nonNullResults.map(
-    (r) => applyModifiers(r).type ?? $$.constrainedType(ctx.plugin.symbols.typing.Any),
+    (r) => applyModifiers(r).type ?? $$.constrainedType(ctx.plugin.imports.typing.Any),
   );
 
   const unionMembers = nonNullMembers;

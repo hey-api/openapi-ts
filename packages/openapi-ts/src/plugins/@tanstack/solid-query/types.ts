@@ -8,7 +8,7 @@ import type {
   Plugin,
 } from '@hey-api/shared';
 
-import type { TanStackQuerySymbols } from '../query-core/symbols';
+import type { TanStackQueryImports } from '../query-core/imports';
 
 export type UserConfig = Plugin.Name<'@tanstack/solid-query'> &
   Plugin.Hooks &
@@ -467,5 +467,5 @@ export type TanStackSolidQueryPlugin = DefinePlugin<
   UserConfig,
   Config,
   never,
-  TanStackQuerySymbols
+  TanStackQueryImports
 >;

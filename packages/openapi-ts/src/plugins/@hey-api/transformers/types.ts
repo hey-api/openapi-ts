@@ -3,7 +3,7 @@ import type { DefinePlugin, Plugin } from '@hey-api/shared';
 import type ts from 'typescript';
 
 import type { $, DollarTsDsl, MaybeTsDsl, TsDsl } from '../../../ts-dsl';
-import type { TransformersSymbols } from './symbols';
+import type { TransformersImports } from './imports';
 
 interface BaseTransformer extends DollarTsDsl {
   plugin: HeyApiTransformersPlugin['Instance'];
@@ -88,4 +88,4 @@ export type Config = Plugin.Name<'@hey-api/transformers'> &
     typeTransformers: ReadonlyArray<TypeTransformer>;
   };
 
-export type HeyApiTransformersPlugin = DefinePlugin<UserConfig, Config, never, TransformersSymbols>;
+export type HeyApiTransformersPlugin = DefinePlugin<UserConfig, Config, never, TransformersImports>;

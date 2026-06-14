@@ -180,6 +180,9 @@ export interface BaseContext extends DollarTsDsl, SchemaVisitorContext<ZodPlugin
    * Provides access to commonly used symbols within the plugin.
    */
   symbols: {
+    /**
+     * @deprecated The `z` symbol is now available via `plugin.imports.z` and should be accessed from there.
+     */
     z: Symbol;
   };
 }

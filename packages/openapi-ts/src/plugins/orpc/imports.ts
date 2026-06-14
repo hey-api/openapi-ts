@@ -2,11 +2,11 @@ import type { PluginInstance } from '@hey-api/shared';
 
 import * as SYMBOLS from '../../symbols';
 
-export function swrSymbols(plugin: PluginInstance) {
+export function orpcImports(plugin: PluginInstance) {
   const factory = plugin.symbolFactory;
   return {
-    ...SYMBOLS.SWR(factory),
+    contract: SYMBOLS.ORPC_CONTRACT(factory),
   };
 }
 
-export type SwrSymbols = ReturnType<typeof swrSymbols>;
+export type OrpcImports = ReturnType<typeof orpcImports>;

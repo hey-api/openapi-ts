@@ -19,12 +19,9 @@ export function createUseMutation({
 
   const symbolUseMutationFn = plugin.symbol(applyNaming(operation.id, plugin.config.useMutation));
 
-  const symbolUseMutation = plugin.symbols.useMutation;
-
   const typeData = useTypeData({ operation, plugin });
 
-  const symbolMutationOptionsType = plugin.symbols.MutationOptions;
-  const mutationType = $.type(symbolMutationOptionsType)
+  const mutationType = $.type(plugin.imports.MutationOptions)
     .generic(useTypeResponse({ operation, plugin }))
     .generic(useTypeError({ operation, plugin }))
     .generic(typeData);
@@ -48,7 +45,7 @@ export function createUseMutation({
   );
 
   func.do(
-    $(symbolUseMutation)
+    $(plugin.imports.useMutation)
       .call($.object().spread($(symbolMutationOptionsFn).call()).spread(mutationOptionsParamName))
       .return(),
   );

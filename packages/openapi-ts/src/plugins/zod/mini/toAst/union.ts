@@ -11,7 +11,7 @@ import type { ZodResult } from '../../shared/types';
 
 function baseNode(ctx: UnionResolverContext): Chain {
   const { childResults, parentSchema, plugin, schemas } = ctx;
-  const { z } = plugin.symbols;
+  const { z } = plugin.imports;
 
   if (!childResults.length) {
     return $(z).attr(identifiers.null).call();
@@ -141,7 +141,7 @@ export function unionToAst({
   chain: Chain;
   childResults: Array<ZodResult>;
 } {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
 
   const ctx: UnionResolverContext = {
     $,

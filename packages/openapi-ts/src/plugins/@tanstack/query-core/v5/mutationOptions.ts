@@ -38,7 +38,7 @@ export function createMutationOptions({
     createMutationKeyFunction({ plugin });
   }
 
-  const symbolMutationOptionsType = plugin.symbols.MutationOptions;
+  const symbolMutationOptionsType = plugin.imports.MutationOptions;
 
   const typeData = useTypeData({ operation, plugin });
   const mutationType = $.type(symbolMutationOptionsType)

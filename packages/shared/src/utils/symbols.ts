@@ -60,17 +60,6 @@ export class SymbolFactory {
     return result;
   }
 
-  external(
-    resource: Required<SymbolMeta>['resource'],
-    meta: Omit<SymbolMeta, 'category' | 'resource'> = {},
-  ): Symbol {
-    return this.project.symbols.reference({
-      ...meta,
-      category: 'external',
-      resource,
-    });
-  }
-
   isRegistered(identifier: SymbolIdentifier): boolean {
     return this.project.symbols.isRegistered(identifier);
   }
@@ -98,7 +87,7 @@ export class SymbolFactory {
   }
 
   reference(meta: SymbolMeta): Symbol<ResolvedNode> {
-    return this.project.symbols.reference(meta) as Symbol<ResolvedNode>;
+    return this.project.symbols.reference(meta);
   }
 
   register(name: SymbolIn['name'], symbol: Omit<SymbolIn, 'name'> = {}): Symbol<ResolvedNode> {

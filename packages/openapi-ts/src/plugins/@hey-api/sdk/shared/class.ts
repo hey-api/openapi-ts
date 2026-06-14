@@ -67,7 +67,7 @@ export function createClientClass({
 }): ReturnType<typeof $.class> {
   const symClient = plugin.querySymbol({ category: 'client' });
   const optionalClient = Boolean(plugin.config.client && symClient);
-  const symbolClient = plugin.symbols.Client;
+  const symbolClient = plugin.imports.Client;
   return $.class(symbol)
     .field('client', (f) => f.protected().type(symbolClient))
     .newline()

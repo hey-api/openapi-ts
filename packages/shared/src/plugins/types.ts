@@ -64,8 +64,9 @@ export type PluginContext = {
   ) => T | false;
 };
 
-export type PluginSymbols = {
-  [key: string]: Symbol | PluginSymbols;
+/** Map of symbols imported from external modules. */
+export type PluginImports = {
+  [key: string]: Symbol | PluginImports;
 };
 
 type BaseApi = Record<string, unknown>;
@@ -91,11 +92,11 @@ export namespace Plugin {
      */
     dependencies?: ReadonlyArray<AnyPluginName>;
     handler: (args: { plugin: PluginInstance<T> }) => void;
+    /** Declares symbols this plugin imports from external modules. */
+    imports?: (plugin: PluginInstance<T>) => T['imports'];
     name: T['config']['name'];
-    /** Metadata merged into every non-external symbol this plugin creates. */
+    /** Metadata merged into every symbol this plugin creates. */
     symbolMeta?: (symbol: Omit<SymbolIn, 'name'>) => SymbolMeta;
-    /** Symbols this plugin registers at construction time. */
-    symbols?: (plugin: PluginInstance<T>) => T['symbols'];
     /**
      * Tags can be used to help with deciding plugin order and resolving
      * plugin configuration options.
@@ -144,29 +145,44 @@ export namespace Plugin {
     dependencies: Set<AnyPluginName>;
   };
 
+  /**
+   * @typeParam Config - User-facing config shape.
+   * @typeParam ResolvedConfig - Fully resolved config shape after normalization.
+   * @typeParam Api - Public API surface exposed by this plugin to other plugins.
+   * @typeParam Imports - Shape of the external symbol imports map.
+   */
   export type Types<
     Config extends PluginBaseConfig = PluginBaseConfig,
     ResolvedConfig extends PluginBaseConfig = Config,
     Api extends BaseApi = never,
-    Symbols extends PluginSymbols = Record<never, never>,
+    Imports extends PluginImports = Record<never, never>,
   > = ([Api] extends [never] ? { api?: BaseApi } : { api: Api }) & {
     config: Config;
+    imports: Imports;
     resolvedConfig: ResolvedConfig;
-    symbols: Symbols;
   };
 }
 
+/**
+ * Convenience type that derives all plugin-related types from a single
+ * set of type parameters.
+ *
+ * @typeParam Config - User-facing config shape.
+ * @typeParam ResolvedConfig - Fully resolved config shape after normalization.
+ * @typeParam Api - Public API surface exposed by this plugin to other plugins.
+ * @typeParam Imports - Shape of the external symbol imports map.
+ */
 export type DefinePlugin<
   Config extends PluginBaseConfig = PluginBaseConfig,
   ResolvedConfig extends PluginBaseConfig = Config,
   Api extends BaseApi = never,
-  Symbols extends PluginSymbols = Record<never, never>,
+  Imports extends PluginImports = Record<never, never>,
 > = {
-  Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api, Symbols>>;
+  Config: Plugin.Config<Plugin.Types<Config, ResolvedConfig, Api, Imports>>;
   Handler: (args: {
-    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api, Symbols>>;
+    plugin: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api, Imports>>;
   }) => void;
   /** The plugin instance. */
-  Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api, Symbols>>;
-  Types: Plugin.Types<Config, ResolvedConfig, Api, Symbols>;
+  Instance: PluginInstance<Plugin.Types<Config, ResolvedConfig, Api, Imports>>;
+  Types: Plugin.Types<Config, ResolvedConfig, Api, Imports>;
 };

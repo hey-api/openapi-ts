@@ -10,7 +10,7 @@ import { unknownToPipes } from './unknown';
 
 function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
   const { schema } = ctx;
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
 
   const enumMembers: Array<ReturnType<typeof $.literal>> = [];
   const literalSchemas: Array<Pipe> = [];
@@ -42,7 +42,7 @@ function baseNode(ctx: EnumResolverContext): PipeResult {
     return unknownToPipes({ path: ctx.path, plugin: ctx.plugin });
   }
 
-  const { v } = ctx.plugin.symbols;
+  const { v } = ctx.plugin.imports;
 
   // skip this feature for now, requires knowing whether the enum contains safe values only, which requires special handling that we don't currently support
   // const def = ctx.plugin.querySymbol<ReturnType<typeof $.enum | typeof $.var>>(
@@ -89,7 +89,7 @@ export function enumToPipes({
 }: SchemaVisitorContext<ValibotPlugin['Instance']> & {
   schema: SchemaWithType<'enum'>;
 }): Pipe {
-  const v = plugin.symbols.v;
+  const v = plugin.imports.v;
 
   const resolverCtx: EnumResolverContext = {
     $,

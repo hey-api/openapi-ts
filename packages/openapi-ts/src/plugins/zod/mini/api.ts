@@ -142,7 +142,7 @@ function createRequestSchemaContext(
   ctx: RequestSchemaContext<ZodPlugin['Instance']>,
 ): RequestValidatorResolverContext {
   const { plugin } = ctx;
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
 
   return {
     ...ctx,
@@ -223,7 +223,7 @@ export function createResponseValidatorMini({
   });
   if (!symbol) return;
 
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const resolverCtx: ResponseValidatorResolverContext = {
     $,
     chain: {

@@ -1,7 +1,7 @@
 import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from '../../../plugins/@tanstack/query-core/plugin';
-import { tanStackQuerySymbols } from '../query-core/symbols';
+import { tanStackQueryImports } from '../query-core/imports';
 import type { TanStackSolidQueryPlugin } from './types';
 
 const defaultMeta = (): Record<string, unknown> => ({});
@@ -87,13 +87,13 @@ export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
   },
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
+  imports: tanStackQueryImports,
   name: '@tanstack/solid-query',
   symbolMeta() {
     return {
       tool: '@tanstack/solid-query',
     };
   },
-  symbols: tanStackQuerySymbols,
 };
 
 /**

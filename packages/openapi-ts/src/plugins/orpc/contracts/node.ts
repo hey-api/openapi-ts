@@ -54,7 +54,7 @@ function createContractExpression(
   const successResponse = getSuccessResponse(operation);
   const tags = getTags(operation, plugin.config.contracts.strategyDefaultTag);
 
-  let expression = $(plugin.symbols.contract.oc)
+  let expression = $(plugin.imports.contract.oc)
     .attr('route')
     .call(
       $.object()

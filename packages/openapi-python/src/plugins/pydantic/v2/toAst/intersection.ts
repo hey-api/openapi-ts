@@ -15,7 +15,7 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
   const { applyModifiers, childResults, plugin } = ctx;
 
   if (!childResults.length) {
-    return { type: $$.constrainedType(plugin.symbols.typing.Any) };
+    return { type: $$.constrainedType(plugin.imports.typing.Any) };
   }
 
   if (childResults.length === 1) {
@@ -35,7 +35,7 @@ function baseNode(ctx: IntersectionResolverContext): PydanticType {
     return { type: baseClasses[0]! };
   }
 
-  return { type: $$.constrainedType(plugin.symbols.typing.Any) };
+  return { type: $$.constrainedType(plugin.imports.typing.Any) };
 }
 
 function intersectionResolver(ctx: IntersectionResolverContext): PydanticType {

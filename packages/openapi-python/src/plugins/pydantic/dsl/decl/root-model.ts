@@ -40,8 +40,8 @@ export class PydanticRootModelDsl extends Mixed {
 
     const { plugin } = this;
 
-    const rootModelBase = $(plugin.symbols.RootModel).slice(
-      this._type?.type ?? plugin.symbols.typing.Any,
+    const rootModelBase = $(plugin.imports.RootModel).slice(
+      this._type?.type ?? plugin.imports.typing.Any,
     );
 
     const rootField = new PydanticFieldDsl(plugin, identifiers.root)

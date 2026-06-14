@@ -7,7 +7,7 @@ import type { Chain } from '../../shared/chain';
 import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: NullResolverContext): Chain {
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   return $(z).attr(identifiers.null).call();
 }
 
@@ -24,7 +24,7 @@ export function nullToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'null'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: NullResolverContext = {
     $,
     chain: {

@@ -70,7 +70,7 @@ export function createMutationOptions({
       $.func()
         .param(options, (p) => p.optional().type($.type('Partial').generic(typeData)))
         .returns(
-          $.type(plugin.symbols.UseMutationOptions)
+          $.type(plugin.imports.UseMutationOptions)
             .generic(useTypeResponse({ operation, plugin }))
             .generic(typeData)
             .generic(useTypeError({ operation, plugin })),

@@ -31,9 +31,9 @@ export const useTypeError = ({
     resourceId: operation.id,
     role: 'error',
   });
-  const symbolError = symbolErrorType || plugin.symbols.DefaultError;
+  const symbolError = symbolErrorType || plugin.imports.DefaultError;
   if (client.name === '@hey-api/client-axios') {
-    const symbol = plugin.symbols.axios.AxiosError;
+    const symbol = plugin.imports.axios.AxiosError;
     return $.type(symbol).generic(symbolError);
   }
   return $.type(symbolError);

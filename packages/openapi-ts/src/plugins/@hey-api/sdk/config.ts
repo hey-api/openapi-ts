@@ -2,10 +2,10 @@ import { log } from '@hey-api/codegen-core';
 import type { PluginContext } from '@hey-api/shared';
 import { coerce, definePluginConfig } from '@hey-api/shared';
 
+import { sdkImports } from './imports';
 import type { UserOperationsConfig } from './operations';
 import { mapLegacyToConfig } from './operations/config';
 import { handler } from './plugin';
-import { sdkSymbols } from './symbols';
 import type { Config, HeyApiSdkPlugin } from './types';
 
 const transformerInferWarn =
@@ -187,13 +187,13 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   },
   dependencies: ['@hey-api/typescript'],
   handler,
+  imports: sdkImports,
   name: '@hey-api/sdk',
   symbolMeta() {
     return {
       tool: 'sdk',
     };
   },
-  symbols: sdkSymbols,
 };
 
 /**

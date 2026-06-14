@@ -132,9 +132,6 @@ export function createInfiniteQueryOptions({
     createInfiniteParamsFunction({ plugin });
   }
 
-  const symbolInfiniteQueryOptions = plugin.symbols.infiniteQueryOptions;
-  const symbolInfiniteDataType = plugin.symbols.InfiniteData;
-
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
 
@@ -226,7 +223,7 @@ export function createInfiniteQueryOptions({
         .param('options', (p) => p.required(isRequiredOptions).type(typeData))
         .do(
           $.const('opts').assign(
-            $(symbolInfiniteQueryOptions)
+            $(plugin.imports.infiniteQueryOptions)
               .call(
                 $.object()
                   .pretty()
@@ -246,7 +243,7 @@ export function createInfiniteQueryOptions({
               .generics(
                 typeResponse,
                 useTypeError({ operation, plugin }),
-                $.type(symbolInfiniteDataType).generic(typeResponse),
+                $.type(plugin.imports.InfiniteData).generic(typeResponse),
                 typeQueryKey,
                 $.type.or(type, typePageObjectParam),
               ),

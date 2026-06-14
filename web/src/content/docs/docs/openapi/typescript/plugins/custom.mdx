@@ -21,9 +21,9 @@ We recommend following the design pattern of the native plugins. You can browse 
 <FileTree>
 - my-plugin/
   - config.ts
+  - imports.ts
   - index.ts
   - plugin.ts
-  - symbols.ts
   - types.ts
 </FileTree>
 
@@ -220,51 +220,52 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
 };
 ```
 
-## Symbols
+## Imports
 
-Symbols are a type-safe way to reference identifiers your plugin works with, whether from external libraries or your own generated output. Rather than querying or constructing identifiers manually, you declare them once and access them through `plugin.symbols` anywhere in your handler.
+Imports are a type-safe way to reference external symbols your plugin works with. Rather than querying or constructing identifiers manually, you declare them once and access them through `plugin.imports` anywhere in your handler.
 
-Symbols are also visible to users customizing your plugin's behavior. When a user provides hooks like `~resolvers`, they receive the `plugin` instance and can access `plugin.symbols` to reference your plugin's identifiers directly.
+Imports are also visible to users customizing your plugin's behavior. When a user provides hooks like `~resolvers`, they receive the `plugin` instance and can access `plugin.imports` to reference your plugin's imports directly.
 
 <Tabs>
-  <TabItem label="symbols">
-```ts title="symbols.ts"
+  <TabItem label="imports">
+```ts title="imports.ts"
 import type { PluginInstance } from '@hey-api/openapi-ts';
 
-export function myPluginSymbols(plugin: PluginInstance) {
+export function myPluginImports(plugin: PluginInstance) {
+  const factory = plugin.symbolFactory;
   return {
-    myLib: plugin.symbol('myLib', { external: 'my-lib' }),
+    myLib: factory.register('myLib', { external: 'my-lib' }),
   };
 }
 
-export type MyPluginSymbols = ReturnType<typeof myPluginSymbols>;
+export type MyPluginImports = ReturnType<typeof myPluginImports>;
 ```
   </TabItem>
   <TabItem label="types">
 ```ts {1,5} title="types.ts"
-import type { MyPluginSymbols } from './symbols';
+import type { MyPluginImports } from './imports';
 
 /** ... */
 
-export type MyPlugin = DefinePlugin<UserConfig, Config, never, MyPluginSymbols>;
+export type MyPlugin = DefinePlugin<UserConfig, Config, never, MyPluginImports>;
 ```
   </TabItem>
   <TabItem label="config">
-```ts {1,7} title="config.ts"
-import { myPluginSymbols } from './symbols';
+```ts {1,6} title="config.ts"
+import { myPluginImports } from './imports';
 
 export const defaultConfig: MyPlugin['Config'] = {
   config: { ... },
   handler,
+  imports: myPluginImports,
   name: 'my-plugin',
-  symbols: myPluginSymbols,
 };
 ```
   </TabItem>
   <TabItem label="handler">
 ```ts {2} title="plugin.ts"
 export const handler: MyPlugin['Handler'] = ({ plugin }) => {
-  const { myLib } = plugin.symbols;
+  const { myLib } = plugin.imports;
   // use myLib as a typed reference when building nodes
 };
 ```

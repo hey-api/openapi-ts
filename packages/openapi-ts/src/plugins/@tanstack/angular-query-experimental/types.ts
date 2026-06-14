@@ -2,7 +2,7 @@ import type { Casing, FeatureToggle, NameTransformer, NamingOptions } from '@hey
 import type { IR } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
-import type { TanStackQuerySymbols } from '../query-core/symbols';
+import type { TanStackQueryImports } from '../query-core/imports';
 
 export type UserConfig = Plugin.Name<'@tanstack/angular-query-experimental'> &
   Plugin.Hooks &
@@ -460,5 +460,5 @@ export type TanStackAngularQueryPlugin = DefinePlugin<
   UserConfig,
   Config,
   never,
-  TanStackQuerySymbols
+  TanStackQueryImports
 >;

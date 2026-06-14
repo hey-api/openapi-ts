@@ -13,14 +13,14 @@ function baseNode(ctx: StringResolverContext): Chain {
 
 function constNode(ctx: StringResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (typeof schema.const !== 'string') return;
   return $(z).attr(identifiers.literal).call($.literal(schema.const));
 }
 
 function formatNode(ctx: StringResolverContext): ChainResult {
   const { plugin, schema } = ctx;
-  const { z } = plugin.symbols;
+  const { z } = plugin.imports;
 
   switch (schema.format) {
     case 'date':
@@ -115,7 +115,7 @@ export function stringToNode({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: StringResolverContext = {
     $,
     chain: {

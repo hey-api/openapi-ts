@@ -2,8 +2,8 @@ import type { DefinePlugin, OperationsStrategy, Plugin } from '@hey-api/shared';
 
 import type { PluginClientNames } from '../../types';
 import type { ExamplesConfig, UserExamplesConfig } from './examples';
+import type { SdkImports } from './imports';
 import type { OperationsConfig, UserOperationsConfig } from './operations';
-import type { SdkSymbols } from './symbols';
 
 export type UserConfig = Plugin.Name<'@hey-api/python-sdk'> &
   Plugin.Hooks &
@@ -94,4 +94,4 @@ export type Config = Plugin.Name<'@hey-api/python-sdk'> &
     paramsStructure: 'flat' | 'grouped';
   };
 
-export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config, never, SdkSymbols>;
+export type HeyApiSdkPlugin = DefinePlugin<UserConfig, Config, never, SdkImports>;

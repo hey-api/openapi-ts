@@ -124,7 +124,7 @@ export const createQueryOptions = ({
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
-      $(plugin.symbols.defineQueryOptions)
+      $(plugin.imports.defineQueryOptions)
         .call(
           $.func()
             .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))

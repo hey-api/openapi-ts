@@ -4,68 +4,68 @@ import { getTypedConfig } from '../../../config/utils';
 import { clientFolderAbsolutePath } from '../../../generate/client';
 import * as SYMBOLS from '../../../symbols';
 
-export function sdkSymbols(plugin: PluginInstance) {
+export function sdkImports(plugin: PluginInstance) {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const factory = plugin.symbolFactory;
 
   return {
-    Client: plugin.symbol('Client', {
+    Client: factory.register('Client', {
       external: clientModule,
       kind: 'type',
       meta: {
         resource: 'client.Client',
       },
     }),
-    ClientMeta: plugin.symbol('ClientMeta', {
+    ClientMeta: factory.register('ClientMeta', {
       external: clientModule,
       kind: 'type',
       meta: {
         resource: 'client.ClientMeta',
       },
     }),
-    Composable: plugin.symbol('Composable', {
+    Composable: factory.register('Composable', {
       external: clientModule,
       kind: 'type',
       meta: {
         resource: 'client.Composable',
       },
     }),
-    Options: plugin.symbol('Options', {
+    Options: factory.register('Options', {
       external: clientModule,
       kind: 'type',
     }),
-    RequestResult: plugin.symbol('RequestResult', {
+    RequestResult: factory.register('RequestResult', {
       external: clientModule,
       kind: 'type',
       meta: {
         resource: 'client.RequestResult',
       },
     }),
-    ServerSentEventsResult: plugin.symbol('ServerSentEventsResult', {
+    ServerSentEventsResult: factory.register('ServerSentEventsResult', {
       external: clientModule,
       kind: 'type',
       meta: {
         resource: 'client.ServerSentEventsResult',
       },
     }),
-    TDataShape: plugin.symbol('TDataShape', {
+    TDataShape: factory.register('TDataShape', {
       external: clientModule,
       kind: 'type',
     }),
     angular: SYMBOLS.ANGULAR(factory),
-    buildClientParams: plugin.symbol('buildClientParams', {
+    buildClientParams: factory.register('buildClientParams', {
       external: clientModule,
       meta: {
         resource: 'client.buildClientParams',
       },
     }),
-    formDataBodySerializer: plugin.symbol('formDataBodySerializer', {
+    formDataBodySerializer: factory.register('formDataBodySerializer', {
       external: clientModule,
       meta: {
         resource: 'client.formDataBodySerializer',
       },
     }),
-    urlSearchParamsBodySerializer: plugin.symbol('urlSearchParamsBodySerializer', {
+    urlSearchParamsBodySerializer: factory.register('urlSearchParamsBodySerializer', {
       external: clientModule,
       meta: {
         resource: 'client.urlSearchParamsBodySerializer',
@@ -74,4 +74,4 @@ export function sdkSymbols(plugin: PluginInstance) {
   };
 }
 
-export type SdkSymbols = ReturnType<typeof sdkSymbols>;
+export type SdkImports = ReturnType<typeof sdkImports>;

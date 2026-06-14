@@ -13,14 +13,14 @@ function baseNode(ctx: StringResolverContext): Chain {
 
 function constNode(ctx: StringResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (typeof schema.const !== 'string') return;
   return $(z).attr(identifiers.literal).call($.literal(schema.const));
 }
 
 function formatNode(ctx: StringResolverContext): ChainResult {
   const { plugin, schema } = ctx;
-  const { z } = plugin.symbols;
+  const { z } = plugin.imports;
 
   switch (schema.format) {
     case 'date':
@@ -55,28 +55,28 @@ function formatNode(ctx: StringResolverContext): ChainResult {
 
 function lengthNode(ctx: StringResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.minLength === undefined || schema.minLength !== schema.maxLength) return;
   return $(z).attr(identifiers.length).call($.literal(schema.minLength));
 }
 
 function maxLengthNode(ctx: StringResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.maxLength === undefined) return;
   return $(z).attr(identifiers.maxLength).call($.literal(schema.maxLength));
 }
 
 function minLengthNode(ctx: StringResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.minLength === undefined) return;
   return $(z).attr(identifiers.minLength).call($.literal(schema.minLength));
 }
 
 function patternNode(ctx: StringResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (!schema.pattern) return;
   const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
   return $(z).attr(identifiers.regex).call($.regexp(schema.pattern, flags));
@@ -125,7 +125,7 @@ export function stringToNode({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'string'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
   const ctx: StringResolverContext = {
     $,
     chain: {

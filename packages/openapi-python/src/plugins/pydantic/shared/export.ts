@@ -57,7 +57,7 @@ export function exportAst({
     //   let baseModelSymbol: Symbol | undefined = plugin.querySymbol(BASE_MODEL_META);
     //   if (!baseModelSymbol) {
     //     baseModelSymbol = plugin.symbol('BaseModel', {
-    //       children: [...plugin.symbols.BaseModel.children],
+    //       children: [...plugin.imports.BaseModel.children],
     //       meta: BASE_MODEL_META,
     //     });
     //     const baseModel = createBaseModel(plugin, baseModelSymbol);

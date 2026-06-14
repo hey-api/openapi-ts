@@ -32,8 +32,8 @@ export class PydanticTypeAliasDsl extends Mixed {
     const { plugin } = this;
 
     this._dsl = $.var(this.name)
-      .type(plugin.symbols.typing.TypeAlias)
-      .assign(this.aliased?.type ?? plugin.symbols.typing.Any);
+      .type(plugin.imports.typing.TypeAlias)
+      .assign(this.aliased?.type ?? plugin.imports.typing.Any);
 
     return this._dsl;
   }

@@ -9,7 +9,7 @@ import { unknownToAst } from './unknown';
 
 function baseNode(ctx: ArrayResolverContext): Chain {
   const { applyModifiers, childResults, path, plugin, schema } = ctx;
-  const { z } = plugin.symbols;
+  const { z } = plugin.imports;
 
   const arrayFn = $(z).attr(identifiers.array);
 
@@ -118,7 +118,7 @@ export function arrayToAst({
   const childResults: Array<ZodResult> = [];
   let schemaCopy = schema;
 
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
 
   if (schemaCopy.items) {
     schemaCopy = deduplicateSchema({ schema: schemaCopy });

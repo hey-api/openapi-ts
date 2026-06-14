@@ -9,7 +9,7 @@ import { unknownToAst } from './unknown';
 
 function baseNode(ctx: ArrayResolverContext): Chain {
   const { applyModifiers, childResults, path, plugin, schema } = ctx;
-  const { z } = plugin.symbols;
+  const { z } = plugin.imports;
 
   const arrayFn = $(z).attr(identifiers.array);
 
@@ -59,14 +59,14 @@ function lengthNode(ctx: ArrayResolverContext): ChainResult {
 
 function maxLengthNode(ctx: ArrayResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.maxItems === undefined) return;
   return $(z).attr(identifiers.maxLength).call($.fromValue(schema.maxItems));
 }
 
 function minLengthNode(ctx: ArrayResolverContext): ChainResult {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
   if (schema.minItems === undefined) return;
   return $(z).attr(identifiers.minLength).call($.fromValue(schema.minItems));
 }
@@ -109,7 +109,7 @@ export function arrayToAst({
   const childResults: Array<ZodResult> = [];
   let schemaCopy = schema;
 
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
 
   if (schemaCopy.items) {
     schemaCopy = deduplicateSchema({ schema: schemaCopy });

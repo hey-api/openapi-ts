@@ -9,7 +9,7 @@ import { unknownToAst } from './unknown';
 
 function itemsNode(ctx: EnumResolverContext): ReturnType<EnumResolverContext['nodes']['items']> {
   const { schema } = ctx;
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
 
   const enumMembers: Array<ReturnType<typeof $.literal>> = [];
   const literalSchemas: Array<Chain> = [];
@@ -40,7 +40,7 @@ function baseNode(ctx: EnumResolverContext): Chain {
     return unknownToAst({ path: ctx.path, plugin: ctx.plugin });
   }
 
-  const { z } = ctx.plugin.symbols;
+  const { z } = ctx.plugin.imports;
 
   // skip this feature for now, requires knowing whether the enum contains safe values only, which requires special handling that we don't currently support
   // const def = ctx.plugin.querySymbol<ReturnType<typeof $.enum | typeof $.var>>(
@@ -87,7 +87,7 @@ export function enumToAst({
 }: SchemaVisitorContext<ZodPlugin['Instance']> & {
   schema: SchemaWithType<'enum'>;
 }): Chain {
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
 
   const ctx: EnumResolverContext = {
     $,

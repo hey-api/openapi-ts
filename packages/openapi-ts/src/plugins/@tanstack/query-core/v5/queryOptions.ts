@@ -40,8 +40,6 @@ export function createQueryOptions({
     createQueryKeyFunction({ plugin });
   }
 
-  const symbolQueryOptions = plugin.symbols.queryOptions;
-
   const symbolQueryKey = plugin.symbol(applyNaming(operation.id, plugin.config.queryKeys));
   const node = queryKeyStatement({
     isInfinite: false,
@@ -113,7 +111,7 @@ export function createQueryOptions({
           p.required(isRequiredOptions).type(useTypeData({ operation, plugin })),
         )
         .do(
-          $(symbolQueryOptions)
+          $(plugin.imports.queryOptions)
             .call(queryOptionsObj)
             .generics(
               typeResponse,

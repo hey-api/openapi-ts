@@ -5,15 +5,15 @@ import type { Ast, IrSchemaToAstOptions } from '../../shared/types';
 import { nullToAst } from './null';
 import { objectToAst } from './object';
 import { stringToAst } from './string';
-// import { arrayToAst } from "./array";
-// import { booleanToAst } from "./boolean";
-// import { enumToAst } from "./enum";
-// import { neverToAst } from "./never";
-// import { numberToAst } from "./number";
-// import { tupleToAst } from "./tuple";
-// import { undefinedToAst } from "./undefined";
-// import { unknownToAst } from "./unknown";
-// import { voidToAst } from "./void";
+// import { arrayToAst } from './array';
+// import { booleanToAst } from './boolean';
+// import { enumToAst } from './enum';
+// import { neverToAst } from './never';
+// import { numberToAst } from './number';
+// import { tupleToAst } from './tuple';
+// import { undefinedToAst } from './undefined';
+// import { unknownToAst } from './unknown';
+// import { voidToAst } from './void';
 
 export function irSchemaWithTypeToAst({
   schema,
@@ -85,9 +85,7 @@ export function irSchemaWithTypeToAst({
     //   });
   }
 
-  const type = args.plugin.external('arktype.type');
-
-  const expression = $(type).call(
+  const expression = $(args.plugin.imports.type).call(
     $.object()
       .prop('name', $.literal('string'))
       .prop('platform', $.literal("'android' | 'ios'"))

@@ -68,11 +68,10 @@ function childToNode(
     plugin.config.operations.methodName.casing ?? 'camelCase',
   );
   const memberName = plugin.symbol(memberNameStr);
-  const cachedProp = plugin.symbols.funcTools.cachedProperty;
 
   return [
     $.method(memberName)
-      .decorator(cachedProp)
+      .decorator(plugin.imports.funcTools.cachedProperty)
       .param('self')
       .returns(refChild)
       .do(
@@ -98,9 +97,7 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
         },
       );
 
-      const symbolClient = plugin.symbols.Client;
-
-      const c = $.class(symbol).export().extends(symbolClient);
+      const c = $.class(symbol).export().extends(plugin.imports.Client);
 
       const dependencies: Array<ReturnType<typeof $.class>> = [];
 
@@ -138,7 +135,7 @@ function implementFn<T extends ReturnType<typeof $.method>>(args: {
         // TODO: extract operation statements into a separate function
         .do(
           $.var('params').assign(
-            $(plugin.symbols.buildClientParams).call(
+            $(plugin.imports.buildClientParams).call(
               fieldsList,
               ...paramNames.map((name) => $.kwarg(name, name)),
             ),

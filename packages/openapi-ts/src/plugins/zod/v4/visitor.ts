@@ -41,7 +41,7 @@ export function createVisitor(
 ): SchemaVisitor<ZodResult, ZodPlugin['Instance']> {
   const { plugin, schemaExtractor } = config;
 
-  const z = plugin.symbols.z;
+  const z = plugin.imports.z;
 
   return {
     applyModifiers(result, ctx, options = {}): ZodFinal {
