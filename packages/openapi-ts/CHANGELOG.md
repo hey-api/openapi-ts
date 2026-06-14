@@ -1,5 +1,49 @@
 # @hey-api/openapi-ts
 
+## 0.99.0
+
+### Minor Changes
+
+- **BREAKING** **config**: merge duplicate plugin configurations ([`089ed2e`](https://github.com/hey-api/openapi-ts/commit/089ed2ed065ff92accb7d98cdeb95c66cf88f2f6)) by [@mrlubos](https://github.com/mrlubos)
+
+### Plugin duplicates behavior
+
+If you specified the same plugin multiple times, only the last instance would be used. We eventually added a warning for this behavior, but that didn't treat the root issue. This release changes that by merging duplicate plugin configurations.
+
+### Patch Changes
+
+- **config**: add Presets API ([`3b4ee7a`](https://github.com/hey-api/openapi-ts/commit/3b4ee7a5d3fd454aa8416ad1ed4a565119632be1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(zod)**: improve discriminator handling ([`680b947`](https://github.com/hey-api/openapi-ts/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/preact-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/openapi-ts/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/solid-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/openapi-ts/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(zod)**: support creating optional request schemas ([`11315c7`](https://github.com/hey-api/openapi-ts/commit/11315c763a6a8ba9f7b2396466bfaf5a9e257fee)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/react-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/openapi-ts/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(valibot)**: support creating optional request schemas ([`11315c7`](https://github.com/hey-api/openapi-ts/commit/11315c763a6a8ba9f7b2396466bfaf5a9e257fee)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/svelte-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/openapi-ts/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/angular-query-experimental)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/openapi-ts/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/typescript)**: improve discriminator handling ([`680b947`](https://github.com/hey-api/openapi-ts/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(orpc)**: make `.input()` optional if all layers are optional ([`11315c7`](https://github.com/hey-api/openapi-ts/commit/11315c763a6a8ba9f7b2396466bfaf5a9e257fee)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/vue-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`8d91bd5`](https://github.com/hey-api/openapi-ts/commit/8d91bd5dfb70f4cf1db1d7b1277f49f57066b831)) by [@magicismight](https://github.com/magicismight)
+
+- **plugin(valibot)**: improve discriminator handling ([`680b947`](https://github.com/hey-api/openapi-ts/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.5.0
+- @hey-api/json-schema-ref-parser@1.4.4
+- @hey-api/codegen-core@0.9.1
+
 ## 0.98.2
 
 ### Patch Changes
