@@ -3,6 +3,7 @@ import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
 import type { IApi } from './api';
 import type { HeyApiTypeScriptResolvers } from './resolvers';
+import type { TypeScriptSymbols } from './symbols';
 
 export type EnumsType = 'javascript' | 'typescript' | 'typescript-const';
 
@@ -333,4 +334,4 @@ export type Config = Plugin.Name<'@hey-api/typescript'> &
     };
   };
 
-export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, IApi>;
+export type HeyApiTypeScriptPlugin = DefinePlugin<UserConfig, Config, IApi, TypeScriptSymbols>;

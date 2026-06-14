@@ -28,8 +28,9 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
     const dates = plugin.getPlugin('@hey-api/transformers')?.config.dates;
     if (dates) {
       if (dates === 'temporal') {
-        const temporal = plugin.symbolOnce('Temporal', { external: 'temporal-polyfill' });
-        return $.type(temporal).attr(format === 'date' ? 'PlainDate' : 'Instant');
+        return $.type(plugin.symbols.temporalPolyfill.Temporal).attr(
+          format === 'date' ? 'PlainDate' : 'Instant',
+        );
       }
       return $.type('Date');
     }
@@ -44,13 +45,13 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
       category: 'type',
       resource: 'type-id',
       resourceId: typeidBase,
-      tool: 'typescript',
+      tool: 'types',
     };
     if (!plugin.querySymbol(typeidQuery)) {
       const containerQuery: SymbolMeta = {
         category: 'type',
         resource: 'type-id',
-        tool: 'typescript',
+        tool: 'types',
         variant: 'container',
       };
 

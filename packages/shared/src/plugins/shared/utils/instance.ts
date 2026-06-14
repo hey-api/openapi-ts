@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import type { IProject, Node, Symbol, SymbolIn } from '@hey-api/codegen-core';
+import type { IProject, Node, Symbol, SymbolIn, SymbolMeta } from '@hey-api/codegen-core';
 
 import type { Dependency } from '../../../config/utils/dependencies';
 import { HeyApiError } from '../../../error';
@@ -75,6 +75,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   package: Dependency;
   /** Factory for creating and managing symbols. */
   symbolFactory: SymbolFactory;
+  /** Metadata merged into every non-external symbol this plugin creates. */
+  symbolMeta: Plugin.Config<T>['symbolMeta'];
   /** Symbols declared in the plugin config. */
   symbols: T['symbols'];
 
@@ -85,7 +87,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   readonly referenceSymbol: SymbolFactory['reference'];
 
   constructor(
-    props: Pick<Plugin.Config<T>, 'api' | 'handler' | 'name' | 'symbols'> & {
+    props: Pick<Plugin.Config<T>, 'api' | 'handler' | 'name' | 'symbolMeta' | 'symbols'> & {
       config: Omit<T['resolvedConfig'], 'name'>;
       context: Context;
       dependencies: Set<AnyPluginName>;
@@ -100,6 +102,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     this.handler = props.handler;
     this.name = props.name;
     this.package = props.context.package;
+    this.symbolMeta = props.symbolMeta;
     // buildEventHooks must run after this.name, this.gen, and
     // this.context are set, as hooks may rely on them
     this.eventHooks = SymbolFactory.buildEventHooks([
@@ -367,18 +370,21 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   symbol(name: SymbolIn['name'], symbol: Omit<SymbolIn, 'name'> = {}): Symbol<ResolvedNode> {
+    let meta: SymbolMeta = {};
+    if (!symbol.external && this.symbolMeta) {
+      meta = this.symbolMeta(symbol);
+    }
+    Object.assign(meta, symbol.meta);
+    if (!symbol.external) {
+      const pluginName = path.isAbsolute(this.name) ? 'custom' : this.name;
+      meta.pluginName = pluginName;
+    }
     return this.symbolFactory.register(name, {
       ...symbol,
       getExportFromFilePath:
         symbol.getExportFromFilePath ?? this.getSymbolExportFromFilePath.bind(this),
       getFilePath: symbol.getFilePath ?? this.getSymbolFilePath.bind(this),
-      meta: {
-        // only stamp non-external symbols
-        ...(symbol.external
-          ? {}
-          : { pluginName: path.isAbsolute(this.name) ? 'custom' : this.name }),
-        ...symbol.meta,
-      },
+      meta,
     });
   }
 

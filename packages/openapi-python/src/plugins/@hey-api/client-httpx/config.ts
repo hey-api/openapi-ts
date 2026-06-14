@@ -10,6 +10,11 @@ export const defaultConfig: HeyApiClientHttpxPlugin['Config'] = {
     // TODO: handler
   },
   name: '@hey-api/client-httpx',
+  symbolMeta() {
+    return {
+      tool: 'client',
+    };
+  },
 };
 
 /**

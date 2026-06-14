@@ -1,6 +1,7 @@
 import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
+import { swrSymbols } from './symbols';
 import type { SwrPlugin } from './types';
 
 const defaultMeta = (): Record<string, unknown> => ({});
@@ -75,6 +76,12 @@ export const defaultConfig: SwrPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: 'swr',
+  symbolMeta() {
+    return {
+      tool: 'swr',
+    };
+  },
+  symbols: swrSymbols,
 };
 
 /**

@@ -15,6 +15,11 @@ export const defaultConfig: HeyApiClientKyPlugin['Config'] = {
   },
   handler: clientPluginHandler as unknown as HeyApiClientKyPlugin['Handler'],
   name: '@hey-api/client-ky',
+  symbolMeta() {
+    return {
+      tool: 'client',
+    };
+  },
 };
 
 /**

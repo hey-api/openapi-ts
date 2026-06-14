@@ -2,12 +2,6 @@ import type { SwrPlugin } from '../types';
 import { createUseSwr } from './useSwr';
 
 export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
-  plugin.symbol('useSWR', {
-    external: 'swr',
-    importKind: 'default',
-    kind: 'function',
-  });
-
   plugin.forEach(
     'operation',
     ({ operation }) => {

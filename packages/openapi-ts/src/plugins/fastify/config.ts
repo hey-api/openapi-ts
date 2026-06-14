@@ -1,6 +1,7 @@
 import { definePluginConfig } from '@hey-api/shared';
 
 import { handler } from './plugin';
+import { fastifySymbols } from './symbols';
 import type { FastifyPlugin } from './types';
 
 export const defaultConfig: FastifyPlugin['Config'] = {
@@ -10,6 +11,12 @@ export const defaultConfig: FastifyPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: 'fastify',
+  symbolMeta() {
+    return {
+      tool: 'fastify',
+    };
+  },
+  symbols: fastifySymbols,
 };
 
 /**

@@ -323,6 +323,11 @@ export const defaultConfig: ZodPlugin['Config'] = {
   },
   handler,
   name: 'zod',
+  symbolMeta() {
+    return {
+      tool: 'zod',
+    };
+  },
   symbols: zodSymbols,
   tags: ['transformer', 'validator'],
 };

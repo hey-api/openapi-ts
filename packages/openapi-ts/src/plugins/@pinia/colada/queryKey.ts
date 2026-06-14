@@ -20,7 +20,6 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
       meta: {
         category: 'utility',
         resource: 'createQueryKey',
-        tool: plugin.name,
       },
     },
   );
@@ -29,7 +28,6 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
     resource: 'QueryKey',
     tool: plugin.name,
   });
-  const symbolJsonValue = plugin.external(`${plugin.name}._JSONValue`);
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
@@ -80,7 +78,7 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
               .as(returnType),
           ),
         $.if('tags').do(
-          $('params').attr('tags').assign($('tags').as('unknown').as(symbolJsonValue)),
+          $('params').attr('tags').assign($('tags').as('unknown').as(plugin.symbols._JSONValue)),
         ),
         $.if($('options').attr('body').optional().neq($.id('undefined'))).do(
           $.const('normalizedBody').assign(
@@ -136,8 +134,6 @@ const createQueryKeyLiteral = ({
 };
 
 export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
-  const symbolJsonValue = plugin.external(`${plugin.name}._JSONValue`);
-
   const symbolOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client-options',
@@ -147,7 +143,6 @@ export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Inst
     meta: {
       category: 'type',
       resource: 'QueryKey',
-      tool: plugin.name,
     },
   });
   const queryKeyType = $.type
@@ -162,11 +157,11 @@ export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Inst
             .object()
             .prop('_id', (p) => p.type('string'))
             .prop(getClientBaseUrlKey(getTypedConfig(plugin)), (p) =>
-              p.optional().type(symbolJsonValue),
+              p.optional().type(plugin.symbols._JSONValue),
             )
-            .prop('body', (p) => p.optional().type(symbolJsonValue))
-            .prop('query', (p) => p.optional().type(symbolJsonValue))
-            .prop('tags', (p) => p.optional().type(symbolJsonValue)),
+            .prop('body', (p) => p.optional().type(plugin.symbols._JSONValue))
+            .prop('query', (p) => p.optional().type(plugin.symbols._JSONValue))
+            .prop('tags', (p) => p.optional().type(plugin.symbols._JSONValue)),
         ),
       ),
     );

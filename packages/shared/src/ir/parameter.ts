@@ -2,13 +2,13 @@ import type { Context } from './context';
 import type { Pagination } from './pagination';
 import type { IR } from './types';
 
-const getPaginationSchema = ({
+function getPaginationSchema({
   context,
   parameter,
 }: {
   context: Context;
   parameter: IR.ParameterObject;
-}): IR.SchemaObject | undefined => {
+}): IR.SchemaObject | undefined {
   if (!parameter.pagination) {
     return;
   }
@@ -23,11 +23,11 @@ const getPaginationSchema = ({
   }
 
   return schema.properties![parameter.pagination]!;
-};
+}
 
-export const hasParameterGroupObjectRequired = (
+export function hasParameterGroupObjectRequired(
   parameterGroup?: Record<string, IR.ParameterObject>,
-): boolean => {
+): boolean {
   for (const name in parameterGroup) {
     if (parameterGroup[name]!.required) {
       return true;
@@ -35,11 +35,9 @@ export const hasParameterGroupObjectRequired = (
   }
 
   return false;
-};
+}
 
-export const hasParametersObjectRequired = (
-  parameters: IR.ParametersObject | undefined,
-): boolean => {
+export function hasParametersObjectRequired(parameters: IR.ParametersObject | undefined): boolean {
   if (!parameters) {
     return false;
   }
@@ -61,15 +59,15 @@ export const hasParametersObjectRequired = (
   }
 
   return false;
-};
+}
 
-export const parameterWithPagination = ({
+export function parameterWithPagination({
   context,
   parameters,
 }: {
   context: Context;
   parameters: IR.ParametersObject | undefined;
-}): Pagination | undefined => {
+}): Pagination | undefined {
   if (!parameters) {
     return;
   }
@@ -131,4 +129,4 @@ export const parameterWithPagination = ({
   }
 
   return;
-};
+}

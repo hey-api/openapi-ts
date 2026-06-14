@@ -15,6 +15,11 @@ export const defaultConfig: HeyApiClientAxiosPlugin['Config'] = {
   },
   handler: clientPluginHandler as unknown as HeyApiClientAxiosPlugin['Handler'],
   name: '@hey-api/client-axios',
+  symbolMeta() {
+    return {
+      tool: 'client',
+    };
+  },
 };
 
 /**

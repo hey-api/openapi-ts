@@ -14,20 +14,6 @@ import {
 import type { AngularCommonPlugin } from './types';
 
 export const handler: AngularCommonPlugin['Handler'] = ({ plugin }) => {
-  plugin.symbol('HttpRequest', {
-    external: '@angular/common/http',
-    kind: 'type',
-  });
-  plugin.symbol('inject', {
-    external: '@angular/core',
-  });
-  plugin.symbol('Injectable', {
-    external: '@angular/core',
-  });
-  plugin.symbol('httpResource', {
-    external: '@angular/common/http',
-  });
-
   const httpRequestStructure = new StructureModel();
   const httpResourceStructure = new StructureModel();
 

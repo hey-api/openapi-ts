@@ -339,7 +339,6 @@ function schemasV2_0_X({
         category: 'schema',
         resource: 'definition',
         resourceId: name,
-        tool: 'json-schema',
       },
     });
     const obj = schemaToJsonSchemaDraft_04({
@@ -378,7 +377,6 @@ function schemasV3_0_X({
         category: 'schema',
         resource: 'definition',
         resourceId: name,
-        tool: 'json-schema',
       },
     });
     const obj = schemaToJsonSchemaDraft_05({
@@ -417,7 +415,6 @@ function schemasV3_1_X({
         category: 'schema',
         resource: 'definition',
         resourceId: name,
-        tool: 'json-schema',
       },
     });
     const obj = schemaToJsonSchema2020_12({

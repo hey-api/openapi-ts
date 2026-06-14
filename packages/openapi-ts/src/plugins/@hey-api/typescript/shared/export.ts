@@ -45,7 +45,6 @@ export function exportAst({
         resource: 'definition',
         resourceId: $ref,
         tags,
-        tool: 'typescript',
       },
       name,
       naming,

@@ -99,7 +99,6 @@ export function createQueryOptions({
         resource: 'operation',
         resourceId: operation.id,
         role: 'queryOptions',
-        tool: plugin.name,
       },
     },
   );

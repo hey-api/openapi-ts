@@ -57,7 +57,6 @@ export function createUseSetQueryData({
         resource: 'operation',
         resourceId: operation.id,
         role: 'useSetQueryData',
-        tool: plugin.name,
       },
     },
   );

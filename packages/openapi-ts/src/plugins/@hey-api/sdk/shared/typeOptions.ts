@@ -13,7 +13,6 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
     meta: {
       category: 'type',
       resource: 'client-options',
-      tool: 'sdk',
     },
   });
 

@@ -18,7 +18,7 @@ const operationToMethod = ({
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
-    tool: 'typescript',
+    tool: 'types',
   });
 
   if (symbolDataType) {
@@ -78,7 +78,7 @@ const operationToMethod = ({
     resource: 'operation',
     resourceId: operation.id,
     role: 'response',
-    tool: 'typescript',
+    tool: 'types',
   });
 
   if (symbolResponseType && responses) {

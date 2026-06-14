@@ -110,7 +110,6 @@ export const createClient: PluginHandler = ({ plugin }) => {
     kind: 'type',
     meta: {
       resource: 'client.Client',
-      tool: plugin.name,
     },
   });
   const statement = $.const(symbolClient)

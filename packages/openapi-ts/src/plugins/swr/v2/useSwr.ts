@@ -6,18 +6,17 @@ import type { TsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
 import type { SwrPlugin } from '../types';
 
-export const createUseSwr = ({
+export function createUseSwr({
   operation,
   plugin,
 }: {
   operation: IR.OperationObject;
   plugin: SwrPlugin['Instance'];
-}): void => {
+}): void {
   if (hasOperationSse({ operation })) {
     return;
   }
 
-  const symbolUseSwr = plugin.external('swr.useSWR');
   const symbolUseQueryFn = plugin.symbol(applyNaming(operation.id, plugin.config.useSwr));
 
   const awaitSdkFn = $.lazy((ctx) =>
@@ -45,7 +44,7 @@ export const createUseSwr = ({
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
       $.func().do(
-        $(symbolUseSwr)
+        $(plugin.symbols.useSWR)
           .call(
             $.literal(operation.path),
             $.func()
@@ -56,4 +55,4 @@ export const createUseSwr = ({
       ),
     );
   plugin.node(statement);
-};
+}

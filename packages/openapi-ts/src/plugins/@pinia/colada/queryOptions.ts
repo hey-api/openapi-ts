@@ -117,16 +117,14 @@ export const createQueryOptions = ({
         resource: 'operation',
         resourceId: operation.id,
         role: 'queryOptions',
-        tool: plugin.name,
       },
     },
   );
-  const symbolDefineQueryOptions = plugin.external(`${plugin.name}.defineQueryOptions`);
   const statement = $.const(symbolQueryOptionsFn)
     .export()
     .$if(plugin.config.comments && createOperationComment(operation), (c, v) => c.doc(v))
     .assign(
-      $(symbolDefineQueryOptions)
+      $(plugin.symbols.defineQueryOptions)
         .call(
           $.func()
             .param(optionsParamName, (p) => p.required(isRequiredOptions).type(typeData))

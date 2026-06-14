@@ -131,6 +131,11 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
   dependencies: ['@hey-api/sdk', '@hey-api/typescript'],
   handler,
   name: '@tanstack/preact-query',
+  symbolMeta() {
+    return {
+      tool: '@tanstack/preact-query',
+    };
+  },
   symbols: tanStackQuerySymbols,
 };
 

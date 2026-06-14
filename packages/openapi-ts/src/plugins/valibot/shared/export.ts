@@ -30,7 +30,6 @@ export function exportAst({
         category: 'schema',
         path,
         tags,
-        tool: 'valibot',
         ...meta,
       },
       name,

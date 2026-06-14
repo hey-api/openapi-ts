@@ -58,7 +58,6 @@ export function createSetQueryData({
       resource: 'operation',
       resourceId: operation.id,
       role: 'setQueryData',
-      tool: plugin.name,
     },
   });
 

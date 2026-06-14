@@ -2,6 +2,8 @@ import type { Casing, FeatureToggle, NameTransformer, NamingOptions } from '@hey
 import type { IR } from '@hey-api/shared';
 import type { DefinePlugin, Plugin } from '@hey-api/shared';
 
+import type { PiniaColadaSymbols } from './symbols';
+
 export type UserConfig = Plugin.Name<'@pinia/colada'> &
   Plugin.Hooks &
   Plugin.UserComments &
@@ -257,4 +259,4 @@ export type Config = Plugin.Name<'@pinia/colada'> &
       };
   };
 
-export type PiniaColadaPlugin = DefinePlugin<UserConfig, Config>;
+export type PiniaColadaPlugin = DefinePlugin<UserConfig, Config, never, PiniaColadaSymbols>;

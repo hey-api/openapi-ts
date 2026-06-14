@@ -102,7 +102,6 @@ export const handlerV1: HeyApiTypeScriptPlugin['Handler'] = ({ plugin }) => {
         meta: {
           category: 'type',
           resource: 'webhook',
-          tool: 'typescript',
           variant: 'container',
         },
         name: 'Webhooks',

@@ -15,6 +15,11 @@ export const defaultConfig: HeyApiClientNextPlugin['Config'] = {
   },
   handler: clientPluginHandler as unknown as HeyApiClientNextPlugin['Handler'],
   name: '@hey-api/client-next',
+  symbolMeta() {
+    return {
+      tool: 'client',
+    };
+  },
 };
 
 /**

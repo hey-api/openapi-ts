@@ -21,7 +21,6 @@ function createInfiniteParamsFunction({ plugin }: { plugin: PluginInstance }): v
       meta: {
         category: 'utility',
         resource: 'createInfiniteParams',
-        tool: plugin.name,
       },
     },
   );

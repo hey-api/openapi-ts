@@ -188,6 +188,11 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   dependencies: ['@hey-api/typescript'],
   handler,
   name: '@hey-api/sdk',
+  symbolMeta() {
+    return {
+      tool: 'sdk',
+    };
+  },
   symbols: sdkSymbols,
 };
 
