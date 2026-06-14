@@ -1,5 +1,11 @@
 # @hey-api/json-schema-ref-parser
 
+## 1.4.4
+
+### Patch Changes
+
+- **package**: remove `cjs` from files array ([`3b4ee7a`](https://github.com/hey-api/openapi-ts/commit/3b4ee7a5d3fd454aa8416ad1ed4a565119632be1)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 1.4.3
 
 ### Patch Changes

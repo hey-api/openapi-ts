@@ -1,5 +1,32 @@
 # @hey-api/shared
 
+## 0.5.0
+
+### Minor Changes
+
+- **parser**: improve discriminator handling ([`680b947`](https://github.com/hey-api/openapi-ts/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **utils**: remove `warnOnConflictingDuplicatePlugins` export ([`089ed2e`](https://github.com/hey-api/openapi-ts/commit/089ed2ed065ff92accb7d98cdeb95c66cf88f2f6)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- **config**: add Presets API ([`3b4ee7a`](https://github.com/hey-api/openapi-ts/commit/3b4ee7a5d3fd454aa8416ad1ed4a565119632be1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **utils**: export `deepMerge`, `resolvePlugins` methods, `PluginResolutionInput`, `PluginResolutionResult` types ([`089ed2e`](https://github.com/hey-api/openapi-ts/commit/089ed2ed065ff92accb7d98cdeb95c66cf88f2f6)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: add `outerOptional` option to `RequestSchemaContext` ([`11315c7`](https://github.com/hey-api/openapi-ts/commit/11315c763a6a8ba9f7b2396466bfaf5a9e257fee)) by [@mrlubos](https://github.com/mrlubos)
+
+- **symbol**: add implicit priority ([`7dbfe4e`](https://github.com/hey-api/openapi-ts/commit/7dbfe4e7d4a958389c63167c7dbbfa7254a787d1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **utils**: export discriminator utilities ([`680b947`](https://github.com/hey-api/openapi-ts/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: add `symbolMeta` field ([#4051](https://github.com/hey-api/openapi-ts/pull/4051)) ([`51818a7`](https://github.com/hey-api/openapi-ts/commit/51818a70af3a8d3641e2c7a958c5d23cab42f45a)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.4
+- @hey-api/codegen-core@0.9.1
+
 ## 0.4.8
 
 ### Patch Changes
