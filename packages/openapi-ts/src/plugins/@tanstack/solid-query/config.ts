@@ -91,7 +91,7 @@ export const defaultConfig: TanStackSolidQueryPlugin['Config'] = {
   name: '@tanstack/solid-query',
   symbolMeta() {
     return {
-      tool: '@tanstack/solid-query',
+      artifact: '@tanstack/solid-query',
     };
   },
 };

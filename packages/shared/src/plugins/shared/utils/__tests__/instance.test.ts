@@ -68,7 +68,7 @@ describe('PluginInstance.symbol', () => {
 
     expect(gen.symbols.register).toHaveBeenCalledWith(
       expect.objectContaining({
-        meta: expect.objectContaining({ category: 'type', pluginName: '@hey-api/test' }),
+        meta: expect.objectContaining({ category: 'type', plugin: '@hey-api/test' }),
         name: 'Foo',
       }),
     );
@@ -92,7 +92,7 @@ describe('PluginInstance.symbol', () => {
 
     expect(gen.symbols.register).toHaveBeenCalledWith(
       expect.objectContaining({
-        meta: expect.objectContaining({ pluginName: 'custom' }),
+        meta: expect.objectContaining({ plugin: 'custom' }),
       }),
     );
   });

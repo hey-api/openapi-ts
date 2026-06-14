@@ -238,10 +238,10 @@ export function createVisitor(
     },
     reference($ref, schema) {
       const query: SymbolMeta = {
+        artifact: 'zod',
         category: 'schema',
         resource: 'definition',
         resourceId: $ref,
-        tool: 'zod',
       };
 
       const refSymbol = plugin.referenceSymbol(query);

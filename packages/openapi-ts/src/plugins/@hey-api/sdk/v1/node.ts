@@ -48,10 +48,10 @@ function attachComment<T extends ReturnType<typeof $.var | typeof $.method>>(arg
 
 function createShellMeta(node: StructureNode): SymbolMeta {
   return {
+    artifact: 'sdk',
     category: 'utility',
     resource: 'class',
     resourceId: node.getPath().join('.'),
-    tool: 'sdk',
   };
 }
 
@@ -131,10 +131,10 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
         .$if(isInstance(plugin), (c) =>
           c.extends(
             plugin.referenceSymbol({
+              artifact: 'sdk',
               category: 'utility',
               resource: 'class',
               resourceId: 'HeyApiClient',
-              tool: 'sdk',
             }),
           ),
         )

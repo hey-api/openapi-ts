@@ -62,7 +62,7 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   name: '@hey-api/typescript',
   symbolMeta() {
     return {
-      tool: 'types',
+      artifact: 'types',
     };
   },
 };

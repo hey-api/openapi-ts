@@ -1,12 +1,12 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
+import { $ } from '../../../../ts-dsl';
 import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
-} from '../../../../plugins/shared/utils/operation';
-import { $ } from '../../../../ts-dsl';
+} from '../../../shared/utils/operation';
 import { useTypeData, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -27,11 +27,11 @@ export function createUseGetQueryData({
   });
 
   const symbolQueryOptionsFn = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'hook',
     resource: 'operation',
     resourceId: operation.id,
     role: 'queryOptions',
-    tool: plugin.name,
   });
 
   const typeData = useTypeData({ operation, plugin });

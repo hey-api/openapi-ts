@@ -14,7 +14,7 @@ export const defaultConfig: FastifyPlugin['Config'] = {
   name: 'fastify',
   symbolMeta() {
     return {
-      tool: 'fastify',
+      artifact: 'fastify',
     };
   },
 };

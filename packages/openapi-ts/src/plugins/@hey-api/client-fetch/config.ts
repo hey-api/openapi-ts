@@ -17,7 +17,7 @@ export const defaultConfig: HeyApiClientFetchPlugin['Config'] = {
   name: '@hey-api/client-fetch',
   symbolMeta() {
     return {
-      tool: 'client',
+      artifact: 'client',
     };
   },
 };

@@ -17,7 +17,7 @@ export const defaultConfig: HeyApiClientNextPlugin['Config'] = {
   name: '@hey-api/client-next',
   symbolMeta() {
     return {
-      tool: 'client',
+      artifact: 'client',
     };
   },
 };

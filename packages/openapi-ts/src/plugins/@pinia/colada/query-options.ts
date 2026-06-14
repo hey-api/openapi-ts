@@ -2,17 +2,17 @@ import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
-import { getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
+import { $ } from '../../../ts-dsl';
+import { getClientPlugin } from '../../@hey-api/client-core/utils';
 import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
-} from '../../../plugins/shared/utils/operation';
-import { $ } from '../../../ts-dsl';
+} from '../../shared/utils/operation';
 import { handleMeta } from './meta';
-import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from './queryKey';
+import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from './query-key';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeError, useTypeResponse } from './useType';
+import { useTypeError, useTypeResponse } from './use-type';
 import { getPublicTypeData } from './utils';
 
 const optionsParamName = 'options';
@@ -35,9 +35,9 @@ export const createQueryOptions = ({
   });
   if (
     !plugin.querySymbol({
+      artifact: '@pinia/colada',
       category: 'utility',
       resource: 'createQueryKey',
-      tool: plugin.name,
     })
   ) {
     createQueryKeyType({ plugin });
@@ -56,9 +56,9 @@ export const createQueryOptions = ({
     keyExpression = $(symbolQueryKey).call(optionsParamName);
   } else {
     const symbolCreateQueryKey = plugin.referenceSymbol({
+      artifact: '@pinia/colada',
       category: 'utility',
       resource: 'createQueryKey',
-      tool: plugin.name,
     });
     // Optionally include tags when configured
     let tagsExpr: ReturnType<typeof $.array> | undefined;

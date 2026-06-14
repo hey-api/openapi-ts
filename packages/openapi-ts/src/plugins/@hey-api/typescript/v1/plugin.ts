@@ -3,7 +3,7 @@ import type { IR } from '@hey-api/shared';
 import { buildSymbolIn, pathToJsonPointer } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
-import { createClientOptions } from '../shared/clientOptions';
+import { createClientOptions } from '../shared/client-options';
 import { operationToType } from '../shared/operation';
 import { webhookToType } from '../shared/webhook';
 import type { HeyApiTypeScriptPlugin } from '../types';

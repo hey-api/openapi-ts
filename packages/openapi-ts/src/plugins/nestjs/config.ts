@@ -12,7 +12,7 @@ export const defaultConfig: NestJsPlugin['Config'] = {
   name: 'nestjs',
   symbolMeta() {
     return {
-      tool: 'nestjs',
+      artifact: 'nestjs',
     };
   },
 };

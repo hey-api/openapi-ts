@@ -97,7 +97,7 @@ export const defaultConfig: ArktypePlugin['Config'] = {
   name: 'arktype',
   symbolMeta() {
     return {
-      tool: 'arktype',
+      artifact: 'arktype',
     };
   },
   tags: ['validator'],

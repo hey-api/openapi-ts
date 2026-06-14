@@ -3,8 +3,8 @@ import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
-import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
 import { $ } from '../../../ts-dsl';
+import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
 
@@ -23,9 +23,9 @@ export function createMutationKeyFunction({ plugin }: { plugin: PluginInstance }
     },
   );
   const symbolMutationKeyType = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'type',
     resource: 'MutationKey',
-    tool: plugin.name,
   });
 
   const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
@@ -35,9 +35,9 @@ export function createMutationKeyFunction({ plugin }: { plugin: PluginInstance }
   });
 
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
 
   const returnType = $.type(symbolMutationKeyType).generic(TOptionsType).idx(0);
@@ -105,9 +105,9 @@ function createMutationKeyLiteral({
     tagsArray = $.array().elements(...operation.tags);
   }
   const symbolCreateMutationKey = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'utility',
     resource: 'createMutationKey',
-    tool: plugin.name,
   });
   const createMutationKeyCallExpression = $(symbolCreateMutationKey).call(
     $.literal(id),
@@ -119,9 +119,9 @@ function createMutationKeyLiteral({
 
 export function createMutationKeyType({ plugin }: { plugin: PluginInstance }): void {
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
   const symbolMutationKeyType = plugin.symbol('MutationKey', {
     meta: {

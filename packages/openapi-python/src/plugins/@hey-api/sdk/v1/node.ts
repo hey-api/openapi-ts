@@ -34,10 +34,10 @@ function attachComment<T extends ReturnType<typeof $.method>>(args: {
 
 function createShellMeta(node: StructureNode): SymbolMeta {
   return {
+    artifact: 'sdk',
     category: 'utility',
     resource: 'class',
     resourceId: node.getPath().join('.'),
-    tool: 'sdk',
   };
 }
 

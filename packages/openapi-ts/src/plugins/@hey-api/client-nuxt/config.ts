@@ -14,7 +14,7 @@ export const defaultConfig: HeyApiClientNuxtPlugin['Config'] = {
   name: '@hey-api/client-nuxt',
   symbolMeta() {
     return {
-      tool: 'client',
+      artifact: 'client',
     };
   },
 };

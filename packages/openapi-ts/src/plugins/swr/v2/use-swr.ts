@@ -1,9 +1,9 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
-import { createOperationComment, hasOperationSse } from '../../../plugins/shared/utils/operation';
 import type { TsDsl } from '../../../ts-dsl';
 import { $ } from '../../../ts-dsl';
+import { createOperationComment, hasOperationSse } from '../../shared/utils/operation';
 import type { SwrPlugin } from '../types';
 
 export function createUseSwr({

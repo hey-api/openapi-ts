@@ -11,11 +11,11 @@ export function createRequestValidatorV2({
   plugin,
 }: RequestSchemaContext<ArktypePlugin['Instance']>): ArrowFunc | undefined {
   const symbol = plugin.querySymbol({
+    artifact: 'arktype',
     category: 'schema',
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
-    tool: 'arktype',
   });
   if (!symbol) return;
 
@@ -45,11 +45,11 @@ export function createResponseValidatorV2({
   plugin,
 }: ValidatorArgs): ArrowFunc | undefined {
   const symbol = plugin.querySymbol({
+    artifact: 'arktype',
     category: 'schema',
     resource: 'operation',
     resourceId: operation.id,
     role: 'responses',
-    tool: 'arktype',
   });
   if (!symbol) return;
 

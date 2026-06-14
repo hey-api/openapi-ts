@@ -14,7 +14,7 @@ type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
   headers: ReturnType<typeof mergeHeaders>;
 };
 
-export const createClient = (config: Config = {}): Client => {
+export function createClient(config: Config = {}): Client {
   let _config = mergeConfigs(createConfig(), config);
 
   const getConfig = (): Config => ({ ..._config });
@@ -176,4 +176,4 @@ export const createClient = (config: Config = {}): Client => {
     setConfig,
     trace: (options) => request({ ...options, method: 'TRACE' }),
   };
-};
+}

@@ -13,12 +13,12 @@ import type { FromRef, FromRefs, Ref, Refs } from './types';
  * const r2 = ref(r); // { '~ref': 123 } (not double-wrapped)
  * ```
  */
-export const ref = <T>(value: T): Ref<T> => {
+export function ref<T>(value: T): Ref<T> {
   if (isRef(value)) {
     return value as Ref<T>;
   }
   return { '~ref': value } as Ref<T>;
-};
+}
 
 /**
  * Converts a plain object to an object of Refs (deep, per property).
@@ -29,7 +29,7 @@ export const ref = <T>(value: T): Ref<T> => {
  * const refs = refs(obj); // { a: { '~ref': 1 }, b: { '~ref': "x" } }
  * ```
  */
-export const refs = <T extends Record<string, unknown>>(obj: T): Refs<T> => {
+export function refs<T extends Record<string, unknown>>(obj: T): Refs<T> {
   const result = {} as Refs<T>;
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -37,7 +37,7 @@ export const refs = <T extends Record<string, unknown>>(obj: T): Refs<T> => {
     }
   }
   return result;
-};
+}
 
 /**
  * Unwraps a single Ref object to its value.
@@ -49,8 +49,9 @@ export const refs = <T extends Record<string, unknown>>(obj: T): Refs<T> => {
  * console.log(n); // 42
  * ```
  */
-export const fromRef = <T extends Ref<unknown> | undefined>(ref: T): FromRef<T> =>
-  ref?.['~ref'] as FromRef<T>;
+export function fromRef<T extends Ref<unknown> | undefined>(ref: T): FromRef<T> {
+  return ref?.['~ref'] as FromRef<T>;
+}
 
 /**
  * Converts an object of Refs back to a plain object (unwraps all refs).
@@ -61,7 +62,7 @@ export const fromRef = <T extends Ref<unknown> | undefined>(ref: T): FromRef<T> 
  * const plain = fromRefs(refs); // { a: 1, b: "x" }
  * ```
  */
-export const fromRefs = <T extends Refs<Record<string, unknown>>>(obj: T): FromRefs<T> => {
+export function fromRefs<T extends Refs<Record<string, unknown>>>(obj: T): FromRefs<T> {
   const result = {} as FromRefs<T>;
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -69,7 +70,7 @@ export const fromRefs = <T extends Refs<Record<string, unknown>>>(obj: T): FromR
     }
   }
   return result;
-};
+}
 
 /**
  * Checks whether a value is a Ref object.
@@ -77,5 +78,6 @@ export const fromRefs = <T extends Refs<Record<string, unknown>>>(obj: T): FromR
  * @param value Value to check
  * @returns True if the value is a Ref object.
  */
-export const isRef = <T>(value: unknown): value is Ref<T> =>
-  typeof value === 'object' && value !== null && '~ref' in value;
+export function isRef<T>(value: unknown): value is Ref<T> {
+  return typeof value === 'object' && value !== null && '~ref' in value;
+}

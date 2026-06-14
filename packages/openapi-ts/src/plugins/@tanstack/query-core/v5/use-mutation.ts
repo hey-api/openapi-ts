@@ -1,8 +1,8 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
-import { createOperationComment } from '../../../../plugins/shared/utils/operation';
 import { $ } from '../../../../ts-dsl';
+import { createOperationComment } from '../../../shared/utils/operation';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
 
@@ -27,11 +27,11 @@ export function createUseMutation({
     .generic(typeData);
 
   const symbolMutationOptionsFn = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'hook',
     resource: 'operation',
     resourceId: operation.id,
     role: 'mutationOptions',
-    tool: plugin.name,
   });
 
   const func = $.func().param(mutationOptionsParamName, (p) =>

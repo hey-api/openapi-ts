@@ -1,2 +1,2 @@
-export const createRegistryClass = () => {};
-export const createClientClass = () => {};
+export function createRegistryClass() {}
+export function createClientClass() {}

@@ -4,7 +4,7 @@ import type { FileInfo } from '../types';
 import { ResolverError } from '../util/errors';
 import { resolve } from '../util/url';
 
-export const sendRequest = async ({
+export async function sendRequest({
   fetchOptions,
   redirects = [],
   timeout = 60_000,
@@ -17,7 +17,7 @@ export const sendRequest = async ({
 }): Promise<{
   fetchOptions?: RequestInit;
   response: Response;
-}> => {
+}> {
   url = new URL(url);
   redirects.push(url.href);
 
@@ -57,7 +57,7 @@ export const sendRequest = async ({
   }
 
   return { fetchOptions, response };
-};
+}
 
 export const urlResolver = {
   handler: async ({

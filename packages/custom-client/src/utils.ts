@@ -86,11 +86,11 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
   return url;
 };
 
-export const createQuerySerializer = <T = unknown>({
+export function createQuerySerializer<T = unknown>({
   allowReserved,
   array,
   object,
-}: QuerySerializerOptions = {}) => {
+}: QuerySerializerOptions = {}) {
   const querySerializer = (queryParams: T) => {
     const search: string[] = [];
     if (queryParams && typeof queryParams === 'object') {
@@ -134,12 +134,12 @@ export const createQuerySerializer = <T = unknown>({
     return search.join('&');
   };
   return querySerializer;
-};
+}
 
 /**
  * Infers parseAs value from provided Content-Type header.
  */
-export const getParseAs = (contentType: string | null): Exclude<Config['parseAs'], 'auto'> => {
+export function getParseAs(contentType: string | null): Exclude<Config['parseAs'], 'auto'> {
   if (!contentType) {
     // If no Content-Type header is provided, the best we can do is return the raw response body,
     // which is effectively the same as the 'stream' option.
@@ -171,14 +171,14 @@ export const getParseAs = (contentType: string | null): Exclude<Config['parseAs'
   }
 
   return;
-};
+}
 
-const checkForExistence = (
+function checkForExistence(
   options: Pick<RequestOptions, 'auth' | 'query'> & {
     headers: Headers;
   },
   name?: string,
-): boolean => {
+): boolean {
   if (!name) {
     return false;
   }
@@ -190,13 +190,13 @@ const checkForExistence = (
     return true;
   }
   return false;
-};
+}
 
-export const setAuthParams = async (
+export async function setAuthParams(
   options: Pick<RequestOptions, 'auth' | 'query' | 'security'> & {
     headers: Headers;
   },
-) => {
+): Promise<void> {
   for (const auth of options.security ?? []) {
     if (checkForExistence(options, auth.name)) {
       continue;
@@ -226,7 +226,7 @@ export const setAuthParams = async (
         break;
     }
   }
-};
+}
 
 export const buildUrl: Client['buildUrl'] = (options) => {
   const url = getUrl({
@@ -242,7 +242,7 @@ export const buildUrl: Client['buildUrl'] = (options) => {
   return url;
 };
 
-export const getUrl = ({
+export function getUrl({
   baseUrl,
   path,
   query,
@@ -254,7 +254,7 @@ export const getUrl = ({
   query?: Record<string, unknown>;
   querySerializer: QuerySerializer;
   url: string;
-}) => {
+}): string {
   const pathUrl = _url.startsWith('/') ? _url : `/${_url}`;
   let url = (baseUrl ?? '') + pathUrl;
   if (path) {
@@ -268,20 +268,18 @@ export const getUrl = ({
     url += `?${search}`;
   }
   return url;
-};
+}
 
-export const mergeConfigs = (a: Config, b: Config): Config => {
+export function mergeConfigs(a: Config, b: Config): Config {
   const config = { ...a, ...b };
   if (config.baseUrl?.endsWith('/')) {
     config.baseUrl = config.baseUrl.substring(0, config.baseUrl.length - 1);
   }
   config.headers = mergeHeaders(a.headers, b.headers);
   return config;
-};
+}
 
-export const mergeHeaders = (
-  ...headers: Array<Required<Config>['headers'] | undefined>
-): Headers => {
+export function mergeHeaders(...headers: Array<Required<Config>['headers'] | undefined>): Headers {
   const mergedHeaders = new Headers();
   for (const header of headers) {
     if (!header || typeof header !== 'object') {
@@ -308,7 +306,7 @@ export const mergeHeaders = (
     }
   }
   return mergedHeaders;
-};
+}
 
 type ErrInterceptor<Err, Res, Req, Options> = (
   error: Err,
@@ -372,16 +370,13 @@ export interface Middleware<Req, Res, Err, Options> {
   response: Interceptors<ResInterceptor<Res, Req, Options>>;
 }
 
-export const createInterceptors = <Req, Res, Err, Options>(): Middleware<
-  Req,
-  Res,
-  Err,
-  Options
-> => ({
-  error: new Interceptors<ErrInterceptor<Err, Res, Req, Options>>(),
-  request: new Interceptors<ReqInterceptor<Req, Options>>(),
-  response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
-});
+export function createInterceptors<Req, Res, Err, Options>(): Middleware<Req, Res, Err, Options> {
+  return {
+    error: new Interceptors<ErrInterceptor<Err, Res, Req, Options>>(),
+    request: new Interceptors<ReqInterceptor<Req, Options>>(),
+    response: new Interceptors<ResInterceptor<Res, Req, Options>>(),
+  };
+}
 
 const defaultQuerySerializer = createQuerySerializer({
   allowReserved: false,
@@ -399,12 +394,14 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-export const createConfig = <T extends ClientOptions = ClientOptions>(
+export function createConfig<T extends ClientOptions = ClientOptions>(
   override: Config<Omit<ClientOptions, keyof T> & T> = {},
-): Config<Omit<ClientOptions, keyof T> & T> => ({
-  ...jsonBodySerializer,
-  headers: defaultHeaders,
-  parseAs: 'auto',
-  querySerializer: defaultQuerySerializer,
-  ...override,
-});
+): Config<Omit<ClientOptions, keyof T> & T> {
+  return {
+    ...jsonBodySerializer,
+    headers: defaultHeaders,
+    parseAs: 'auto',
+    querySerializer: defaultQuerySerializer,
+    ...override,
+  };
+}

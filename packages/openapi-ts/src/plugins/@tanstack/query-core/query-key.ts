@@ -3,8 +3,8 @@ import type { IR } from '@hey-api/shared';
 import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
-import { getClientBaseUrlKey } from '../../../plugins/@hey-api/client-core/utils';
 import { $ } from '../../../ts-dsl';
+import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
 import { useTypeData } from './shared/useType';
 import type { PluginInstance } from './types';
 
@@ -23,9 +23,9 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
     },
   );
   const symbolQueryKeyType = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'type',
     resource: 'QueryKey',
-    tool: plugin.name,
   });
 
   const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
@@ -35,9 +35,9 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
   });
 
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
@@ -110,9 +110,9 @@ function createQueryKeyLiteral({
     tagsArray = $.array().elements(...operation.tags);
   }
   const symbolCreateQueryKey = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'utility',
     resource: 'createQueryKey',
-    tool: plugin.name,
   });
   const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
@@ -125,9 +125,9 @@ function createQueryKeyLiteral({
 
 export function createQueryKeyType({ plugin }: { plugin: PluginInstance }): void {
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
   const symbolQueryKeyType = plugin.symbol('QueryKey', {
     meta: {

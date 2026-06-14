@@ -76,7 +76,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
   name: '@hey-api/python-sdk',
   symbolMeta() {
     return {
-      tool: 'sdk',
+      artifact: 'sdk',
     };
   },
 };

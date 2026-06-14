@@ -2,7 +2,7 @@ import { StructureModel } from '@hey-api/codegen-core';
 
 import type { $ } from '../../../../ts-dsl';
 import { resolveStrategy } from '../operations';
-import { createTypeOptions } from '../shared/typeOptions';
+import { createTypeOptions } from '../shared/type-options';
 import type { HeyApiSdkPlugin } from '../types';
 import type { OperationItem } from './node';
 import { createShell, source, toNode } from './node';

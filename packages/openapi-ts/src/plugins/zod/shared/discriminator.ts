@@ -38,10 +38,10 @@ export function shouldFallBackToUnion({
     }
 
     const query: SymbolMeta = {
+      artifact: 'zod',
       category: 'schema',
       resource: 'definition',
       resourceId: ref,
-      tool: 'zod',
     };
     if ((plugin.querySymbol(query)?.meta as unknown as ZodMeta)?.isIntersection) {
       if (!(resolved?.logicalOperator === 'and' && resolved.items?.length === 1)) {

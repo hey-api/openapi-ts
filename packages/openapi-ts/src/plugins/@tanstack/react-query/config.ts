@@ -134,7 +134,7 @@ export const defaultConfig: TanStackReactQueryPlugin['Config'] = {
   name: '@tanstack/react-query',
   symbolMeta() {
     return {
-      tool: '@tanstack/react-query',
+      artifact: '@tanstack/react-query',
     };
   },
 };
