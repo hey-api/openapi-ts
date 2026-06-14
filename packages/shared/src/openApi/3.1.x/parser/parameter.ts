@@ -162,6 +162,7 @@ const parameterToIrParameter = ({
     target: irParameter,
   });
 
+  console.log(irParameter);
   return irParameter;
 };
 
