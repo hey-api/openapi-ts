@@ -1,8 +1,8 @@
 import { buildSymbolIn, pathToName } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
 
-import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
 import { $ } from '../../../../ts-dsl';
+import { createSchemaComment } from '../../../shared/utils/schema';
 import { exportEnumAst } from './enum';
 import type { ProcessorContext } from './processor';
 import type { TypeScriptFinal } from './types';

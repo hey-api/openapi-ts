@@ -25,6 +25,7 @@ export const useTypeError = ({
   plugin: PiniaColadaPlugin['Instance'];
 }): ReturnType<typeof $.type> => {
   const client = getClientPlugin(getTypedConfig(plugin));
+  // TODO: contract (?)
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
@@ -46,6 +47,7 @@ export const useTypeResponse = ({
   operation: IR.OperationObject;
   plugin: PiniaColadaPlugin['Instance'];
 }): ReturnType<typeof $.type> => {
+  // TODO: contract (?)
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',

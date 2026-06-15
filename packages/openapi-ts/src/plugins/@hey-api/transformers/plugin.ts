@@ -56,6 +56,7 @@ function processSchemaType({
       resourceId: schema.$ref,
     };
     const symbol =
+      // TODO: contract (self)
       plugin.querySymbol(query) ??
       plugin.symbol(
         applyNaming(refToName(schema.$ref), {
@@ -98,6 +99,7 @@ function processSchemaType({
     // symbol is currently being built (recursive reference) — in the
     // latter case we allow emitting a call that will be implemented later.
     if (symbol.node || buildingSymbols.has(symbol.id)) {
+      // TODO: contract (self)
       const ref = plugin.referenceSymbol(query);
       const callExpression = $(ref).call(dataExpression);
 
@@ -336,6 +338,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
         return;
       }
 
+      // TODO: contract (?)
       const symbolResponse = plugin.querySymbol({
         category: 'type',
         resource: 'operation',

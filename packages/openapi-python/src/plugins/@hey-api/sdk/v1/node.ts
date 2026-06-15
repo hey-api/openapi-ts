@@ -62,6 +62,7 @@ function childToNode(
   resource: StructureNode,
   plugin: HeyApiSdkPlugin['Instance'],
 ): ReadonlyArray<ReturnType<typeof $.method>> {
+  // TODO: contract (self)
   const refChild = plugin.referenceSymbol(createShellMeta(resource));
   const memberNameStr = toCase(
     refChild.name,

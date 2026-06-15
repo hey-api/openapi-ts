@@ -77,7 +77,7 @@ function baseNode(ctx: EnumResolverContext): PydanticType {
       type: $$.constrainedType($(literal).slice(...values)),
     };
   }
-
+  // TODO: contract (self)
   const refSymbol = plugin.referenceSymbol({
     artifact: 'pydantic',
     category: 'schema',

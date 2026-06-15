@@ -2,8 +2,8 @@ import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { buildSymbolIn } from '@hey-api/shared';
 
-import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
 import { $ } from '../../../../ts-dsl';
+import { createSchemaComment } from '../../../shared/utils/schema';
 import type { HeyApiTypeScriptPlugin } from '../types';
 import { createProcessor } from '../v1/processor';
 

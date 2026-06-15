@@ -9,12 +9,12 @@ import type { IR } from '@hey-api/shared';
 import { applyNaming, toCase } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../../config/utils';
-import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
+import { $, ctx } from '../../../../ts-dsl';
+import { getClientPlugin } from '../../../@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '../../../../plugins/shared/utils/operation';
-import { $, ctx } from '../../../../ts-dsl';
+} from '../../../shared/utils/operation';
 import { createClientClass, createRegistryClass } from '../shared/class';
 import { nuxtTypeComposable, nuxtTypeDefault } from '../shared/constants';
 import { operationParameters, operationReturnType, operationStatements } from '../shared/operation';
@@ -76,6 +76,7 @@ function childToNode(
   resource: StructureNode,
   plugin: HeyApiSdkPlugin['Instance'],
 ): ReadonlyArray<ReturnType<typeof $.field | typeof $.getter>> {
+  // TODO: contract (self)
   const refChild = plugin.referenceSymbol(createShellMeta(resource));
   const memberNameStr = toCase(
     refChild.name,
@@ -98,6 +99,7 @@ function childToNode(
       ),
     ];
   }
+  // TODO: contract (self)
   if (plugin.isSymbolRegistered(refChild.id)) {
     return [$.field(memberName, (f) => f.static().assign($(refChild)))];
   }
@@ -130,6 +132,7 @@ export function createShell(plugin: HeyApiSdkPlugin['Instance']): StructureShell
         .export()
         .$if(isInstance(plugin), (c) =>
           c.extends(
+            // TODO: contract (self)
             plugin.referenceSymbol({
               artifact: 'sdk',
               category: 'utility',
@@ -190,6 +193,7 @@ function enrichRootClass(args: {
       symbol: symbolRegistry,
     }),
   );
+  // TODO: contract (?)
   const isClientRequired = !plugin.config.client || !plugin.querySymbol({ category: 'client' });
   const registry = plugin.symbol('__registry');
   node.toAccessNode = (node, options) => {
@@ -289,6 +293,7 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
           )
           .generic(nuxtTypeDefault, (t) =>
             t.$if(
+              // TODO: contract (?)
               plugin.querySymbol({
                 category: 'type',
                 resource: 'operation',

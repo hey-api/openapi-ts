@@ -1,6 +1,6 @@
 import { definePluginConfig } from '@hey-api/shared';
 
-import { handler } from '../../../plugins/@tanstack/query-core/plugin';
+import { handler } from '../../@tanstack/query-core/plugin';
 import { tanStackQueryImports } from '../query-core/imports';
 import type { TanStackPreactQueryPlugin } from './types';
 

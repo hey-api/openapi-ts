@@ -82,7 +82,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
 
   readonly isSymbolRegistered: SymbolFactory['isRegistered'];
   readonly querySymbol: SymbolFactory['query'];
-  readonly querySymbols: SymbolFactory['queryAll'];
   readonly referenceSymbol: SymbolFactory['reference'];
 
   constructor(
@@ -115,7 +114,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     });
     this.isSymbolRegistered = this.symbolFactory.isRegistered.bind(this.symbolFactory);
     this.querySymbol = this.symbolFactory.query.bind(this.symbolFactory);
-    this.querySymbols = this.symbolFactory.queryAll.bind(this.symbolFactory);
     this.referenceSymbol = this.symbolFactory.reference.bind(this.symbolFactory);
     // imports must be initialized last — the function calls this.symbol() which
     // requires this.name, this.gen, this.context, and this.eventHooks to be set.
@@ -382,6 +380,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     });
   }
 
+  // TODO: add ability to inject custom imports, then remove
   /**
    * Registers a symbol only if it does not already exist based on the provided
    * name and metadata. This prevents duplicate symbols from being created in
@@ -391,7 +390,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     // `.symbol()` will handle the external symbol deduplication
     if (symbol.external) return this.symbol(name, symbol);
     if (symbol.meta) {
-      const existing = this.querySymbols(symbol.meta).find((s) => s.name === name);
+      const existing = this.symbolFactory.queryAll(symbol.meta).find((s) => s.name === name);
       if (existing) return existing;
     }
     return this.symbol(name, symbol);

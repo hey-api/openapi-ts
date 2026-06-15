@@ -29,6 +29,7 @@ function schemaToPythonType(
   plugin: HeyApiSdkPlugin['Instance'],
 ): ReturnType<typeof $.expr | typeof $.subscript> | Symbol {
   if (schema.$ref) {
+    // TODO: contract (?)
     return plugin.referenceSymbol({
       category: 'schema',
       resourceId: schema.$ref,

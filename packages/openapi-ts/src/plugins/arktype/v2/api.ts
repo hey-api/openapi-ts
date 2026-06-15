@@ -10,6 +10,7 @@ export function createRequestValidatorV2({
   operation,
   plugin,
 }: RequestSchemaContext<ArktypePlugin['Instance']>): ArrowFunc | undefined {
+  // TODO: contract (self)
   const symbol = plugin.querySymbol({
     artifact: 'arktype',
     category: 'schema',
@@ -44,6 +45,7 @@ export function createResponseValidatorV2({
   operation,
   plugin,
 }: ValidatorArgs): ArrowFunc | undefined {
+  // TODO: contract (self)
   const symbol = plugin.querySymbol({
     artifact: 'arktype',
     category: 'schema',

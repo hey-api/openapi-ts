@@ -157,8 +157,9 @@ export function createVisitor(
         resource: 'definition',
         resourceId: $ref,
       };
-
+      // TODO: contract (self)
       const refSymbol = plugin.referenceSymbol(query);
+      // TODO: contract (self)
       const isRegistered = plugin.isSymbolRegistered(query);
       const type = $.constrainedType(refSymbol);
 

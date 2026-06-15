@@ -3,7 +3,7 @@ import { applyNaming } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { createOperationComment } from '../../../shared/utils/operation';
-import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
+import { useTypeData, useTypeError, useTypeResponse } from '../shared/use-type';
 import type { PluginInstance } from '../types';
 
 const mutationOptionsParamName = 'mutationOptions';
@@ -25,7 +25,7 @@ export function createUseMutation({
     .generic(useTypeResponse({ operation, plugin }))
     .generic(useTypeError({ operation, plugin }))
     .generic(typeData);
-
+  // TODO: contract (self)
   const symbolMutationOptionsFn = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'hook',

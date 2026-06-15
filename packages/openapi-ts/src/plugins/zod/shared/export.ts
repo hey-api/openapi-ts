@@ -1,8 +1,8 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import { buildSymbolIn, pathToName } from '@hey-api/shared';
 
-import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../ts-dsl';
+import { createSchemaComment } from '../../shared/utils/schema';
 import { identifiers } from '../constants';
 import type { ProcessorContext } from './processor';
 import type { ZodFinal } from './types';

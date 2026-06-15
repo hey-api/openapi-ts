@@ -2,8 +2,8 @@ import type { SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { buildSymbolIn, toCase } from '@hey-api/shared';
 
-import { createSchemaComment } from '../../../../plugins/shared/utils/schema';
 import { $, regexp } from '../../../../ts-dsl';
+import { createSchemaComment } from '../../../shared/utils/schema';
 import type { HeyApiTypeScriptPlugin } from '../types';
 import type { TypeScriptFinal } from './types';
 

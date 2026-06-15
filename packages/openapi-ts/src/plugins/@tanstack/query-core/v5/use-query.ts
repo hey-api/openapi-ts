@@ -7,7 +7,7 @@ import {
   hasOperationSse,
   isOperationOptionsRequired,
 } from '../../../shared/utils/operation';
-import { useTypeData } from '../shared/useType';
+import { useTypeData } from '../shared/use-type';
 import type { PluginInstance } from '../types';
 
 const optionsParamName = 'options';
@@ -30,7 +30,7 @@ export function createUseQuery({
     operation,
   });
   const typeData = useTypeData({ operation, plugin });
-
+  // TODO: contract (self)
   const symbolQueryOptionsFn = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'hook',

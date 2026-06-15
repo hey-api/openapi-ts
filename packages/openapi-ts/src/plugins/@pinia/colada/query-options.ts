@@ -34,6 +34,7 @@ export const createQueryOptions = ({
     operation,
   });
   if (
+    // TODO: contract (self)
     !plugin.querySymbol({
       artifact: '@pinia/colada',
       category: 'utility',
@@ -55,6 +56,7 @@ export const createQueryOptions = ({
     plugin.node(node);
     keyExpression = $(symbolQueryKey).call(optionsParamName);
   } else {
+    // TODO: contract (self)
     const symbolCreateQueryKey = plugin.referenceSymbol({
       artifact: '@pinia/colada',
       category: 'utility',
@@ -78,6 +80,7 @@ export const createQueryOptions = ({
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
+        // TODO: contract (cross)
         plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',

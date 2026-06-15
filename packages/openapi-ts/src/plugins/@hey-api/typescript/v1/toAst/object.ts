@@ -2,8 +2,8 @@ import { ref } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { deduplicateSchema } from '@hey-api/shared';
 
-import { createSchemaComment } from '../../../../../plugins/shared/utils/schema';
 import { $ } from '../../../../../ts-dsl';
+import { createSchemaComment } from '../../../../shared/utils/schema';
 import type { ObjectResolverContext } from '../../resolvers';
 import type { Type } from '../../shared/types';
 

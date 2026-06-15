@@ -9,7 +9,7 @@ import {
 } from '../../../shared/utils/operation';
 import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../query-key';
 import { handleMeta } from '../shared/meta';
-import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
+import { useTypeData, useTypeError, useTypeResponse } from '../shared/use-type';
 import type { PluginInstance } from '../types';
 
 function createInfiniteParamsFunction({ plugin }: { plugin: PluginInstance }): void {
@@ -112,6 +112,7 @@ export function createInfiniteQueryOptions({
   });
 
   if (
+    // TODO: contract (self)
     !plugin.querySymbol({
       artifact: plugin.name,
       category: 'utility',
@@ -123,6 +124,7 @@ export function createInfiniteQueryOptions({
   }
 
   if (
+    // TODO: contract (self)
     !plugin.querySymbol({
       artifact: plugin.name,
       category: 'utility',
@@ -134,7 +136,7 @@ export function createInfiniteQueryOptions({
 
   const typeData = useTypeData({ operation, plugin });
   const typeResponse = useTypeResponse({ operation, plugin });
-
+  // TODO: contract (self)
   const symbolQueryKeyType = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'type',
@@ -168,6 +170,7 @@ export function createInfiniteQueryOptions({
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
+        // TODO: contract (cross)
         plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',
@@ -183,7 +186,7 @@ export function createInfiniteQueryOptions({
       )
       .await(),
   );
-
+  // TODO: contract (self)
   const symbolCreateInfiniteParams = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'utility',

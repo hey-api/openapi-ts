@@ -26,7 +26,9 @@ export function createResponseTransformer({
     resourceId: operation.id,
     role: 'response',
   };
+  // TODO: contract (self)
   if (plugin.isSymbolRegistered(query)) {
+    // TODO: contract (self)
     const ref = plugin.referenceSymbol(query);
     return $(ref);
   }

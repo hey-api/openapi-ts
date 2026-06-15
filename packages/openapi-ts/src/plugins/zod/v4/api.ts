@@ -52,7 +52,7 @@ function compositeNode(ctx: RequestValidatorResolverContext): Chain | undefined 
   const defaultValues = getDefaultRequestValidatorLayers(ctx.operation);
   for (const key of requestValidatorLayers) {
     const layer = resolveValidatorLayer(ctx.layers, key, defaultValues);
-
+    // TODO: contract (self)
     const layerSchema = ctx.plugin.querySymbol({
       artifact: 'zod',
       category: 'schema',
@@ -213,6 +213,7 @@ export function createResponseValidatorV4({
   operation,
   plugin,
 }: ValidatorArgs): ArrowFunc | undefined {
+  // TODO: contract (self)
   const symbol = plugin.querySymbol({
     artifact: 'zod',
     category: 'schema',

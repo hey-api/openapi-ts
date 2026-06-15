@@ -7,7 +7,7 @@ import {
   hasOperationSse,
   isOperationOptionsRequired,
 } from '../../../shared/utils/operation';
-import { useTypeData, useTypeResponse } from '../shared/useType';
+import { useTypeData, useTypeResponse } from '../shared/use-type';
 import type { PluginInstance } from '../types';
 
 export function createGetQueryData({
@@ -27,6 +27,7 @@ export function createGetQueryData({
   // getQueryData reuses the queryOptions function to get the queryKey,
   // mirroring how setQueryData wraps queryOptions. This requires queryOptions
   // to also be enabled (referenceSymbol throws if it isn't).
+  // TODO: contract (self)
   const symbolQueryOptionsFn = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'hook',
@@ -34,7 +35,7 @@ export function createGetQueryData({
     resourceId: operation.id,
     role: 'queryOptions',
   });
-
+  // TODO: contract (self)
   const symbolQueryClient = plugin.referenceSymbol({
     resource: `${plugin.name}.QueryClient`,
   });

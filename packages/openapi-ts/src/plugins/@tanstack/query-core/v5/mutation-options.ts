@@ -11,7 +11,7 @@ import {
   mutationKeyStatement,
 } from '../mutation-key';
 import { handleMeta } from '../shared/meta';
-import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
+import { useTypeData, useTypeError, useTypeResponse } from '../shared/use-type';
 import type { PluginInstance } from '../types';
 
 export function createMutationOptions({
@@ -25,6 +25,7 @@ export function createMutationOptions({
 
   if (
     plugin.config.mutationKeys.enabled &&
+    // TODO: contract (self)
     !plugin.querySymbol({
       artifact: plugin.name,
       category: 'utility',
@@ -48,6 +49,7 @@ export function createMutationOptions({
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
+        // TODO: contract (cross)
         plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',

@@ -23,8 +23,9 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
       },
     },
   );
+  // TODO: contract (self)
   const symbolQueryKeyType = plugin.referenceSymbol({
-    artifact: plugin.name,
+    artifact: '@pinia/colada',
     category: 'type',
     resource: 'QueryKey',
   });
@@ -32,12 +33,13 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
 
   const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
-
+  // TODO: contract (cross)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
   });
+  // TODO: contract (?)
   const symbolClient = plugin.querySymbol({
     category: 'client',
   });
@@ -119,9 +121,9 @@ const createQueryKeyLiteral = ({
   if (config.tags && operation.tags && operation.tags.length) {
     tagsExpression = $.array(...operation.tags.map((tag) => $.literal(tag)));
   }
-
+  // TODO: contract (self)
   const symbolCreateQueryKey = plugin.referenceSymbol({
-    artifact: plugin.name,
+    artifact: '@pinia/colada',
     category: 'utility',
     resource: 'createQueryKey',
   });
@@ -134,6 +136,7 @@ const createQueryKeyLiteral = ({
 };
 
 export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
+  // TODO: contract (cross)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',

@@ -12,7 +12,7 @@ function operationToRouteHandler({
   plugin: FastifyPlugin['Instance'];
 }) {
   const type = $.type.object();
-
+  // TODO: contract (cross)
   const symbolDataType = plugin.querySymbol({
     artifact: 'types',
     category: 'type',
@@ -59,6 +59,7 @@ function operationToRouteHandler({
   const { errors, responses } = operationResponsesMap(operation);
 
   let errorsTypeReference: ReturnType<typeof $.type> | undefined;
+  // TODO: contract (?)
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
@@ -80,6 +81,7 @@ function operationToRouteHandler({
   }
 
   let responsesTypeReference: ReturnType<typeof $.type> | undefined = undefined;
+  // TODO: contract (?)
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
