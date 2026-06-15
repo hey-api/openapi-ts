@@ -57,14 +57,21 @@ function buildKeyMap(fields: FieldsConfig, map?: KeyMap): KeyMap {
 }
 
 interface Params {
-  body: unknown;
-  headers: Record<string, unknown>;
-  path: Record<string, unknown>;
-  query: Record<string, unknown>;
+  body?: unknown;
+  headers?: Record<string, unknown>;
+  path?: Record<string, unknown>;
+  query?: Record<string, unknown>;
 }
 
+// Strips constructed slots (headers/path/query) that ended up empty, so we
+// don't send an empty object the caller never populated. `body` is deliberately
+// excluded: unlike the other slots it is supplied by the caller, so an explicit
+// empty body (e.g. `{}`) is a real value and must be sent as-is.
 const stripEmptySlots = (params: Params) => {
   for (const [slot, value] of Object.entries(params)) {
+    if (slot === 'body') {
+      continue;
+    }
     if (value && typeof value === 'object' && !Object.keys(value).length) {
       delete params[slot as Slot];
     }
@@ -73,13 +80,25 @@ const stripEmptySlots = (params: Params) => {
 
 export function buildClientParams(args: ReadonlyArray<unknown>, fields: FieldsConfig): Params {
   const params: Params = {
-    body: Object.create(null),
     headers: Object.create(null),
     path: Object.create(null),
     query: Object.create(null),
   };
 
   const map = buildKeyMap(fields);
+
+  // Writes a single field into its slot. `body` has no placeholder and is
+  // created on first write, so a request without a body sends none, while an
+  // explicitly-provided body is preserved by `stripEmptySlots`. The null
+  // prototype guards against prototype pollution (GHSA-hhx9-57xq-r5rw).
+  const writeSlot = (slot: Slot, key: string, value: unknown): void => {
+    let record = params[slot] as Record<string, unknown> | undefined;
+    if (record === undefined) {
+      record = Object.create(null) as Record<string, unknown>;
+      params[slot] = record;
+    }
+    record[key] = value;
+  };
 
   let config: FieldsConfig[number] | undefined;
 
@@ -96,7 +115,7 @@ export function buildClientParams(args: ReadonlyArray<unknown>, fields: FieldsCo
       if (config.key) {
         const field = map.get(config.key)!;
         const name = field.map || config.key;
-        (params[field.in] as Record<string, unknown>)[name] = arg;
+        writeSlot(field.in, name, arg);
       } else {
         params.body = arg;
       }
@@ -106,17 +125,17 @@ export function buildClientParams(args: ReadonlyArray<unknown>, fields: FieldsCo
 
         if (field) {
           const name = field.map || key;
-          (params[field.in] as Record<string, unknown>)[name] = value;
+          writeSlot(field.in, name, value);
         } else {
           const extra = extraPrefixes.find(([prefix]) => key.startsWith(prefix));
 
           if (extra) {
             const [prefix, slot] = extra;
-            (params[slot] as Record<string, unknown>)[key.slice(prefix.length)] = value;
+            writeSlot(slot, key.slice(prefix.length), value);
           } else {
             for (const [slot, allowed] of Object.entries(config.allowExtra ?? {})) {
               if (allowed) {
-                (params[slot as Slot] as Record<string, unknown>)[key] = value;
+                writeSlot(slot as Slot, key, value);
                 break;
               }
             }
