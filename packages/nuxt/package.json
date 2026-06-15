@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "4.3.1",
-    "defu": "6.1.4",
+    "defu": "6.1.7",
     "mlly": "1.8.0"
   },
   "devDependencies": {
