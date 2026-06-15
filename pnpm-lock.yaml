@@ -117,8 +117,8 @@ importers:
         specifier: 0.6.1
         version: 0.6.1(msw@2.13.2(@types/node@24.13.2)(typescript@6.0.3))
       '@opencode-ai/sdk':
-        specifier: 1.16.2
-        version: 1.16.2
+        specifier: 1.17.3
+        version: 1.17.3
       '@orpc/contract':
         specifier: 1.14.5
         version: 1.14.5
@@ -5303,8 +5303,8 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@opencode-ai/sdk@1.16.2':
-    resolution: {integrity: sha512-Z/xZ7q79dYeE0afqIk/yFEcRNGEQFcE+H8ssYivUiy+xGZ1mGwT72jpaQZKBwPn3JH4sRCu4KA2lcktBQfcOjg==}
+  '@opencode-ai/sdk@1.17.3':
+    resolution: {integrity: sha512-oXrEjOuP3+J9pPNw3cmOnRma/xiVQ4WIIvGd6YkhPQgqqi2PnD/b1qfNY0AMead3QfNhKwKdDM4QFJdN2LpByg==}
 
   '@orpc/client@1.14.5':
     resolution: {integrity: sha512-7kDiGJDyiwdHUnWJGGY2/evUenfAjvw6skrfuIKX+ZNtNrJecNNl3ytURmWOoZbcNZ4bX/1NKViO8BrtPgY0KA==}
@@ -21438,7 +21438,7 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@opencode-ai/sdk@1.16.2':
+  '@opencode-ai/sdk@1.17.3':
     dependencies:
       cross-spawn: 7.0.6
 
