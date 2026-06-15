@@ -31,18 +31,18 @@ export function operationOptionsType({
 
   const symbolDataType = isDataAllowed
     ? plugin.querySymbol({
+        artifact: 'types',
         category: 'type',
         resource: 'operation',
         resourceId: operation.id,
         role: 'data',
-        tool: 'types',
       })
     : undefined;
 
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
 
   if (isNuxtClient) {

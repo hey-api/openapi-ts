@@ -91,7 +91,7 @@ export const defaultConfig: TanStackAngularQueryPlugin['Config'] = {
   name: '@tanstack/angular-query-experimental',
   symbolMeta() {
     return {
-      tool: '@tanstack/angular-query-experimental',
+      artifact: '@tanstack/angular-query-experimental',
     };
   },
 };

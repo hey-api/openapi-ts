@@ -14,11 +14,11 @@ function operationToRouteHandler({
   const type = $.type.object();
 
   const symbolDataType = plugin.querySymbol({
+    artifact: 'types',
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
-    tool: 'types',
   });
   if (symbolDataType) {
     if (operation.body) {

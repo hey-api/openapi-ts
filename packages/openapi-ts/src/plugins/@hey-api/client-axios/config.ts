@@ -17,7 +17,7 @@ export const defaultConfig: HeyApiClientAxiosPlugin['Config'] = {
   name: '@hey-api/client-axios',
   symbolMeta() {
     return {
-      tool: 'client',
+      artifact: 'client',
     };
   },
 };

@@ -49,10 +49,10 @@ function baseNode(ctx: UnionResolverContext): Chain {
     if (!shouldFallBackToUnion({ childResults, parentSchema, plugin, schemas })) {
       const unionMembers = discriminatedData.members.map((member) => {
         const query: SymbolMeta = {
+          artifact: 'zod',
           category: 'schema',
           resource: 'definition',
           resourceId: member.ref,
-          tool: 'zod',
         };
         const refExpr = $(plugin.referenceSymbol(query));
         return member.needsExtend

@@ -64,43 +64,45 @@ export interface $RefParserOptions {
   timeoutMs?: number;
 }
 
-export const getJsonSchemaRefParserDefaultOptions = (): $RefParserOptions => ({
-  /**
-   * Determines the types of JSON references that are allowed.
-   */
-  dereference: {
+export function getJsonSchemaRefParserDefaultOptions(): $RefParserOptions {
+  return {
     /**
-     * Dereference circular (recursive) JSON references?
-     * If false, then a {@link ReferenceError} will be thrown if a circular reference is found.
-     * If "ignore", then circular references will not be dereferenced.
-     *
-     * @type {boolean|string}
+     * Determines the types of JSON references that are allowed.
      */
-    circular: true,
+    dereference: {
+      /**
+       * Dereference circular (recursive) JSON references?
+       * If false, then a {@link ReferenceError} will be thrown if a circular reference is found.
+       * If "ignore", then circular references will not be dereferenced.
+       *
+       * @type {boolean|string}
+       */
+      circular: true,
+      /**
+       * A function, called for each path, which can return true to stop this path and all
+       * subpaths from being dereferenced further. This is useful in schemas where some
+       * subpaths contain literal $ref keys that should not be dereferenced.
+       *
+       * @type {function}
+       */
+      excludedPathMatcher: () => false,
+      // @ts-expect-error
+      referenceResolution: 'relative',
+    },
     /**
-     * A function, called for each path, which can return true to stop this path and all
-     * subpaths from being dereferenced further. This is useful in schemas where some
-     * subpaths contain literal $ref keys that should not be dereferenced.
+     * Determines how different types of files will be parsed.
      *
-     * @type {function}
+     * You can add additional parsers of your own, replace an existing one with
+     * your own implementation, or disable any parser by setting it to false.
      */
-    excludedPathMatcher: () => false,
-    // @ts-expect-error
-    referenceResolution: 'relative',
-  },
-  /**
-   * Determines how different types of files will be parsed.
-   *
-   * You can add additional parsers of your own, replace an existing one with
-   * your own implementation, or disable any parser by setting it to false.
-   */
-  parse: {
-    binary: { ...binaryParser },
-    json: { ...jsonParser },
-    text: { ...textParser },
-    yaml: { ...yamlParser },
-  },
-});
+    parse: {
+      binary: { ...binaryParser },
+      json: { ...jsonParser },
+      text: { ...textParser },
+      yaml: { ...yamlParser },
+    },
+  };
+}
 
 export type Options = $RefParserOptions;
 

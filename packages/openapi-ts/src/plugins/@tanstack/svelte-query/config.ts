@@ -91,7 +91,7 @@ export const defaultConfig: TanStackSvelteQueryPlugin['Config'] = {
   name: '@tanstack/svelte-query',
   symbolMeta() {
     return {
-      tool: '@tanstack/svelte-query',
+      artifact: '@tanstack/svelte-query',
     };
   },
 };

@@ -42,16 +42,16 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
     const typeidBase = parts.join('_');
 
     const typeidQuery: SymbolMeta = {
+      artifact: 'types',
       category: 'type',
       resource: 'type-id',
       resourceId: typeidBase,
-      tool: 'types',
     };
     if (!plugin.querySymbol(typeidQuery)) {
       const containerQuery: SymbolMeta = {
+        artifact: 'types',
         category: 'type',
         resource: 'type-id',
-        tool: 'types',
         variant: 'container',
       };
 

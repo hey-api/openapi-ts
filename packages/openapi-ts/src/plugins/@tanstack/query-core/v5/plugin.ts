@@ -1,13 +1,13 @@
 import type { PluginHandler } from '../types';
-import { createGetQueryData } from './getQueryData';
-import { createInfiniteQueryOptions } from './infiniteQueryOptions';
-import { createMutationOptions } from './mutationOptions';
-import { createQueryOptions } from './queryOptions';
-import { createSetQueryData } from './setQueryData';
-import { createUseGetQueryData } from './useGetQueryData';
-import { createUseMutation } from './useMutation';
-import { createUseQuery } from './useQuery';
-import { createUseSetQueryData } from './useSetQueryData';
+import { createGetQueryData } from './get-query-data';
+import { createInfiniteQueryOptions } from './infinite-query-options';
+import { createMutationOptions } from './mutation-options';
+import { createQueryOptions } from './query-options';
+import { createSetQueryData } from './set-query-data';
+import { createUseGetQueryData } from './use-get-query-data';
+import { createUseMutation } from './use-mutation';
+import { createUseQuery } from './use-query';
+import { createUseSetQueryData } from './use-set-query-data';
 
 export const handlerV5: PluginHandler = ({ plugin }) => {
   plugin.forEach(

@@ -36,41 +36,41 @@ function attachComment<T extends ReturnType<typeof $.var | typeof $.method>>(arg
 
 function createHttpRequestFnMeta(operation: IR.OperationObject): SymbolMeta {
   return {
+    artifact: '@angular/common',
     category: 'utility',
     resource: 'operation',
     resourceId: operation.id,
     role: 'request',
-    tool: '@angular/common',
   };
 }
 
 function createHttpRequestShellMeta(node: StructureNode): SymbolMeta {
   return {
+    artifact: '@angular/common',
     category: 'utility',
     resource: 'shell',
     resourceId: node.getPath().join('.'),
     role: 'request',
-    tool: '@angular/common',
   };
 }
 
 function createHttpResourceFnMeta(operation: IR.OperationObject): SymbolMeta {
   return {
+    artifact: '@angular/common',
     category: 'utility',
     resource: 'operation',
     resourceId: operation.id,
     role: 'resource',
-    tool: '@angular/common',
   };
 }
 
 function createHttpResourceShellMeta(node: StructureNode): SymbolMeta {
   return {
+    artifact: '@angular/common',
     category: 'utility',
     resource: 'shell',
     resourceId: node.getPath().join('.'),
     role: 'resource',
-    tool: '@angular/common',
   };
 }
 
@@ -203,16 +203,16 @@ function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.me
 
   const symbolClient = plugin.querySymbol({ category: 'client' });
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
   const symbolDataType = plugin.querySymbol({
+    artifact: 'types',
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
-    tool: 'types',
   });
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
@@ -263,16 +263,16 @@ function implementHttpResourceFn<T extends ReturnType<typeof $.func | typeof $.m
   });
 
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
   const symbolDataType = plugin.querySymbol({
+    artifact: 'types',
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
-    tool: 'types',
   });
   const symbolResponseType = plugin.querySymbol({
     category: 'type',

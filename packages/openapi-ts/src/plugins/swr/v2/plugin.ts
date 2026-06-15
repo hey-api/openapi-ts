@@ -1,5 +1,5 @@
 import type { SwrPlugin } from '../types';
-import { createUseSwr } from './useSwr';
+import { createUseSwr } from './use-swr';
 
 export const handlerV2: SwrPlugin['Handler'] = ({ plugin }) => {
   plugin.forEach(

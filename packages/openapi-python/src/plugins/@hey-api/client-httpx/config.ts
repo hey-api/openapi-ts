@@ -12,7 +12,7 @@ export const defaultConfig: HeyApiClientHttpxPlugin['Config'] = {
   name: '@hey-api/client-httpx',
   symbolMeta() {
     return {
-      tool: 'client',
+      artifact: 'client',
     };
   },
 };

@@ -326,7 +326,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
   name: 'zod',
   symbolMeta() {
     return {
-      tool: 'zod',
+      artifact: 'zod',
     };
   },
   tags: ['transformer', 'validator'],

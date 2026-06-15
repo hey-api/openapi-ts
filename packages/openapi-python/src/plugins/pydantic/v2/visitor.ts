@@ -152,10 +152,10 @@ export function createVisitor(
     },
     reference($ref, schema) {
       const query: SymbolMeta = {
+        artifact: 'pydantic',
         category: 'schema',
         resource: 'definition',
         resourceId: $ref,
-        tool: 'pydantic',
       };
 
       const refSymbol = plugin.referenceSymbol(query);

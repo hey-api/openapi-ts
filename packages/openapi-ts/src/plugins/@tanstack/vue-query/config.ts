@@ -91,7 +91,7 @@ export const defaultConfig: TanStackVueQueryPlugin['Config'] = {
   name: '@tanstack/vue-query',
   symbolMeta() {
     return {
-      tool: '@tanstack/vue-query',
+      artifact: '@tanstack/vue-query',
     };
   },
 };

@@ -45,9 +45,9 @@ function baseNode(ctx: EnumResolverContext): Chain {
   // skip this feature for now, requires knowing whether the enum contains safe values only, which requires special handling that we don't currently support
   // const def = ctx.plugin.querySymbol<ReturnType<typeof $.enum | typeof $.var>>(
   //   {
+  //     artifact: 'types',
   //     resource: 'definition', // maybe we shouldn't hardcode definition
   //     resourceId: pathToJsonPointer(fromRef(ctx.path)),
-  //     tool: 'types',
   //   },
   //   ['EnumTsDsl', 'VarTsDsl'],
   //   // skip const enums, not supported by Zod

@@ -1,6 +1,6 @@
 import { getTypedConfig } from '../../../../config/utils';
-import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
 import { $ } from '../../../../ts-dsl';
+import { getClientPlugin } from '../../client-core/utils';
 import type { HeyApiSdkPlugin } from '../types';
 import { isInstance } from '../v1/node';
 import { nuxtTypeDefault, nuxtTypeResponse } from './constants';

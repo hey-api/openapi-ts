@@ -17,7 +17,7 @@ export const defaultConfig: HeyApiClientKyPlugin['Config'] = {
   name: '@hey-api/client-ky',
   symbolMeta() {
     return {
-      tool: 'client',
+      artifact: 'client',
     };
   },
 };

@@ -29,7 +29,7 @@ export const defaultConfig: HeyApiTransformersPlugin['Config'] = {
   name: '@hey-api/transformers',
   symbolMeta() {
     return {
-      tool: 'transformers',
+      artifact: 'transformers',
     };
   },
   tags: ['transformer'],

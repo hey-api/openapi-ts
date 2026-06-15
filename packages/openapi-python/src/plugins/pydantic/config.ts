@@ -84,7 +84,7 @@ export const defaultConfig: PydanticPlugin['Config'] = {
   name: 'pydantic',
   symbolMeta() {
     return {
-      tool: 'pydantic',
+      artifact: 'pydantic',
     };
   },
   tags: ['validator'],

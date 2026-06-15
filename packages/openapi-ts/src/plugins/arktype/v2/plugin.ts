@@ -42,10 +42,10 @@ export function irSchemaToAst({
 
   if (schema.$ref) {
     const query: SymbolMeta = {
+      artifact: 'arktype',
       category: 'schema',
       resource: 'definition',
       resourceId: schema.$ref,
-      tool: 'arktype',
     };
     const refSymbol = plugin.referenceSymbol(query);
     if (plugin.isSymbolRegistered(query)) {

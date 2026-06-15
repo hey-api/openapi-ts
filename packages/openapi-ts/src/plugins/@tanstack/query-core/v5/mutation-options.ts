@@ -2,17 +2,14 @@ import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
-import {
-  createOperationComment,
-  hasOperationSse,
-} from '../../../../plugins/shared/utils/operation';
 import type { TsDsl } from '../../../../ts-dsl';
 import { $ } from '../../../../ts-dsl';
+import { createOperationComment, hasOperationSse } from '../../../shared/utils/operation';
 import {
   createMutationKeyFunction,
   createMutationKeyType,
   mutationKeyStatement,
-} from '../mutationKey';
+} from '../mutation-key';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -29,9 +26,9 @@ export function createMutationOptions({
   if (
     plugin.config.mutationKeys.enabled &&
     !plugin.querySymbol({
+      artifact: plugin.name,
       category: 'utility',
       resource: 'createMutationKey',
-      tool: plugin.name,
     })
   ) {
     createMutationKeyType({ plugin });

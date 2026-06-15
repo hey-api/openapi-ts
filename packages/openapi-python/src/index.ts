@@ -17,6 +17,7 @@ declare module '@hey-api/codegen-core' {
   }
 
   interface SymbolMeta {
+    artifact?: 'pydantic' | 'sdk' | AnyString;
     category?:
       | 'client'
       | 'external'
@@ -30,13 +31,12 @@ declare module '@hey-api/codegen-core' {
     /** Path to the resource this symbol represents. */
     path?: ReadonlyArray<string | number>;
     /** Name of the plugin that registered this symbol. */
-    pluginName?: string;
+    plugin?: string;
     resource?: 'client' | 'definition' | 'operation' | 'webhook' | AnyString;
     resourceId?: string;
     role?: 'data' | 'error' | 'errors' | 'options' | 'response' | 'responses' | AnyString;
     /** Tags associated with this symbol. */
     tags?: ReadonlyArray<string>;
-    tool?: 'pydantic' | 'sdk' | AnyString;
     variant?: 'container' | AnyString;
   }
 }

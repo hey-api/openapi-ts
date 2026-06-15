@@ -46,7 +46,7 @@ export const defaultConfig: PiniaColadaPlugin['Config'] = {
   name: '@pinia/colada',
   symbolMeta() {
     return {
-      tool: '@pinia/colada',
+      artifact: '@pinia/colada',
     };
   },
 };

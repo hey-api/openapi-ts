@@ -35,7 +35,7 @@ type KeyMap = Map<
   }
 >;
 
-const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
+function buildKeyMap(fields: FieldsConfig, map?: KeyMap): KeyMap {
   if (!map) {
     map = new Map();
   }
@@ -54,7 +54,7 @@ const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
   }
 
   return map;
-};
+}
 
 interface Params {
   body: unknown;
@@ -71,7 +71,7 @@ const stripEmptySlots = (params: Params) => {
   }
 };
 
-export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsConfig) => {
+export function buildClientParams(args: ReadonlyArray<unknown>, fields: FieldsConfig): Params {
   const params: Params = {
     body: Object.create(null),
     headers: Object.create(null),
@@ -129,4 +129,4 @@ export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsCo
   stripEmptySlots(params);
 
   return params;
-};
+}

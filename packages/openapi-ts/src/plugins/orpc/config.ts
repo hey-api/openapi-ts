@@ -88,7 +88,7 @@ export const defaultConfig: OrpcPlugin['Config'] = {
   name: 'orpc',
   symbolMeta() {
     return {
-      tool: 'orpc',
+      artifact: 'orpc',
     };
   },
 };

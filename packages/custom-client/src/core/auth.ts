@@ -17,10 +17,10 @@ export interface Auth {
   type: 'apiKey' | 'http';
 }
 
-export const getAuthToken = async (
+export async function getAuthToken(
   auth: Auth,
   callback: ((auth: Auth) => Promise<AuthToken> | AuthToken) | AuthToken,
-): Promise<string | undefined> => {
+): Promise<string | undefined> {
   const token = typeof callback === 'function' ? await callback(auth) : callback;
 
   if (!token) {
@@ -36,4 +36,4 @@ export const getAuthToken = async (
   }
 
   return token;
-};
+}

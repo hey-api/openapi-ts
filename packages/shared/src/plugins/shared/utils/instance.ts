@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import type { IProject, Node, Symbol, SymbolIn, SymbolMeta } from '@hey-api/codegen-core';
+import type { IProject, Node, Symbol, SymbolIn } from '@hey-api/codegen-core';
 
 import type { Dependency } from '../../../config/utils/dependencies';
 import { HeyApiError } from '../../../error';
@@ -25,22 +25,22 @@ import type { BaseEvent, WalkEvent } from '../types/instance';
 
 // TODO: abstract
 function defaultGetFilePath(symbol: Symbol): string | undefined {
-  if (!symbol.meta?.pluginName || typeof symbol.meta.pluginName !== 'string') {
+  if (!symbol.meta?.plugin || typeof symbol.meta.plugin !== 'string') {
     return;
   }
-  if (symbol.meta.pluginName.startsWith('@hey-api/client-')) {
+  if (symbol.meta.plugin.startsWith('@hey-api/client-')) {
     return 'client';
   }
-  if (symbol.meta.pluginName === '@hey-api/typescript') {
+  if (symbol.meta.plugin === '@hey-api/typescript') {
     return 'types';
   }
-  if (symbol.meta.pluginName === '@hey-api/python-sdk') {
+  if (symbol.meta.plugin === '@hey-api/python-sdk') {
     return 'sdk';
   }
-  if (symbol.meta.pluginName.startsWith('@hey-api/')) {
-    return symbol.meta.pluginName.split('/')[1];
+  if (symbol.meta.plugin.startsWith('@hey-api/')) {
+    return symbol.meta.plugin.split('/')[1];
   }
-  return symbol.meta.pluginName;
+  return symbol.meta.plugin;
 }
 
 const defaultGetKind: Required<Required<Hooks>['operations']>['getKind'] = (operation) => {
@@ -368,14 +368,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   symbol(name: SymbolIn['name'], symbol: Omit<SymbolIn, 'name'> = {}): Symbol<ResolvedNode> {
-    let meta: SymbolMeta = {};
-    if (!symbol.external && this.symbolMeta) {
-      meta = this.symbolMeta(symbol);
-    }
+    const meta = !symbol.external && this.symbolMeta ? this.symbolMeta(symbol) : {};
     Object.assign(meta, symbol.meta);
     if (!symbol.external) {
-      const pluginName = path.isAbsolute(this.name) ? 'custom' : this.name;
-      meta.pluginName = pluginName;
+      meta.plugin = path.isAbsolute(this.name) ? 'custom' : this.name;
     }
     return this.symbolFactory.register(name, {
       ...symbol,

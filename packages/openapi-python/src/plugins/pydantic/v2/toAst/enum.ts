@@ -79,10 +79,10 @@ function baseNode(ctx: EnumResolverContext): PydanticType {
   }
 
   const refSymbol = plugin.referenceSymbol({
+    artifact: 'pydantic',
     category: 'schema',
     resource: 'definition',
     resourceId: pathToJsonPointer(fromRef(ctx.path)),
-    tool: 'pydantic',
   });
 
   return {

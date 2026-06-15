@@ -134,7 +134,7 @@ export const defaultConfig: TanStackPreactQueryPlugin['Config'] = {
   name: '@tanstack/preact-query',
   symbolMeta() {
     return {
-      tool: '@tanstack/preact-query',
+      artifact: '@tanstack/preact-query',
     };
   },
 };

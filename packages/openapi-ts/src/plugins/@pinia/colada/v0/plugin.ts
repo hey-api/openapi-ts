@@ -1,5 +1,5 @@
-import { createMutationOptions } from '../mutationOptions';
-import { createQueryOptions } from '../queryOptions';
+import { createMutationOptions } from '../mutation-options';
+import { createQueryOptions } from '../query-options';
 import type { PiniaColadaPlugin } from '../types';
 
 export const handlerV0: PiniaColadaPlugin['Handler'] = ({ plugin }) => {

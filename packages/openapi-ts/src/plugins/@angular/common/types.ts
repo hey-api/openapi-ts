@@ -1,7 +1,7 @@
 import type { DefinePlugin, OperationsStrategy, Plugin } from '@hey-api/shared';
 
-import type { HttpRequestsConfig, UserHttpRequestsConfig } from './httpRequests';
-import type { HttpResourcesConfig, UserHttpResourcesConfig } from './httpResources';
+import type { HttpRequestsConfig, UserHttpRequestsConfig } from './http-requests';
+import type { HttpResourcesConfig, UserHttpResourcesConfig } from './http-resources';
 import type { AngularImports } from './imports';
 
 export type UserConfig = Plugin.Name<'@angular/common'> &

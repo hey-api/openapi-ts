@@ -1,14 +1,14 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
+import type { TsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import {
   createOperationComment,
   hasOperationSse,
   isOperationOptionsRequired,
-} from '../../../../plugins/shared/utils/operation';
-import type { TsDsl } from '../../../../ts-dsl';
-import { $ } from '../../../../ts-dsl';
-import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
+} from '../../../shared/utils/operation';
+import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../query-key';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -31,9 +31,9 @@ export function createQueryOptions({
 
   if (
     !plugin.querySymbol({
+      artifact: plugin.name,
       category: 'utility',
       resource: 'createQueryKey',
-      tool: plugin.name,
     })
   ) {
     createQueryKeyType({ plugin });

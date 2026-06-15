@@ -17,7 +17,7 @@ export const defaultConfig: HeyApiClientOfetchPlugin['Config'] = {
   name: '@hey-api/client-ofetch',
   symbolMeta() {
     return {
-      tool: 'client',
+      artifact: 'client',
     };
   },
 };

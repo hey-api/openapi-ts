@@ -14,11 +14,11 @@ const operationToMethod = ({
   const funcType = $.type.func();
 
   const symbolDataType = plugin.querySymbol({
+    artifact: 'types',
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'data',
-    tool: 'types',
   });
 
   if (symbolDataType) {
@@ -74,11 +74,11 @@ const operationToMethod = ({
   const { responses } = operationResponsesMap(operation);
 
   const symbolResponseType = plugin.querySymbol({
+    artifact: 'types',
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: 'response',
-    tool: 'types',
   });
 
   if (symbolResponseType && responses) {

@@ -2,12 +2,12 @@ import type { IR } from '@hey-api/shared';
 import { applyNaming } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
-import { getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
-import { createOperationComment } from '../../../plugins/shared/utils/operation';
 import { $ } from '../../../ts-dsl';
+import { getClientPlugin } from '../../@hey-api/client-core/utils';
+import { createOperationComment } from '../../shared/utils/operation';
 import { handleMeta } from './meta';
 import type { PiniaColadaPlugin } from './types';
-import { useTypeError, useTypeResponse } from './useType';
+import { useTypeError, useTypeResponse } from './use-type';
 import { getPublicTypeData } from './utils';
 
 export function createMutationOptions({

@@ -1,13 +1,13 @@
 import type { IR } from '@hey-api/shared';
 import { applyNaming, operationPagination } from '@hey-api/shared';
 
+import type { TsDsl } from '../../../../ts-dsl';
+import { $ } from '../../../../ts-dsl';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '../../../../plugins/shared/utils/operation';
-import type { TsDsl } from '../../../../ts-dsl';
-import { $ } from '../../../../ts-dsl';
-import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../queryKey';
+} from '../../../shared/utils/operation';
+import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../query-key';
 import { handleMeta } from '../shared/meta';
 import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
 import type { PluginInstance } from '../types';
@@ -113,9 +113,9 @@ export function createInfiniteQueryOptions({
 
   if (
     !plugin.querySymbol({
+      artifact: plugin.name,
       category: 'utility',
       resource: 'createQueryKey',
-      tool: plugin.name,
     })
   ) {
     createQueryKeyType({ plugin });
@@ -124,9 +124,9 @@ export function createInfiniteQueryOptions({
 
   if (
     !plugin.querySymbol({
+      artifact: plugin.name,
       category: 'utility',
       resource: 'createInfiniteParams',
-      tool: plugin.name,
     })
   ) {
     createInfiniteParamsFunction({ plugin });
@@ -136,9 +136,9 @@ export function createInfiniteQueryOptions({
   const typeResponse = useTypeResponse({ operation, plugin });
 
   const symbolQueryKeyType = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'type',
     resource: 'QueryKey',
-    tool: plugin.name,
   });
   const typeQueryKey = $.type(symbolQueryKeyType).generic(typeData);
   const typePageObjectParam = $.type('Pick').generics(
@@ -185,9 +185,9 @@ export function createInfiniteQueryOptions({
   );
 
   const symbolCreateInfiniteParams = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'utility',
     resource: 'createInfiniteParams',
-    tool: plugin.name,
   });
 
   const statements: Array<TsDsl<any>> = [

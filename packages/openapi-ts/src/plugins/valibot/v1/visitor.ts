@@ -252,10 +252,10 @@ export function createVisitor(
     },
     reference($ref, schema) {
       const query: SymbolMeta = {
+        artifact: 'valibot',
         category: 'schema',
         resource: 'definition',
         resourceId: $ref,
-        tool: 'valibot',
       };
 
       const refSymbol = plugin.referenceSymbol(query);

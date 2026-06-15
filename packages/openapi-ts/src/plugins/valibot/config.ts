@@ -86,7 +86,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
   name: 'valibot',
   symbolMeta() {
     return {
-      tool: 'valibot',
+      artifact: 'valibot',
     };
   },
   tags: ['transformer', 'validator'],

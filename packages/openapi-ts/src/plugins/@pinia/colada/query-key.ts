@@ -4,8 +4,8 @@ import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
 import { clientFolderAbsolutePath } from '../../../generate/client';
-import { getClientBaseUrlKey, getClientPlugin } from '../../../plugins/@hey-api/client-core/utils';
 import { $ } from '../../../ts-dsl';
+import { getClientBaseUrlKey, getClientPlugin } from '../../@hey-api/client-core/utils';
 import type { PiniaColadaPlugin } from './types';
 import { getPublicTypeData } from './utils';
 
@@ -24,9 +24,9 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
     },
   );
   const symbolQueryKeyType = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'type',
     resource: 'QueryKey',
-    tool: plugin.name,
   });
 
   const returnType = $.type(symbolQueryKeyType).generic(TOptionsType).idx(0);
@@ -34,9 +34,9 @@ export const createQueryKeyFunction = ({ plugin }: { plugin: PiniaColadaPlugin['
   const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
 
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
   const symbolClient = plugin.querySymbol({
     category: 'client',
@@ -121,9 +121,9 @@ const createQueryKeyLiteral = ({
   }
 
   const symbolCreateQueryKey = plugin.referenceSymbol({
+    artifact: plugin.name,
     category: 'utility',
     resource: 'createQueryKey',
-    tool: plugin.name,
   });
   const createQueryKeyCallExpression = $(symbolCreateQueryKey).call(
     $.literal(id),
@@ -135,9 +135,9 @@ const createQueryKeyLiteral = ({
 
 export const createQueryKeyType = ({ plugin }: { plugin: PiniaColadaPlugin['Instance'] }) => {
   const symbolOptions = plugin.referenceSymbol({
+    artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
-    tool: 'sdk',
   });
   const symbolQueryKeyType = plugin.symbol('QueryKey', {
     meta: {

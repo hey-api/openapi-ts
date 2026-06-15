@@ -79,7 +79,7 @@ export const defaultConfig: SwrPlugin['Config'] = {
   name: 'swr',
   symbolMeta() {
     return {
-      tool: 'swr',
+      artifact: 'swr',
     };
   },
 };

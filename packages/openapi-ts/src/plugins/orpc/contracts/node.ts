@@ -95,11 +95,11 @@ function createContractExpression(
   if (successResponse.hasOutput && plugin.config.validator.output) {
     expression = expression.attr('output').call(
       plugin.referenceSymbol({
+        artifact: plugin.config.validator.output,
         category: 'schema',
         resource: 'operation',
         resourceId: operation.id,
         role: 'responses',
-        tool: plugin.config.validator.output,
       }),
     );
   }

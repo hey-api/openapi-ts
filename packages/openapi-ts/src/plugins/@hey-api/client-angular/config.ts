@@ -17,7 +17,7 @@ export const defaultConfig: HeyApiClientAngularPlugin['Config'] = {
   name: '@hey-api/client-angular',
   symbolMeta() {
     return {
-      tool: 'client',
+      artifact: 'client',
     };
   },
 };
