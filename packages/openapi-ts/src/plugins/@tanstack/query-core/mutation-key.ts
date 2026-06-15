@@ -5,7 +5,7 @@ import { applyNaming } from '@hey-api/shared';
 import { getTypedConfig } from '../../../config/utils';
 import { $ } from '../../../ts-dsl';
 import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
-import { useTypeData } from './shared/useType';
+import { useTypeData } from './shared/use-type';
 import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
@@ -22,6 +22,7 @@ export function createMutationKeyFunction({ plugin }: { plugin: PluginInstance }
       },
     },
   );
+  // TODO: contract (self)
   const symbolMutationKeyType = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'type',
@@ -30,10 +31,11 @@ export function createMutationKeyFunction({ plugin }: { plugin: PluginInstance }
 
   const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
 
+  // TODO: contract (?)
   const symbolClient = plugin.querySymbol({
     category: 'client',
   });
-
+  // TODO: contract (cross)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',
@@ -104,6 +106,7 @@ function createMutationKeyLiteral({
   if (config.tags && operation.tags && operation.tags.length) {
     tagsArray = $.array().elements(...operation.tags);
   }
+  // TODO: contract (self)
   const symbolCreateMutationKey = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'utility',
@@ -118,6 +121,7 @@ function createMutationKeyLiteral({
 }
 
 export function createMutationKeyType({ plugin }: { plugin: PluginInstance }): void {
+  // TODO: contract (cross)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',

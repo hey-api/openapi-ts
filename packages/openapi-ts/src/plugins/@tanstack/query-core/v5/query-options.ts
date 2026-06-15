@@ -10,7 +10,7 @@ import {
 } from '../../../shared/utils/operation';
 import { createQueryKeyFunction, createQueryKeyType, queryKeyStatement } from '../query-key';
 import { handleMeta } from '../shared/meta';
-import { useTypeData, useTypeError, useTypeResponse } from '../shared/useType';
+import { useTypeData, useTypeError, useTypeResponse } from '../shared/use-type';
 import type { PluginInstance } from '../types';
 
 const optionsParamName = 'options';
@@ -30,6 +30,7 @@ export function createQueryOptions({
   });
 
   if (
+    // TODO: contract (self)
     !plugin.querySymbol({
       artifact: plugin.name,
       category: 'utility',
@@ -54,6 +55,7 @@ export function createQueryOptions({
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
+        // TODO: contract (cross)
         plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',

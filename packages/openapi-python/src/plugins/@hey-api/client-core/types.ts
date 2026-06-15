@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import type { Plugin } from '@hey-api/shared';
 
-import type { HeyApiClientHttpxPlugin } from '../../../plugins/@hey-api/client-httpx';
+import type { HeyApiClientHttpxPlugin } from '../client-httpx';
 
 export interface PluginHandler {
   (...args: Parameters<HeyApiClientHttpxPlugin['Handler']>): void;

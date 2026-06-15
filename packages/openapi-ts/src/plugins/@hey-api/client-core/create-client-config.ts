@@ -5,6 +5,7 @@ import type { PluginHandler } from './types';
 
 export function createClientConfigType({ plugin }: Parameters<PluginHandler>[0]): void {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
+  // TODO: contract (?)
   const symbolClientOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client',

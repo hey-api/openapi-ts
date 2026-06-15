@@ -1,8 +1,8 @@
 import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
-import { maybeBigInt, shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
-import { getIntegerLimit } from '../../../../plugins/shared/utils/formats';
 import { $ } from '../../../../ts-dsl';
+import { maybeBigInt, shouldCoerceToBigInt } from '../../../shared/utils/coerce';
+import { getIntegerLimit } from '../../../shared/utils/formats';
 import { identifiers } from '../../constants';
 import type { NumberResolverContext } from '../../resolvers';
 import type { Chain, ChainResult } from '../../shared/chain';

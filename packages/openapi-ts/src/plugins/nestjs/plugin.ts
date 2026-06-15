@@ -12,7 +12,7 @@ const operationToMethod = ({
   plugin: NestJsPlugin['Instance'];
 }) => {
   const funcType = $.type.func();
-
+  // TODO: contract (cross)
   const symbolDataType = plugin.querySymbol({
     artifact: 'types',
     category: 'type',
@@ -72,7 +72,7 @@ const operationToMethod = ({
   // status-code-indexed responses map. NestJS controllers return values
   // directly, not status-code mappings.
   const { responses } = operationResponsesMap(operation);
-
+  // TODO: contract (cross)
   const symbolResponseType = plugin.querySymbol({
     artifact: 'types',
     category: 'type',

@@ -11,9 +11,9 @@ import type {
 import type { MaybeArray } from '@hey-api/types';
 import type ts from 'typescript';
 
-import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../plugins/shared/utils/coerce';
-import type { GetIntegerLimit } from '../../plugins/shared/utils/formats';
 import type { $, DollarTsDsl, TsDsl } from '../../ts-dsl';
+import type { MaybeBigInt, ShouldCoerceToBigInt } from '../shared/utils/coerce';
+import type { GetIntegerLimit } from '../shared/utils/formats';
 import type { Chain, ChainResult } from './shared/chain';
 import type { ZodFinal, ZodResult } from './shared/types';
 import type { ZodPlugin } from './types';

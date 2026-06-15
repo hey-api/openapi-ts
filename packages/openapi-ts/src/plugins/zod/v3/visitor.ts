@@ -230,9 +230,10 @@ export function createVisitor(
         resource: 'definition',
         resourceId: $ref,
       };
-
+      // TODO: contract (self)
       const refSymbol = plugin.referenceSymbol(query);
 
+      // TODO: contract (self)
       if (plugin.isSymbolRegistered(query)) {
         return {
           chain: $(refSymbol),

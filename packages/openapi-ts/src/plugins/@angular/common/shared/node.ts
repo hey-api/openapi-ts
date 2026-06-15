@@ -9,12 +9,12 @@ import type { IR } from '@hey-api/shared';
 import { applyNaming, toCase } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../../config/utils';
-import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
+import { $ } from '../../../../ts-dsl';
+import { getClientPlugin } from '../../../@hey-api/client-core/utils';
 import {
   createOperationComment,
   isOperationOptionsRequired,
-} from '../../../../plugins/shared/utils/operation';
-import { $ } from '../../../../ts-dsl';
+} from '../../../shared/utils/operation';
 import type { AngularCommonPlugin } from '../types';
 
 export interface OperationItem {
@@ -100,6 +100,7 @@ function childToHttpRequestNode(
   resource: StructureNode,
   plugin: AngularCommonPlugin['Instance'],
 ): ReadonlyArray<ReturnType<typeof $.field | typeof $.getter>> {
+  // TODO: contract (self)
   const refChild = plugin.referenceSymbol(createHttpRequestShellMeta(resource));
   const memberNameStr = toCase(refChild.name, 'camelCase');
   const memberName = plugin.symbol(memberNameStr);
@@ -118,6 +119,7 @@ function childToHttpResourceNode(
   resource: StructureNode,
   plugin: AngularCommonPlugin['Instance'],
 ): ReadonlyArray<ReturnType<typeof $.field | typeof $.getter>> {
+  // TODO: contract (self)
   const refChild = plugin.referenceSymbol(createHttpResourceShellMeta(resource));
   const memberNameStr = toCase(refChild.name, 'camelCase');
   const memberName = plugin.symbol(memberNameStr);
@@ -201,12 +203,15 @@ function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.me
     operation,
   });
 
+  // TODO: contract (?)
   const symbolClient = plugin.querySymbol({ category: 'client' });
+  // TODO: contract (cross)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
   });
+  // TODO: contract (cross)
   const symbolDataType = plugin.querySymbol({
     artifact: 'types',
     category: 'type',
@@ -214,6 +219,7 @@ function implementHttpRequestFn<T extends ReturnType<typeof $.func | typeof $.me
     resourceId: operation.id,
     role: 'data',
   });
+  // TODO: contract (?)
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
@@ -262,11 +268,13 @@ function implementHttpResourceFn<T extends ReturnType<typeof $.func | typeof $.m
     operation,
   });
 
+  // TODO: contract (cross)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',
     resource: 'client-options',
   });
+  // TODO: contract (cross)
   const symbolDataType = plugin.querySymbol({
     artifact: 'types',
     category: 'type',
@@ -274,6 +282,7 @@ function implementHttpResourceFn<T extends ReturnType<typeof $.func | typeof $.m
     resourceId: operation.id,
     role: 'data',
   });
+  // TODO: contract (?)
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
@@ -308,6 +317,7 @@ function implementHttpResourceFn<T extends ReturnType<typeof $.func | typeof $.m
                   .do(
                     $.lazy((ctx) =>
                       ctx
+                        // TODO: contract (self)
                         .access(plugin.referenceSymbol(createHttpRequestFnMeta(operation)), {
                           transform: (node, index) =>
                             index === 0

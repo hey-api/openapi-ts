@@ -94,6 +94,7 @@ function createContractExpression(
 
   if (successResponse.hasOutput && plugin.config.validator.output) {
     expression = expression.attr('output').call(
+      // TODO: contract (cross)
       plugin.referenceSymbol({
         artifact: plugin.config.validator.output,
         category: 'schema',

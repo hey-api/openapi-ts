@@ -28,6 +28,7 @@ export function createMutationOptions({
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
+        // TODO: contract (?)
         plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',

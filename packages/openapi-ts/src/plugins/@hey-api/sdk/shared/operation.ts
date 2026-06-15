@@ -2,9 +2,9 @@ import type { IR } from '@hey-api/shared';
 import { statusCodeToGroup } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../../config/utils';
-import { getClientPlugin } from '../../../../plugins/@hey-api/client-core/utils';
-import { hasOperationSse } from '../../../../plugins/shared/utils/operation';
 import { $ } from '../../../../ts-dsl';
+import { getClientPlugin } from '../../../@hey-api/client-core/utils';
+import { hasOperationSse } from '../../../shared/utils/operation';
 import type { Field, Fields } from '../../client-core/bundle/params';
 import type { HeyApiSdkPlugin } from '../types';
 import { isInstance } from '../v1/node';
@@ -29,6 +29,7 @@ export function operationOptionsType({
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
+  // TODO: contract (cross)
   const symbolDataType = isDataAllowed
     ? plugin.querySymbol({
         artifact: 'types',
@@ -38,7 +39,7 @@ export function operationOptionsType({
         role: 'data',
       })
     : undefined;
-
+  // TODO: contract (self)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',
@@ -46,6 +47,7 @@ export function operationOptionsType({
   });
 
   if (isNuxtClient) {
+    // TODO: contract (?)
     const symbolResponseType = plugin.querySymbol({
       category: 'type',
       resource: 'operation',
@@ -62,6 +64,7 @@ export function operationOptionsType({
   const isSse = hasOperationSse({ operation });
 
   if (isSse) {
+    // TODO: contract (?)
     const symbolResponseType = plugin.querySymbol({
       category: 'type',
       resource: 'operation',
@@ -215,13 +218,14 @@ export function operationStatements({
   const client = getClientPlugin(getTypedConfig(plugin));
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
+  // TODO: contract (?)
   const symbolResponseType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
     resourceId: operation.id,
     role: isNuxtClient ? 'response' : 'responses',
   });
-
+  // TODO: contract (?)
   const symbolErrorType = plugin.querySymbol({
     category: 'type',
     resource: 'operation',
@@ -435,6 +439,7 @@ export function operationStatements({
     }
   }
 
+  // TODO: contract (?)
   const symbolClient = plugin.config.client
     ? plugin.querySymbol({
         category: 'client',
@@ -495,6 +500,7 @@ export function operationReturnType({
   const isNuxt = client.name === '@hey-api/client-nuxt';
   const isSse = hasOperationSse({ operation });
 
+  // TODO: contract (?)
   const queryType = (role: 'response' | 'responses' | 'error' | 'errors') =>
     plugin.querySymbol({
       category: 'type',

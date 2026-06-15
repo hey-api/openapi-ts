@@ -1,8 +1,8 @@
 import type { Symbol } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 
-import { createSchemaComment } from '../../../plugins/shared/utils/schema';
 import { $ } from '../../../ts-dsl';
+import { createSchemaComment } from '../../shared/utils/schema';
 import { identifiers } from '../constants';
 import type { ArktypePlugin } from '../types';
 import type { Ast } from './types';

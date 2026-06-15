@@ -5,7 +5,7 @@ import { applyNaming, hasOperationDataRequired } from '@hey-api/shared';
 import { getTypedConfig } from '../../../config/utils';
 import { $ } from '../../../ts-dsl';
 import { getClientBaseUrlKey } from '../../@hey-api/client-core/utils';
-import { useTypeData } from './shared/useType';
+import { useTypeData } from './shared/use-type';
 import type { PluginInstance } from './types';
 
 const TOptionsType = 'TOptions';
@@ -22,6 +22,7 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
       },
     },
   );
+  // TODO: contract (self)
   const symbolQueryKeyType = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'type',
@@ -30,10 +31,11 @@ export function createQueryKeyFunction({ plugin }: { plugin: PluginInstance }): 
 
   const baseUrlKey = getClientBaseUrlKey(getTypedConfig(plugin));
 
+  // TODO: contract (?)
   const symbolClient = plugin.querySymbol({
     category: 'client',
   });
-
+  // TODO: contract (cross)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',
@@ -109,6 +111,7 @@ function createQueryKeyLiteral({
   if (config.tags && operation.tags && operation.tags.length) {
     tagsArray = $.array().elements(...operation.tags);
   }
+  // TODO: contract (self)
   const symbolCreateQueryKey = plugin.referenceSymbol({
     artifact: plugin.name,
     category: 'utility',
@@ -124,6 +127,7 @@ function createQueryKeyLiteral({
 }
 
 export function createQueryKeyType({ plugin }: { plugin: PluginInstance }): void {
+  // TODO: contract (cross)
   const symbolOptions = plugin.referenceSymbol({
     artifact: 'sdk',
     category: 'type',

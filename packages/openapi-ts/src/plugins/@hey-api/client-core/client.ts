@@ -57,6 +57,7 @@ export const createClient: PluginHandler = ({ plugin }) => {
   const symbolCreateConfig = plugin.symbol('createConfig', {
     external: clientModule,
   });
+  // TODO: contract (?)
   const symbolClientOptions = plugin.referenceSymbol({
     category: 'type',
     resource: 'client',

@@ -43,6 +43,7 @@ export function shouldFallBackToUnion({
       resource: 'definition',
       resourceId: ref,
     };
+    // TODO: contract (self)
     if ((plugin.querySymbol(query)?.meta as unknown as ZodMeta)?.isIntersection) {
       if (!(resolved?.logicalOperator === 'and' && resolved.items?.length === 1)) {
         return true;

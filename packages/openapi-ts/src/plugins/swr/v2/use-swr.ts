@@ -22,6 +22,7 @@ export function createUseSwr({
   const awaitSdkFn = $.lazy((ctx) =>
     ctx
       .access(
+        // TODO: contract (cross)
         plugin.referenceSymbol({
           category: 'sdk',
           resource: 'operation',

@@ -1,7 +1,7 @@
 import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 
-import { shouldCoerceToBigInt } from '../../../../plugins/shared/utils/coerce';
 import { $ } from '../../../../ts-dsl';
+import { shouldCoerceToBigInt } from '../../../shared/utils/coerce';
 import type { StringResolverContext } from '../../resolvers';
 import type { Pipe, PipeResult, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';

@@ -9,9 +9,9 @@ import type {
   Walker,
 } from '@hey-api/shared';
 
-import type { MaybeBigInt, ShouldCoerceToBigInt } from '../../plugins/shared/utils/coerce';
-import type { GetIntegerLimit } from '../../plugins/shared/utils/formats';
 import type { $, DollarTsDsl } from '../../ts-dsl';
+import type { MaybeBigInt, ShouldCoerceToBigInt } from '../shared/utils/coerce';
+import type { GetIntegerLimit } from '../shared/utils/formats';
 import type { Pipe, PipeResult, Pipes, PipesUtils } from './shared/pipes';
 import type { ValibotFinal, ValibotResult } from './shared/types';
 import type { ValibotPlugin } from './types';

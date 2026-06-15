@@ -1,8 +1,8 @@
 import type { Plugin, PluginConfigMap, PluginNames } from '@hey-api/shared';
 
-import { defaultConfig as heyApiClientHttpx } from '../plugins/@hey-api/client-httpx';
-import { defaultConfig as heyApiSdk } from '../plugins/@hey-api/sdk';
-import { defaultConfig as pydantic } from '../plugins/pydantic';
+import { defaultConfig as heyApiClientHttpx } from './@hey-api/client-httpx';
+import { defaultConfig as heyApiSdk } from './@hey-api/sdk';
+import { defaultConfig as pydantic } from './pydantic';
 
 /**
  * Default plugins used to generate artifacts if plugins aren't specified.

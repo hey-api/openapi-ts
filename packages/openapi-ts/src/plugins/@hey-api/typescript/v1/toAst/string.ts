@@ -47,6 +47,7 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
       resource: 'type-id',
       resourceId: typeidBase,
     };
+    // TODO: contract (self)
     if (!plugin.querySymbol(typeidQuery)) {
       const containerQuery: SymbolMeta = {
         artifact: 'types',
@@ -54,7 +55,7 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
         resource: 'type-id',
         variant: 'container',
       };
-
+      // TODO: contract (self)
       if (!plugin.querySymbol(containerQuery)) {
         const symbolTypeId = plugin.symbol('TypeID', {
           meta: containerQuery,
@@ -66,7 +67,7 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
           .type($.type.template().add($.type('T')).add('_').add($.type('string')));
         plugin.node(nodeTypeId);
       }
-
+      // TODO: contract (self)
       const refSymbol = plugin.referenceSymbol(containerQuery);
       const symbolTypeName = plugin.symbol(toCase(`${typeidBase}_id`, plugin.config.case), {
         meta: typeidQuery,
@@ -77,6 +78,7 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
         .type($.type(refSymbol).generic($.type.literal(typeidBase)));
       plugin.node(node);
     }
+    // TODO: contract (self)
     return $.type(plugin.referenceSymbol(typeidQuery));
   }
 }

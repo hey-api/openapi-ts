@@ -47,7 +47,9 @@ export function irSchemaToAst({
       resource: 'definition',
       resourceId: schema.$ref,
     };
+    // TODO: contract (self)
     const refSymbol = plugin.referenceSymbol(query);
+    // TODO: contract (self)
     if (plugin.isSymbolRegistered(query)) {
       const ref = $(refSymbol);
       ast.expression = ref;

@@ -54,6 +54,7 @@ function baseNode(ctx: UnionResolverContext): Chain {
           resource: 'definition',
           resourceId: member.ref,
         };
+        // TODO: contract (self)
         const refExpr = $(plugin.referenceSymbol(query));
         return member.needsExtend
           ? refExpr

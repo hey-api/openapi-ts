@@ -154,6 +154,7 @@ export function createVisitor(
       return result;
     },
     reference($ref, schema) {
+      // TODO: contract (?)
       const symbol = plugin.referenceSymbol({
         category: 'type',
         resource: 'definition',
