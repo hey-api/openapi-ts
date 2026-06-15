@@ -1268,8 +1268,8 @@ importers:
         specifier: 4.61.1
         version: 4.61.1
       rollup-plugin-dts:
-        specifier: 6.1.1
-        version: 6.1.1(rollup@4.61.1)(typescript@6.0.3)
+        specifier: 6.4.1
+        version: 6.4.1(rollup@4.61.1)(typescript@6.0.3)
 
   packages/json-schema-ref-parser:
     dependencies:
@@ -14677,6 +14677,13 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: ^4.5 || ^5.0
 
+  rollup-plugin-dts@6.4.1:
+    resolution: {integrity: sha512-l//F3Zf7ID5GoOfLfD8kroBjQKEKpy1qfhtAdnpibFZMffPaylrg1CoDC2vGkPeTeyxUe4bVFCln2EFuL7IGGg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      rollup: ^3.29.4 || ^4
+      typescript: ^4.5 || ^5.0 || ^6.0
+
   rollup-plugin-visualizer@5.14.0:
     resolution: {integrity: sha512-VlDXneTDaKsHIw8yzJAFWtrzguoJ/LnQ+lMpoVfYJ3jJF4Ihe5oYLAqLklIK/35lgUY+1yEzCkHyZ1j4A5w5fA==}
     engines: {node: '>=18'}
@@ -21008,7 +21015,7 @@ snapshots:
       pathe: 1.1.2
       pkg-types: 1.3.1
       scule: 1.3.0
-      semver: 7.8.1
+      semver: 7.8.2
       ufo: 1.6.3
       unctx: 2.5.0
       unimport: 3.14.6(rollup@4.61.1)
@@ -33135,8 +33142,11 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.29.0
 
-  rollup-plugin-dts@6.1.1(rollup@4.61.1)(typescript@6.0.3):
+  rollup-plugin-dts@6.4.1(rollup@4.61.1)(typescript@6.0.3):
     dependencies:
+      '@jridgewell/remapping': 2.3.5
+      '@jridgewell/sourcemap-codec': 1.5.5
+      convert-source-map: 2.0.0
       magic-string: 0.30.21
       rollup: 4.61.1
       typescript: 6.0.3
