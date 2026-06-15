@@ -1,5 +1,6 @@
 import type {
   Casing,
+  CustomImports,
   DefinePlugin,
   FeatureToggle,
   IR,
@@ -1319,6 +1320,16 @@ export type UserConfig = Plugin.Name<'zod'> &
                 };
           };
         };
+    /**
+     * Custom external symbols to register and make available via
+     * `plugin.imports`.
+     *
+     * Each key becomes the symbol name, and the value defines how
+     * the symbol is imported (module, import kind, etc.).
+     *
+     * @default {}
+     */
+    '~imports'?: CustomImports;
   };
 
 export type Config = Plugin.Name<'zod'> &
@@ -1385,6 +1396,8 @@ export type Config = Plugin.Name<'zod'> &
     };
     /** Configuration for webhook-specific Zod schemas. */
     webhooks: NamingOptions & FeatureToggle & TypeOptions;
+    /** Custom external symbols registered via config and available on `plugin.imports`. */
+    '~imports': CustomImports;
   };
 
 export type ZodPlugin = DefinePlugin<UserConfig, Config, IApi, ZodImports>;

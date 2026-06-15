@@ -69,6 +69,10 @@ export type PluginImports = {
   [key: string]: Symbol | PluginImports;
 };
 
+export type UserImportDef = Omit<SymbolIn, 'name'>;
+
+export type CustomImports = Record<string, UserImportDef>;
+
 type BaseApi = Record<string, unknown>;
 
 type PluginBaseConfig = UserIndexExportOption & {

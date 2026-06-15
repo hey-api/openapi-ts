@@ -121,6 +121,7 @@ export { PluginInstance } from './plugins/shared/utils/instance';
 export { buildSymbolIn } from './plugins/symbol';
 export type {
   AnyPluginName,
+  CustomImports,
   DefinePlugin,
   Plugin,
   PluginConfigMap,
@@ -128,6 +129,7 @@ export type {
   PluginImports,
   PluginNames,
   PluginTag,
+  UserImportDef,
 } from './plugins/types';
 export type {
   DefaultRequestValidatorLayers,

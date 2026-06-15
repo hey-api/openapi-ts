@@ -320,6 +320,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
         },
       },
     },
+    '~imports': {},
   },
   handler,
   imports: zodImports,

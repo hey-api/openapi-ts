@@ -99,21 +99,23 @@ In this case, you'll want to use a third-party library to validate your values. 
 ```js title="openapi-ts.config.ts"
 {
   name: 'valibot',
+  '~imports': {
+    Big: {
+      external: 'big.js',
+      importKind: 'default',
+    },
+  },
   '~resolvers': {
     number(ctx) {
-      const { $, plugin, symbols } = ctx;
-      const { v } = symbols;
-      const big = plugin.symbolOnce('Big', {
-        external: 'big.js',
-        importKind: 'default',
-      });
-      return $(v).attr('instance').call(big);
+      const { $, plugin } = ctx;
+      const { v, Big } = plugin.imports;
+      return $(v).attr('instance').call(Big);
     }
   }
 }
 ```
 
-We're calling `plugin.symbolOnce()` to ensure we always use the same symbol reference.
+We're declaring the `Big` import in `~imports` and accessing it from `plugin.imports`. This replaces the previous `plugin.symbolOnce()` approach.
 
 <Tabs>
   <TabItem label="after">

@@ -80,6 +80,7 @@ export const defaultConfig: ValibotPlugin['Config'] = {
       enabled: true,
       name: 'v{{name}}WebhookRequest',
     },
+    '~imports': {},
   },
   handler,
   imports: valibotImports,

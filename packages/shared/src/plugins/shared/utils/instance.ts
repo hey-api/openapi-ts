@@ -380,22 +380,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     });
   }
 
-  // TODO: add ability to inject custom imports, then remove
-  /**
-   * Registers a symbol only if it does not already exist based on the provided
-   * name and metadata. This prevents duplicate symbols from being created in
-   * the project.
-   */
-  symbolOnce(name: SymbolIn['name'], symbol: Omit<SymbolIn, 'name'> = {}): Symbol {
-    // `.symbol()` will handle the external symbol deduplication
-    if (symbol.external) return this.symbol(name, symbol);
-    if (symbol.meta) {
-      const existing = this.symbolFactory.queryAll(symbol.meta).find((s) => s.name === name);
-      if (existing) return existing;
-    }
-    return this.symbol(name, symbol);
-  }
-
   private forEachError(error: unknown, event: WalkEvent) {
     const originalError = error instanceof Error ? error : new Error(String(error));
     throw new HeyApiError({
