@@ -5,7 +5,7 @@ import { type _JSONValue, defineQueryOptions, type UseMutationOptions } from '@p
 import { serializeQueryKeyValue } from '../client';
 import { client } from '../client.gen';
 import { callToTestOrderOfParams, callWithDefaultOptionalParameters, callWithDefaultParameters, callWithDescriptions, callWithDuplicateResponses, callWithNoContentResponse, callWithParameters, callWithResponse, callWithResponseAndNoContentResponse, callWithResponses, callWithResultFromHeader, callWithWeirdParameterNames, collectionFormat, complexTypes, deleteCallWithoutParametersAndResponse, dummyA, dummyB, duplicateName, duplicateName2, duplicateName3, duplicateName4, fooWow, getCallWithoutParametersAndResponse, nonAsciiæøåÆøÅöôêÊ字符串, type Options, patchApiVbyApiVersionNoTag, patchCallWithoutParametersAndResponse, postApiVbyApiVersionBody, postCallWithoutParametersAndResponse, putCallWithoutParametersAndResponse, serviceWithEmptyTag, testErrorCode, types } from '../sdk.gen';
-import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithNoContentResponseData, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseData, CallWithResponseResponse, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResultFromHeaderData, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, ComplexTypesResponse, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyBData, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, GetCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, PatchApiVbyApiVersionNoTagData, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TypesData, TypesResponse } from '../types.gen';
+import type { CallToTestOrderOfParamsData, CallWithDefaultOptionalParametersData, CallWithDefaultParametersData, CallWithDescriptionsData, CallWithDuplicateResponsesData, CallWithDuplicateResponsesError, CallWithDuplicateResponsesResponse, CallWithDuplicateResponsesResponses, CallWithNoContentResponseData, CallWithNoContentResponseResponses, CallWithParametersData, CallWithResponseAndNoContentResponseData, CallWithResponseAndNoContentResponseResponse, CallWithResponseAndNoContentResponseResponses, CallWithResponseData, CallWithResponseResponse, CallWithResponseResponses, CallWithResponsesData, CallWithResponsesError, CallWithResponsesResponse, CallWithResponsesResponses, CallWithResultFromHeaderData, CallWithResultFromHeaderResponses, CallWithWeirdParameterNamesData, CollectionFormatData, ComplexTypesData, ComplexTypesResponse, ComplexTypesResponses, DeleteCallWithoutParametersAndResponseData, DummyAData, DummyAResponses, DummyBData, DummyBResponses, DuplicateName2Data, DuplicateName3Data, DuplicateName4Data, DuplicateNameData, FooWowData, FooWowResponses, GetCallWithoutParametersAndResponseData, NonAsciiæøåÆøÅöôêÊ字符串Data, NonAsciiæøåÆøÅöôêÊ字符串Response, NonAsciiæøåÆøÅöôêÊ字符串Responses, PatchApiVbyApiVersionNoTagData, PatchApiVbyApiVersionNoTagResponses, PatchCallWithoutParametersAndResponseData, PostApiVbyApiVersionBodyData, PostApiVbyApiVersionBodyError, PostApiVbyApiVersionBodyResponse, PostApiVbyApiVersionBodyResponses, PostCallWithoutParametersAndResponseData, PutCallWithoutParametersAndResponseData, ServiceWithEmptyTagData, TestErrorCodeData, TestErrorCodeResponses, TypesData, TypesResponse, TypesResponses } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'path'> & {
@@ -42,9 +42,9 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const serviceWithEmptyTagQueryKey = (options?: Options<ServiceWithEmptyTagData>) => createQueryKey('serviceWithEmptyTag', options);
+export const serviceWithEmptyTagQueryKey = (options?: Options<ServiceWithEmptyTagData, boolean, unknown, TParseAs>) => createQueryKey('serviceWithEmptyTag', options);
 
-export const serviceWithEmptyTagQuery = defineQueryOptions<Options<ServiceWithEmptyTagData>, unknown, Error>((options?: Options<ServiceWithEmptyTagData>) => ({
+export const serviceWithEmptyTagQuery = defineQueryOptions<Options<ServiceWithEmptyTagData, boolean, unknown, TParseAs>, unknown, Error>((options?: Options<ServiceWithEmptyTagData, boolean, unknown, TParseAs>) => ({
     key: serviceWithEmptyTagQueryKey(options),
     query: async (context) => {
         const { data } = await serviceWithEmptyTag({
@@ -56,7 +56,7 @@ export const serviceWithEmptyTagQuery = defineQueryOptions<Options<ServiceWithEm
     }
 }));
 
-export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData>, Error> => ({
+export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<PatchApiVbyApiVersionNoTagData, boolean, PatchApiVbyApiVersionNoTagResponses, TParseAs>>): UseMutationOptions<unknown, Options<PatchApiVbyApiVersionNoTagData, boolean, PatchApiVbyApiVersionNoTagResponses, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await patchApiVbyApiVersionNoTag({
             ...options,
@@ -67,7 +67,7 @@ export const patchApiVbyApiVersionNoTagMutation = (options?: Partial<Options<Pat
     }
 });
 
-export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutationOptions<unknown, Options<FooWowData>, Error> => ({
+export const fooWowMutation = (options?: Partial<Options<FooWowData, boolean, FooWowResponses, TParseAs>>): UseMutationOptions<unknown, Options<FooWowData, boolean, FooWowResponses, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await fooWow({
             ...options,
@@ -78,7 +78,7 @@ export const fooWowMutation = (options?: Partial<Options<FooWowData>>): UseMutat
     }
 });
 
-export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<DeleteCallWithoutParametersAndResponseData>, Error> => ({
+export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial<Options<DeleteCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<DeleteCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await deleteCallWithoutParametersAndResponse({
             ...options,
@@ -89,9 +89,9 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
     }
 });
 
-export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => createQueryKey('getCallWithoutParametersAndResponse', options);
+export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>) => createQueryKey('getCallWithoutParametersAndResponse', options);
 
-export const getCallWithoutParametersAndResponseQuery = defineQueryOptions<Options<GetCallWithoutParametersAndResponseData>, unknown, Error>((options?: Options<GetCallWithoutParametersAndResponseData>) => ({
+export const getCallWithoutParametersAndResponseQuery = defineQueryOptions<Options<GetCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>, unknown, Error>((options?: Options<GetCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>) => ({
     key: getCallWithoutParametersAndResponseQueryKey(options),
     query: async (context) => {
         const { data } = await getCallWithoutParametersAndResponse({
@@ -103,7 +103,7 @@ export const getCallWithoutParametersAndResponseQuery = defineQueryOptions<Optio
     }
 }));
 
-export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PatchCallWithoutParametersAndResponseData>, Error> => ({
+export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PatchCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<PatchCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await patchCallWithoutParametersAndResponse({
             ...options,
@@ -114,7 +114,7 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<
     }
 });
 
-export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PostCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PostCallWithoutParametersAndResponseData>, Error> => ({
+export const postCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PostCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<PostCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await postCallWithoutParametersAndResponse({
             ...options,
@@ -125,7 +125,7 @@ export const postCallWithoutParametersAndResponseMutation = (options?: Partial<O
     }
 });
 
-export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PutCallWithoutParametersAndResponseData>>): UseMutationOptions<unknown, Options<PutCallWithoutParametersAndResponseData>, Error> => ({
+export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Options<PutCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<PutCallWithoutParametersAndResponseData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await putCallWithoutParametersAndResponse({
             ...options,
@@ -136,7 +136,7 @@ export const putCallWithoutParametersAndResponseMutation = (options?: Partial<Op
     }
 });
 
-export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData>>): UseMutationOptions<unknown, Options<CallWithDescriptionsData>, Error> => ({
+export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithDescriptionsData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<CallWithDescriptionsData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await callWithDescriptions({
             ...options,
@@ -147,7 +147,7 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
     }
 });
 
-export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData>>): UseMutationOptions<unknown, Options<CallWithParametersData>, Error> => ({
+export const callWithParametersMutation = (options?: Partial<Options<CallWithParametersData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<CallWithParametersData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await callWithParameters({
             ...options,
@@ -158,7 +158,7 @@ export const callWithParametersMutation = (options?: Partial<Options<CallWithPar
     }
 });
 
-export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData>>): UseMutationOptions<unknown, Options<CallWithWeirdParameterNamesData>, Error> => ({
+export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<CallWithWeirdParameterNamesData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<CallWithWeirdParameterNamesData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await callWithWeirdParameterNames({
             ...options,
@@ -169,9 +169,9 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
     }
 });
 
-export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData>) => createQueryKey('callWithDefaultParameters', options);
+export const callWithDefaultParametersQueryKey = (options: Options<CallWithDefaultParametersData, boolean, unknown, TParseAs>) => createQueryKey('callWithDefaultParameters', options);
 
-export const callWithDefaultParametersQuery = defineQueryOptions<Options<CallWithDefaultParametersData>, unknown, Error>((options: Options<CallWithDefaultParametersData>) => ({
+export const callWithDefaultParametersQuery = defineQueryOptions<Options<CallWithDefaultParametersData, boolean, unknown, TParseAs>, unknown, Error>((options: Options<CallWithDefaultParametersData, boolean, unknown, TParseAs>) => ({
     key: callWithDefaultParametersQueryKey(options),
     query: async (context) => {
         const { data } = await callWithDefaultParameters({
@@ -183,7 +183,7 @@ export const callWithDefaultParametersQuery = defineQueryOptions<Options<CallWit
     }
 }));
 
-export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData>>): UseMutationOptions<unknown, Options<CallWithDefaultOptionalParametersData>, Error> => ({
+export const callWithDefaultOptionalParametersMutation = (options?: Partial<Options<CallWithDefaultOptionalParametersData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<CallWithDefaultOptionalParametersData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await callWithDefaultOptionalParameters({
             ...options,
@@ -194,7 +194,7 @@ export const callWithDefaultOptionalParametersMutation = (options?: Partial<Opti
     }
 });
 
-export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData>>): UseMutationOptions<unknown, Options<CallToTestOrderOfParamsData>, Error> => ({
+export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallToTestOrderOfParamsData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<CallToTestOrderOfParamsData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await callToTestOrderOfParams({
             ...options,
@@ -205,7 +205,7 @@ export const callToTestOrderOfParamsMutation = (options?: Partial<Options<CallTo
     }
 });
 
-export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameData>>): UseMutationOptions<unknown, Options<DuplicateNameData>, Error> => ({
+export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameData, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<DuplicateNameData, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await duplicateName({
             ...options,
@@ -216,9 +216,9 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
     }
 });
 
-export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => createQueryKey('duplicateName2', options);
+export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data, boolean, unknown, TParseAs>) => createQueryKey('duplicateName2', options);
 
-export const duplicateName2Query = defineQueryOptions<Options<DuplicateName2Data>, unknown, Error>((options?: Options<DuplicateName2Data>) => ({
+export const duplicateName2Query = defineQueryOptions<Options<DuplicateName2Data, boolean, unknown, TParseAs>, unknown, Error>((options?: Options<DuplicateName2Data, boolean, unknown, TParseAs>) => ({
     key: duplicateName2QueryKey(options),
     query: async (context) => {
         const { data } = await duplicateName2({
@@ -230,7 +230,7 @@ export const duplicateName2Query = defineQueryOptions<Options<DuplicateName2Data
     }
 }));
 
-export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data>>): UseMutationOptions<unknown, Options<DuplicateName3Data>, Error> => ({
+export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3Data, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<DuplicateName3Data, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await duplicateName3({
             ...options,
@@ -241,7 +241,7 @@ export const duplicateName3Mutation = (options?: Partial<Options<DuplicateName3D
     }
 });
 
-export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4Data>>): UseMutationOptions<unknown, Options<DuplicateName4Data>, Error> => ({
+export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4Data, boolean, unknown, TParseAs>>): UseMutationOptions<unknown, Options<DuplicateName4Data, boolean, unknown, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await duplicateName4({
             ...options,
@@ -252,9 +252,9 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
     }
 });
 
-export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => createQueryKey('callWithNoContentResponse', options);
+export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData, boolean, CallWithNoContentResponseResponses, TParseAs>) => createQueryKey('callWithNoContentResponse', options);
 
-export const callWithNoContentResponseQuery = defineQueryOptions<Options<CallWithNoContentResponseData>, unknown, Error>((options?: Options<CallWithNoContentResponseData>) => ({
+export const callWithNoContentResponseQuery = defineQueryOptions<Options<CallWithNoContentResponseData, boolean, CallWithNoContentResponseResponses, TParseAs>, unknown, Error>((options?: Options<CallWithNoContentResponseData, boolean, CallWithNoContentResponseResponses, TParseAs>) => ({
     key: callWithNoContentResponseQueryKey(options),
     query: async (context) => {
         const { data } = await callWithNoContentResponse({
@@ -266,9 +266,9 @@ export const callWithNoContentResponseQuery = defineQueryOptions<Options<CallWit
     }
 }));
 
-export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => createQueryKey('callWithResponseAndNoContentResponse', options);
+export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData, boolean, CallWithResponseAndNoContentResponseResponses, TParseAs>) => createQueryKey('callWithResponseAndNoContentResponse', options);
 
-export const callWithResponseAndNoContentResponseQuery = defineQueryOptions<Options<CallWithResponseAndNoContentResponseData>, CallWithResponseAndNoContentResponseResponse, Error>((options?: Options<CallWithResponseAndNoContentResponseData>) => ({
+export const callWithResponseAndNoContentResponseQuery = defineQueryOptions<Options<CallWithResponseAndNoContentResponseData, boolean, CallWithResponseAndNoContentResponseResponses, TParseAs>, CallWithResponseAndNoContentResponseResponse, Error>((options?: Options<CallWithResponseAndNoContentResponseData, boolean, CallWithResponseAndNoContentResponseResponses, TParseAs>) => ({
     key: callWithResponseAndNoContentResponseQueryKey(options),
     query: async (context) => {
         const { data } = await callWithResponseAndNoContentResponse({
@@ -280,9 +280,9 @@ export const callWithResponseAndNoContentResponseQuery = defineQueryOptions<Opti
     }
 }));
 
-export const dummyAQueryKey = (options?: Options<DummyAData>) => createQueryKey('dummyA', options);
+export const dummyAQueryKey = (options?: Options<DummyAData, boolean, DummyAResponses, TParseAs>) => createQueryKey('dummyA', options);
 
-export const dummyAQuery = defineQueryOptions<Options<DummyAData>, unknown, Error>((options?: Options<DummyAData>) => ({
+export const dummyAQuery = defineQueryOptions<Options<DummyAData, boolean, DummyAResponses, TParseAs>, unknown, Error>((options?: Options<DummyAData, boolean, DummyAResponses, TParseAs>) => ({
     key: dummyAQueryKey(options),
     query: async (context) => {
         const { data } = await dummyA({
@@ -294,9 +294,9 @@ export const dummyAQuery = defineQueryOptions<Options<DummyAData>, unknown, Erro
     }
 }));
 
-export const dummyBQueryKey = (options?: Options<DummyBData>) => createQueryKey('dummyB', options);
+export const dummyBQueryKey = (options?: Options<DummyBData, boolean, DummyBResponses, TParseAs>) => createQueryKey('dummyB', options);
 
-export const dummyBQuery = defineQueryOptions<Options<DummyBData>, unknown, Error>((options?: Options<DummyBData>) => ({
+export const dummyBQuery = defineQueryOptions<Options<DummyBData, boolean, DummyBResponses, TParseAs>, unknown, Error>((options?: Options<DummyBData, boolean, DummyBResponses, TParseAs>) => ({
     key: dummyBQueryKey(options),
     query: async (context) => {
         const { data } = await dummyB({
@@ -308,9 +308,9 @@ export const dummyBQuery = defineQueryOptions<Options<DummyBData>, unknown, Erro
     }
 }));
 
-export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => createQueryKey('callWithResponse', options);
+export const callWithResponseQueryKey = (options?: Options<CallWithResponseData, boolean, CallWithResponseResponses, TParseAs>) => createQueryKey('callWithResponse', options);
 
-export const callWithResponseQuery = defineQueryOptions<Options<CallWithResponseData>, CallWithResponseResponse, Error>((options?: Options<CallWithResponseData>) => ({
+export const callWithResponseQuery = defineQueryOptions<Options<CallWithResponseData, boolean, CallWithResponseResponses, TParseAs>, CallWithResponseResponse, Error>((options?: Options<CallWithResponseData, boolean, CallWithResponseResponses, TParseAs>) => ({
     key: callWithResponseQueryKey(options),
     query: async (context) => {
         const { data } = await callWithResponse({
@@ -322,7 +322,7 @@ export const callWithResponseQuery = defineQueryOptions<Options<CallWithResponse
     }
 }));
 
-export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData>>): UseMutationOptions<CallWithDuplicateResponsesResponse, Options<CallWithDuplicateResponsesData>, CallWithDuplicateResponsesError> => ({
+export const callWithDuplicateResponsesMutation = (options?: Partial<Options<CallWithDuplicateResponsesData, boolean, CallWithDuplicateResponsesResponses, TParseAs>>): UseMutationOptions<CallWithDuplicateResponsesResponse, Options<CallWithDuplicateResponsesData, boolean, CallWithDuplicateResponsesResponses, TParseAs>, CallWithDuplicateResponsesError> => ({
     mutation: async (vars) => {
         const { data } = await callWithDuplicateResponses({
             ...options,
@@ -333,7 +333,7 @@ export const callWithDuplicateResponsesMutation = (options?: Partial<Options<Cal
     }
 });
 
-export const callWithResponsesMutation = (options?: Partial<Options<CallWithResponsesData>>): UseMutationOptions<CallWithResponsesResponse, Options<CallWithResponsesData>, CallWithResponsesError> => ({
+export const callWithResponsesMutation = (options?: Partial<Options<CallWithResponsesData, boolean, CallWithResponsesResponses, TParseAs>>): UseMutationOptions<CallWithResponsesResponse, Options<CallWithResponsesData, boolean, CallWithResponsesResponses, TParseAs>, CallWithResponsesError> => ({
     mutation: async (vars) => {
         const { data } = await callWithResponses({
             ...options,
@@ -344,9 +344,9 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
     }
 });
 
-export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => createQueryKey('collectionFormat', options);
+export const collectionFormatQueryKey = (options: Options<CollectionFormatData, boolean, unknown, TParseAs>) => createQueryKey('collectionFormat', options);
 
-export const collectionFormatQuery = defineQueryOptions<Options<CollectionFormatData>, unknown, Error>((options: Options<CollectionFormatData>) => ({
+export const collectionFormatQuery = defineQueryOptions<Options<CollectionFormatData, boolean, unknown, TParseAs>, unknown, Error>((options: Options<CollectionFormatData, boolean, unknown, TParseAs>) => ({
     key: collectionFormatQueryKey(options),
     query: async (context) => {
         const { data } = await collectionFormat({
@@ -358,9 +358,9 @@ export const collectionFormatQuery = defineQueryOptions<Options<CollectionFormat
     }
 }));
 
-export const typesQueryKey = (options: Options<TypesData>) => createQueryKey('types', options);
+export const typesQueryKey = (options: Options<TypesData, boolean, TypesResponses, TParseAs>) => createQueryKey('types', options);
 
-export const typesQuery = defineQueryOptions<Options<TypesData>, TypesResponse, Error>((options: Options<TypesData>) => ({
+export const typesQuery = defineQueryOptions<Options<TypesData, boolean, TypesResponses, TParseAs>, TypesResponse, Error>((options: Options<TypesData, boolean, TypesResponses, TParseAs>) => ({
     key: typesQueryKey(options),
     query: async (context) => {
         const { data } = await types({
@@ -372,9 +372,9 @@ export const typesQuery = defineQueryOptions<Options<TypesData>, TypesResponse, 
     }
 }));
 
-export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => createQueryKey('complexTypes', options);
+export const complexTypesQueryKey = (options: Options<ComplexTypesData, boolean, ComplexTypesResponses, TParseAs>) => createQueryKey('complexTypes', options);
 
-export const complexTypesQuery = defineQueryOptions<Options<ComplexTypesData>, ComplexTypesResponse, Error>((options: Options<ComplexTypesData>) => ({
+export const complexTypesQuery = defineQueryOptions<Options<ComplexTypesData, boolean, ComplexTypesResponses, TParseAs>, ComplexTypesResponse, Error>((options: Options<ComplexTypesData, boolean, ComplexTypesResponses, TParseAs>) => ({
     key: complexTypesQueryKey(options),
     query: async (context) => {
         const { data } = await complexTypes({
@@ -386,7 +386,7 @@ export const complexTypesQuery = defineQueryOptions<Options<ComplexTypesData>, C
     }
 }));
 
-export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallWithResultFromHeaderData>>): UseMutationOptions<unknown, Options<CallWithResultFromHeaderData>, Error> => ({
+export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallWithResultFromHeaderData, boolean, CallWithResultFromHeaderResponses, TParseAs>>): UseMutationOptions<unknown, Options<CallWithResultFromHeaderData, boolean, CallWithResultFromHeaderResponses, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await callWithResultFromHeader({
             ...options,
@@ -397,7 +397,7 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
     }
 });
 
-export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData>>): UseMutationOptions<unknown, Options<TestErrorCodeData>, Error> => ({
+export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeData, boolean, TestErrorCodeResponses, TParseAs>>): UseMutationOptions<unknown, Options<TestErrorCodeData, boolean, TestErrorCodeResponses, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await testErrorCode({
             ...options,
@@ -408,7 +408,7 @@ export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeDat
     }
 });
 
-export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, Options<NonAsciiæøåÆøÅöôêÊ字符串Data>, Error> => ({
+export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<Options<NonAsciiæøåÆøÅöôêÊ字符串Data, boolean, NonAsciiæøåÆøÅöôêÊ字符串Responses, TParseAs>>): UseMutationOptions<NonAsciiæøåÆøÅöôêÊ字符串Response, Options<NonAsciiæøåÆøÅöôêÊ字符串Data, boolean, NonAsciiæøåÆøÅöôêÊ字符串Responses, TParseAs>, Error> => ({
     mutation: async (vars) => {
         const { data } = await nonAsciiæøåÆøÅöôêÊ字符串({
             ...options,
@@ -424,7 +424,7 @@ export const nonAsciiæøåÆøÅöôêÊ字符串Mutation = (options?: Partial<
  *
  * Body should not be unknown
  */
-export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData>>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, Options<PostApiVbyApiVersionBodyData>, PostApiVbyApiVersionBodyError> => ({
+export const postApiVbyApiVersionBodyMutation = (options?: Partial<Options<PostApiVbyApiVersionBodyData, boolean, PostApiVbyApiVersionBodyResponses, TParseAs>>): UseMutationOptions<PostApiVbyApiVersionBodyResponse, Options<PostApiVbyApiVersionBodyData, boolean, PostApiVbyApiVersionBodyResponses, TParseAs>, PostApiVbyApiVersionBodyError> => ({
     mutation: async (vars) => {
         const { data } = await postApiVbyApiVersionBody({
             ...options,
