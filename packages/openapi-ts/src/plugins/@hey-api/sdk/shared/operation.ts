@@ -410,10 +410,12 @@ export function operationStatements({
       }
       config.push(shape);
     }
-    const symbol = plugin.imports.buildClientParams;
     statements.push(
       $.const('params').assign(
-        $(symbol).call($.array(...args), $.array($.object().prop('args', $.array(...config)))),
+        $(plugin.imports.buildClientParams).call(
+          $.array(...args),
+          $.array($.object().prop('args', $.array(...config))),
+        ),
       ),
     );
     reqOptions.spread('params');

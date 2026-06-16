@@ -356,6 +356,35 @@ describe('buildClientParams', () => {
         body: [],
       },
     },
+    {
+      args: [{}],
+      config: [
+        {
+          in: 'body',
+        },
+      ],
+      description: 'empty object positional body',
+      params: {
+        body: {},
+      },
+    },
+    {
+      args: [
+        {
+          foo: {},
+        },
+      ],
+      config: [
+        {
+          key: 'foo',
+          map: 'body',
+        },
+      ],
+      description: 'empty object aliased body',
+      params: {
+        body: {},
+      },
+    },
   ];
 
   it.each(scenarios)('$description', async ({ args, config, params }) => {
