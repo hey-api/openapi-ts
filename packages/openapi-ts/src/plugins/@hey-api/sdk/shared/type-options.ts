@@ -7,7 +7,11 @@ import { nuxtTypeDefault, nuxtTypeResponse } from './constants';
 
 export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instance'] }) {
   const client = getClientPlugin(getTypedConfig(plugin));
+  const isFetchClient = client.name === '@hey-api/client-fetch';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const parseAsType = $.type('NonNullable').generic(
+    $.type.idx($.type(plugin.imports.Config), $.type.literal('parseAs')),
+  );
 
   const symbolOptions = plugin.symbol('Options', {
     meta: {
@@ -37,7 +41,10 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
             g.extends(plugin.imports.TDataShape).default(plugin.imports.TDataShape),
           )
           .generic('ThrowOnError', (g) => g.extends('boolean').default('boolean'))
-          .generic('TResponse', (g) => g.default('unknown')),
+          .generic('TResponse', (g) => g.default('unknown'))
+          .$if(isFetchClient, (t) =>
+            t.generic('TParseAs', (g) => g.extends(parseAsType).default($.type.literal('auto'))),
+          ),
     )
     .type(
       $.type.and(
@@ -49,7 +56,14 @@ export function createTypeOptions({ plugin }: { plugin: HeyApiSdkPlugin['Instanc
               .generic('TData')
               .generic(nuxtTypeResponse)
               .generic(nuxtTypeDefault),
-          (t) => t.generic('TData').generic('ThrowOnError').generic('TResponse'),
+          (t) =>
+            t
+              .generic('TData')
+              .generic('ThrowOnError')
+              .generic('TResponse')
+              .$if(isFetchClient, (t) =>
+                t.generic($.type.literal(plugin.config.responseStyle)).generic('TParseAs'),
+              ),
         ),
         $.type
           .object()

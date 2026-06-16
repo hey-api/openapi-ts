@@ -27,6 +27,7 @@ export function operationOptionsType({
   throwOnError?: string;
 }): ReturnType<typeof $.type> {
   const client = getClientPlugin(getTypedConfig(plugin));
+  const isFetchClient = client.name === '@hey-api/client-fetch';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   // TODO: contract (cross)
@@ -76,6 +77,22 @@ export function operationOptionsType({
       .generic(isDataAllowed ? (symbolDataType ?? 'unknown') : 'never')
       .generic(throwOnError !== undefined ? throwOnError : 'boolean')
       .generic(symbolResponseType ?? 'unknown');
+  }
+
+  if (isFetchClient) {
+    const symbolResponseType =
+      plugin.querySymbol({
+        category: 'type',
+        resource: 'operation',
+        resourceId: operation.id,
+        role: 'responses',
+      }) ?? 'unknown';
+
+    return $.type(symbolOptions)
+      .generic(isDataAllowed ? (symbolDataType ?? plugin.imports.TDataShape) : 'never')
+      .generic(throwOnError !== undefined ? throwOnError : 'boolean')
+      .generic(symbolResponseType)
+      .generic('TParseAs');
   }
 
   // TODO: refactor this to be more generic, works for now
@@ -216,7 +233,10 @@ export function operationStatements({
   plugin: HeyApiSdkPlugin['Instance'];
 }): Array<ReturnType<typeof $.return | typeof $.const>> {
   const client = getClientPlugin(getTypedConfig(plugin));
+  const isFetchClient = client.name === '@hey-api/client-fetch';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const isSse = hasOperationSse({ operation });
+  const supportsParseAs = isFetchClient && !isSse;
 
   // TODO: contract (?)
   const symbolResponseType = plugin.querySymbol({
@@ -348,7 +368,6 @@ export function operationStatements({
     reqOptions.prop('responseTransformer', responseHandlers.transformer);
   }
 
-  const isSse = hasOperationSse({ operation });
   let responseTypeValue: ReturnType<typeof getResponseType> | undefined;
 
   for (const statusCode in operation.responses) {
@@ -477,9 +496,12 @@ export function operationStatements({
               .generic(symbolErrorType ?? 'unknown')
               .generic('ThrowOnError'),
         )
-        .$if(plugin.config.responseStyle === 'data', (f) =>
-          f.generic($.type.literal(plugin.config.responseStyle)),
-        ),
+        .$if(
+          plugin.config.responseStyle === 'data',
+          (f) => f.generic($.type.literal(plugin.config.responseStyle)),
+          (f) => f.$if(supportsParseAs, (f) => f.generic($.type.literal('fields'))),
+        )
+        .$if(supportsParseAs, (f) => f.generic('TParseAs')),
     ),
   );
 
@@ -497,8 +519,10 @@ export function operationReturnType({
   plugin: HeyApiSdkPlugin['Instance'];
 }): ReturnType<typeof $.type> {
   const client = getClientPlugin(getTypedConfig(plugin));
+  const isFetchClient = client.name === '@hey-api/client-fetch';
   const isNuxt = client.name === '@hey-api/client-nuxt';
   const isSse = hasOperationSse({ operation });
+  const supportsParseAs = isFetchClient && !isSse;
 
   // TODO: contract (?)
   const queryType = (role: 'response' | 'responses' | 'error' | 'errors') =>
@@ -529,7 +553,10 @@ export function operationReturnType({
     .generic(queryType('responses'))
     .generic(queryType('errors'))
     .generic('ThrowOnError')
-    .$if(plugin.config.responseStyle === 'data', (t) =>
-      t.generic($.type.literal(plugin.config.responseStyle)),
-    );
+    .$if(
+      plugin.config.responseStyle === 'data',
+      (t) => t.generic($.type.literal(plugin.config.responseStyle)),
+      (t) => t.$if(supportsParseAs, (t) => t.generic($.type.literal('fields'))),
+    )
+    .$if(supportsParseAs, (t) => t.generic('TParseAs'));
 }
