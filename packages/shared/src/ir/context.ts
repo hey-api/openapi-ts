@@ -16,25 +16,15 @@ export class Context<Spec extends Record<string, any> = any, Config extends AnyC
    * is a mix of user-provided and default values.
    */
   config: Config;
-  /**
-   * The code generation project instance used to manage files, symbols,
-   */
+  /** The code generation project instance used to manage files, symbols, */
   gen: Project;
-  /**
-   * The dependency graph built from the intermediate representation.
-   */
+  /** The dependency graph built from the intermediate representation. */
   graph: Graph | undefined;
-  /**
-   * Intents declared by plugins.
-   */
+  /** Intents declared by plugins. */
   intents: Array<ExampleIntent> = [];
-  /**
-   * Intermediate representation model obtained from `spec`.
-   */
+  /** Intermediate representation model obtained from `spec`. */
   ir: IR.Model = {};
-  /**
-   * Logger instance.
-   */
+  /** Logger instance. */
   logger: Logger;
   /**
    * The package metadata and utilities for the current context, constructed
@@ -50,9 +40,7 @@ export class Context<Spec extends Record<string, any> = any, Config extends AnyC
    */
   plugins: Partial<Record<PluginNames, PluginInstance<PluginConfigMap[keyof PluginConfigMap]>>> =
     {};
-  /**
-   * Resolved specification from `input`.
-   */
+  /** Resolved specification from `input`. */
   spec: Spec;
 
   constructor({
@@ -103,8 +91,8 @@ export class Context<Spec extends Record<string, any> = any, Config extends AnyC
     ]!;
     const instance = new PluginInstance({
       api: plugin.api,
-      config: plugin.config as any,
-      context: this as any,
+      config: plugin.config,
+      context: this,
       dependencies: plugin.dependencies ?? new Set(),
       gen: this.gen,
       handler: plugin.handler,

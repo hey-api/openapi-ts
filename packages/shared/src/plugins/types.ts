@@ -73,12 +73,7 @@ type BaseApi = Record<string, unknown>;
 
 type PluginBaseConfig = UserIndexExportOption & {
   name: AnyPluginName;
-  /**
-   * Optional hooks to override default plugin behavior.
-   *
-   * Use these to classify resources, control which outputs are generated,
-   * or provide custom behavior for specific resources.
-   */
+  /** Hooks to override default plugin behavior. */
   '~hooks'?: ParserHooks;
 };
 
@@ -126,7 +121,7 @@ export namespace Plugin {
    */
   export type Resolvers<T extends Record<string, unknown> = Record<string, unknown>> = {
     /**
-     * Custom behavior resolvers for a plugin.
+     * Custom behavior resolvers.
      *
      * Used to define how specific schema constructs are
      * resolved into AST or runtime logic.
