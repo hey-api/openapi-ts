@@ -117,8 +117,8 @@ importers:
         specifier: 0.6.1
         version: 0.6.1(msw@2.13.2(@types/node@24.13.2)(typescript@6.0.3))
       '@opencode-ai/sdk':
-        specifier: 1.17.3
-        version: 1.17.3
+        specifier: 1.17.4
+        version: 1.17.4
       '@orpc/contract':
         specifier: 1.14.5
         version: 1.14.5
@@ -5288,8 +5288,8 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@opencode-ai/sdk@1.17.3':
-    resolution: {integrity: sha512-oXrEjOuP3+J9pPNw3cmOnRma/xiVQ4WIIvGd6YkhPQgqqi2PnD/b1qfNY0AMead3QfNhKwKdDM4QFJdN2LpByg==}
+  '@opencode-ai/sdk@1.17.4':
+    resolution: {integrity: sha512-OdHkBoNIQOjQsPnFtkcxAp9HsLAKn/MQiq7wIQURkRARmw8yhFqGiMPYbNm+UfLn6bMkx97rdPkWQARejMyiXQ==}
 
   '@orpc/client@1.14.5':
     resolution: {integrity: sha512-7kDiGJDyiwdHUnWJGGY2/evUenfAjvw6skrfuIKX+ZNtNrJecNNl3ytURmWOoZbcNZ4bX/1NKViO8BrtPgY0KA==}
@@ -15528,6 +15528,7 @@ packages:
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -21492,7 +21493,7 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@opencode-ai/sdk@1.17.3':
+  '@opencode-ai/sdk@1.17.4':
     dependencies:
       cross-spawn: 7.0.6
 
