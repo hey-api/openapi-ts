@@ -72,7 +72,7 @@ export interface RequestOptions<
   TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-  TParseAs extends ParseAs = 'auto',
+  TParseAs extends ParseAs = ParseAs,
 >
   extends
     Config<{
@@ -108,7 +108,7 @@ export interface ResolvedRequestOptions<
   TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-  TParseAs extends ParseAs = 'auto',
+  TParseAs extends ParseAs = ParseAs,
 > extends RequestOptions<unknown, TResponseStyle, ThrowOnError, Url, TParseAs> {
   headers: Headers;
   serializedBody?: string;

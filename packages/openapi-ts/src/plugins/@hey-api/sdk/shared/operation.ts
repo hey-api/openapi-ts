@@ -16,18 +16,20 @@ import { createRequestValidator } from './validator';
 
 /** TODO: needs complete refactor */
 export function operationOptionsType({
+  includeParseAs = true,
   isDataAllowed = true,
   operation,
   plugin,
   throwOnError,
 }: {
+  includeParseAs?: boolean;
   isDataAllowed?: boolean;
   operation: IR.OperationObject;
   plugin: HeyApiSdkPlugin['Instance'];
   throwOnError?: string;
 }): ReturnType<typeof $.type> {
   const client = getClientPlugin(getTypedConfig(plugin));
-  const isFetchClient = client.name === '@hey-api/client-fetch';
+  const isFetchClient = includeParseAs && client.name === '@hey-api/client-fetch';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
 
   // TODO: contract (cross)

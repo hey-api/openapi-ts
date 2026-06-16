@@ -14,7 +14,7 @@ export const useTypeData = ({
   plugin: PluginInstance;
 }): ReturnType<typeof $.type> => {
   const pluginSdk = plugin.getPluginOrThrow('@hey-api/sdk');
-  return operationOptionsType({ operation, plugin: pluginSdk });
+  return operationOptionsType({ includeParseAs: false, operation, plugin: pluginSdk });
 };
 
 export const useTypeError = ({
