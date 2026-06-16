@@ -1,7 +1,7 @@
 import type { SymbolMeta } from '@hey-api/codegen-core';
 import { fromRef } from '@hey-api/codegen-core';
 import type { SchemaExtractor, SchemaVisitor } from '@hey-api/shared';
-import { pathToJsonPointer } from '@hey-api/shared';
+import { normalizeJsonPointer, pathToJsonPointer } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import { maybeBigInt } from '../../shared/utils/coerce';
@@ -27,6 +27,8 @@ import { unknownToPipes } from './toAst/unknown';
 import { voidToPipes } from './toAst/void';
 
 export interface VisitorConfig {
+  /** Ensures an acyclic referenced schema has been emitted before using it directly. */
+  ensureReferenceRegistered?: ($ref: string) => void;
   /** The plugin instance. */
   plugin: ValibotPlugin['Instance'];
   /** Optional schema extractor function. */
@@ -40,7 +42,7 @@ function getDefaultValue(meta: ValibotMeta): ReturnType<typeof $.fromValue> {
 export function createVisitor(
   config: VisitorConfig,
 ): SchemaVisitor<ValibotResult, ValibotPlugin['Instance']> {
-  const { plugin, schemaExtractor } = config;
+  const { ensureReferenceRegistered, plugin, schemaExtractor } = config;
 
   const v = plugin.imports.v;
 
@@ -251,15 +253,16 @@ export function createVisitor(
       };
     },
     reference($ref, schema) {
+      const resourceId = normalizeJsonPointer($ref);
       const query: SymbolMeta = {
         artifact: 'valibot',
         category: 'schema',
         resource: 'definition',
-        resourceId: $ref,
+        resourceId,
       };
+      ensureReferenceRegistered?.($ref);
       // TODO: contract (self)
       const refSymbol = plugin.referenceSymbol(query);
-      // TODO: contract (self)
       const isRegistered = plugin.isSymbolRegistered(query);
 
       if (isRegistered) {
