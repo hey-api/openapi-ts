@@ -1,37 +1,35 @@
 import type { UserConfig } from '@hey-api/openapi-python';
+import { plugins } from '@hey-api/openapi-python';
 
 export type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number]>;
 
 export const presets = {
   client: () => [
     /** Just the client */
-    '@hey-api/client-httpx',
+    plugins.clientHttpx(),
   ],
   none: () => [
     /** No plugins at all */
   ],
   sdk: () => [
     /** SDK */
-    {
-      name: '@hey-api/python-sdk',
+    plugins.sdk({
       operations: {
         containerName: 'OpenCode',
         strategy: 'single',
       },
       paramsStructure: 'flat',
-    },
+    }),
   ],
   validated: () => [
     /** SDK + Pydantic validation */
-    {
-      name: '@hey-api/python-sdk',
+    plugins.sdk({
       paramsStructure: 'flat',
-    },
-    {
+    }),
+    plugins.pydantic({
       fieldStyle: 'field',
       modelType: 'BaseModel',
-      name: 'pydantic',
-    },
+    }),
   ],
 } as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;
 

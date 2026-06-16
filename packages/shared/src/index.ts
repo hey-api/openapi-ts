@@ -116,6 +116,7 @@ export type {
 export type { GetNameContext, Hooks } from './parser/hooks';
 export type { PluginResolutionInput, PluginResolutionResult } from './plugins/config';
 export { definePluginConfig, resolvePlugins } from './plugins/config';
+export { pluginHelper } from './plugins/helper';
 export type { SchemaWithType } from './plugins/shared/types/schema';
 export { PluginInstance } from './plugins/shared/utils/instance';
 export { buildSymbolIn } from './plugins/symbol';

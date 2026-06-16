@@ -161,6 +161,7 @@ export async function defineConfig<T extends MaybeArray<UserConfig>>(
 }
 
 export type { UserConfig } from './config/types';
+export * as plugins from './plugins';
 export { clientDefaultConfig, clientDefaultMeta } from './plugins/@hey-api/client-core/config';
 export { clientPluginHandler } from './plugins/@hey-api/client-core/plugin';
 export type { Client } from './plugins/@hey-api/client-core/types';

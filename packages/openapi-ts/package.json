@@ -59,6 +59,10 @@
       "types": "./dist/internal.d.mts",
       "import": "./dist/internal.mjs"
     },
+    "./plugins": {
+      "types": "./dist/plugins.d.mts",
+      "import": "./dist/plugins.mjs"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
