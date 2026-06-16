@@ -58,25 +58,19 @@ function buildKeyMap(fields: FieldsConfig, map?: KeyMap): KeyMap {
 
 interface Params {
   body?: unknown;
-  headers?: Record<string, unknown>;
-  path?: Record<string, unknown>;
-  query?: Record<string, unknown>;
+  headers: Record<string, unknown>;
+  path: Record<string, unknown>;
+  query: Record<string, unknown>;
 }
 
-// Strips constructed slots (headers/path/query) that ended up empty, so we
-// don't send an empty object the caller never populated. `body` is deliberately
-// excluded: unlike the other slots it is supplied by the caller, so an explicit
-// empty body (e.g. `{}`) is a real value and must be sent as-is.
-const stripEmptySlots = (params: Params) => {
+function stripEmptySlots(params: Params): void {
   for (const [slot, value] of Object.entries(params)) {
-    if (slot === 'body') {
-      continue;
-    }
-    if (value && typeof value === 'object' && !Object.keys(value).length) {
+    if (slot === 'body') continue;
+    if (value && typeof value === 'object' && !Array.isArray(value) && !Object.keys(value).length) {
       delete params[slot as Slot];
     }
   }
-};
+}
 
 export function buildClientParams(args: ReadonlyArray<unknown>, fields: FieldsConfig): Params {
   const params: Params = {
@@ -87,18 +81,14 @@ export function buildClientParams(args: ReadonlyArray<unknown>, fields: FieldsCo
 
   const map = buildKeyMap(fields);
 
-  // Writes a single field into its slot. `body` has no placeholder and is
-  // created on first write, so a request without a body sends none, while an
-  // explicitly-provided body is preserved by `stripEmptySlots`. The null
-  // prototype guards against prototype pollution (GHSA-hhx9-57xq-r5rw).
-  const writeSlot = (slot: Slot, key: string, value: unknown): void => {
+  function writeSlot(slot: Slot, key: string, value: unknown): void {
     let record = params[slot] as Record<string, unknown> | undefined;
     if (record === undefined) {
       record = Object.create(null) as Record<string, unknown>;
       params[slot] = record;
     }
     record[key] = value;
-  };
+  }
 
   let config: FieldsConfig[number] | undefined;
 
@@ -115,7 +105,9 @@ export function buildClientParams(args: ReadonlyArray<unknown>, fields: FieldsCo
       if (config.key) {
         const field = map.get(config.key)!;
         const name = field.map || config.key;
-        writeSlot(field.in, name, arg);
+        if (field.in) {
+          writeSlot(field.in, name, arg);
+        }
       } else {
         params.body = arg;
       }

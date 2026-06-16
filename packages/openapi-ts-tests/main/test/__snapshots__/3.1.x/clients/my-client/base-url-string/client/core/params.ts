@@ -63,13 +63,13 @@ interface Params {
   query: Record<string, unknown>;
 }
 
-const stripEmptySlots = (params: Params) => {
+function stripEmptySlots(params: Params) {
   for (const [slot, value] of Object.entries(params)) {
     if (value && typeof value === 'object' && !Object.keys(value).length) {
       delete params[slot as Slot];
     }
   }
-};
+}
 
 export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsConfig) => {
   const params: Params = {

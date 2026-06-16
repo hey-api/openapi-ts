@@ -405,7 +405,7 @@ describe('buildClientParams', () => {
         queryFields,
       );
       expect(Object.getPrototypeOf(result.query)).toBeNull();
-      expect(result.query!.q).toBe('hello');
+      expect(result.query.q).toBe('hello');
     });
 
     it('$query_constructor writes a plain property', () => {
@@ -431,8 +431,8 @@ describe('buildClientParams', () => {
 
     it('still processes legitimate $query_ extra keys', () => {
       const result = buildClientParams([{ $query_extra: 'value', q: 'hello' }], queryFields);
-      expect(result.query!.extra).toBe('value');
-      expect(result.query!.q).toBe('hello');
+      expect(result.query.extra).toBe('value');
+      expect(result.query.q).toBe('hello');
     });
   });
 });
