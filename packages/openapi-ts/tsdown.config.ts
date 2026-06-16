@@ -30,7 +30,7 @@ export default defineConfig({
       'vue',
     ],
   },
-  entry: ['./src/{index,internal,run}.ts'],
+  entry: ['./src/{index,internal,plugins,run}.ts'],
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = [

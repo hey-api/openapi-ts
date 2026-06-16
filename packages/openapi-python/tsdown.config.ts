@@ -11,7 +11,7 @@ export default defineConfig({
     ignoreRules: ['cjs-resolves-to-esm'],
     profile: 'esm-only',
   },
-  entry: ['./src/{index,run}.ts'],
+  entry: ['./src/{index,plugins,run}.ts'],
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
     const pluginNames = ['client-httpx'];

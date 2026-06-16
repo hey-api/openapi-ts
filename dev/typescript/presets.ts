@@ -1,100 +1,90 @@
 import type { UserConfig } from '@hey-api/openapi-ts';
+import { plugins } from '@hey-api/openapi-ts';
 
 export type PluginConfig = NonNullable<NonNullable<UserConfig['plugins']>[number]>;
 
 export const presets = {
   angular: () => [
-    {
+    plugins.angularCommon({
       httpRequests: 'flat',
-      name: '@angular/common',
-    },
+    }),
   ],
   client: () => [
     /** Just the client */
-    '@hey-api/client-axios',
+    plugins.clientAxios(),
   ],
   full: () => [
     /** Full kitchen sink for comprehensive testing */
-    '@hey-api/typescript',
-    {
-      name: '@hey-api/sdk',
+    plugins.typescript(),
+    plugins.sdk({
       paramsStructure: 'flat',
-    },
-    {
+    }),
+    plugins.transformers({
       dates: true,
-      name: '@hey-api/transformers',
-    },
-    {
+    }),
+    plugins.zod({
       metadata: true,
-      name: 'zod',
-    },
-    {
-      name: '@tanstack/react-query',
+    }),
+    plugins.tanstackReactQuery({
       queryKeys: {
         tags: true,
       },
-    },
+    }),
   ],
   none: () => [
     /** No plugins at all */
   ],
   rpc: () => [
     /** RPC-style SDK with Zod validation */
-    'orpc',
-    'zod',
+    plugins.orpc(),
+    plugins.zod(),
   ],
   sdk: () => [
     /** SDK with types */
-    '@hey-api/typescript',
-    {
-      name: '@hey-api/sdk',
+    plugins.typescript(),
+    plugins.sdk({
       operations: {
         containerName: 'OpenCode',
         strategy: 'single',
       },
       paramsStructure: 'flat',
-    },
+    }),
   ],
   tanstack: () => [
     /** SDK + TanStack Query */
-    '@hey-api/typescript',
-    '@hey-api/sdk',
-    {
-      name: '@tanstack/react-query',
+    plugins.typescript(),
+    plugins.sdk(),
+    plugins.tanstackReactQuery({
       queryKeys: {
         tags: true,
       },
-    },
+    }),
   ],
   transformed: () => [
     /** SDK + transforms */
-    '@hey-api/typescript',
-    {
-      name: '@hey-api/sdk',
+    plugins.typescript(),
+    plugins.sdk({
       transformer: 'valibot',
-    },
-    'valibot',
-    'zod',
+    }),
+    plugins.valibot(),
+    plugins.zod(),
   ],
   types: () => [
     /** Just types, nothing else */
-    '@hey-api/typescript',
+    plugins.typescript(),
   ],
   validated: () => [
     /** SDK + validation */
-    '@hey-api/typescript',
-    {
-      name: '@hey-api/sdk',
+    plugins.typescript(),
+    plugins.sdk({
       validator: 'zod',
-    },
-    {
+    }),
+    plugins.valibot({
       metadata: true,
-      name: 'valibot',
-    },
-    {
+    }),
+    plugins.zod({
       metadata: true,
-      name: 'zod',
-    },
+    }),
   ],
 } as const satisfies Record<string, () => ReadonlyArray<PluginConfig>>;
 
