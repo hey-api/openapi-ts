@@ -271,3 +271,88 @@ describe('PluginInstance.symbol', () => {
     });
   });
 });
+
+describe('PluginInstance.symbolOnce', () => {
+  it('returns existing symbol if found by name and meta', () => {
+    const existingSymbol = {
+      id: 1,
+      meta: { category: 'type', pluginName: '@hey-api/test' },
+      name: 'ExistingSymbol',
+    } as any;
+    const gen = createMockGen();
+    gen.symbols.query.mockReturnValueOnce([existingSymbol]);
+    const context = createMockContext();
+    const instance = new PluginInstance({
+      config: {},
+      context,
+      dependencies: new Set(),
+      gen: gen as any,
+      handler: vi.fn(),
+      name: '@hey-api/test',
+    });
+
+    const result = instance.symbolOnce('ExistingSymbol', { meta: { category: 'type' } });
+
+    expect(gen.symbols.query).toHaveBeenCalledWith({ category: 'type' });
+    expect(gen.symbols.register).not.toHaveBeenCalled();
+    expect(result).toBe(existingSymbol);
+  });
+
+  it('registers new symbol when not found', () => {
+    const gen = createMockGen();
+    gen.symbols.query.mockReturnValueOnce([]);
+    const context = createMockContext();
+    const instance = new PluginInstance({
+      config: {},
+      context,
+      dependencies: new Set(),
+      gen: gen as any,
+      handler: vi.fn(),
+      name: '@hey-api/test',
+    });
+
+    instance.symbolOnce('NewSymbol', { meta: { category: 'type' } });
+
+    expect(gen.symbols.register).toHaveBeenCalled();
+  });
+
+  it('delegates to symbol() for external symbols', () => {
+    const gen = createMockGen();
+    const context = createMockContext();
+    const instance = new PluginInstance({
+      config: {},
+      context,
+      dependencies: new Set(),
+      gen: gen as any,
+      handler: vi.fn(),
+      name: '@hey-api/test',
+    });
+
+    instance.symbolOnce('ExternalSym', { external: 'lib' });
+
+    expect(gen.symbols.query).toHaveBeenCalledWith({
+      category: 'external',
+      resource: 'lib.ExternalSym',
+    });
+  });
+
+  it('does not deduplicate when meta is not provided', () => {
+    const gen = createMockGen();
+    gen.symbols.query.mockReturnValue([]);
+    const context = createMockContext();
+    const instance = new PluginInstance({
+      config: {},
+      context,
+      dependencies: new Set(),
+      gen: gen as any,
+      handler: vi.fn(),
+      name: '@hey-api/test',
+    });
+
+    const result1 = instance.symbolOnce('RepeatableSymbol');
+    const result2 = instance.symbolOnce('RepeatableSymbol');
+
+    expect(result1).not.toBe(result2);
+    expect(gen.symbols.register).toHaveBeenCalledTimes(2);
+  });
+});

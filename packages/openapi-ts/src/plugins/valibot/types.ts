@@ -1,6 +1,5 @@
 import type {
   Casing,
-  CustomImports,
   DefinePlugin,
   FeatureToggle,
   IR,
@@ -351,16 +350,6 @@ export type UserConfig = Plugin.Name<'valibot'> &
            */
           name?: NameTransformer;
         };
-    /**
-     * Custom external symbols to register and make available via
-     * `plugin.imports`.
-     *
-     * Each key becomes the symbol name, and the value defines how
-     * the symbol is imported (module, import kind, etc.).
-     *
-     * @default {}
-     */
-    '~imports'?: CustomImports;
   };
 
 export type Config = Plugin.Name<'valibot'> &
@@ -399,8 +388,6 @@ export type Config = Plugin.Name<'valibot'> &
     responses: NamingOptions & FeatureToggle;
     /** Configuration for webhook-specific Valibot schemas. */
     webhooks: NamingOptions & FeatureToggle;
-    /** Custom external symbols registered via config and available on `plugin.imports`. */
-    '~imports': CustomImports;
   };
 
 export type ValibotPlugin = DefinePlugin<UserConfig, Config, IApi, ValibotImports>;
