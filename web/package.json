@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "7.2.0",
-    "@astrojs/starlight": "0.39.3",
+    "@astrojs/starlight": "0.40.0",
     "@astrojs/starlight-docsearch": "0.7.0",
     "@astrojs/vercel": "10.0.8",
     "@hey-api/starlight-llms-txt": "0.10.2",
