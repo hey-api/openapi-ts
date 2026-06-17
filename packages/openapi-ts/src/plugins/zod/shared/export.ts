@@ -24,7 +24,7 @@ export function exportAst({
 
   const name = pathToName(path, { anchor: namingAnchor });
 
-  const symbol = plugin.registerSymbol(
+  const symbol = plugin.symbol(
     buildSymbolIn({
       meta: {
         category: 'schema',
@@ -39,7 +39,6 @@ export function exportAst({
       schema,
     }),
   );
-
   const statement = $.const(symbol)
     .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
@@ -47,26 +46,23 @@ export function exportAst({
     .assign(final.chain);
   plugin.node(statement);
 
-  const typeInferSymbol = naming.types.infer.enabled
-    ? plugin.registerSymbol(
-        buildSymbolIn({
-          meta: {
-            category: 'type',
-            path,
-            tags,
-            variant: 'infer',
-            ...meta,
-          },
-          name,
-          naming: naming.types.infer,
+  if (naming.types.infer.enabled) {
+    const typeInferSymbol = plugin.symbol(
+      buildSymbolIn({
+        meta: {
+          category: 'type',
           path,
-          plugin,
-          schema,
-        }),
-      )
-    : undefined;
-
-  if (typeInferSymbol) {
+          tags,
+          variant: 'infer',
+          ...meta,
+        },
+        name,
+        naming: naming.types.infer,
+        path,
+        plugin,
+        schema,
+      }),
+    );
     const inferType = $.type
       .alias(typeInferSymbol)
       .export()
@@ -74,26 +70,23 @@ export function exportAst({
     plugin.node(inferType);
   }
 
-  const typeInputSymbol = naming.types.input.enabled
-    ? plugin.registerSymbol(
-        buildSymbolIn({
-          meta: {
-            category: 'type',
-            path,
-            tags,
-            variant: 'input',
-            ...meta,
-          },
-          name,
-          naming: naming.types.input,
+  if (naming.types.input.enabled) {
+    const typeInputSymbol = plugin.symbol(
+      buildSymbolIn({
+        meta: {
+          category: 'type',
           path,
-          plugin,
-          schema,
-        }),
-      )
-    : undefined;
-
-  if (typeInputSymbol) {
+          tags,
+          variant: 'input',
+          ...meta,
+        },
+        name,
+        naming: naming.types.input,
+        path,
+        plugin,
+        schema,
+      }),
+    );
     const inputType = $.type
       .alias(typeInputSymbol)
       .export()
@@ -101,26 +94,23 @@ export function exportAst({
     plugin.node(inputType);
   }
 
-  const typeOutputSymbol = naming.types.output.enabled
-    ? plugin.registerSymbol(
-        buildSymbolIn({
-          meta: {
-            category: 'type',
-            path,
-            tags,
-            variant: 'output',
-            ...meta,
-          },
-          name,
-          naming: naming.types.output,
+  if (naming.types.output.enabled) {
+    const typeOutputSymbol = plugin.symbol(
+      buildSymbolIn({
+        meta: {
+          category: 'type',
           path,
-          plugin,
-          schema,
-        }),
-      )
-    : undefined;
-
-  if (typeOutputSymbol) {
+          tags,
+          variant: 'output',
+          ...meta,
+        },
+        name,
+        naming: naming.types.output,
+        path,
+        plugin,
+        schema,
+      }),
+    );
     const outputType = $.type
       .alias(typeOutputSymbol)
       .export()

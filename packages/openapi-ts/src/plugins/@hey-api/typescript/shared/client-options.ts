@@ -42,7 +42,7 @@ export const createClientOptions = ({
     types.push($.type.and($.type('string'), $.type.object()));
   }
 
-  const symbol = plugin.registerSymbol(
+  const symbol = plugin.symbol(
     buildSymbolIn({
       meta: {
         category: 'type',

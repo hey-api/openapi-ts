@@ -24,7 +24,7 @@ export function exportAst({
 }): Symbol {
   const name = pathToName(path, { anchor: namingAnchor });
 
-  const symbol = plugin.registerSymbol(
+  const symbol = plugin.symbol(
     buildSymbolIn({
       meta: {
         category: 'schema',
@@ -39,13 +39,11 @@ export function exportAst({
       schema,
     }),
   );
-
   const statement = $.const(symbol)
     .export()
     .$if(plugin.config.comments && createSchemaComment(schema), (c, v) => c.doc(v))
     .$if(final.typeName, (c) => c.type($.type(plugin.imports.v).attr(final.typeName!)))
     .assign(pipesToNode(final.pipes, plugin));
-
   plugin.node(statement);
 
   return symbol;

@@ -5,6 +5,7 @@ import { requestValidatorLayers, resolveValidatorLayer } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import { identifiers } from '../constants';
+import { ZodContracts } from '../contracts';
 import type {
   RequestValidatorResolverContext,
   ResponseValidatorResolverContext,
@@ -22,7 +23,7 @@ function emptyNode(
     layer: ResolvedRequestValidatorLayer;
   },
 ): Chain {
-  const { z } = ctx.symbols;
+  const { z } = ctx.plugin.imports;
   if (ctx.layer.whenEmpty === 'omit') {
     throw new Error(
       `Cannot create empty schema for layer "${ctx.layer.as}" with whenEmpty: 'omit'`,
@@ -41,27 +42,22 @@ function optionalNode(
   },
 ): Chain {
   if (!ctx.layer.optional) return ctx.schema;
-  const { z } = ctx.symbols;
+  const { z } = ctx.plugin.imports;
   return $(z).attr(identifiers.optional).call(ctx.schema);
 }
 
 function compositeNode(ctx: RequestValidatorResolverContext): Chain | undefined {
-  const { z } = ctx.symbols;
+  const { z } = ctx.plugin.imports;
   const obj = $.object();
 
   let allOptional = true;
   const defaultValues = getDefaultRequestValidatorLayers(ctx.operation);
   for (const key of requestValidatorLayers) {
     const layer = resolveValidatorLayer(ctx.layers, key, defaultValues);
-    // TODO: contract (self)
-    const layerSchema = ctx.plugin.querySymbol({
-      artifact: 'zod',
-      category: 'schema',
-      resource: 'operation',
-      resourceId: ctx.operation.id,
-      role: `request-${key}`,
-    });
 
+    const layerSchema = ctx.plugin.querySymbol(
+      ZodContracts.operationRequest(ctx.operation.id, key),
+    );
     if (layerSchema) {
       obj.prop(layer.as, ctx.nodes.optional({ ...ctx, layer, schema: $(layerSchema) }));
       if (!layer.optional) {
@@ -214,14 +210,7 @@ export function createResponseValidatorMini({
   operation,
   plugin,
 }: ValidatorArgs): ArrowFunc | undefined {
-  // TODO: contract (self)
-  const symbol = plugin.querySymbol({
-    artifact: 'zod',
-    category: 'schema',
-    resource: 'operation',
-    resourceId: operation.id,
-    role: 'responses',
-  });
+  const symbol = plugin.querySymbol(ZodContracts.operationResponses(operation.id));
   if (!symbol) return;
 
   const z = plugin.imports.z;

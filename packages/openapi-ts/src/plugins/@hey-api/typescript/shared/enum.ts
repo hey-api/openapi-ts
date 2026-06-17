@@ -99,7 +99,7 @@ export function exportEnumAst({
         ? items.filter((item) => item.schema.const !== null)
         : items;
 
-    const symbolObject = plugin.registerSymbol(
+    const symbolObject = plugin.symbol(
       buildSymbolIn({
         meta: createSymbolMeta({
           category: 'utility',
@@ -128,7 +128,7 @@ export function exportEnumAst({
       );
     plugin.node(objectNode);
 
-    const symbol = plugin.registerSymbol(
+    const symbol = plugin.symbol(
       buildSymbolIn({
         meta: createSymbolMeta({
           category: 'type',
@@ -155,7 +155,7 @@ export function exportEnumAst({
     );
     if (hasInvalidTypes) return false;
 
-    const symbol = plugin.registerSymbol(
+    const symbol = plugin.symbol(
       buildSymbolIn({
         meta: createSymbolMeta({
           category: 'type',

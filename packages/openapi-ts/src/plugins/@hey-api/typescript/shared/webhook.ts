@@ -22,7 +22,7 @@ export function webhookToType({
   let symbolWebhookPayload: Symbol | undefined;
 
   if (operation.body) {
-    symbolWebhookPayload = plugin.registerSymbol(
+    symbolWebhookPayload = plugin.symbol(
       buildSymbolIn({
         meta: {
           category: 'type',
@@ -74,7 +74,7 @@ export function webhookToType({
     .prop('path', (p) => p.required(false).type($.type('never')))
     .prop('query', (p) => p.required(false).type($.type('never')));
 
-  const symbol = plugin.registerSymbol(
+  const symbol = plugin.symbol(
     buildSymbolIn({
       meta: {
         category: 'type',

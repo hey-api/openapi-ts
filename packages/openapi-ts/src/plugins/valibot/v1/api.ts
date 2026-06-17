@@ -22,7 +22,7 @@ function emptyNode(
     layer: ResolvedRequestValidatorLayer;
   },
 ): Pipe {
-  const { v } = ctx.symbols;
+  const { v } = ctx.plugin.imports;
   if (ctx.layer.whenEmpty === 'omit') {
     throw new Error(
       `Cannot create empty schema for layer "${ctx.layer.as}" with whenEmpty: 'omit'`,
@@ -41,12 +41,12 @@ function optionalNode(
   },
 ): Pipe {
   if (!ctx.layer.optional) return ctx.schema;
-  const v = ctx.symbols.v;
+  const { v } = ctx.plugin.imports;
   return $(v).attr(identifiers.schemas.optional).call(ctx.schema);
 }
 
 function compositeNode(ctx: RequestValidatorResolverContext): Pipe | undefined {
-  const { v } = ctx.symbols;
+  const { v } = ctx.plugin.imports;
   const obj = $.object();
 
   let allOptional = true;
@@ -95,14 +95,16 @@ function compositeNode(ctx: RequestValidatorResolverContext): Pipe | undefined {
 function requestValidatorResolver(
   ctx: RequestValidatorResolverContext,
 ): ReturnType<typeof $.return> {
-  const { schema, v } = ctx.symbols;
+  const { schema } = ctx.symbols;
+  const { v } = ctx.plugin.imports;
   return $(v).attr(identifiers.async.parseAsync).call(schema, 'data').await().return();
 }
 
 function responseValidatorResolver(
   ctx: ResponseValidatorResolverContext,
 ): ReturnType<typeof $.return> {
-  const { schema, v } = ctx.symbols;
+  const { schema } = ctx.symbols;
+  const { v } = ctx.plugin.imports;
   return $(v).attr(identifiers.async.parseAsync).call(schema, 'data').await().return();
 }
 
