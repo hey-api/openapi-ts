@@ -13,12 +13,12 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "7.1.0",
+    "@astrojs/markdown-remark": "7.2.0",
     "@astrojs/starlight": "0.39.3",
     "@astrojs/starlight-docsearch": "0.7.0",
-    "@astrojs/vercel": "10.0.6",
+    "@astrojs/vercel": "10.0.8",
     "@hey-api/starlight-llms-txt": "0.10.2",
-    "astro": "6.3.1",
+    "astro": "6.4.6",
     "mdast-util-mdx-jsx": "3.2.0",
     "resend": "6.12.4",
     "starlight-theme-flexoki": "0.2.2",
