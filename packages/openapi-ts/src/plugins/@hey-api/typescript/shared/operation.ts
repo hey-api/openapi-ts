@@ -115,7 +115,7 @@ export const operationToType = ({
     schema: data,
   });
 
-  const dataSymbol = plugin.registerSymbol(
+  const dataSymbol = plugin.symbol(
     buildSymbolIn({
       meta: {
         category: 'type',
@@ -153,7 +153,7 @@ export const operationToType = ({
       schema: errors,
     });
 
-    const errorsSymbol = plugin.registerSymbol(
+    const errorsSymbol = plugin.symbol(
       buildSymbolIn({
         meta: {
           category: 'type',
@@ -177,7 +177,7 @@ export const operationToType = ({
     plugin.node(errorsNode);
 
     if (error) {
-      const errorSymbol = plugin.registerSymbol(
+      const errorSymbol = plugin.symbol(
         buildSymbolIn({
           meta: {
             category: 'type',
@@ -218,7 +218,7 @@ export const operationToType = ({
       schema: responses,
     });
 
-    const responsesSymbol = plugin.registerSymbol(
+    const responsesSymbol = plugin.symbol(
       buildSymbolIn({
         meta: {
           category: 'type',
@@ -242,7 +242,7 @@ export const operationToType = ({
     plugin.node(responsesNode);
 
     if (response) {
-      const responseSymbol = plugin.registerSymbol(
+      const responseSymbol = plugin.symbol(
         buildSymbolIn({
           meta: {
             category: 'type',

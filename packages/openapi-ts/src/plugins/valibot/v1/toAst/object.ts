@@ -23,7 +23,7 @@ function additionalPropertiesNode(ctx: ObjectResolverContext): Pipe | null | und
 }
 
 function baseNode(ctx: ObjectResolverContext): Pipes | Pipe {
-  const { v } = ctx.symbols;
+  const { v } = ctx.plugin.imports;
 
   const additional = ctx.nodes.additionalProperties(ctx);
   const shape = ctx.nodes.shape(ctx);

@@ -2,6 +2,7 @@ import type { Context, OpenApi } from '@hey-api/shared';
 import { satisfies } from '@hey-api/shared';
 import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@hey-api/spec-types';
 
+import { contracts } from '../../../contracts';
 import { $ } from '../../../ts-dsl';
 import type { HeyApiSchemasPlugin } from './types';
 
@@ -335,11 +336,7 @@ function schemasV2_0_X({
   for (const name in context.spec.definitions) {
     const schema = context.spec.definitions[name]!;
     const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
-      meta: {
-        category: 'schema',
-        resource: 'definition',
-        resourceId: name,
-      },
+      meta: contracts.schema.definition(name),
     });
     const obj = schemaToJsonSchemaDraft_04({
       context,
@@ -373,11 +370,7 @@ function schemasV3_0_X({
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
     const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
-      meta: {
-        category: 'schema',
-        resource: 'definition',
-        resourceId: name,
-      },
+      meta: contracts.schema.definition(name),
     });
     const obj = schemaToJsonSchemaDraft_05({
       context,
@@ -411,11 +404,7 @@ function schemasV3_1_X({
   for (const name in context.spec.components.schemas) {
     const schema = context.spec.components.schemas[name]!;
     const symbol = plugin.symbol(schemaName({ name, plugin, schema }), {
-      meta: {
-        category: 'schema',
-        resource: 'definition',
-        resourceId: name,
-      },
+      meta: contracts.schema.definition(name),
     });
     const obj = schemaToJsonSchema2020_12({
       context,

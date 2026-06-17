@@ -37,7 +37,7 @@ export function exportAst({
     return;
   }
 
-  const symbol = plugin.registerSymbol(
+  const symbol = plugin.symbol(
     buildSymbolIn({
       meta: {
         category: 'type',

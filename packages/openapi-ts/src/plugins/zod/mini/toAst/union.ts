@@ -1,9 +1,9 @@
-import type { SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 import { buildDiscriminatedUnion } from '@hey-api/shared';
 
 import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
+import { ZodContracts } from '../../contracts';
 import type { UnionResolverContext } from '../../resolvers';
 import type { Chain } from '../../shared/chain';
 import { shouldFallBackToUnion } from '../../shared/discriminator';
@@ -48,14 +48,7 @@ function baseNode(ctx: UnionResolverContext): Chain {
   if (discriminatedData) {
     if (!shouldFallBackToUnion({ childResults, parentSchema, plugin, schemas })) {
       const unionMembers = discriminatedData.members.map((member) => {
-        const query: SymbolMeta = {
-          artifact: 'zod',
-          category: 'schema',
-          resource: 'definition',
-          resourceId: member.ref,
-        };
-        // TODO: contract (self)
-        const refExpr = $(plugin.referenceSymbol(query));
+        const refExpr = $(plugin.referenceSymbol(ZodContracts.definition(member.ref)));
         return member.needsExtend
           ? $(z)
               .attr(identifiers.extend)

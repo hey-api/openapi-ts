@@ -10,7 +10,7 @@ import { identifiers } from '../constants';
 import { numberToPipes } from './number';
 
 function baseNode(ctx: StringResolverContext): PipeResult {
-  const { v } = ctx.symbols;
+  const { v } = ctx.plugin.imports;
   return $(v).attr(identifiers.schemas.string).call();
 }
 

@@ -7,7 +7,7 @@ import type { Chain, ChainResult } from '../../shared/chain';
 import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: StringResolverContext): Chain {
-  const { z } = ctx.symbols;
+  const { z } = ctx.plugin.imports;
   return $(z).attr(identifiers.string).call();
 }
 

@@ -346,13 +346,6 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   }
 
   /**
-   * Alias for `symbol()` method with single argument.
-   */
-  registerSymbol(symbol: SymbolIn): Symbol<ResolvedNode> {
-    return this.symbol(symbol.name, symbol) as Symbol<ResolvedNode>;
-  }
-
-  /**
    * Executes plugin's handler function.
    */
   async run(): Promise<void> {
@@ -365,7 +358,22 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     }
   }
 
-  symbol(name: SymbolIn['name'], symbol: Omit<SymbolIn, 'name'> = {}): Symbol<ResolvedNode> {
+  symbol(name: SymbolIn['name'], symbol?: Omit<SymbolIn, 'name'>): Symbol<ResolvedNode>;
+  symbol(symbol: SymbolIn): Symbol<ResolvedNode>;
+  symbol(
+    nameOrSymbol: SymbolIn['name'] | SymbolIn,
+    symbolArg: Omit<SymbolIn, 'name'> = {},
+  ): Symbol<ResolvedNode> {
+    let name: SymbolIn['name'];
+    let symbol: Omit<SymbolIn, 'name'>;
+    if (typeof nameOrSymbol === 'object') {
+      const { name: _name, ...rest } = nameOrSymbol;
+      name = _name;
+      symbol = rest;
+    } else {
+      name = nameOrSymbol;
+      symbol = symbolArg;
+    }
     const meta = !symbol.external && this.symbolMeta ? this.symbolMeta(symbol) : {};
     Object.assign(meta, symbol.meta);
     if (!symbol.external) {

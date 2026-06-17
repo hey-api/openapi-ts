@@ -1,4 +1,3 @@
-import type { SymbolMeta } from '@hey-api/codegen-core';
 import { fromRef } from '@hey-api/codegen-core';
 import type { SchemaExtractor, SchemaVisitor } from '@hey-api/shared';
 import { pathToJsonPointer } from '@hey-api/shared';
@@ -6,6 +5,7 @@ import { pathToJsonPointer } from '@hey-api/shared';
 import { $ } from '../../../ts-dsl';
 import { maybeBigInt, shouldCoerceToBigInt } from '../../shared/utils/coerce';
 import { identifiers } from '../constants';
+import { ZodContracts } from '../contracts';
 import { defaultMeta, inheritMeta } from '../shared/meta';
 import type { ProcessorContext } from '../shared/processor';
 import type { ZodFinal, ZodMeta, ZodResult } from '../shared/types';
@@ -223,17 +223,9 @@ export function createVisitor(
       return result;
     },
     reference($ref, schema) {
-      const z = plugin.imports.z;
-      const query: SymbolMeta = {
-        artifact: 'zod',
-        category: 'schema',
-        resource: 'definition',
-        resourceId: $ref,
-      };
-      // TODO: contract (self)
+      const query = ZodContracts.definition($ref);
       const refSymbol = plugin.referenceSymbol(query);
 
-      // TODO: contract (self)
       if (plugin.isSymbolRegistered(query)) {
         return {
           chain: $(refSymbol),
@@ -241,6 +233,7 @@ export function createVisitor(
         };
       }
 
+      const z = plugin.imports.z;
       return {
         chain: $(z)
           .attr(identifiers.lazy)

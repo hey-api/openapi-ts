@@ -26,7 +26,7 @@ export function exportAst({
   node: PydanticNode;
 }): void {
   const name = pathToName(path, { anchor: namingAnchor });
-  const symbol = plugin.registerSymbol(
+  const symbol = plugin.symbol(
     buildSymbolIn({
       meta: {
         category: 'schema',

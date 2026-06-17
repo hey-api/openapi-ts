@@ -1,6 +1,6 @@
-import type { SymbolMeta } from '@hey-api/codegen-core';
 import type { IR } from '@hey-api/shared';
 
+import { ZodContracts } from '../contracts';
 import type { ZodPlugin } from '../types';
 import type { ZodMeta, ZodResult } from './types';
 
@@ -37,14 +37,9 @@ export function shouldFallBackToUnion({
       continue;
     }
 
-    const query: SymbolMeta = {
-      artifact: 'zod',
-      category: 'schema',
-      resource: 'definition',
-      resourceId: ref,
-    };
-    // TODO: contract (self)
-    if ((plugin.querySymbol(query)?.meta as unknown as ZodMeta)?.isIntersection) {
+    if (
+      (plugin.querySymbol(ZodContracts.definition(ref))?.meta as unknown as ZodMeta)?.isIntersection
+    ) {
       if (!(resolved?.logicalOperator === 'and' && resolved.items?.length === 1)) {
         return true;
       }
