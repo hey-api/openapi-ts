@@ -9,7 +9,7 @@ const spy = createClient as Mock;
 
 import { heyApiPlugin } from '../index';
 
-function callConfigResolved(plugin: ReturnType<typeof heyApiPlugin>): Promise<void> | undefined {
+function callConfigResolved(plugin: ReturnType<typeof heyApiPlugin>) {
   const hook = plugin.configResolved;
   if (typeof hook === 'function') {
     return hook.call({} as never, {} as never);
