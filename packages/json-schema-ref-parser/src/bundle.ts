@@ -177,6 +177,7 @@ const inventory$Ref = <S extends object = JSONSchema>({
         }
         if (!pointer) {
           console.warn(`Skipping unresolvable $ref: ${$refPath}`);
+          delete $ref.$ref;
           return;
         }
       } else {
