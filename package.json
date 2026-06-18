@@ -1,11 +1,11 @@
 {
-  "name": "openapi-ts-monorepo",
+  "name": "hey-api",
   "version": "0.1.0",
   "private": true,
-  "description": "Public @hey-api monorepo",
+  "description": "Public Hey API monorepo",
   "homepage": "https://heyapi.dev",
   "bugs": {
-    "url": "https://github.com/hey-api/openapi-ts/issues"
+    "url": "https://github.com/hey-api/hey-api/issues"
   },
   "license": "MIT",
   "author": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
+    "url": "git+https://github.com/hey-api/hey-api.git"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "type": "module",

@@ -3,14 +3,13 @@ title: Get Started
 description: Get started with @hey-api/openapi-ts.
 ---
 
-import InstallOpenapiTs from '@/components/package-managers/InstallOpenapiTs.mdx';
-import InstallVitePlugin from '@/components/package-managers/InstallVitePlugin.mdx';
+import InstallCommand from '@/components/package-managers/InstallCommand.astro';
 import Examples from '@/components/Examples.astro';
 import StackBlitz from '@/components/StackBlitz.astro';
 
 # Get Started
 
-[@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) generates TypeScript code from OpenAPI specifications. Point it at your spec, pick your plugins, and get production-grade code in seconds.
+[@hey-api/openapi-ts](https://github.com/hey-api/hey-api) generates TypeScript code from OpenAPI specifications. Point it at your spec, pick your plugins, and get production-grade code in seconds.
 
 Used by companies like Vercel, OpenCode, and PayPal.
 
@@ -55,7 +54,7 @@ Congratulations on creating your first client! 🎉 You can learn more about the
 
 You can download `@hey-api/openapi-ts` from npm using your favorite package manager.
 
-<InstallOpenapiTs />
+<InstallCommand packageName="@hey-api/openapi-ts" />
 
 ### Versioning
 
@@ -94,7 +93,7 @@ createClient({
 
 If you're using [Vite](https://vite.dev) 5, 6, 7, or 8, you can integrate `@hey-api/openapi-ts` directly into your build pipeline with `@hey-api/vite-plugin`. Install it alongside the main package:
 
-<InstallVitePlugin />
+<InstallCommand packageName="@hey-api/vite-plugin" />
 
 Then add the plugin to your Vite configuration:
 

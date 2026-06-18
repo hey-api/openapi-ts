@@ -4,7 +4,7 @@ import { getInfo, getInfoFromPullRequest } from '@changesets/get-github-info';
  * @returns {string}
  */
 function getRepo() {
-  return 'hey-api/openapi-ts';
+  return 'hey-api/hey-api';
 }
 
 /** @type {import("@changesets/types").ChangelogFunctions} */

@@ -1,0 +1,29 @@
+---
+import PackageManagers from '@/components/PackageManagers.astro';
+
+interface Props {
+  exactVersion?: boolean;
+  isDevDependency?: boolean;
+  packageName: string;
+}
+
+const {
+  exactVersion = true,
+  isDevDependency = true,
+  packageName,
+} = Astro.props as Props;
+
+if (!packageName) {
+  throw new Error('InstallCommand requires a "packageName" prop.');
+}
+
+const exactFlag = exactVersion ? ' -E' : '';
+const devFlag = isDevDependency ? ' -D' : '';
+---
+
+<PackageManagers
+  npm={`npm install ${packageName}${devFlag}${exactFlag}`}
+  pnpm={`pnpm add ${packageName}${devFlag}${exactFlag}`}
+  yarn={`yarn add ${packageName}${devFlag}${exactFlag}`}
+  bun={`bun add ${packageName}${devFlag}`}
+/>

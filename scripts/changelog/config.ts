@@ -55,7 +55,7 @@ export function getChangelogPackages(): Array<ChangelogPackage> {
   return changelogPackagesCache;
 }
 
-export const repo = 'hey-api/openapi-ts';
+export const repo = 'hey-api/hey-api';
 
 function getPackageBaseName(packageName: string): string {
   if (packageName.startsWith('@') && packageName.includes('/')) {

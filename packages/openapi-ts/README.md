@@ -7,17 +7,17 @@
 <p align="center">
   <a href="https://www.devtrends.dev/trends?c=v1.kZIBIg"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fopenapi-ts?period=month&style=flat&view=value" alt="DevTrends badge for @hey-api/openapi-ts" /></a>
   <a href="https://www.devtrends.dev/trends?c=v1.kZIBIg&v=change"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fopenapi-ts?period=year&style=flat&view=change" alt="DevTrends badge for @hey-api/openapi-ts" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
-  <a href="https://github.com/hey-api/openapi-ts"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
+  <a href="https://github.com/hey-api/hey-api/actions?query=branch%3Amain"><img src="https://github.com/hey-api/hey-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
+  <a href="https://github.com/hey-api/hey-api"><img src="https://img.shields.io/github/stars/hey-api/hey-api?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
+  <a href="https://github.com/hey-api/hey-api/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/hey-api/hey-api" alt="MIT License"></a>
 </p>
 
 <p align="center">
   <a href="https://stackblitz.com/edit/hey-api-example?file=openapi-ts.config.ts,src%2Fclient%2Fschemas.gen.ts,src%2Fclient%2Fsdk.gen.ts,src%2Fclient%2Ftypes.gen.ts">Demo</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://heyapi.dev">Manual</a>
+  <a href="https://heyapi.dev/docs/openapi/typescript/get-started">Manual</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
+  <a href="https://github.com/hey-api/hey-api/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://heyapi.dev/docs/openapi/typescript/community/contributing">Contribute</a>
 </p>
@@ -345,7 +345,7 @@ Alternatively, you can use `openapi-ts.config.js` and configure the export state
 
 You must set the input so we can load your OpenAPI specification. It can be a path or URL, object containing a path or URL, or an object representing an OpenAPI specification. Hey API supports all valid OpenAPI versions and file formats.
 
-> If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/openapi-ts/issues/276#issuecomment-2043143501) in your environment.
+> If you use an HTTPS URL with a self-signed certificate in development, you will need to set [`NODE_TLS_REJECT_UNAUTHORIZED=0`](https://github.com/hey-api/hey-api/issues/276#issuecomment-2043143501) in your environment.
 
 ### Output
 
@@ -377,15 +377,15 @@ Clients are responsible for sending the actual HTTP requests. We default to Fetc
 
 ### Proposed Clients (Vote to Prioritize)
 
-The following clients are roadmap proposals and are not started yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues?q=state%3Aopen%20label%3A%22vote%20%F0%9F%93%A9%22).
+The following clients are roadmap proposals and are not started yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/hey-api/issues?q=state%3Aopen%20label%3A%22vote%20%F0%9F%93%A9%22).
 
 - [`@hey-api/client-effect`](https://heyapi.dev/docs/openapi/typescript/clients/effect)
 
-Don't see your client? [Build your own](https://heyapi.dev/docs/openapi/typescript/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+Don't see your client? [Build your own](https://heyapi.dev/docs/openapi/typescript/clients/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/hey-api/issues).
 
 ### Available Plugins
 
-These plugins help reduce boilerplate associated with third-party dependencies. Hey API natively supports the most popular packages. Please open an issue on [GitHub](https://github.com/hey-api/openapi-ts/issues) if you'd like us to support your favorite package.
+These plugins help reduce boilerplate associated with third-party dependencies. Hey API natively supports the most popular packages. Please open an issue on [GitHub](https://github.com/hey-api/hey-api/issues) if you'd like us to support your favorite package.
 
 - [`@angular/common`](https://heyapi.dev/docs/openapi/typescript/plugins/angular)
 - [`@hey-api/schemas`](https://heyapi.dev/docs/openapi/typescript/plugins/schemas)
@@ -407,7 +407,7 @@ These plugins help reduce boilerplate associated with third-party dependencies. 
 
 ### Proposed Plugins (Vote to Prioritize)
 
-The following plugins are roadmap proposals and are not started yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/openapi-ts/issues?q=state%3Aopen%20label%3A%22vote%20%F0%9F%93%A9%22).
+The following plugins are roadmap proposals and are not started yet. You can help us prioritize them by voting on [GitHub](https://github.com/hey-api/hey-api/issues?q=state%3Aopen%20label%3A%22vote%20%F0%9F%93%A9%22).
 
 - [Adonis](https://heyapi.dev/docs/openapi/typescript/plugins/adonis)
 - [Ajv](https://heyapi.dev/docs/openapi/typescript/plugins/ajv)
@@ -430,7 +430,7 @@ The following plugins are roadmap proposals and are not started yet. You can hel
 - [Yup](https://heyapi.dev/docs/openapi/typescript/plugins/yup)
 - [Zustand](https://heyapi.dev/docs/openapi/typescript/plugins/zustand)
 
-Don't see your plugin? [Build your own](https://heyapi.dev/docs/openapi/typescript/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/openapi-ts/issues).
+Don't see your plugin? [Build your own](https://heyapi.dev/docs/openapi/typescript/plugins/custom) or let us know your interest by [opening an issue](https://github.com/hey-api/hey-api/issues).
 
 ## Migrating
 
@@ -440,6 +440,6 @@ You can learn more on the [Migrating](https://heyapi.dev/docs/openapi/typescript
 
 ## License
 
-Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+Released under the [MIT License](https://github.com/hey-api/hey-api/blob/main/LICENSE.md).
 
 <!-- template-license-end -->

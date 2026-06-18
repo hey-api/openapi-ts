@@ -4,28 +4,40 @@
   "description": "🌀 OpenAPI to TypeScript codegen. Production-grade SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.",
   "keywords": [
     "angular",
+    "arktype",
     "axios",
     "codegen",
+    "faker",
+    "fakerjs",
+    "fastify",
     "fetch",
     "generator",
     "http",
     "javascript",
     "json",
+    "ky",
+    "nest.js",
     "next",
     "next.js",
     "node",
     "nuxt",
     "ofetch",
     "openapi",
+    "orpc",
+    "pinia",
     "rest",
+    "sdk",
     "swagger",
+    "swr",
     "typescript",
+    "valibot",
     "xhr",
-    "yaml"
+    "yaml",
+    "zod"
   ],
   "homepage": "https://heyapi.dev/",
   "bugs": {
-    "url": "https://github.com/hey-api/openapi-ts/issues"
+    "url": "https://github.com/hey-api/hey-api/issues"
   },
   "license": "MIT",
   "author": {
@@ -35,7 +47,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
+    "url": "git+https://github.com/hey-api/hey-api.git"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "bin": {

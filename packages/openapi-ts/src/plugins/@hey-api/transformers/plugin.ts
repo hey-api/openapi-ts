@@ -290,7 +290,7 @@ function processSchemaType({
 
       if (!hasSimpleTypes && !isProcessable) {
         console.warn(
-          `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/openapi-ts/issues`,
+          `❗️ Transformers warning: schema ${JSON.stringify(schema)} is too complex and won't be currently processed. This will likely produce an incomplete transformer which is not what you want. Please open an issue if you'd like this improved https://github.com/hey-api/hey-api/issues`,
         );
       }
     }
@@ -332,7 +332,7 @@ export const handler: HeyApiTransformersPlugin['Handler'] = ({ plugin }) => {
       ) {
         if (plugin.context.config.logs.level === 'debug') {
           console.warn(
-            `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/openapi-ts/issues`,
+            `❗️ Transformers warning: route ${createOperationKey(operation)} has ${response.items.length} non-void success responses. This is currently not handled and we will not generate a response transformer. Please open an issue if you'd like this feature https://github.com/hey-api/hey-api/issues`,
           );
         }
         return;

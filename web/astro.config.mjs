@@ -58,7 +58,7 @@ export default defineConfig({
       description:
         '🌀 OpenAPI to TypeScript codegen. Production-ready SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.',
       editLink: {
-        baseUrl: 'https://github.com/hey-api/openapi-ts/edit/main/docs',
+        baseUrl: 'https://github.com/hey-api/hey-api/edit/main/docs',
       },
       favicon: '/assets/icons/dark.svg',
       head: [

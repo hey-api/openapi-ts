@@ -4,12 +4,12 @@
   "description": "Shared utility types.",
   "homepage": "https://heyapi.dev/",
   "bugs": {
-    "url": "https://github.com/hey-api/openapi-ts/issues"
+    "url": "https://github.com/hey-api/hey-api/issues"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
+    "url": "git+https://github.com/hey-api/hey-api.git"
   },
   "files": [
     "dist"

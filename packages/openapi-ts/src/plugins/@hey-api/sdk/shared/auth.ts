@@ -98,7 +98,7 @@ export function operationAuth({
       auth.push(authObject);
     } else if (securitySchemeObject.type !== 'mutualTLS') {
       console.warn(
-        `❗️ SDK warning: unsupported security scheme. Please open an issue if you'd like it added https://github.com/hey-api/openapi-ts/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
+        `❗️ SDK warning: unsupported security scheme. Please open an issue if you'd like it added https://github.com/hey-api/hey-api/issues\n${JSON.stringify(securitySchemeObject, null, 2)}`,
       );
     }
   }

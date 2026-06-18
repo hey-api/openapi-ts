@@ -8,37 +8,37 @@
 
 #### @hey-api/client-angular
 
-- reassign the result of `HttpHeaders.delete()` back to `opts.headers` ([#3988](https://github.com/hey-api/openapi-ts/pull/3988))
-- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+- reassign the result of `HttpHeaders.delete()` back to `opts.headers` ([#3988](https://github.com/hey-api/hey-api/pull/3988))
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/hey-api/pull/3996))
 
 #### @hey-api/client-axios
 
-- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/hey-api/pull/3996))
 
 #### @hey-api/client-fetch
 
-- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/hey-api/pull/3996))
 
 #### @hey-api/client-ky
 
-- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/hey-api/pull/3996))
 
 #### @hey-api/client-next
 
-- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/hey-api/pull/3996))
 
 #### @hey-api/client-nuxt
 
-- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/hey-api/pull/3996))
 
 #### @hey-api/client-ofetch
 
-- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+- export augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/hey-api/pull/3996))
 
 #### @hey-api/sdk
 
-- don't expose SSE errors as iterator return types ([#3989](https://github.com/hey-api/openapi-ts/pull/3989))
-- support type-safe `meta` option via augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/openapi-ts/pull/3996))
+- don't expose SSE errors as iterator return types ([#3989](https://github.com/hey-api/hey-api/pull/3989))
+- support type-safe `meta` option via augmentable `ClientMeta` interface ([#3996](https://github.com/hey-api/hey-api/pull/3996))
 
 ---
 
@@ -46,9 +46,9 @@
 
 ### Updates
 
-- symbol: add event listeners ([#3998](https://github.com/hey-api/openapi-ts/pull/3998))
-- types: rename `ProjectRenderMeta` to `ProjectMeta` and key it by language ([#3984](https://github.com/hey-api/openapi-ts/pull/3984))
-- utils: expose `Version` class ([#3991](https://github.com/hey-api/openapi-ts/pull/3991))
+- symbol: add event listeners ([#3998](https://github.com/hey-api/hey-api/pull/3998))
+- types: rename `ProjectRenderMeta` to `ProjectMeta` and key it by language ([#3984](https://github.com/hey-api/hey-api/pull/3984))
+- utils: expose `Version` class ([#3991](https://github.com/hey-api/hey-api/pull/3991))
 
 ---
 
@@ -56,8 +56,8 @@
 
 ### Updates
 
-- types: update project meta types ([#3984](https://github.com/hey-api/openapi-ts/pull/3984))
-- utils: expose `SymbolFactory` ([#3991](https://github.com/hey-api/openapi-ts/pull/3991))
+- types: update project meta types ([#3984](https://github.com/hey-api/hey-api/pull/3984))
+- utils: expose `SymbolFactory` ([#3991](https://github.com/hey-api/hey-api/pull/3991))
 
 ---
 
@@ -67,17 +67,17 @@
 
 ### Updates
 
-- cli: simplify generate command messages ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+- cli: simplify generate command messages ([#3982](https://github.com/hey-api/hey-api/pull/3982))
 
 ### Plugins
 
 #### valibot
 
-- revert referencing TypeScript enums ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+- revert referencing TypeScript enums ([#3982](https://github.com/hey-api/hey-api/pull/3982))
 
 #### zod
 
-- revert referencing TypeScript enums ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+- revert referencing TypeScript enums ([#3982](https://github.com/hey-api/hey-api/pull/3982))
 
 ---
 
@@ -89,68 +89,68 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** config: declarative configuration ([#3950](https://github.com/hey-api/openapi-ts/pull/3950))
+- **⚠️ Breaking:** config: declarative configuration ([#3950](https://github.com/hey-api/hey-api/pull/3950))
 
-This is an internal change that simplifies the configuration and plugin APIs. The generated output should be unaffected, please [open an issue](https://github.com/hey-api/openapi-ts/issues) if that's not the case. If you have custom plugins, refer to the [custom plugin guide](https://heyapi.dev/docs/openapi/typescript/plugins/custom) for the latest instructions.
-- dsl: track extended class symbols ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
-- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/openapi-ts/pull/3953))
+This is an internal change that simplifies the configuration and plugin APIs. The generated output should be unaffected, please [open an issue](https://github.com/hey-api/hey-api/issues) if that's not the case. If you have custom plugins, refer to the [custom plugin guide](https://heyapi.dev/docs/openapi/typescript/plugins/custom) for the latest instructions.
+- dsl: track extended class symbols ([#3945](https://github.com/hey-api/hey-api/pull/3945))
+- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/hey-api/pull/3953))
 
 ### Plugins
 
 #### @hey-api/client-angular
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-axios
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-fetch
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-ky
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-next
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
 
 #### @hey-api/client-nuxt
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-ofetch
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/sdk
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/openapi-ts/pull/3935))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/hey-api/pull/3935))
 
 #### orpc
 
-- handle no-content success responses ([#3948](https://github.com/hey-api/openapi-ts/pull/3948))
+- handle no-content success responses ([#3948](https://github.com/hey-api/hey-api/pull/3948))
 
 #### valibot
 
-- improve boolean enum handling ([#3974](https://github.com/hey-api/openapi-ts/pull/3974))
+- improve boolean enum handling ([#3974](https://github.com/hey-api/hey-api/pull/3974))
 
 ---
 
@@ -158,7 +158,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- node: add `~dsl` property ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+- node: add `~dsl` property ([#3982](https://github.com/hey-api/hey-api/pull/3982))
 
 ---
 
@@ -166,8 +166,8 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- symbol: add `children` and `override` property ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
-- symbols: export `pythonNameConflictResolver`, `SymbolChild`, `SymbolKind`, and `SymbolRegistry` ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
+- symbol: add `children` and `override` property ([#3945](https://github.com/hey-api/hey-api/pull/3945))
+- symbols: export `pythonNameConflictResolver`, `SymbolChild`, `SymbolKind`, and `SymbolRegistry` ([#3945](https://github.com/hey-api/hey-api/pull/3945))
 
 ---
 
@@ -175,7 +175,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- bundle: name whole-file `$ref`s after the source filename ([#3936](https://github.com/hey-api/openapi-ts/pull/3936))
+- bundle: name whole-file `$ref`s after the source filename ([#3936](https://github.com/hey-api/hey-api/pull/3936))
 
 ---
 
@@ -183,7 +183,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- plugin: add generics support to `querySymbol()` and `querySymbols()` ([#3982](https://github.com/hey-api/openapi-ts/pull/3982))
+- plugin: add generics support to `querySymbol()` and `querySymbols()` ([#3982](https://github.com/hey-api/hey-api/pull/3982))
 
 ---
 
@@ -191,12 +191,12 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- plugin: add `symbols` property ([#3942](https://github.com/hey-api/openapi-ts/pull/3942))
-- parser: expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/openapi-ts/pull/3935))
-- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/openapi-ts/pull/3953))
-- config: `valueToObject` is recursive ([#3927](https://github.com/hey-api/openapi-ts/pull/3927))
-- plugin: do not stamp external symbols ([#3942](https://github.com/hey-api/openapi-ts/pull/3942))
-- plugin: export `coerce`, `defineConfig`, `Coercer`, `CoercerMap`, `ConfigTable`, `PluginSymbols`, `PluginTag`, `TableDirectives`, and `WithCoercers` ([#3927](https://github.com/hey-api/openapi-ts/pull/3927))
+- plugin: add `symbols` property ([#3942](https://github.com/hey-api/hey-api/pull/3942))
+- parser: expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/hey-api/pull/3935))
+- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/hey-api/pull/3953))
+- config: `valueToObject` is recursive ([#3927](https://github.com/hey-api/hey-api/pull/3927))
+- plugin: do not stamp external symbols ([#3942](https://github.com/hey-api/hey-api/pull/3942))
+- plugin: export `coerce`, `defineConfig`, `Coercer`, `CoercerMap`, `ConfigTable`, `PluginSymbols`, `PluginTag`, `TableDirectives`, and `WithCoercers` ([#3927](https://github.com/hey-api/hey-api/pull/3927))
 
 ---
 
@@ -210,68 +210,68 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** config: declarative configuration ([#3950](https://github.com/hey-api/openapi-ts/pull/3950))
+- **⚠️ Breaking:** config: declarative configuration ([#3950](https://github.com/hey-api/hey-api/pull/3950))
 
-This is an internal change that simplifies the configuration and plugin APIs. The generated output should be unaffected, please [open an issue](https://github.com/hey-api/openapi-ts/issues) if that's not the case. If you have custom plugins, refer to the [custom plugin guide](https://heyapi.dev/docs/openapi/typescript/plugins/custom) for the latest instructions.
-- dsl: track extended class symbols ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
-- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/openapi-ts/pull/3953))
+This is an internal change that simplifies the configuration and plugin APIs. The generated output should be unaffected, please [open an issue](https://github.com/hey-api/hey-api/issues) if that's not the case. If you have custom plugins, refer to the [custom plugin guide](https://heyapi.dev/docs/openapi/typescript/plugins/custom) for the latest instructions.
+- dsl: track extended class symbols ([#3945](https://github.com/hey-api/hey-api/pull/3945))
+- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/hey-api/pull/3953))
 
 ### Plugins
 
 #### @hey-api/client-angular
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-axios
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-fetch
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-ky
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-next
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
 
 #### @hey-api/client-nuxt
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/client-ofetch
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/openapi-ts/pull/3973))
-- improve params helper type ([#3946](https://github.com/hey-api/openapi-ts/pull/3946))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- use `Object.create()` to avoid prototype chain substitution. Reported by @programsurf, @daeungdaeung, @yoonsh, and @lubroai (GHSA-hhx9-57xq-r5rw) ([#3973](https://github.com/hey-api/hey-api/pull/3973))
+- improve params helper type ([#3946](https://github.com/hey-api/hey-api/pull/3946))
 
 #### @hey-api/sdk
 
-- add explicit return types ([#3880](https://github.com/hey-api/openapi-ts/pull/3880))
-- expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/openapi-ts/pull/3935))
+- add explicit return types ([#3880](https://github.com/hey-api/hey-api/pull/3880))
+- expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/hey-api/pull/3935))
 
 #### orpc
 
-- handle no-content success responses ([#3948](https://github.com/hey-api/openapi-ts/pull/3948))
+- handle no-content success responses ([#3948](https://github.com/hey-api/hey-api/pull/3948))
 
 #### valibot
 
-- improve boolean enum handling ([#3974](https://github.com/hey-api/openapi-ts/pull/3974))
+- improve boolean enum handling ([#3974](https://github.com/hey-api/hey-api/pull/3974))
 
 ---
 
@@ -279,8 +279,8 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- symbol: add `children` and `override` property ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
-- symbols: export `pythonNameConflictResolver`, `SymbolChild`, `SymbolKind`, and `SymbolRegistry` ([#3945](https://github.com/hey-api/openapi-ts/pull/3945))
+- symbol: add `children` and `override` property ([#3945](https://github.com/hey-api/hey-api/pull/3945))
+- symbols: export `pythonNameConflictResolver`, `SymbolChild`, `SymbolKind`, and `SymbolRegistry` ([#3945](https://github.com/hey-api/hey-api/pull/3945))
 
 ---
 
@@ -288,7 +288,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- bundle: name whole-file `$ref`s after the source filename ([#3936](https://github.com/hey-api/openapi-ts/pull/3936))
+- bundle: name whole-file `$ref`s after the source filename ([#3936](https://github.com/hey-api/hey-api/pull/3936))
 
 ---
 
@@ -296,12 +296,12 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- plugin: add `symbols` property ([#3942](https://github.com/hey-api/openapi-ts/pull/3942))
-- parser: expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/openapi-ts/pull/3935))
-- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/openapi-ts/pull/3953))
-- config: `valueToObject` is recursive ([#3927](https://github.com/hey-api/openapi-ts/pull/3927))
-- plugin: do not stamp external symbols ([#3942](https://github.com/hey-api/openapi-ts/pull/3942))
-- plugin: export `coerce`, `defineConfig`, `Coercer`, `CoercerMap`, `ConfigTable`, `PluginSymbols`, `PluginTag`, `TableDirectives`, and `WithCoercers` ([#3927](https://github.com/hey-api/openapi-ts/pull/3927))
+- plugin: add `symbols` property ([#3942](https://github.com/hey-api/hey-api/pull/3942))
+- parser: expose `key` on security schemes when their signatures collide ([#3935](https://github.com/hey-api/hey-api/pull/3935))
+- parser: preserve sort order when filtering input ([#3953](https://github.com/hey-api/hey-api/pull/3953))
+- config: `valueToObject` is recursive ([#3927](https://github.com/hey-api/hey-api/pull/3927))
+- plugin: do not stamp external symbols ([#3942](https://github.com/hey-api/hey-api/pull/3942))
+- plugin: export `coerce`, `defineConfig`, `Coercer`, `CoercerMap`, `ConfigTable`, `PluginSymbols`, `PluginTag`, `TableDirectives`, and `WithCoercers` ([#3927](https://github.com/hey-api/hey-api/pull/3927))
 
 ---
 
@@ -313,61 +313,61 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 #### @hey-api/client-angular
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-axios
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-fetch
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-ky
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-next
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-ofetch
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/transformers
 
-- add support for Temporal API via [temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) in `dates` ([#3916](https://github.com/hey-api/openapi-ts/pull/3916))
+- add support for Temporal API via [temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) in `dates` ([#3916](https://github.com/hey-api/hey-api/pull/3916))
 
 #### @tanstack/angular-query-experimental
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/preact-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
-- add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
+- add `useGetQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/react-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
-- add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
+- add `useGetQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/solid-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/svelte-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/vue-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### zod
 
-- avoid invalid `.extend()` on `z.record()` when a discriminated union member is an empty object ([#3915](https://github.com/hey-api/openapi-ts/pull/3915))
+- avoid invalid `.extend()` on `z.record()` when a discriminated union member is an empty object ([#3915](https://github.com/hey-api/hey-api/pull/3915))
 
 ---
 
@@ -375,7 +375,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- symbols: prefer recursive over top-level merging in registry ([#3917](https://github.com/hey-api/openapi-ts/pull/3917))
+- symbols: prefer recursive over top-level merging in registry ([#3917](https://github.com/hey-api/hey-api/pull/3917))
 
 ---
 
@@ -383,11 +383,11 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- parser: encode special characters in JSON Pointer ([#3903](https://github.com/hey-api/openapi-ts/pull/3903))
-- fix: various performance improvements ([#3917](https://github.com/hey-api/openapi-ts/pull/3917))
-- plugin: expose getHooks method ([#3913](https://github.com/hey-api/openapi-ts/pull/3913))
-- types: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/openapi-ts/pull/3907))
-- utils: turn on `enabled` flag in `mappers` ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- parser: encode special characters in JSON Pointer ([#3903](https://github.com/hey-api/hey-api/pull/3903))
+- fix: various performance improvements ([#3917](https://github.com/hey-api/hey-api/pull/3917))
+- plugin: expose getHooks method ([#3913](https://github.com/hey-api/hey-api/pull/3913))
+- types: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/hey-api/pull/3907))
+- utils: turn on `enabled` flag in `mappers` ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 ---
 
@@ -399,61 +399,61 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 #### @hey-api/client-angular
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-axios
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-fetch
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-ky
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-next
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/client-ofetch
 
-- correct return type in SSE ([#3919](https://github.com/hey-api/openapi-ts/pull/3919))
+- correct return type in SSE ([#3919](https://github.com/hey-api/hey-api/pull/3919))
 
 #### @hey-api/transformers
 
-- add support for Temporal API via [temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) in `dates` ([#3916](https://github.com/hey-api/openapi-ts/pull/3916))
+- add support for Temporal API via [temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) in `dates` ([#3916](https://github.com/hey-api/hey-api/pull/3916))
 
 #### @tanstack/angular-query-experimental
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/preact-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
-- add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
+- add `useGetQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/react-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
-- add `useGetQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
+- add `useGetQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/solid-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/svelte-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### @tanstack/vue-query
 
-- add `getQueryData` option ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- add `getQueryData` option ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 #### zod
 
-- avoid invalid `.extend()` on `z.record()` when a discriminated union member is an empty object ([#3915](https://github.com/hey-api/openapi-ts/pull/3915))
+- avoid invalid `.extend()` on `z.record()` when a discriminated union member is an empty object ([#3915](https://github.com/hey-api/hey-api/pull/3915))
 
 ---
 
@@ -461,7 +461,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- symbols: prefer recursive over top-level merging in registry ([#3917](https://github.com/hey-api/openapi-ts/pull/3917))
+- symbols: prefer recursive over top-level merging in registry ([#3917](https://github.com/hey-api/hey-api/pull/3917))
 
 ---
 
@@ -469,11 +469,11 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- parser: encode special characters in JSON Pointer ([#3903](https://github.com/hey-api/openapi-ts/pull/3903))
-- fix: various performance improvements ([#3917](https://github.com/hey-api/openapi-ts/pull/3917))
-- plugin: expose getHooks method ([#3913](https://github.com/hey-api/openapi-ts/pull/3913))
-- types: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/openapi-ts/pull/3907))
-- utils: turn on `enabled` flag in `mappers` ([#3827](https://github.com/hey-api/openapi-ts/pull/3827))
+- parser: encode special characters in JSON Pointer ([#3903](https://github.com/hey-api/hey-api/pull/3903))
+- fix: various performance improvements ([#3917](https://github.com/hey-api/hey-api/pull/3917))
+- plugin: expose getHooks method ([#3913](https://github.com/hey-api/hey-api/pull/3913))
+- types: export `ResolverNodes` type on `Plugin` ([#3907](https://github.com/hey-api/hey-api/pull/3907))
+- utils: turn on `enabled` flag in `mappers` ([#3827](https://github.com/hey-api/hey-api/pull/3827))
 
 ---
 
@@ -483,74 +483,74 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- dsl: cache lazy node result ([#3855](https://github.com/hey-api/openapi-ts/pull/3855))
+- dsl: cache lazy node result ([#3855](https://github.com/hey-api/hey-api/pull/3855))
 
 ### Plugins
 
 #### @hey-api/client-angular
 
-- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/hey-api/pull/3853))
 
 #### @hey-api/client-axios
 
-- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/hey-api/pull/3853))
 
 #### @hey-api/client-fetch
 
-- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/hey-api/pull/3853))
 
 #### @hey-api/client-ky
 
-- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/hey-api/pull/3853))
 
 #### @hey-api/client-next
 
-- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/hey-api/pull/3853))
 
 #### @hey-api/client-nuxt
 
-- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/hey-api/pull/3853))
 
 #### @hey-api/client-ofetch
 
-- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/openapi-ts/pull/3853))
+- preserve query auth when when there are no other query parameters ([#3853](https://github.com/hey-api/hey-api/pull/3853))
 
 #### @hey-api/sdk
 
-- support `valibot` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847))
-- support `zod` as response transformer ([#3847](https://github.com/hey-api/openapi-ts/pull/3847))
+- support `valibot` as response transformer ([#3847](https://github.com/hey-api/hey-api/pull/3847))
+- support `zod` as response transformer ([#3847](https://github.com/hey-api/hey-api/pull/3847))
 
 #### @tanstack/angular-query-experimental
 
-- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/hey-api/pull/3858))
 
 #### @tanstack/preact-query
 
-- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/hey-api/pull/3858))
 
 #### @tanstack/react-query
 
-- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/hey-api/pull/3858))
 
 #### @tanstack/solid-query
 
-- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/hey-api/pull/3858))
 
 #### @tanstack/svelte-query
 
-- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/hey-api/pull/3858))
 
 #### @tanstack/vue-query
 
-- add `mutationKeys` option ([#3858](https://github.com/hey-api/openapi-ts/pull/3858))
+- add `mutationKeys` option ([#3858](https://github.com/hey-api/hey-api/pull/3858))
 
 #### valibot
 
-- use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+- use enums from TypeScript if available ([#3884](https://github.com/hey-api/hey-api/pull/3884))
 
 #### zod
 
-- use enums from TypeScript if available ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+- use enums from TypeScript if available ([#3884](https://github.com/hey-api/hey-api/pull/3884))
 
 ---
 
@@ -558,7 +558,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- plugin: add `querySymbols()` function ([#3884](https://github.com/hey-api/openapi-ts/pull/3884))
+- plugin: add `querySymbols()` function ([#3884](https://github.com/hey-api/hey-api/pull/3884))
 
 ---
 
@@ -570,7 +570,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 #### @hey-api/transformers
 
-- use symbols for `additionalProperties` key variables ([#3841](https://github.com/hey-api/openapi-ts/pull/3841))
+- use symbols for `additionalProperties` key variables ([#3841](https://github.com/hey-api/hey-api/pull/3841))
 
 ---
 
@@ -578,7 +578,7 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 ### Updates
 
-- yaml: swap `yaml` back to `js-yaml` ([#3843](https://github.com/hey-api/openapi-ts/pull/3843))
+- yaml: swap `yaml` back to `js-yaml` ([#3843](https://github.com/hey-api/hey-api/pull/3843))
 
 ---
 
@@ -598,33 +598,33 @@ This release has 15 breaking changes. Please review the release notes carefully 
 
 ### Updates
 
-- cli: print file count and generator speed ([#3828](https://github.com/hey-api/openapi-ts/pull/3828))
-- **⚠️ Breaking:** client: resolve `runtimeConfigPath` relative to the output folder ([#3770](https://github.com/hey-api/openapi-ts/pull/3770))
+- cli: print file count and generator speed ([#3828](https://github.com/hey-api/hey-api/pull/3828))
+- **⚠️ Breaking:** client: resolve `runtimeConfigPath` relative to the output folder ([#3770](https://github.com/hey-api/hey-api/pull/3770))
 
 ### Changed `runtimeConfigPath` behavior
 
 This was a known, long-standing issue confusing first-time users. Before, defining client `runtimeConfigPath` value would paste it verbatim to the generated output. This release changes the behavior to resolve relative to the current working directory the same way output path works.
-- config: remove `--apply` flag from Biome post-processor commands ([#3812](https://github.com/hey-api/openapi-ts/pull/3812))
+- config: remove `--apply` flag from Biome post-processor commands ([#3812](https://github.com/hey-api/hey-api/pull/3812))
 
 ### Plugins
 
 #### @hey-api/client-angular
 
-- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/hey-api/pull/3814))
 
 #### @hey-api/client-fetch
 
-- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/hey-api/pull/3814))
 
 #### @hey-api/client-ky
 
-- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** respect ky instance defaults ([#3806](https://github.com/hey-api/openapi-ts/pull/3806))
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** respect ky instance defaults ([#3806](https://github.com/hey-api/hey-api/pull/3806))
 
 ### Changed Ky client behavior
 
@@ -632,44 +632,44 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 
 #### @hey-api/client-next
 
-- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** pass previous result to error interceptors ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/hey-api/pull/3814))
 
 #### @hey-api/client-ofetch
 
-- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
-- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/openapi-ts/pull/3814))
+- **⚠️ Breaking:** `request` and `response` objects might be undefined ([#3814](https://github.com/hey-api/hey-api/pull/3814))
+- **⚠️ Breaking:** respect `throwOnError` when request validation fails ([#3814](https://github.com/hey-api/hey-api/pull/3814))
 
 #### @tanstack/angular-query-experimental
 
-- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/hey-api/pull/3824))
 
 #### @tanstack/preact-query
 
-- add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
-- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `useSetQueryData` option ([#3824](https://github.com/hey-api/hey-api/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/hey-api/pull/3824))
 
 #### @tanstack/react-query
 
-- add `useSetQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
-- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `useSetQueryData` option ([#3824](https://github.com/hey-api/hey-api/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/hey-api/pull/3824))
 
 #### @tanstack/solid-query
 
-- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/hey-api/pull/3824))
 
 #### @tanstack/svelte-query
 
-- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/hey-api/pull/3824))
 
 #### @tanstack/vue-query
 
-- add `setQueryData` option ([#3824](https://github.com/hey-api/openapi-ts/pull/3824))
+- add `setQueryData` option ([#3824](https://github.com/hey-api/hey-api/pull/3824))
 
 #### zod
 
-- fallback `.discriminatedUnion` to `.union` if members contain intersection ([#3813](https://github.com/hey-api/openapi-ts/pull/3813))
+- fallback `.discriminatedUnion` to `.union` if members contain intersection ([#3813](https://github.com/hey-api/hey-api/pull/3813))
 
 ---
 
@@ -677,8 +677,8 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 
 ### Updates
 
-- planner: speed up identifier conflict detector ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
-- symbol: speed up symbol registry cache ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+- planner: speed up identifier conflict detector ([#3823](https://github.com/hey-api/hey-api/pull/3823))
+- symbol: speed up symbol registry cache ([#3823](https://github.com/hey-api/hey-api/pull/3823))
 
 ---
 
@@ -686,8 +686,8 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 
 ### Updates
 
-- graph: speed up graph builder ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
-- utils: speed up deep equality check ([#3823](https://github.com/hey-api/openapi-ts/pull/3823))
+- graph: speed up graph builder ([#3823](https://github.com/hey-api/hey-api/pull/3823))
+- utils: speed up deep equality check ([#3823](https://github.com/hey-api/hey-api/pull/3823))
 
 ---
 
@@ -697,41 +697,41 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 
 ### Updates
 
-- config: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753))
-- output: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683))
-- parser: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791))
-- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
+- config: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/hey-api/pull/3753))
+- output: surface postprocess errors ([#3683](https://github.com/hey-api/hey-api/pull/3683))
+- parser: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/hey-api/pull/3791))
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/hey-api/pull/3782))
 
 ### Plugins
 
 #### @hey-api/client-angular
 
-- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/hey-api/pull/3757))
 
 #### @hey-api/client-fetch
 
-- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/hey-api/pull/3757))
 
 #### @hey-api/client-ky
 
-- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/hey-api/pull/3757))
 
 #### @hey-api/client-next
 
-- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/hey-api/pull/3757))
 
 #### @hey-api/client-ofetch
 
-- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/openapi-ts/pull/3757))
+- narrow `headers` to `Headers` in `ResolvedRequestOptions` ([#3757](https://github.com/hey-api/hey-api/pull/3757))
 
 #### valibot
 
-- add support for `.variant()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780))
+- add support for `.variant()` ([#3780](https://github.com/hey-api/hey-api/pull/3780))
 
 #### zod
 
-- add support for `.discriminatedUnion()` ([#3780](https://github.com/hey-api/openapi-ts/pull/3780))
-- support generating `z.input` and `z.output` types ([#3759](https://github.com/hey-api/openapi-ts/pull/3759))
+- add support for `.discriminatedUnion()` ([#3780](https://github.com/hey-api/hey-api/pull/3780))
+- support generating `z.input` and `z.output` types ([#3759](https://github.com/hey-api/hey-api/pull/3759))
 
 ---
 
@@ -739,7 +739,7 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 
 ### Updates
 
-- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/hey-api/pull/3782))
 
 ---
 
@@ -747,10 +747,10 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 
 ### Updates
 
-- output: surface postprocess errors ([#3683](https://github.com/hey-api/openapi-ts/pull/3683))
-- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/openapi-ts/pull/3782))
-- parser: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/openapi-ts/pull/3791))
-- config: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/openapi-ts/pull/3753))
+- output: surface postprocess errors ([#3683](https://github.com/hey-api/hey-api/pull/3683))
+- parser: avoid encoding url unsafe characters ([#3782](https://github.com/hey-api/hey-api/pull/3782))
+- parser: re-add implicitly-filtered schemas in collectOperations ([#3791](https://github.com/hey-api/hey-api/pull/3791))
+- config: warn on duplicated plugin configurations ([#3753](https://github.com/hey-api/hey-api/pull/3753))
 
 ---
 
@@ -758,7 +758,7 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 
 ### Updates
 
-- api: expose `vite` options ([#3776](https://github.com/hey-api/openapi-ts/pull/3776))
+- api: expose `vite` options ([#3776](https://github.com/hey-api/hey-api/pull/3776))
 
 ---
 
@@ -772,48 +772,48 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
-- cli: improve error message on invalid input ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
-- parser: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/openapi-ts/pull/3714))
-- parser: process enum metadata ([#3727](https://github.com/hey-api/openapi-ts/pull/3727))
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/hey-api/pull/3694))
+- cli: improve error message on invalid input ([#3679](https://github.com/hey-api/hey-api/pull/3679))
+- parser: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/hey-api/pull/3714))
+- parser: process enum metadata ([#3727](https://github.com/hey-api/hey-api/pull/3727))
 
 ### Plugins
 
 #### @angular/common
 
-- requests and resources broken default configuration ([#3678](https://github.com/hey-api/openapi-ts/pull/3678))
+- requests and resources broken default configuration ([#3678](https://github.com/hey-api/hey-api/pull/3678))
 
 #### @hey-api/client-angular
 
-- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/hey-api/pull/3686))
 
 #### @hey-api/client-axios
 
-- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/hey-api/pull/3686))
 
 #### @hey-api/client-fetch
 
-- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/hey-api/pull/3686))
 
 #### @hey-api/client-ky
 
-- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/hey-api/pull/3686))
 
 #### @hey-api/client-next
 
-- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/hey-api/pull/3686))
 
 #### @hey-api/client-nuxt
 
-- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/hey-api/pull/3686))
 
 #### @hey-api/client-ofetch
 
-- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/openapi-ts/pull/3686))
+- simplify SSE line endings normalization ([#3686](https://github.com/hey-api/hey-api/pull/3686))
 
 #### @hey-api/transformers
 
-- return value for primitive array entries ([#3733](https://github.com/hey-api/openapi-ts/pull/3733))
+- return value for primitive array entries ([#3733](https://github.com/hey-api/hey-api/pull/3733))
 
 ---
 
@@ -825,7 +825,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/hey-api/pull/3694))
 
 ---
 
@@ -837,8 +837,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
-- internal: export errors ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/hey-api/pull/3694))
+- internal: export errors ([#3679](https://github.com/hey-api/hey-api/pull/3679))
 
 ---
 
@@ -850,10 +850,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/openapi-ts/pull/3694))
-- parser: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/openapi-ts/pull/3714))
-- parser: process enum metadata ([#3727](https://github.com/hey-api/openapi-ts/pull/3727))
-- error: handle InputError ([#3679](https://github.com/hey-api/openapi-ts/pull/3679))
+- **⚠️ Breaking:** This release bumps the minimum required Node version to 22.13. ([#3694](https://github.com/hey-api/hey-api/pull/3694))
+- parser: keep orphans when explicitly included in filters ([#3714](https://github.com/hey-api/hey-api/pull/3714))
+- parser: process enum metadata ([#3727](https://github.com/hey-api/hey-api/pull/3727))
+- error: handle InputError ([#3679](https://github.com/hey-api/hey-api/pull/3679))
 
 ---
 
@@ -865,11 +865,11 @@ This release has 2 breaking changes. Please review the release notes carefully b
 
 ### Updates
 
-- **⚠️ Breaking:** remove OpenAPI types from JSON Schema documents ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
-- **⚠️ Breaking:** rename `OpenAPIExtensions` to `SpecExtensions` ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
-- types: add `WithSpecExtensions` type ([#3734](https://github.com/hey-api/openapi-ts/pull/3734))
-- openapi: stricter 2.0 version type ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
-- types: use mutable arrays ([#3715](https://github.com/hey-api/openapi-ts/pull/3715))
+- **⚠️ Breaking:** remove OpenAPI types from JSON Schema documents ([#3715](https://github.com/hey-api/hey-api/pull/3715))
+- **⚠️ Breaking:** rename `OpenAPIExtensions` to `SpecExtensions` ([#3715](https://github.com/hey-api/hey-api/pull/3715))
+- types: add `WithSpecExtensions` type ([#3734](https://github.com/hey-api/hey-api/pull/3734))
+- openapi: stricter 2.0 version type ([#3715](https://github.com/hey-api/hey-api/pull/3715))
+- types: use mutable arrays ([#3715](https://github.com/hey-api/hey-api/pull/3715))
 
 ---
 
@@ -881,7 +881,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** This package is now ESM-only. ([#3688](https://github.com/hey-api/openapi-ts/pull/3688))
+- **⚠️ Breaking:** This package is now ESM-only. ([#3688](https://github.com/hey-api/hey-api/pull/3688))
 
 ---
 
@@ -891,7 +891,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- internal: remove `plugin.getSymbol()` function ([#3671](https://github.com/hey-api/openapi-ts/pull/3671))
+- internal: remove `plugin.getSymbol()` function ([#3671](https://github.com/hey-api/hey-api/pull/3671))
 
 ### Removed `plugin.getSymbol()` function
 
@@ -901,35 +901,35 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 #### @hey-api/client-angular
 
-- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660))
+- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/hey-api/pull/3660))
 
 #### @hey-api/client-axios
 
-- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660))
+- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/hey-api/pull/3660))
 
 #### @hey-api/client-fetch
 
-- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660))
+- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/hey-api/pull/3660))
 
 #### @hey-api/client-ky
 
-- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660))
+- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/hey-api/pull/3660))
 
 #### @hey-api/client-next
 
-- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/openapi-ts/pull/3660))
+- improve `beforeRequest` typing ([#3660](https://github.com/hey-api/hey-api/pull/3660))
 
 #### @hey-api/sdk
 
-- improve types for SSE events ([#3466](https://github.com/hey-api/openapi-ts/pull/3466))
+- improve types for SSE events ([#3466](https://github.com/hey-api/hey-api/pull/3466))
 
 #### orpc
 
-- adjust input shape ([#3671](https://github.com/hey-api/openapi-ts/pull/3671))
+- adjust input shape ([#3671](https://github.com/hey-api/hey-api/pull/3671))
 
 #### valibot
 
-- remove request data schema ([#3671](https://github.com/hey-api/openapi-ts/pull/3671))
+- remove request data schema ([#3671](https://github.com/hey-api/hey-api/pull/3671))
 
 ### Validator request schemas
 
@@ -954,11 +954,11 @@ export default {
   ],
 };
 ```
-- export request body, path, query, and headers schemas ([#3671](https://github.com/hey-api/openapi-ts/pull/3671))
+- export request body, path, query, and headers schemas ([#3671](https://github.com/hey-api/hey-api/pull/3671))
 
 #### zod
 
-- remove request data schema ([#3671](https://github.com/hey-api/openapi-ts/pull/3671))
+- remove request data schema ([#3671](https://github.com/hey-api/hey-api/pull/3671))
 
 ### Validator request schemas
 
@@ -983,7 +983,7 @@ export default {
   ],
 };
 ```
-- export request body, path, query, and headers schemas ([#3671](https://github.com/hey-api/openapi-ts/pull/3671))
+- export request body, path, query, and headers schemas ([#3671](https://github.com/hey-api/hey-api/pull/3671))
 
 ---
 
@@ -991,8 +991,8 @@ export default {
 
 ### Updates
 
-- plugins: add request validator helpers ([#3671](https://github.com/hey-api/openapi-ts/pull/3671))
-- internal: remove `plugin.getSymbol()` function ([#3671](https://github.com/hey-api/openapi-ts/pull/3671))
+- plugins: add request validator helpers ([#3671](https://github.com/hey-api/hey-api/pull/3671))
+- internal: remove `plugin.getSymbol()` function ([#3671](https://github.com/hey-api/hey-api/pull/3671))
 
 ### Removed `plugin.getSymbol()` function
 
@@ -1008,7 +1008,7 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 #### orpc
 
-- initial release ([#3264](https://github.com/hey-api/openapi-ts/pull/3264))
+- initial release ([#3264](https://github.com/hey-api/hey-api/pull/3264))
 
 ---
 
@@ -1018,19 +1018,19 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- output: add `module` option ([#3616](https://github.com/hey-api/openapi-ts/pull/3616))
-- output: pass context as second argument in `module.resolve()` function ([#3615](https://github.com/hey-api/openapi-ts/pull/3615))
-- parser: self-referencing discriminator ([#3601](https://github.com/hey-api/openapi-ts/pull/3601))
+- output: add `module` option ([#3616](https://github.com/hey-api/hey-api/pull/3616))
+- output: pass context as second argument in `module.resolve()` function ([#3615](https://github.com/hey-api/hey-api/pull/3615))
+- parser: self-referencing discriminator ([#3601](https://github.com/hey-api/hey-api/pull/3601))
 
 ### Plugins
 
 #### @hey-api/client-nuxt
 
-- preserve AbortSignal, FormData, and ReadableStream in unwrapRefs ([#3614](https://github.com/hey-api/openapi-ts/pull/3614))
+- preserve AbortSignal, FormData, and ReadableStream in unwrapRefs ([#3614](https://github.com/hey-api/hey-api/pull/3614))
 
 #### @hey-api/transformers
 
-- expose `plugin` and `$` in transformer function context ([#3610](https://github.com/hey-api/openapi-ts/pull/3610))
+- expose `plugin` and `$` in transformer function context ([#3610](https://github.com/hey-api/hey-api/pull/3610))
 
 ---
 
@@ -1038,7 +1038,7 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- planner: language-aware declaration sharing check ([#3606](https://github.com/hey-api/openapi-ts/pull/3606))
+- planner: language-aware declaration sharing check ([#3606](https://github.com/hey-api/hey-api/pull/3606))
 
 ---
 
@@ -1046,9 +1046,9 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- output: add `module` option ([#3616](https://github.com/hey-api/openapi-ts/pull/3616))
-- parser: self-referencing discriminator ([#3601](https://github.com/hey-api/openapi-ts/pull/3601))
-- output: pass context as second argument in `module.resolve()` function ([#3615](https://github.com/hey-api/openapi-ts/pull/3615))
+- output: add `module` option ([#3616](https://github.com/hey-api/hey-api/pull/3616))
+- parser: self-referencing discriminator ([#3601](https://github.com/hey-api/hey-api/pull/3601))
+- output: pass context as second argument in `module.resolve()` function ([#3615](https://github.com/hey-api/hey-api/pull/3615))
 
 ---
 
@@ -1058,15 +1058,15 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- internal: export Plugins namespace ([#3586](https://github.com/hey-api/openapi-ts/pull/3586))
-- internal: expand TypeScript peer dependency range ([#3588](https://github.com/hey-api/openapi-ts/pull/3588))
-- output: pass default value to `header` function ([#3585](https://github.com/hey-api/openapi-ts/pull/3585))
+- internal: export Plugins namespace ([#3586](https://github.com/hey-api/hey-api/pull/3586))
+- internal: expand TypeScript peer dependency range ([#3588](https://github.com/hey-api/hey-api/pull/3588))
+- output: pass default value to `header` function ([#3585](https://github.com/hey-api/hey-api/pull/3585))
 
 ### Plugins
 
 #### nestjs
 
-- initial release ([#3573](https://github.com/hey-api/openapi-ts/pull/3573))
+- initial release ([#3573](https://github.com/hey-api/hey-api/pull/3573))
 
 ---
 
@@ -1074,7 +1074,7 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- internal: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/openapi-ts/pull/3566))
+- internal: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/hey-api/pull/3566))
 
 ---
 
@@ -1082,8 +1082,8 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- internal: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/openapi-ts/pull/3566))
-- utils: `outputHeaderToPrefix()` function signature change ([#3585](https://github.com/hey-api/openapi-ts/pull/3585))
+- internal: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/hey-api/pull/3566))
+- utils: `outputHeaderToPrefix()` function signature change ([#3585](https://github.com/hey-api/hey-api/pull/3585))
 
 ---
 
@@ -1091,7 +1091,7 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- internal: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/openapi-ts/pull/3566))
+- internal: remove TypeScript from peer dependencies ([#3566](https://github.com/hey-api/hey-api/pull/3566))
 
 ---
 
@@ -1101,31 +1101,31 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- cli: show environment value in development ([#3546](https://github.com/hey-api/openapi-ts/pull/3546))
-- config(plugins): show warning when plugin infer fails ([#3540](https://github.com/hey-api/openapi-ts/pull/3540))
-- dsl: expand list of JavaScript globals ([#3508](https://github.com/hey-api/openapi-ts/pull/3508))
+- cli: show environment value in development ([#3546](https://github.com/hey-api/hey-api/pull/3546))
+- config(plugins): show warning when plugin infer fails ([#3540](https://github.com/hey-api/hey-api/pull/3540))
+- dsl: expand list of JavaScript globals ([#3508](https://github.com/hey-api/hey-api/pull/3508))
 
 ### Plugins
 
 #### @hey-api/transformers
 
-- support `anyOf` schema with null ([#3504](https://github.com/hey-api/openapi-ts/pull/3504))
+- support `anyOf` schema with null ([#3504](https://github.com/hey-api/hey-api/pull/3504))
 
 #### @hey-api/typescript
 
-- add Resolvers API ([#3531](https://github.com/hey-api/openapi-ts/pull/3531))
-- implement `getName()` symbol hook ([#3556](https://github.com/hey-api/openapi-ts/pull/3556))
+- add Resolvers API ([#3531](https://github.com/hey-api/hey-api/pull/3531))
+- implement `getName()` symbol hook ([#3556](https://github.com/hey-api/hey-api/pull/3556))
 
 #### valibot
 
-- provide more resolvers ([#3547](https://github.com/hey-api/openapi-ts/pull/3547))
-- implement `getName()` symbol hook ([#3556](https://github.com/hey-api/openapi-ts/pull/3556))
+- provide more resolvers ([#3547](https://github.com/hey-api/hey-api/pull/3547))
+- implement `getName()` symbol hook ([#3556](https://github.com/hey-api/hey-api/pull/3556))
 
 #### zod
 
-- handle `guid` string format ([#3552](https://github.com/hey-api/openapi-ts/pull/3552))
-- implement `getName()` symbol hook ([#3556](https://github.com/hey-api/openapi-ts/pull/3556))
-- provide more resolvers ([#3554](https://github.com/hey-api/openapi-ts/pull/3554))
+- handle `guid` string format ([#3552](https://github.com/hey-api/hey-api/pull/3552))
+- implement `getName()` symbol hook ([#3556](https://github.com/hey-api/hey-api/pull/3556))
+- provide more resolvers ([#3554](https://github.com/hey-api/hey-api/pull/3554))
 
 ---
 
@@ -1133,7 +1133,7 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- log: make group optional in warn method ([#3540](https://github.com/hey-api/openapi-ts/pull/3540))
+- log: make group optional in warn method ([#3540](https://github.com/hey-api/hey-api/pull/3540))
 
 ---
 
@@ -1141,9 +1141,9 @@ This function has been removed. You can use `plugin.querySymbol()` instead. It a
 
 ### Updates
 
-- parser: add `getName()` symbol hook ([#3556](https://github.com/hey-api/openapi-ts/pull/3556))
-- cli: export isEnvironment function ([#3546](https://github.com/hey-api/openapi-ts/pull/3546))
-- internal: export more IR types ([#3513](https://github.com/hey-api/openapi-ts/pull/3513))
+- parser: add `getName()` symbol hook ([#3556](https://github.com/hey-api/hey-api/pull/3556))
+- cli: export isEnvironment function ([#3546](https://github.com/hey-api/hey-api/pull/3546))
+- internal: export more IR types ([#3513](https://github.com/hey-api/hey-api/pull/3513))
 
 ---
 
@@ -1157,40 +1157,40 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** client: `buildUrl()` function includes `baseUrl` from config by default ([#3491](https://github.com/hey-api/openapi-ts/pull/3491))
-- client: change serializer types from `any` to `unknown` ([#3471](https://github.com/hey-api/openapi-ts/pull/3471))
-- dsl(reserved): expand reserved keywords with more globals ([#3487](https://github.com/hey-api/openapi-ts/pull/3487))
-- internal: simplify dev mode check ([#3498](https://github.com/hey-api/openapi-ts/pull/3498))
-- internal: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/openapi-ts/pull/3448))
-- output: avoid double sanitizing leading character ([#3448](https://github.com/hey-api/openapi-ts/pull/3448))
-- output(header): support function signature in client and core files ([#3486](https://github.com/hey-api/openapi-ts/pull/3486))
-- parser: explicit discriminator mapping wins over fallback in nested `allOf` ([#3490](https://github.com/hey-api/openapi-ts/pull/3490))
+- **⚠️ Breaking:** client: `buildUrl()` function includes `baseUrl` from config by default ([#3491](https://github.com/hey-api/hey-api/pull/3491))
+- client: change serializer types from `any` to `unknown` ([#3471](https://github.com/hey-api/hey-api/pull/3471))
+- dsl(reserved): expand reserved keywords with more globals ([#3487](https://github.com/hey-api/hey-api/pull/3487))
+- internal: simplify dev mode check ([#3498](https://github.com/hey-api/hey-api/pull/3498))
+- internal: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/hey-api/pull/3448))
+- output: avoid double sanitizing leading character ([#3448](https://github.com/hey-api/hey-api/pull/3448))
+- output(header): support function signature in client and core files ([#3486](https://github.com/hey-api/hey-api/pull/3486))
+- parser: explicit discriminator mapping wins over fallback in nested `allOf` ([#3490](https://github.com/hey-api/hey-api/pull/3490))
 
 ### Plugins
 
 #### @pinia/colada
 
-- pass error type generic to `defineQueryOptions` ([#3483](https://github.com/hey-api/openapi-ts/pull/3483))
+- pass error type generic to `defineQueryOptions` ([#3483](https://github.com/hey-api/hey-api/pull/3483))
 
 #### @tanstack/preact-query
 
-- initial release ([#3499](https://github.com/hey-api/openapi-ts/pull/3499))
+- initial release ([#3499](https://github.com/hey-api/hey-api/pull/3499))
 
 #### @tanstack/react-query
 
-- support generating `useMutation` hooks ([#3432](https://github.com/hey-api/openapi-ts/pull/3432))
+- support generating `useMutation` hooks ([#3432](https://github.com/hey-api/hey-api/pull/3432))
 
 #### typescript
 
-- reference enum object when creating enum types ([#3500](https://github.com/hey-api/openapi-ts/pull/3500))
+- reference enum object when creating enum types ([#3500](https://github.com/hey-api/hey-api/pull/3500))
 
 #### valibot
 
-- support function in `metadata` option ([#3497](https://github.com/hey-api/openapi-ts/pull/3497))
+- support function in `metadata` option ([#3497](https://github.com/hey-api/hey-api/pull/3497))
 
 #### zod
 
-- support function in `metadata` option ([#3497](https://github.com/hey-api/openapi-ts/pull/3497))
+- support function in `metadata` option ([#3497](https://github.com/hey-api/hey-api/pull/3497))
 
 ---
 
@@ -1198,7 +1198,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- internal: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/openapi-ts/pull/3448))
+- internal: log symbol meta if name is falsy ([#3448](https://github.com/hey-api/hey-api/pull/3448))
 
 ---
 
@@ -1206,8 +1206,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- parser: explicit discriminator mapping wins over fallback in nested `allOf` ([#3490](https://github.com/hey-api/openapi-ts/pull/3490))
-- output: context file is optional ([#3486](https://github.com/hey-api/openapi-ts/pull/3486))
+- parser: explicit discriminator mapping wins over fallback in nested `allOf` ([#3490](https://github.com/hey-api/hey-api/pull/3490))
+- output: context file is optional ([#3486](https://github.com/hey-api/hey-api/pull/3486))
 
 ---
 
@@ -1217,33 +1217,33 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- cli: do not set `logs.file` to `true` by default ([#3469](https://github.com/hey-api/openapi-ts/pull/3469))
-- client: avoid removing empty arrays from flat arguments ([#3451](https://github.com/hey-api/openapi-ts/pull/3451))
-- client: support async `createClientConfig` ([#3445](https://github.com/hey-api/openapi-ts/pull/3445))
-- client(@hey-api/nuxt): do not unwrap blob values ([#3459](https://github.com/hey-api/openapi-ts/pull/3459))
+- cli: do not set `logs.file` to `true` by default ([#3469](https://github.com/hey-api/hey-api/pull/3469))
+- client: avoid removing empty arrays from flat arguments ([#3451](https://github.com/hey-api/hey-api/pull/3451))
+- client: support async `createClientConfig` ([#3445](https://github.com/hey-api/hey-api/pull/3445))
+- client(@hey-api/nuxt): do not unwrap blob values ([#3459](https://github.com/hey-api/hey-api/pull/3459))
 
 ### Plugins
 
 #### @hey-api/sdk
 
-- correctly set required flat parameters ([#3458](https://github.com/hey-api/openapi-ts/pull/3458))
+- correctly set required flat parameters ([#3458](https://github.com/hey-api/hey-api/pull/3458))
 
 #### @hey-api/typescript
 
-- simplify union types if a member is `unknown` ([#3454](https://github.com/hey-api/openapi-ts/pull/3454))
+- simplify union types if a member is `unknown` ([#3454](https://github.com/hey-api/hey-api/pull/3454))
 
 #### @tanstack/query
 
-- skip mutation queries for SSE endpoints ([#3470](https://github.com/hey-api/openapi-ts/pull/3470))
+- skip mutation queries for SSE endpoints ([#3470](https://github.com/hey-api/hey-api/pull/3470))
 
 #### valibot
 
-- add `u` flag on regex patterns with unicode property escapes ([#3468](https://github.com/hey-api/openapi-ts/pull/3468))
+- add `u` flag on regex patterns with unicode property escapes ([#3468](https://github.com/hey-api/hey-api/pull/3468))
 
 #### zod
 
-- add `u` flag on regex patterns with unicode property escapes ([#3468](https://github.com/hey-api/openapi-ts/pull/3468))
-- apply nullable modifier to `additionalProperties` schema ([#3452](https://github.com/hey-api/openapi-ts/pull/3452))
+- add `u` flag on regex patterns with unicode property escapes ([#3468](https://github.com/hey-api/hey-api/pull/3468))
+- apply nullable modifier to `additionalProperties` schema ([#3452](https://github.com/hey-api/hey-api/pull/3452))
 
 ---
 
@@ -1253,39 +1253,39 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- client: expose `onRequest` in RequestOptions for SSE request interception ([#3392](https://github.com/hey-api/openapi-ts/pull/3392))
-- input: improve returned status code when spec fetch fails ([#3427](https://github.com/hey-api/openapi-ts/pull/3427))
-- input: avoid prefixing sources if paths do not collide on operations ([#3436](https://github.com/hey-api/openapi-ts/pull/3436))
-- output: apply `output.header` to bundled files ([#3438](https://github.com/hey-api/openapi-ts/pull/3438))
-- parser: add `patch.input` and shorthand `patch()` option for full specification transformations ([#3411](https://github.com/hey-api/openapi-ts/pull/3411))
-- parser: add support for non-string discriminator property types ([#3385](https://github.com/hey-api/openapi-ts/pull/3385))
-- parser: preserve `unevaluatedProperties` keyword in transforms ([#3435](https://github.com/hey-api/openapi-ts/pull/3435))
-- parser: resolve sibling schemas from external files during bundling ([#3422](https://github.com/hey-api/openapi-ts/pull/3422))
-- parser: prefer unprefixed schema names from external files ([#3417](https://github.com/hey-api/openapi-ts/pull/3417))
-- parser: handle OpenAPI 3.1 `contentMediaType` keyword as binary format when file-like ([#3431](https://github.com/hey-api/openapi-ts/pull/3431))
-- parser(patch): support callback for `patch.schemas` ([#3415](https://github.com/hey-api/openapi-ts/pull/3415))
-- parser(patch): support callback for `patch.operations` ([#3420](https://github.com/hey-api/openapi-ts/pull/3420))
-- parser(transforms): add `schemaName` transform ([#3416](https://github.com/hey-api/openapi-ts/pull/3416))
+- client: expose `onRequest` in RequestOptions for SSE request interception ([#3392](https://github.com/hey-api/hey-api/pull/3392))
+- input: improve returned status code when spec fetch fails ([#3427](https://github.com/hey-api/hey-api/pull/3427))
+- input: avoid prefixing sources if paths do not collide on operations ([#3436](https://github.com/hey-api/hey-api/pull/3436))
+- output: apply `output.header` to bundled files ([#3438](https://github.com/hey-api/hey-api/pull/3438))
+- parser: add `patch.input` and shorthand `patch()` option for full specification transformations ([#3411](https://github.com/hey-api/hey-api/pull/3411))
+- parser: add support for non-string discriminator property types ([#3385](https://github.com/hey-api/hey-api/pull/3385))
+- parser: preserve `unevaluatedProperties` keyword in transforms ([#3435](https://github.com/hey-api/hey-api/pull/3435))
+- parser: resolve sibling schemas from external files during bundling ([#3422](https://github.com/hey-api/hey-api/pull/3422))
+- parser: prefer unprefixed schema names from external files ([#3417](https://github.com/hey-api/hey-api/pull/3417))
+- parser: handle OpenAPI 3.1 `contentMediaType` keyword as binary format when file-like ([#3431](https://github.com/hey-api/hey-api/pull/3431))
+- parser(patch): support callback for `patch.schemas` ([#3415](https://github.com/hey-api/hey-api/pull/3415))
+- parser(patch): support callback for `patch.operations` ([#3420](https://github.com/hey-api/hey-api/pull/3420))
+- parser(transforms): add `schemaName` transform ([#3416](https://github.com/hey-api/hey-api/pull/3416))
 
 ### Plugins
 
 #### valibot
 
-- remove `enum.nodes.nullable` resolver node ([#3396](https://github.com/hey-api/openapi-ts/pull/3396))
+- remove `enum.nodes.nullable` resolver node ([#3396](https://github.com/hey-api/hey-api/pull/3396))
 
 ### Removed resolver node
 
 Valibot plugin no longer exposes the `enum.nodes.nullable` node. It was refactored so that nullable values are handled outside of resolvers.
-- use `.nullable()` and `.nullish()` methods ([#3396](https://github.com/hey-api/openapi-ts/pull/3396))
+- use `.nullable()` and `.nullish()` methods ([#3396](https://github.com/hey-api/hey-api/pull/3396))
 
 #### zod
 
-- remove `enum.nodes.nullable` resolver node ([#3398](https://github.com/hey-api/openapi-ts/pull/3398))
+- remove `enum.nodes.nullable` resolver node ([#3398](https://github.com/hey-api/hey-api/pull/3398))
 
 ### Removed resolver node
 
 Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored so that nullable values are handled outside of resolvers.
-- use `.nullable()` and `.nullish()` methods ([#3398](https://github.com/hey-api/openapi-ts/pull/3398))
+- use `.nullable()` and `.nullish()` methods ([#3398](https://github.com/hey-api/hey-api/pull/3398))
 
 ---
 
@@ -1293,9 +1293,9 @@ Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored s
 
 ### Updates
 
-- input: avoid prefixing sources if paths do not collide on operations ([#3436](https://github.com/hey-api/openapi-ts/pull/3436))
-- parser: resolve sibling schemas from external files during bundling ([#3422](https://github.com/hey-api/openapi-ts/pull/3422))
-- parser: prefer unprefixed schema names from external files ([#3417](https://github.com/hey-api/openapi-ts/pull/3417))
+- input: avoid prefixing sources if paths do not collide on operations ([#3436](https://github.com/hey-api/hey-api/pull/3436))
+- parser: resolve sibling schemas from external files during bundling ([#3422](https://github.com/hey-api/hey-api/pull/3422))
+- parser: prefer unprefixed schema names from external files ([#3417](https://github.com/hey-api/hey-api/pull/3417))
 
 ---
 
@@ -1303,15 +1303,15 @@ Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored s
 
 ### Updates
 
-- parser: add `patch.input` and shorthand `patch()` option for full specification transformations ([#3411](https://github.com/hey-api/openapi-ts/pull/3411))
-- parser: add support for non-string discriminator property types ([#3385](https://github.com/hey-api/openapi-ts/pull/3385))
-- parser(transforms): add `schemaName` transform ([#3416](https://github.com/hey-api/openapi-ts/pull/3416))
-- input: improve returned status code when spec fetch fails ([#3427](https://github.com/hey-api/openapi-ts/pull/3427))
-- parser: preserve `unevaluatedProperties` keyword in transforms ([#3435](https://github.com/hey-api/openapi-ts/pull/3435))
-- internal: export schema walker interfaces ([#3396](https://github.com/hey-api/openapi-ts/pull/3396))
-- parser: handle OpenAPI 3.1 `contentMediaType` keyword as binary format when file-like ([#3431](https://github.com/hey-api/openapi-ts/pull/3431))
-- parser(patch): support callback for `patch.operations` ([#3420](https://github.com/hey-api/openapi-ts/pull/3420))
-- parser(patch): support callback for `patch.schemas` ([#3415](https://github.com/hey-api/openapi-ts/pull/3415))
+- parser: add `patch.input` and shorthand `patch()` option for full specification transformations ([#3411](https://github.com/hey-api/hey-api/pull/3411))
+- parser: add support for non-string discriminator property types ([#3385](https://github.com/hey-api/hey-api/pull/3385))
+- parser(transforms): add `schemaName` transform ([#3416](https://github.com/hey-api/hey-api/pull/3416))
+- input: improve returned status code when spec fetch fails ([#3427](https://github.com/hey-api/hey-api/pull/3427))
+- parser: preserve `unevaluatedProperties` keyword in transforms ([#3435](https://github.com/hey-api/hey-api/pull/3435))
+- internal: export schema walker interfaces ([#3396](https://github.com/hey-api/hey-api/pull/3396))
+- parser: handle OpenAPI 3.1 `contentMediaType` keyword as binary format when file-like ([#3431](https://github.com/hey-api/hey-api/pull/3431))
+- parser(patch): support callback for `patch.operations` ([#3420](https://github.com/hey-api/hey-api/pull/3420))
+- parser(patch): support callback for `patch.schemas` ([#3415](https://github.com/hey-api/hey-api/pull/3415))
 
 ---
 
@@ -1321,28 +1321,28 @@ Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored s
 
 ### Updates
 
-- internal: use shared schema processor ([#3370](https://github.com/hey-api/openapi-ts/pull/3370))
-- output: detect `importFileExtension` from tsconfig `module` option ([#3380](https://github.com/hey-api/openapi-ts/pull/3380))
+- internal: use shared schema processor ([#3370](https://github.com/hey-api/hey-api/pull/3370))
+- output: detect `importFileExtension` from tsconfig `module` option ([#3380](https://github.com/hey-api/hey-api/pull/3380))
 
 ### Plugins
 
 #### @angular/common
 
-- use generics for HttpRequests ([#3384](https://github.com/hey-api/openapi-ts/pull/3384))
+- use generics for HttpRequests ([#3384](https://github.com/hey-api/hey-api/pull/3384))
 
 #### @hey-api/client-nuxt
 
-- forward `asyncDataOptions` to `useFetch` and `useLazyFetch` ([#3382](https://github.com/hey-api/openapi-ts/pull/3382))
-- unwrap `ComputedRef` body before initial serialization ([#3361](https://github.com/hey-api/openapi-ts/pull/3361))
+- forward `asyncDataOptions` to `useFetch` and `useLazyFetch` ([#3382](https://github.com/hey-api/hey-api/pull/3382))
+- unwrap `ComputedRef` body before initial serialization ([#3361](https://github.com/hey-api/hey-api/pull/3361))
 
 #### @hey-api/transformers
 
-- false positive warning for discriminated `oneOf` schemas ([#3379](https://github.com/hey-api/openapi-ts/pull/3379))
-- handle `$ref` keywords in `allOf` compositions ([#3374](https://github.com/hey-api/openapi-ts/pull/3374))
+- false positive warning for discriminated `oneOf` schemas ([#3379](https://github.com/hey-api/hey-api/pull/3379))
+- handle `$ref` keywords in `allOf` compositions ([#3374](https://github.com/hey-api/hey-api/pull/3374))
 
 #### @hey-api/typescript
 
-- deduplicate enum keys to avoid name collision ([#3376](https://github.com/hey-api/openapi-ts/pull/3376))
+- deduplicate enum keys to avoid name collision ([#3376](https://github.com/hey-api/hey-api/pull/3376))
 
 ---
 
@@ -1350,8 +1350,8 @@ Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored s
 
 ### Updates
 
-- feat: clean up dependencies ([#3386](https://github.com/hey-api/openapi-ts/pull/3386))
-- fix: pass seen references through crawl stack ([#3387](https://github.com/hey-api/openapi-ts/pull/3387))
+- feat: clean up dependencies ([#3386](https://github.com/hey-api/hey-api/pull/3386))
+- fix: pass seen references through crawl stack ([#3387](https://github.com/hey-api/hey-api/pull/3387))
 
 ---
 
@@ -1359,7 +1359,7 @@ Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored s
 
 ### Updates
 
-- utils: rename `isTopLevelComponentRef` to `isTopLevelComponent` ([#3370](https://github.com/hey-api/openapi-ts/pull/3370))
+- utils: rename `isTopLevelComponentRef` to `isTopLevelComponent` ([#3370](https://github.com/hey-api/hey-api/pull/3370))
 
 ---
 
@@ -1371,7 +1371,7 @@ Zod plugin no longer exposes the `enum.nodes.nullable` node. It was refactored s
 
 #### zod
 
-- use namespace import for zod v4 ([#3325](https://github.com/hey-api/openapi-ts/pull/3325))
+- use namespace import for zod v4 ([#3325](https://github.com/hey-api/hey-api/pull/3325))
 
 ---
 
@@ -1389,7 +1389,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** symbol: replace `exportFrom` array with `getExportFromFilePath()` function ([#3322](https://github.com/hey-api/openapi-ts/pull/3322))
+- **⚠️ Breaking:** symbol: replace `exportFrom` array with `getExportFromFilePath()` function ([#3322](https://github.com/hey-api/hey-api/pull/3322))
 
 ### Updated Symbol interface
 
@@ -1401,9 +1401,9 @@ The `exportFrom` property has been replaced with the `getExportFromFilePath()` f
 
 ### Updates
 
-- parser: add `getExportFromFilePath()` hook ([#3322](https://github.com/hey-api/openapi-ts/pull/3322))
-- config: `includeInEntry` accepts function in addition to primitive value ([#3322](https://github.com/hey-api/openapi-ts/pull/3322))
-- transform(read-write): improve discriminated schemas split ([#3322](https://github.com/hey-api/openapi-ts/pull/3322))
+- parser: add `getExportFromFilePath()` hook ([#3322](https://github.com/hey-api/hey-api/pull/3322))
+- config: `includeInEntry` accepts function in addition to primitive value ([#3322](https://github.com/hey-api/hey-api/pull/3322))
+- transform(read-write): improve discriminated schemas split ([#3322](https://github.com/hey-api/hey-api/pull/3322))
 
 ---
 
@@ -1419,7 +1419,7 @@ No user-facing changes.
 
 ### Updates
 
-- planner: fix duplicate import when same symbol is imported as both type and value ([#3291](https://github.com/hey-api/openapi-ts/pull/3291))
+- planner: fix duplicate import when same symbol is imported as both type and value ([#3291](https://github.com/hey-api/hey-api/pull/3291))
 
 ---
 
@@ -1439,7 +1439,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** Drop CommonJS (CJS) support. This package is now **ESM-only**. ([#3251](https://github.com/hey-api/openapi-ts/pull/3251))
+- **⚠️ Breaking:** Drop CommonJS (CJS) support. This package is now **ESM-only**. ([#3251](https://github.com/hey-api/hey-api/pull/3251))
 
 ### Removed CommonJS (CJS) support
 
@@ -1475,7 +1475,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- **⚠️ Breaking:** Drop CommonJS (CJS) support. This package is now **ESM-only**. ([#3251](https://github.com/hey-api/openapi-ts/pull/3251))
+- **⚠️ Breaking:** Drop CommonJS (CJS) support. This package is now **ESM-only**. ([#3251](https://github.com/hey-api/hey-api/pull/3251))
 
 ### Removed CommonJS (CJS) support
 
@@ -1507,7 +1507,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- feat: initial release ([#3251](https://github.com/hey-api/openapi-ts/pull/3251))
+- feat: initial release ([#3251](https://github.com/hey-api/hey-api/pull/3251))
 
 ---
 
@@ -1515,7 +1515,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- types: add `AnyString` utility type ([#3251](https://github.com/hey-api/openapi-ts/pull/3251))
+- types: add `AnyString` utility type ([#3251](https://github.com/hey-api/hey-api/pull/3251))
 
 ---
 
@@ -1525,33 +1525,33 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- parser: inline deep path `$ref` references ([#3242](https://github.com/hey-api/openapi-ts/pull/3242))
+- parser: inline deep path `$ref` references ([#3242](https://github.com/hey-api/hey-api/pull/3242))
 
 ### Plugins
 
 #### @hey-api/sdk
 
-- correctly map body keys in flat mode ([#3255](https://github.com/hey-api/openapi-ts/pull/3255))
+- correctly map body keys in flat mode ([#3255](https://github.com/hey-api/hey-api/pull/3255))
 
 #### @tanstack/angular-query-experimental
 
-- index mutation options symbol ([#3249](https://github.com/hey-api/openapi-ts/pull/3249))
+- index mutation options symbol ([#3249](https://github.com/hey-api/hey-api/pull/3249))
 
 #### @tanstack/react-query
 
-- index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253))
+- index mutation options symbol ([#3253](https://github.com/hey-api/hey-api/pull/3253))
 
 #### @tanstack/solid-query
 
-- index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253))
+- index mutation options symbol ([#3253](https://github.com/hey-api/hey-api/pull/3253))
 
 #### @tanstack/svelte-query
 
-- index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253))
+- index mutation options symbol ([#3253](https://github.com/hey-api/hey-api/pull/3253))
 
 #### @tanstack/vue-query
 
-- index mutation options symbol ([#3253](https://github.com/hey-api/openapi-ts/pull/3253))
+- index mutation options symbol ([#3253](https://github.com/hey-api/hey-api/pull/3253))
 
 ---
 
@@ -1561,10 +1561,10 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- cli: clean up interface ([#3244](https://github.com/hey-api/openapi-ts/pull/3244))
-- config: move `loadConfigFile` function to `@hey-api/codegen-core` ([#3244](https://github.com/hey-api/openapi-ts/pull/3244))
-- ts-dsl: allow removing object properties by passing `null` ([#3247](https://github.com/hey-api/openapi-ts/pull/3247))
-- ts-dsl: override object properties when called multiple times with the same name ([#3247](https://github.com/hey-api/openapi-ts/pull/3247))
+- cli: clean up interface ([#3244](https://github.com/hey-api/hey-api/pull/3244))
+- config: move `loadConfigFile` function to `@hey-api/codegen-core` ([#3244](https://github.com/hey-api/hey-api/pull/3244))
+- ts-dsl: allow removing object properties by passing `null` ([#3247](https://github.com/hey-api/hey-api/pull/3247))
+- ts-dsl: override object properties when called multiple times with the same name ([#3247](https://github.com/hey-api/hey-api/pull/3247))
 
 ---
 
@@ -1572,7 +1572,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- config: export `loadConfigFile` function (moved from `@hey-api/openapi-ts`) ([#3244](https://github.com/hey-api/openapi-ts/pull/3244))
+- config: export `loadConfigFile` function (moved from `@hey-api/openapi-ts`) ([#3244](https://github.com/hey-api/hey-api/pull/3244))
 
 ---
 
@@ -1580,7 +1580,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- feat: add `ToArray`, `ToReadonlyArray`, and `AnyObject` types ([#3244](https://github.com/hey-api/openapi-ts/pull/3244))
+- feat: add `ToArray`, `ToReadonlyArray`, and `AnyObject` types ([#3244](https://github.com/hey-api/hey-api/pull/3244))
 
 ---
 
@@ -1590,8 +1590,8 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- cli: do not show ascii logo on generate command ([#3238](https://github.com/hey-api/openapi-ts/pull/3238))
-- internal: move logger to codegen-core ([#3235](https://github.com/hey-api/openapi-ts/pull/3235))
+- cli: do not show ascii logo on generate command ([#3238](https://github.com/hey-api/hey-api/pull/3238))
+- internal: move logger to codegen-core ([#3235](https://github.com/hey-api/hey-api/pull/3235))
 
 ---
 
@@ -1599,7 +1599,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- deps: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/openapi-ts/pull/3232))
+- deps: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/hey-api/pull/3232))
 
 ---
 
@@ -1607,7 +1607,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- internal: move logger to codegen-core ([#3235](https://github.com/hey-api/openapi-ts/pull/3235))
+- internal: move logger to codegen-core ([#3235](https://github.com/hey-api/hey-api/pull/3235))
 
 ---
 
@@ -1615,7 +1615,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- deps: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/openapi-ts/pull/3232))
+- deps: move @hey-api/types to dependencies to fix broken types ([#3232](https://github.com/hey-api/hey-api/pull/3232))
 
 ---
 
@@ -1627,7 +1627,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 #### @hey-api/sdk
 
-- do not warn on mutualTLS security schemes ([#3227](https://github.com/hey-api/openapi-ts/pull/3227))
+- do not warn on mutualTLS security schemes ([#3227](https://github.com/hey-api/hey-api/pull/3227))
 
 ---
 
@@ -1635,7 +1635,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- Publish `@hey-api/types` so workspace packages can resolve it from npm. ([#3224](https://github.com/hey-api/openapi-ts/pull/3224))
+- Publish `@hey-api/types` so workspace packages can resolve it from npm. ([#3224](https://github.com/hey-api/hey-api/pull/3224))
 
 ---
 
@@ -1647,23 +1647,23 @@ If your environment cannot use ESM, pin to a previous version.
 
 #### @hey-api/client-fetch
 
-- JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201))
+- JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/hey-api/pull/3201))
 
 #### @hey-api/client-ky
 
-- JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201))
+- JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/hey-api/pull/3201))
 
 #### @hey-api/client-next
 
-- JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/openapi-ts/pull/3201))
+- JSON parsing error on empty response bodies without Content-Length header ([#3201](https://github.com/hey-api/hey-api/pull/3201))
 
 #### valibot
 
-- add `enum` resolver ([#3209](https://github.com/hey-api/openapi-ts/pull/3209))
+- add `enum` resolver ([#3209](https://github.com/hey-api/hey-api/pull/3209))
 
 #### zod
 
-- add `enum` resolver ([#3209](https://github.com/hey-api/openapi-ts/pull/3209))
+- add `enum` resolver ([#3209](https://github.com/hey-api/hey-api/pull/3209))
 
 ---
 
@@ -1673,7 +1673,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- output: add `oxfmt` preset ([#3197](https://github.com/hey-api/openapi-ts/pull/3197))
+- output: add `oxfmt` preset ([#3197](https://github.com/hey-api/hey-api/pull/3197))
 
 ---
 
@@ -1683,13 +1683,13 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- build: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/openapi-ts/pull/3186))
+- build: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/hey-api/pull/3186))
 
 ### Plugins
 
 #### @hey-api/sdk
 
-- do not use bodySerializer if format is binary ([#3190](https://github.com/hey-api/openapi-ts/pull/3190))
+- do not use bodySerializer if format is binary ([#3190](https://github.com/hey-api/hey-api/pull/3190))
 
 ---
 
@@ -1697,7 +1697,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- build: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/openapi-ts/pull/3186))
+- build: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/hey-api/pull/3186))
 
 ---
 
@@ -1705,7 +1705,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- build: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/openapi-ts/pull/3186))
+- build: do not minify bundles for better code readability and debugging ([#3186](https://github.com/hey-api/hey-api/pull/3186))
 
 ---
 
@@ -1715,7 +1715,7 @@ If your environment cannot use ESM, pin to a previous version.
 
 ### Updates
 
-- output: add `source` option ([#3175](https://github.com/hey-api/openapi-ts/pull/3175))
+- output: add `source` option ([#3175](https://github.com/hey-api/hey-api/pull/3175))
 
 Source is a copy of the input specification used to generate your output. It can be used to power documentation tools or to persist a stable snapshot alongside your generated files.
 
@@ -1725,7 +1725,7 @@ Learn how to use the source on the [Output](https://heyapi.dev/openapi-ts/config
 
 #### @hey-api/sdk
 
-- add `examples` option ([#3175](https://github.com/hey-api/openapi-ts/pull/3175))
+- add `examples` option ([#3175](https://github.com/hey-api/hey-api/pull/3175))
 
 The SDK plugin can generate ready-to-use code examples for each operation, showing how to call the SDK methods with proper parameters and setup.
 
@@ -1737,7 +1737,7 @@ Learn how to generate examples on the [SDK plugin](https://heyapi.dev/openapi-ts
 
 ### Updates
 
-- project: expose `.plan()` method ([#3175](https://github.com/hey-api/openapi-ts/pull/3175))
+- project: expose `.plan()` method ([#3175](https://github.com/hey-api/hey-api/pull/3175))
 
 ---
 
@@ -1751,13 +1751,13 @@ This release has 4 breaking changes. Please review the release notes carefully b
 
 ### Updates
 
-- renderer: correctly render default import ([#3109](https://github.com/hey-api/openapi-ts/pull/3109))
+- renderer: correctly render default import ([#3109](https://github.com/hey-api/hey-api/pull/3109))
 
 ### Plugins
 
 #### @angular/common
 
-- **⚠️ Breaking:** Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109))
+- **⚠️ Breaking:** Structure API ([#3109](https://github.com/hey-api/hey-api/pull/3109))
 
 ### Structure API
 
@@ -1765,36 +1765,36 @@ The [Angular plugin](https://heyapi.dev/openapi-ts/plugins/angular) now implemen
 
 Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](https://heyapi.dev/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
 
-Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
+Please [open an issue](https://github.com/hey-api/hey-api/issues) if you're unable to migrate your configuration to the new syntax.
 
 #### @hey-api/client-angular
 
-- use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171))
+- use serialized body in SSE requests ([#3171](https://github.com/hey-api/hey-api/pull/3171))
 
 #### @hey-api/client-axios
 
-- use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171))
+- use serialized body in SSE requests ([#3171](https://github.com/hey-api/hey-api/pull/3171))
 
 #### @hey-api/client-fetch
 
-- use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171))
+- use serialized body in SSE requests ([#3171](https://github.com/hey-api/hey-api/pull/3171))
 
 #### @hey-api/client-ky
 
-- use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171))
+- use serialized body in SSE requests ([#3171](https://github.com/hey-api/hey-api/pull/3171))
 
 #### @hey-api/client-next
 
-- use serialized body in SSE requests ([#3171](https://github.com/hey-api/openapi-ts/pull/3171))
+- use serialized body in SSE requests ([#3171](https://github.com/hey-api/hey-api/pull/3171))
 
 #### @hey-api/client-nuxt
 
-- use serialized body in SSE requests ([#3123](https://github.com/hey-api/openapi-ts/pull/3123))
-- preserve null in `WithRefs` type for nullable fields ([#3131](https://github.com/hey-api/openapi-ts/pull/3131))
+- use serialized body in SSE requests ([#3123](https://github.com/hey-api/hey-api/pull/3123))
+- preserve null in `WithRefs` type for nullable fields ([#3131](https://github.com/hey-api/hey-api/pull/3131))
 
 #### sdk
 
-- **⚠️ Breaking:** Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109))
+- **⚠️ Breaking:** Structure API ([#3109](https://github.com/hey-api/hey-api/pull/3109))
 
 ### Structure API
 
@@ -1802,20 +1802,20 @@ The [SDK plugin](https://heyapi.dev/openapi-ts/plugins/sdk) now implements the S
 
 Some Structure APIs are incompatible with the previous configuration, most notably the `methodNameBuilder` function, which accepted the operation object as an argument. You can read the [SDK Output](https://heyapi.dev/openapi-ts/plugins/sdk#output) section to familiarize yourself with the Structure API.
 
-Please [open an issue](https://github.com/hey-api/openapi-ts/issues) if you're unable to migrate your configuration to the new syntax.
+Please [open an issue](https://github.com/hey-api/hey-api/issues) if you're unable to migrate your configuration to the new syntax.
 
 #### valibot
 
-- **⚠️ Breaking:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/openapi-ts/pull/3147))
+- **⚠️ Breaking:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/hey-api/pull/3147))
 
 The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) page.
 
 #### zod
 
-- **⚠️ Breaking:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/openapi-ts/pull/3147))
+- **⚠️ Breaking:** standardize `~resolvers` API ([#3147](https://github.com/hey-api/hey-api/pull/3147))
 
 The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) has been simplified and expanded to provide a more consistent behavior across plugins. You can view a few common examples on the [Resolvers](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) page.
-- expand support for bigint types ([#3145](https://github.com/hey-api/openapi-ts/pull/3145))
+- expand support for bigint types ([#3145](https://github.com/hey-api/hey-api/pull/3145))
 
 ---
 
@@ -1823,9 +1823,9 @@ The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) ha
 
 ### Updates
 
-- core: Structure API ([#3109](https://github.com/hey-api/openapi-ts/pull/3109))
-- fix: simplify symbol merging logic ([#3169](https://github.com/hey-api/openapi-ts/pull/3169))
-- types: document default values for `importKind` and `kind` ([#3147](https://github.com/hey-api/openapi-ts/pull/3147))
+- core: Structure API ([#3109](https://github.com/hey-api/hey-api/pull/3109))
+- fix: simplify symbol merging logic ([#3169](https://github.com/hey-api/hey-api/pull/3169))
+- types: document default values for `importKind` and `kind` ([#3147](https://github.com/hey-api/hey-api/pull/3147))
 
 ---
 
@@ -1837,11 +1837,11 @@ The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) ha
 
 #### @hey-api/client-axios
 
-- revert use `query` option when no `paramsSerializer` is provided ([#3125](https://github.com/hey-api/openapi-ts/pull/3125))
+- revert use `query` option when no `paramsSerializer` is provided ([#3125](https://github.com/hey-api/hey-api/pull/3125))
 
 #### @hey-api/typescript
 
-- improve type narrowing in discriminated types ([#3120](https://github.com/hey-api/openapi-ts/pull/3120))
+- improve type narrowing in discriminated types ([#3120](https://github.com/hey-api/hey-api/pull/3120))
 
 ---
 
@@ -1851,20 +1851,20 @@ The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) ha
 
 ### Updates
 
-- output: sanitize reserved names with underscore suffix instead of prefix ([#3102](https://github.com/hey-api/openapi-ts/pull/3102))
-- output: default to `.js` extension when module resolution is set to `node16` ([#3115](https://github.com/hey-api/openapi-ts/pull/3115))
-- parser: expose OpenAPI extension keywords ([#3119](https://github.com/hey-api/openapi-ts/pull/3119))
-- parser: improve discriminator support in nested `allOf` fields ([#3117](https://github.com/hey-api/openapi-ts/pull/3117))
+- output: sanitize reserved names with underscore suffix instead of prefix ([#3102](https://github.com/hey-api/hey-api/pull/3102))
+- output: default to `.js` extension when module resolution is set to `node16` ([#3115](https://github.com/hey-api/hey-api/pull/3115))
+- parser: expose OpenAPI extension keywords ([#3119](https://github.com/hey-api/hey-api/pull/3119))
+- parser: improve discriminator support in nested `allOf` fields ([#3117](https://github.com/hey-api/hey-api/pull/3117))
 
 ### Plugins
 
 #### @hey-api/client-axios
 
-- use `query` option when no `paramsSerializer` is provided ([#3062](https://github.com/hey-api/openapi-ts/pull/3062))
+- use `query` option when no `paramsSerializer` is provided ([#3062](https://github.com/hey-api/hey-api/pull/3062))
 
 #### @hey-api/sdk
 
-- lazily initialize sub-resources to improve performance ([#3099](https://github.com/hey-api/openapi-ts/pull/3099))
+- lazily initialize sub-resources to improve performance ([#3099](https://github.com/hey-api/hey-api/pull/3099))
 
 ---
 
@@ -1874,7 +1874,7 @@ The [Resolvers API](https://heyapi.dev/openapi-ts/plugins/concepts/resolvers) ha
 
 ### Updates
 
-- output: add `preferExportAll` option ([#2990](https://github.com/hey-api/openapi-ts/pull/2990))
+- output: add `preferExportAll` option ([#2990](https://github.com/hey-api/hey-api/pull/2990))
 
 ### Prefer named exports
 
@@ -1891,7 +1891,7 @@ export default {
   },
 };
 ```
-- output: add `nameConflictResolver` option ([#2990](https://github.com/hey-api/openapi-ts/pull/2990))
+- output: add `nameConflictResolver` option ([#2990](https://github.com/hey-api/hey-api/pull/2990))
 
 ## Name Conflicts
 
@@ -1916,7 +1916,7 @@ export type ChatCompletion = string;
 
 export type ChatCompletion_N2 = number;
 ```
-- parser: removed `symbol:setValue:*` events ([#2990](https://github.com/hey-api/openapi-ts/pull/2990))
+- parser: removed `symbol:setValue:*` events ([#2990](https://github.com/hey-api/hey-api/pull/2990))
 
 ### Removed `symbol:setValue:*` events
 
@@ -1928,7 +1928,7 @@ These events have been removed in favor of `node:set:*` events.
 
 ### Updates
 
-- symbols: remove `placeholder` property ([#2990](https://github.com/hey-api/openapi-ts/pull/2990))
+- symbols: remove `placeholder` property ([#2990](https://github.com/hey-api/hey-api/pull/2990))
 
 ---
 
@@ -1938,7 +1938,7 @@ These events have been removed in favor of `node:set:*` events.
 
 ### Updates
 
-- clients: handle CR and CRLF line endings in SSE ([#3055](https://github.com/hey-api/openapi-ts/pull/3055))
+- clients: handle CR and CRLF line endings in SSE ([#3055](https://github.com/hey-api/hey-api/pull/3055))
 
 ---
 
@@ -1948,7 +1948,7 @@ These events have been removed in favor of `node:set:*` events.
 
 ### Updates
 
-- @hey-api/sdk: correctly map flat parameters ([#3047](https://github.com/hey-api/openapi-ts/pull/3047))
+- @hey-api/sdk: correctly map flat parameters ([#3047](https://github.com/hey-api/hey-api/pull/3047))
 
 ---
 
@@ -1958,7 +1958,7 @@ These events have been removed in favor of `node:set:*` events.
 
 ### Updates
 
-- output: use TypeScript DSL ([#2986](https://github.com/hey-api/openapi-ts/pull/2986))
+- output: use TypeScript DSL ([#2986](https://github.com/hey-api/hey-api/pull/2986))
 
 ### Removed `compiler` and `tsc` exports
 
@@ -1972,7 +1972,7 @@ This release removes the `compiler` utility functions. Instead, it introduces a 
 
 ### Updates
 
-- client-ofetch: fix FormData boundary mismatch ([#2940](https://github.com/hey-api/openapi-ts/pull/2940))
+- client-ofetch: fix FormData boundary mismatch ([#2940](https://github.com/hey-api/hey-api/pull/2940))
 
 ---
 
@@ -1982,8 +1982,8 @@ This release removes the `compiler` utility functions. Instead, it introduces a 
 
 ### Updates
 
-- valibot: expose validator resolvers ([#2980](https://github.com/hey-api/openapi-ts/pull/2980))
-- zod: expose validator resolvers ([#2980](https://github.com/hey-api/openapi-ts/pull/2980))
+- valibot: expose validator resolvers ([#2980](https://github.com/hey-api/hey-api/pull/2980))
+- zod: expose validator resolvers ([#2980](https://github.com/hey-api/hey-api/pull/2980))
 
 ---
 
@@ -1993,11 +1993,11 @@ This release removes the `compiler` utility functions. Instead, it introduces a 
 
 ### Updates
 
-- @tanstack/query: add type annotations to `queryOptions()` ([#2964](https://github.com/hey-api/openapi-ts/pull/2964))
-- @tanstack/query: prettier mutation options ([#2972](https://github.com/hey-api/openapi-ts/pull/2972))
-- client-fetch: intercept AbortError ([#2970](https://github.com/hey-api/openapi-ts/pull/2970))
-- valibot: allow generating custom pipes with `~resolvers` ([#2975](https://github.com/hey-api/openapi-ts/pull/2975))
-- zod: allow generating custom chains with `~resolvers` ([#2975](https://github.com/hey-api/openapi-ts/pull/2975))
+- @tanstack/query: add type annotations to `queryOptions()` ([#2964](https://github.com/hey-api/hey-api/pull/2964))
+- @tanstack/query: prettier mutation options ([#2972](https://github.com/hey-api/hey-api/pull/2972))
+- client-fetch: intercept AbortError ([#2970](https://github.com/hey-api/hey-api/pull/2970))
+- valibot: allow generating custom pipes with `~resolvers` ([#2975](https://github.com/hey-api/hey-api/pull/2975))
+- zod: allow generating custom chains with `~resolvers` ([#2975](https://github.com/hey-api/hey-api/pull/2975))
 
 ---
 
@@ -2007,12 +2007,12 @@ This release removes the `compiler` utility functions. Instead, it introduces a 
 
 ### Updates
 
-- @pinia/colada: correctly access instantiated SDKs ([#2942](https://github.com/hey-api/openapi-ts/pull/2942))
-- @tanstack/query: prettier query options ([#2947](https://github.com/hey-api/openapi-ts/pull/2947))
-- clients: add support for Ky client ([#2958](https://github.com/hey-api/openapi-ts/pull/2958))
-- output: run lint before format ([#2937](https://github.com/hey-api/openapi-ts/pull/2937))
-- parser: merge `default` keyword with `$ref` in OpenAPI 3.1 ([#2946](https://github.com/hey-api/openapi-ts/pull/2946))
-- valibot: use `.strictObject()` instead of `.objectWithRest()` when additional properties are not allowed ([#2945](https://github.com/hey-api/openapi-ts/pull/2945))
+- @pinia/colada: correctly access instantiated SDKs ([#2942](https://github.com/hey-api/hey-api/pull/2942))
+- @tanstack/query: prettier query options ([#2947](https://github.com/hey-api/hey-api/pull/2947))
+- clients: add support for Ky client ([#2958](https://github.com/hey-api/hey-api/pull/2958))
+- output: run lint before format ([#2937](https://github.com/hey-api/hey-api/pull/2937))
+- parser: merge `default` keyword with `$ref` in OpenAPI 3.1 ([#2946](https://github.com/hey-api/hey-api/pull/2946))
+- valibot: use `.strictObject()` instead of `.objectWithRest()` when additional properties are not allowed ([#2945](https://github.com/hey-api/hey-api/pull/2945))
 
 ---
 
@@ -2022,8 +2022,8 @@ This release removes the `compiler` utility functions. Instead, it introduces a 
 
 ### Updates
 
-- fix(tanstack-query): correctly access instantiated SDKs ([#2939](https://github.com/hey-api/openapi-ts/pull/2939))
-- fix(typescript): remove legacy options ([#2929](https://github.com/hey-api/openapi-ts/pull/2929))
+- fix(tanstack-query): correctly access instantiated SDKs ([#2939](https://github.com/hey-api/hey-api/pull/2939))
+- fix(typescript): remove legacy options ([#2929](https://github.com/hey-api/hey-api/pull/2929))
 
 ---
 
@@ -2033,11 +2033,11 @@ This release removes the `compiler` utility functions. Instead, it introduces a 
 
 ### Updates
 
-- feat: remove legacy clients and plugins ([#2925](https://github.com/hey-api/openapi-ts/pull/2925))
+- feat: remove legacy clients and plugins ([#2925](https://github.com/hey-api/hey-api/pull/2925))
 
 ### Removed legacy clients
 
-This release removes support for legacy clients and plugins. Please migrate to the new clients if you haven't done so yet. If you're unable to do so due to a missing feature, let us know on [GitHub](https://github.com/hey-api/openapi-ts/issues).
+This release removes support for legacy clients and plugins. Please migrate to the new clients if you haven't done so yet. If you're unable to do so due to a missing feature, let us know on [GitHub](https://github.com/hey-api/hey-api/issues).
 
 ---
 
@@ -2047,10 +2047,10 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix: bundled context types ([#2923](https://github.com/hey-api/openapi-ts/pull/2923))
-- fix(sdk): add `paramsStructure` option ([#2909](https://github.com/hey-api/openapi-ts/pull/2909))
-- fix(sdk): handle conflicts between method names and subclasses in class-based SDKs ([#2920](https://github.com/hey-api/openapi-ts/pull/2920))
-- fix(transformers): do not reference undefined transformers ([#2924](https://github.com/hey-api/openapi-ts/pull/2924))
+- fix: bundled context types ([#2923](https://github.com/hey-api/hey-api/pull/2923))
+- fix(sdk): add `paramsStructure` option ([#2909](https://github.com/hey-api/hey-api/pull/2909))
+- fix(sdk): handle conflicts between method names and subclasses in class-based SDKs ([#2920](https://github.com/hey-api/hey-api/pull/2920))
+- fix(transformers): do not reference undefined transformers ([#2924](https://github.com/hey-api/hey-api/pull/2924))
 
 ---
 
@@ -2058,8 +2058,8 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix: remove most of readonly properties to allow mutating in place ([#2919](https://github.com/hey-api/openapi-ts/pull/2919))
-- fix: update types ([#2909](https://github.com/hey-api/openapi-ts/pull/2909))
+- fix: remove most of readonly properties to allow mutating in place ([#2919](https://github.com/hey-api/hey-api/pull/2919))
+- fix: update types ([#2909](https://github.com/hey-api/hey-api/pull/2909))
 
 ---
 
@@ -2069,7 +2069,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(types): use unique generic names in `PluginInstance` to avoid typing issues ([#2897](https://github.com/hey-api/openapi-ts/pull/2897))
+- fix(types): use unique generic names in `PluginInstance` to avoid typing issues ([#2897](https://github.com/hey-api/hey-api/pull/2897))
 
 ---
 
@@ -2079,7 +2079,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(parser): handle OpenAPI 2.0 body as JSON by default if not explicitly defined ([#2893](https://github.com/hey-api/openapi-ts/pull/2893))
+- fix(parser): handle OpenAPI 2.0 body as JSON by default if not explicitly defined ([#2893](https://github.com/hey-api/hey-api/pull/2893))
 
 ---
 
@@ -2087,9 +2087,9 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix: gracefully handle errors in debug reports ([#2884](https://github.com/hey-api/openapi-ts/pull/2884))
-- fix(valibot): handle `time` string format ([#2889](https://github.com/hey-api/openapi-ts/pull/2889))
-- refactor: replace plugin references with queries ([#2873](https://github.com/hey-api/openapi-ts/pull/2873))
+- fix: gracefully handle errors in debug reports ([#2884](https://github.com/hey-api/hey-api/pull/2884))
+- fix(valibot): handle `time` string format ([#2889](https://github.com/hey-api/hey-api/pull/2889))
+- refactor: replace plugin references with queries ([#2873](https://github.com/hey-api/hey-api/pull/2873))
 
 ---
 
@@ -2097,7 +2097,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- feat: add `.query()` method to symbol registry ([#2873](https://github.com/hey-api/openapi-ts/pull/2873))
+- feat: add `.query()` method to symbol registry ([#2873](https://github.com/hey-api/hey-api/pull/2873))
 
 ---
 
@@ -2107,7 +2107,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(valibot): improve handling of additionalProperties type ([#2870](https://github.com/hey-api/openapi-ts/pull/2870))
+- fix(valibot): improve handling of additionalProperties type ([#2870](https://github.com/hey-api/hey-api/pull/2870))
 
 ---
 
@@ -2117,7 +2117,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(types): export Operation type ([#2862](https://github.com/hey-api/openapi-ts/pull/2862))
+- fix(types): export Operation type ([#2862](https://github.com/hey-api/hey-api/pull/2862))
 
 ---
 
@@ -2125,7 +2125,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(transformers): revert function order to fix infinite cycle regression ([#2855](https://github.com/hey-api/openapi-ts/pull/2855))
+- fix(transformers): revert function order to fix infinite cycle regression ([#2855](https://github.com/hey-api/hey-api/pull/2855))
 
 ---
 
@@ -2135,8 +2135,8 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(cli): move cli script to typescript ([#2852](https://github.com/hey-api/openapi-ts/pull/2852))
-- fix(parser): write-only schema incorrectly used in response schemas ([#2850](https://github.com/hey-api/openapi-ts/pull/2850))
+- fix(cli): move cli script to typescript ([#2852](https://github.com/hey-api/hey-api/pull/2852))
+- fix(parser): write-only schema incorrectly used in response schemas ([#2850](https://github.com/hey-api/hey-api/pull/2850))
 
 ---
 
@@ -2146,8 +2146,8 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- feat(clients): granular query parameter serialization strategy ([#2837](https://github.com/hey-api/openapi-ts/pull/2837))
-- feat(parser): pass tags to symbol meta ([#2845](https://github.com/hey-api/openapi-ts/pull/2845))
+- feat(clients): granular query parameter serialization strategy ([#2837](https://github.com/hey-api/hey-api/pull/2837))
+- feat(parser): pass tags to symbol meta ([#2845](https://github.com/hey-api/hey-api/pull/2845))
 
 ---
 
@@ -2157,8 +2157,8 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- feat(parser): add `events` hooks ([#2829](https://github.com/hey-api/openapi-ts/pull/2829))
-- fix(parser): writeOnly schema properties missing from request types in nested schemas ([#2793](https://github.com/hey-api/openapi-ts/pull/2793))
+- feat(parser): add `events` hooks ([#2829](https://github.com/hey-api/hey-api/pull/2829))
+- fix(parser): writeOnly schema properties missing from request types in nested schemas ([#2793](https://github.com/hey-api/hey-api/pull/2793))
 
 ---
 
@@ -2166,8 +2166,8 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(renderer): allow duplicate names when one symbol is a type ([#2812](https://github.com/hey-api/openapi-ts/pull/2812))
-- fix(validators): do not reference variables before they are declared ([#2812](https://github.com/hey-api/openapi-ts/pull/2812))
+- fix(renderer): allow duplicate names when one symbol is a type ([#2812](https://github.com/hey-api/hey-api/pull/2812))
+- fix(validators): do not reference variables before they are declared ([#2812](https://github.com/hey-api/hey-api/pull/2812))
 
 ---
 
@@ -2175,7 +2175,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- feat: add `isRegistered()` method to file and symbol registry ([#2812](https://github.com/hey-api/openapi-ts/pull/2812))
+- feat: add `isRegistered()` method to file and symbol registry ([#2812](https://github.com/hey-api/hey-api/pull/2812))
 
 ---
 
@@ -2185,7 +2185,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(client-axios): revert return error when axios request fails ([#2804](https://github.com/hey-api/openapi-ts/pull/2804))
+- fix(client-axios): revert return error when axios request fails ([#2804](https://github.com/hey-api/hey-api/pull/2804))
 
 ---
 
@@ -2195,9 +2195,9 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- feat: bump minimum Node version to 20.19.0 ([#2775](https://github.com/hey-api/openapi-ts/pull/2775))
-- fix: do not print error details if logs are set to silent ([#2776](https://github.com/hey-api/openapi-ts/pull/2776))
-- fix(client-axios): return error when axios request fails ([#2763](https://github.com/hey-api/openapi-ts/pull/2763))
+- feat: bump minimum Node version to 20.19.0 ([#2775](https://github.com/hey-api/hey-api/pull/2775))
+- fix: do not print error details if logs are set to silent ([#2776](https://github.com/hey-api/hey-api/pull/2776))
+- fix(client-axios): return error when axios request fails ([#2763](https://github.com/hey-api/hey-api/pull/2763))
 
 ---
 
@@ -2205,7 +2205,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- feat: bump minimum Node version to 20.19.0 ([#2775](https://github.com/hey-api/openapi-ts/pull/2775))
+- feat: bump minimum Node version to 20.19.0 ([#2775](https://github.com/hey-api/hey-api/pull/2775))
 
 ---
 
@@ -2215,8 +2215,8 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix: dynamically load c12 to work with cjs modules ([#2755](https://github.com/hey-api/openapi-ts/pull/2755))
-- fix(cli): detect watch mode with input array ([#2751](https://github.com/hey-api/openapi-ts/pull/2751))
+- fix: dynamically load c12 to work with cjs modules ([#2755](https://github.com/hey-api/hey-api/pull/2755))
+- fix(cli): detect watch mode with input array ([#2751](https://github.com/hey-api/hey-api/pull/2751))
 
 ---
 
@@ -2226,7 +2226,7 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- fix(zod): allOf in array items being generated as union instead of intersection ([#2736](https://github.com/hey-api/openapi-ts/pull/2736))
+- fix(zod): allOf in array items being generated as union instead of intersection ([#2736](https://github.com/hey-api/hey-api/pull/2736))
 
 ---
 
@@ -2236,9 +2236,9 @@ This release removes support for legacy clients and plugins. Please migrate to t
 
 ### Updates
 
-- feat: support multiple configurations ([#2602](https://github.com/hey-api/openapi-ts/pull/2602))
-- feat(config): add `output.importFileExtension` option ([#2718](https://github.com/hey-api/openapi-ts/pull/2718))
-- feat(pinia-colada): query options use `defineQueryOptions` ([#2610](https://github.com/hey-api/openapi-ts/pull/2610))
+- feat: support multiple configurations ([#2602](https://github.com/hey-api/hey-api/pull/2602))
+- feat(config): add `output.importFileExtension` option ([#2718](https://github.com/hey-api/hey-api/pull/2718))
+- feat(pinia-colada): query options use `defineQueryOptions` ([#2610](https://github.com/hey-api/hey-api/pull/2610))
 
 ### Updated Pinia Colada query options
 
@@ -2284,7 +2284,7 @@ useQuery(() => ({
   enabled: () => petId.value !== null,
 }));
 ```
-- refactor(config): replace 'off' with null to disable options ([#2718](https://github.com/hey-api/openapi-ts/pull/2718))
+- refactor(config): replace 'off' with null to disable options ([#2718](https://github.com/hey-api/hey-api/pull/2718))
 
 ### Updated `output` options
 
@@ -2310,9 +2310,9 @@ export default {
 
 ### Updates
 
-- fix(client-ofetch): add missing credentials property support ([#2710](https://github.com/hey-api/openapi-ts/pull/2710))
-- fix(config): do not override interactive config from CLI if defined in config file ([#2708](https://github.com/hey-api/openapi-ts/pull/2708))
-- fix(zod): correct schemas for numeric and boolean enums ([#2704](https://github.com/hey-api/openapi-ts/pull/2704))
+- fix(client-ofetch): add missing credentials property support ([#2710](https://github.com/hey-api/hey-api/pull/2710))
+- fix(config): do not override interactive config from CLI if defined in config file ([#2708](https://github.com/hey-api/hey-api/pull/2708))
+- fix(zod): correct schemas for numeric and boolean enums ([#2704](https://github.com/hey-api/hey-api/pull/2704))
 
 ---
 
@@ -2322,7 +2322,7 @@ export default {
 
 ### Updates
 
-- fix(validators): escaping slashes in regular expressions ([#2692](https://github.com/hey-api/openapi-ts/pull/2692))
+- fix(validators): escaping slashes in regular expressions ([#2692](https://github.com/hey-api/hey-api/pull/2692))
 
 ---
 
@@ -2332,8 +2332,8 @@ export default {
 
 ### Updates
 
-- fix(parser): add `propertiesRequiredByDefault` transform option ([#2678](https://github.com/hey-api/openapi-ts/pull/2678))
-- fix(typescript): do not mark enums as types ([#2680](https://github.com/hey-api/openapi-ts/pull/2680))
+- fix(parser): add `propertiesRequiredByDefault` transform option ([#2678](https://github.com/hey-api/hey-api/pull/2678))
+- fix(typescript): do not mark enums as types ([#2680](https://github.com/hey-api/hey-api/pull/2680))
 
 ---
 
@@ -2343,8 +2343,8 @@ export default {
 
 ### Updates
 
-- feat: add `ofetch` client available as `@hey-api/client-ofetch` ([#2642](https://github.com/hey-api/openapi-ts/pull/2642))
-- fix(renderer): replace default import placeholder ([#2674](https://github.com/hey-api/openapi-ts/pull/2674))
+- feat: add `ofetch` client available as `@hey-api/client-ofetch` ([#2642](https://github.com/hey-api/hey-api/pull/2642))
+- fix(renderer): replace default import placeholder ([#2674](https://github.com/hey-api/hey-api/pull/2674))
 
 ---
 
@@ -2362,9 +2362,9 @@ You can preserve the previous Angular output by writing your own [placement func
 
 ### Removed `output` plugin option
 
-Due to the Symbol API release, this option has been removed from the Plugin API. ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
-- fix(axios): remove duplicate `baseURL` when using relative values ([#2624](https://github.com/hey-api/openapi-ts/pull/2624))
-- fix(config): add `output.fileName` option ([#2664](https://github.com/hey-api/openapi-ts/pull/2664))
+Due to the Symbol API release, this option has been removed from the Plugin API. ([#2664](https://github.com/hey-api/hey-api/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/hey-api/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
+- fix(axios): remove duplicate `baseURL` when using relative values ([#2624](https://github.com/hey-api/hey-api/pull/2624))
+- fix(config): add `output.fileName` option ([#2664](https://github.com/hey-api/hey-api/pull/2664))
 
 ## File Name
 
@@ -2393,14 +2393,14 @@ export default {
   },
 };
 ```
-- fix(parser): expand schema deduplication by including validation constraints in type ID ([#2650](https://github.com/hey-api/openapi-ts/pull/2650))
-- fix(parser): bump support for OpenAPI 3.1.2 ([#2667](https://github.com/hey-api/openapi-ts/pull/2667))
-- fix(plugin): every plugin extends Plugin.Hooks interface ([#2664](https://github.com/hey-api/openapi-ts/pull/2664))
+- fix(parser): expand schema deduplication by including validation constraints in type ID ([#2650](https://github.com/hey-api/hey-api/pull/2650))
+- fix(parser): bump support for OpenAPI 3.1.2 ([#2667](https://github.com/hey-api/hey-api/pull/2667))
+- fix(plugin): every plugin extends Plugin.Hooks interface ([#2664](https://github.com/hey-api/hey-api/pull/2664))
 - fix(renderer): group and sort imported modules
 
 ### TypeScript renderer
 
-We ship a dedicated TypeScript renderer for `.ts` files. This release improves the renderer's ability to group and sort imported modules, resulting in a more polished output. ([#2664](https://github.com/hey-api/openapi-ts/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/openapi-ts/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
+We ship a dedicated TypeScript renderer for `.ts` files. This release improves the renderer's ability to group and sort imported modules, resulting in a more polished output. ([#2664](https://github.com/hey-api/hey-api/pull/2664)) ([`e1ede9c`](https://github.com/hey-api/hey-api/commit/e1ede9cabf52b5bbcb9195570deff58db8f43dbb)) by [@mrlubos](https://github.com/mrlubos)
 
 ---
 
@@ -2408,7 +2408,7 @@ We ship a dedicated TypeScript renderer for `.ts` files. This release improves t
 
 ### Updates
 
-- feat: Symbol API ([#2664](https://github.com/hey-api/openapi-ts/pull/2664))
+- feat: Symbol API ([#2664](https://github.com/hey-api/hey-api/pull/2664))
 
 ---
 
@@ -2418,10 +2418,10 @@ We ship a dedicated TypeScript renderer for `.ts` files. This release improves t
 
 ### Updates
 
-- feat(typescript): add `topType` option allowing to choose `any` over `unknown` ([#2629](https://github.com/hey-api/openapi-ts/pull/2629))
-- fix(client): expose all interceptor methods ([#2627](https://github.com/hey-api/openapi-ts/pull/2627))
-- fix(config): correctly load user-defined hooks ([#2623](https://github.com/hey-api/openapi-ts/pull/2623))
-- fix(typescript): handle string and binary string in composite keywords ([#2630](https://github.com/hey-api/openapi-ts/pull/2630))
+- feat(typescript): add `topType` option allowing to choose `any` over `unknown` ([#2629](https://github.com/hey-api/hey-api/pull/2629))
+- fix(client): expose all interceptor methods ([#2627](https://github.com/hey-api/hey-api/pull/2627))
+- fix(config): correctly load user-defined hooks ([#2623](https://github.com/hey-api/hey-api/pull/2623))
+- fix(typescript): handle string and binary string in composite keywords ([#2630](https://github.com/hey-api/hey-api/pull/2630))
 
 ---
 
@@ -2435,12 +2435,12 @@ We ship a dedicated TypeScript renderer for `.ts` files. This release improves t
 
 This release adds the Symbol API, which significantly reduces the risk of naming collisions. While the generated output should only include formatting changes, this feature introduces breaking changes to the Plugin API that affect custom plugins.
 
-We will update the [custom plugin guide](https://heyapi.dev/openapi-ts/plugins/custom) once the Plugin API becomes more stable. ([#2582](https://github.com/hey-api/openapi-ts/pull/2582)) ([`10aea89`](https://github.com/hey-api/openapi-ts/commit/10aea8910771ff72ef9b08d4eacdd6b028833c4c)) by [@mrlubos](https://github.com/mrlubos)
+We will update the [custom plugin guide](https://heyapi.dev/openapi-ts/plugins/custom) once the Plugin API becomes more stable. ([#2582](https://github.com/hey-api/hey-api/pull/2582)) ([`10aea89`](https://github.com/hey-api/hey-api/commit/10aea8910771ff72ef9b08d4eacdd6b028833c4c)) by [@mrlubos](https://github.com/mrlubos)
 - feat(pinia-colada): remove `groupByTag` option
 
 ### Removed `groupByTag` Pinia Colada option
 
-This option has been removed to provide a more consistent API across plugins. We plan to bring it back in a future release. ([#2582](https://github.com/hey-api/openapi-ts/pull/2582)) ([`10aea89`](https://github.com/hey-api/openapi-ts/commit/10aea8910771ff72ef9b08d4eacdd6b028833c4c)) by [@mrlubos](https://github.com/mrlubos)
+This option has been removed to provide a more consistent API across plugins. We plan to bring it back in a future release. ([#2582](https://github.com/hey-api/hey-api/pull/2582)) ([`10aea89`](https://github.com/hey-api/hey-api/commit/10aea8910771ff72ef9b08d4eacdd6b028833c4c)) by [@mrlubos](https://github.com/mrlubos)
 
 ---
 
@@ -2448,7 +2448,7 @@ This option has been removed to provide a more consistent API across plugins. We
 
 ### Updates
 
-- feat: expand Symbol API ([#2582](https://github.com/hey-api/openapi-ts/pull/2582))
+- feat: expand Symbol API ([#2582](https://github.com/hey-api/hey-api/pull/2582))
 
 ---
 
@@ -2458,8 +2458,8 @@ This option has been removed to provide a more consistent API across plugins. We
 
 ### Updates
 
-- fix(client): `mergeHeaders` functions use `.forEach()` instead of `.entries()` ([#2585](https://github.com/hey-api/openapi-ts/pull/2585))
-- fix(client): move `getValidRequestBody()` function to `client-core` ([#2605](https://github.com/hey-api/openapi-ts/pull/2605))
+- fix(client): `mergeHeaders` functions use `.forEach()` instead of `.entries()` ([#2585](https://github.com/hey-api/hey-api/pull/2585))
+- fix(client): move `getValidRequestBody()` function to `client-core` ([#2605](https://github.com/hey-api/hey-api/pull/2605))
 
 ---
 
@@ -2469,10 +2469,10 @@ This option has been removed to provide a more consistent API across plugins. We
 
 ### Updates
 
-- feat(pinia-colada): implicit `$fetch` for `client-nuxt` (hide `composable`) ([#2598](https://github.com/hey-api/openapi-ts/pull/2598))
-- fix(client): improve handling of plain text, falsy, and unserialized request bodies ([#2564](https://github.com/hey-api/openapi-ts/pull/2564))
-- fix(parser): improve $ref handling ([#2588](https://github.com/hey-api/openapi-ts/pull/2588))
-- fix(pinia-colada): optional `options` in mutation factory ([#2593](https://github.com/hey-api/openapi-ts/pull/2593))
+- feat(pinia-colada): implicit `$fetch` for `client-nuxt` (hide `composable`) ([#2598](https://github.com/hey-api/hey-api/pull/2598))
+- fix(client): improve handling of plain text, falsy, and unserialized request bodies ([#2564](https://github.com/hey-api/hey-api/pull/2564))
+- fix(parser): improve $ref handling ([#2588](https://github.com/hey-api/hey-api/pull/2588))
+- fix(pinia-colada): optional `options` in mutation factory ([#2593](https://github.com/hey-api/hey-api/pull/2593))
 
 ---
 
@@ -2482,7 +2482,7 @@ This option has been removed to provide a more consistent API across plugins. We
 
 ### Updates
 
-- fix: update peer dependencies to be more permissible ([#2574](https://github.com/hey-api/openapi-ts/pull/2574))
+- fix: update peer dependencies to be more permissible ([#2574](https://github.com/hey-api/hey-api/pull/2574))
 
 ---
 
@@ -2492,9 +2492,9 @@ This option has been removed to provide a more consistent API across plugins. We
 
 ### Updates
 
-- Thanks [@ixnas](https://github.com/ixnas)! - feat(typescript): add `typescript-const` to `enums.mode` for generating TypeScript enums as constants ([#2541](https://github.com/hey-api/openapi-ts/pull/2541))
-- Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): prune `required` array after removing properties ([#2556](https://github.com/hey-api/openapi-ts/pull/2556))
-- Thanks [@jgoz](https://github.com/jgoz)! - fix(output): avoid appending `.gen` to file names multiple times when `output.clean` is `false` ([#2559](https://github.com/hey-api/openapi-ts/pull/2559))
+- Thanks [@ixnas](https://github.com/ixnas)! - feat(typescript): add `typescript-const` to `enums.mode` for generating TypeScript enums as constants ([#2541](https://github.com/hey-api/hey-api/pull/2541))
+- Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): prune `required` array after removing properties ([#2556](https://github.com/hey-api/hey-api/pull/2556))
+- Thanks [@jgoz](https://github.com/jgoz)! - fix(output): avoid appending `.gen` to file names multiple times when `output.clean` is `false` ([#2559](https://github.com/hey-api/hey-api/pull/2559))
 
 ---
 
@@ -2504,7 +2504,7 @@ This option has been removed to provide a more consistent API across plugins. We
 
 ### Updates
 
-- Thanks [@SebastiaanWouters](https://github.com/SebastiaanWouters)! - feat(parser): add Hooks API ([#2505](https://github.com/hey-api/openapi-ts/pull/2505))
+- Thanks [@SebastiaanWouters](https://github.com/SebastiaanWouters)! - feat(parser): add Hooks API ([#2505](https://github.com/hey-api/hey-api/pull/2505))
 
 ### Added Hooks API
 
@@ -2523,14 +2523,14 @@ export default {
   },
 };
 ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): pass fetch option to sse client ([#2542](https://github.com/hey-api/openapi-ts/pull/2542))
-- Thanks [@SebastiaanWouters](https://github.com/SebastiaanWouters)! - feat(plugin): add `@pinia/colada` plugin ([#2505](https://github.com/hey-api/openapi-ts/pull/2505))
-- Thanks [@alexedme](https://github.com/alexedme)! - feat(client): added angular, axios, fetch, next & nuxt client type export for external typing purposes. ([#2535](https://github.com/hey-api/openapi-ts/pull/2535))
-- Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): improve handling multiple references to shared external variable ([#2544](https://github.com/hey-api/openapi-ts/pull/2544))
-- Thanks [@volesen](https://github.com/volesen)! - fix(client): improve empty response body handling ([#2519](https://github.com/hey-api/openapi-ts/pull/2519))
-- Thanks [@josh-hemphill](https://github.com/josh-hemphill)! - feat(plugin): add `@pinia/colada` plugin ([#1680](https://github.com/hey-api/openapi-ts/pull/1680))
-- Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): improve `readWrite` transformer splitting logic ([#2530](https://github.com/hey-api/openapi-ts/pull/2530))
-- Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): handle `patternProperties` in OpenAPI 3.1 ([#2523](https://github.com/hey-api/openapi-ts/pull/2523))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): pass fetch option to sse client ([#2542](https://github.com/hey-api/hey-api/pull/2542))
+- Thanks [@SebastiaanWouters](https://github.com/SebastiaanWouters)! - feat(plugin): add `@pinia/colada` plugin ([#2505](https://github.com/hey-api/hey-api/pull/2505))
+- Thanks [@alexedme](https://github.com/alexedme)! - feat(client): added angular, axios, fetch, next & nuxt client type export for external typing purposes. ([#2535](https://github.com/hey-api/hey-api/pull/2535))
+- Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): improve handling multiple references to shared external variable ([#2544](https://github.com/hey-api/hey-api/pull/2544))
+- Thanks [@volesen](https://github.com/volesen)! - fix(client): improve empty response body handling ([#2519](https://github.com/hey-api/hey-api/pull/2519))
+- Thanks [@josh-hemphill](https://github.com/josh-hemphill)! - feat(plugin): add `@pinia/colada` plugin ([#1680](https://github.com/hey-api/hey-api/pull/1680))
+- Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): improve `readWrite` transformer splitting logic ([#2530](https://github.com/hey-api/hey-api/pull/2530))
+- Thanks [@carson2222](https://github.com/carson2222)! - fix(parser): handle `patternProperties` in OpenAPI 3.1 ([#2523](https://github.com/hey-api/hey-api/pull/2523))
 
 ---
 
@@ -2540,11 +2540,11 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(typescript): add webhooks configuration options ([#2516](https://github.com/hey-api/openapi-ts/pull/2516))
-- Thanks [@malcolm-kee](https://github.com/malcolm-kee)! - fix(parser): correctly handle schema extending discriminated schema ([#2515](https://github.com/hey-api/openapi-ts/pull/2515))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): move sse functions into their own namespace ([#2513](https://github.com/hey-api/openapi-ts/pull/2513))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validator): add webhooks configuration options ([#2516](https://github.com/hey-api/openapi-ts/pull/2516))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): handle webhooks in OpenAPI 3.1 ([#2516](https://github.com/hey-api/openapi-ts/pull/2516))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(typescript): add webhooks configuration options ([#2516](https://github.com/hey-api/hey-api/pull/2516))
+- Thanks [@malcolm-kee](https://github.com/malcolm-kee)! - fix(parser): correctly handle schema extending discriminated schema ([#2515](https://github.com/hey-api/hey-api/pull/2515))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): move sse functions into their own namespace ([#2513](https://github.com/hey-api/hey-api/pull/2513))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validator): add webhooks configuration options ([#2516](https://github.com/hey-api/hey-api/pull/2516))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): handle webhooks in OpenAPI 3.1 ([#2516](https://github.com/hey-api/hey-api/pull/2516))
 
 ---
 
@@ -2554,7 +2554,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(client): add support for server-sent events (SSE) ([#2510](https://github.com/hey-api/openapi-ts/pull/2510))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(client): add support for server-sent events (SSE) ([#2510](https://github.com/hey-api/hey-api/pull/2510))
 
 ---
 
@@ -2564,7 +2564,7 @@ export default {
 
 ### Updates
 
-- Thanks [@malcolm-kee](https://github.com/malcolm-kee)! - fix(parser): OpenAPI 3.1 parser handles multiple `type` values ([#2502](https://github.com/hey-api/openapi-ts/pull/2502))
+- Thanks [@malcolm-kee](https://github.com/malcolm-kee)! - fix(parser): OpenAPI 3.1 parser handles multiple `type` values ([#2502](https://github.com/hey-api/hey-api/pull/2502))
 
 ---
 
@@ -2572,7 +2572,7 @@ export default {
 
 ### Updates
 
-- Thanks [@max-scopp](https://github.com/max-scopp)! - fix(client): Angular client correctly applies default GET method ([#2500](https://github.com/hey-api/openapi-ts/pull/2500))
+- Thanks [@max-scopp](https://github.com/max-scopp)! - fix(client): Angular client correctly applies default GET method ([#2500](https://github.com/hey-api/hey-api/pull/2500))
 
 ---
 
@@ -2582,11 +2582,11 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): Nuxt client receives raw body in request validators ([#2490](https://github.com/hey-api/openapi-ts/pull/2490))
-- Thanks [@dracomithril](https://github.com/dracomithril)! - fix(parser): deduplicate security schemas based on name ([#2479](https://github.com/hey-api/openapi-ts/pull/2479))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): input supports Hey API Registry shorthand ([#2489](https://github.com/hey-api/openapi-ts/pull/2489))
-- Thanks [@bombillazo](https://github.com/bombillazo)! - feat(parser): input supports ReadMe API Registry with `readme:` prefix ([#2485](https://github.com/hey-api/openapi-ts/pull/2485))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): input supports Scalar API Registry with `scalar:` prefix ([#2491](https://github.com/hey-api/openapi-ts/pull/2491))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): Nuxt client receives raw body in request validators ([#2490](https://github.com/hey-api/hey-api/pull/2490))
+- Thanks [@dracomithril](https://github.com/dracomithril)! - fix(parser): deduplicate security schemas based on name ([#2479](https://github.com/hey-api/hey-api/pull/2479))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): input supports Hey API Registry shorthand ([#2489](https://github.com/hey-api/hey-api/pull/2489))
+- Thanks [@bombillazo](https://github.com/bombillazo)! - feat(parser): input supports ReadMe API Registry with `readme:` prefix ([#2485](https://github.com/hey-api/hey-api/pull/2485))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): input supports Scalar API Registry with `scalar:` prefix ([#2491](https://github.com/hey-api/hey-api/pull/2491))
 
 ---
 
@@ -2596,8 +2596,8 @@ export default {
 
 ### Updates
 
-- Thanks [@dracomithril](https://github.com/dracomithril)! - fix(client): call `auth()` function for every unique security `name` ([#2480](https://github.com/hey-api/openapi-ts/pull/2480))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): cache parent to children nodes ([#2481](https://github.com/hey-api/openapi-ts/pull/2481))
+- Thanks [@dracomithril](https://github.com/dracomithril)! - fix(client): call `auth()` function for every unique security `name` ([#2480](https://github.com/hey-api/hey-api/pull/2480))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): cache parent to children nodes ([#2481](https://github.com/hey-api/hey-api/pull/2481))
 
 ---
 
@@ -2607,7 +2607,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): cache visited graph nodes to boost performance ([#2475](https://github.com/hey-api/openapi-ts/pull/2475))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): cache visited graph nodes to boost performance ([#2475](https://github.com/hey-api/hey-api/pull/2475))
 
 ---
 
@@ -2615,7 +2615,7 @@ export default {
 
 ### Updates
 
-- Thanks [@josstn](https://github.com/josstn)! - fix(parser): handle non-ascii characters in discriminator ([#2471](https://github.com/hey-api/openapi-ts/pull/2471))
+- Thanks [@josstn](https://github.com/josstn)! - fix(parser): handle non-ascii characters in discriminator ([#2471](https://github.com/hey-api/hey-api/pull/2471))
 
 ---
 
@@ -2623,7 +2623,7 @@ export default {
 
 ### Updates
 
-- Thanks [@bjornhenriksson](https://github.com/bjornhenriksson)! - fix(zod): add `dates.local` option to allow unqualified (timezone-less) datetimes ([#2467](https://github.com/hey-api/openapi-ts/pull/2467))
+- Thanks [@bjornhenriksson](https://github.com/bjornhenriksson)! - fix(zod): add `dates.local` option to allow unqualified (timezone-less) datetimes ([#2467](https://github.com/hey-api/hey-api/pull/2467))
 
 ---
 
@@ -2633,8 +2633,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(client): add `@hey-api/client-angular` client ([#2452](https://github.com/hey-api/openapi-ts/pull/2452))
-- Thanks [@max-scopp](https://github.com/max-scopp)! - feat(plugin): add `@angular/common` plugin ([#2423](https://github.com/hey-api/openapi-ts/pull/2423))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(client): add `@hey-api/client-angular` client ([#2452](https://github.com/hey-api/hey-api/pull/2452))
+- Thanks [@max-scopp](https://github.com/max-scopp)! - feat(plugin): add `@angular/common` plugin ([#2423](https://github.com/hey-api/hey-api/pull/2423))
 
 ---
 
@@ -2644,7 +2644,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): handle dates in formdata serializer ([#2438](https://github.com/hey-api/openapi-ts/pull/2438))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): handle dates in formdata serializer ([#2438](https://github.com/hey-api/hey-api/pull/2438))
 
 ---
 
@@ -2654,7 +2654,7 @@ export default {
 
 ### Updates
 
-- Thanks [@flow96](https://github.com/flow96)! - fix(sdk): handle infinite loop in nested operation IDs and tags with duplicate values ([#2426](https://github.com/hey-api/openapi-ts/pull/2426))
+- Thanks [@flow96](https://github.com/flow96)! - fix(sdk): handle infinite loop in nested operation IDs and tags with duplicate values ([#2426](https://github.com/hey-api/hey-api/pull/2426))
 
 ---
 
@@ -2664,9 +2664,9 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): add auto-generated header to client files ([#2418](https://github.com/hey-api/openapi-ts/pull/2418))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): correctly rename client files with nodenext bundler ([#2418](https://github.com/hey-api/openapi-ts/pull/2418))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): set correct name for pagination parameters in infinite query options ([#2416](https://github.com/hey-api/openapi-ts/pull/2416))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): add auto-generated header to client files ([#2418](https://github.com/hey-api/hey-api/pull/2418))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): correctly rename client files with nodenext bundler ([#2418](https://github.com/hey-api/hey-api/pull/2418))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): set correct name for pagination parameters in infinite query options ([#2416](https://github.com/hey-api/hey-api/pull/2416))
 
 ---
 
@@ -2676,7 +2676,7 @@ export default {
 
 ### Updates
 
-- Thanks [@Shinigami92](https://github.com/Shinigami92)! - fix(client): add `.gen` to client files ([#2396](https://github.com/hey-api/openapi-ts/pull/2396))
+- Thanks [@Shinigami92](https://github.com/Shinigami92)! - fix(client): add `.gen` to client files ([#2396](https://github.com/hey-api/hey-api/pull/2396))
 
 ---
 
@@ -2686,9 +2686,9 @@ export default {
 
 ### Updates
 
-- Thanks [@ahmedrowaihi](https://github.com/ahmedrowaihi)! - feat(tanstack-query): support generating `meta` fields ([#2399](https://github.com/hey-api/openapi-ts/pull/2399))
-- Thanks [@dovca](https://github.com/dovca)! - feat(clients): pass raw `body` to interceptors, provide serialized body in `serializedBody` ([#2406](https://github.com/hey-api/openapi-ts/pull/2406))
-- Thanks [@flow96](https://github.com/flow96)! - fix(sdk): prevent infinite loop when a schema tag matches operation ID ([#2407](https://github.com/hey-api/openapi-ts/pull/2407))
+- Thanks [@ahmedrowaihi](https://github.com/ahmedrowaihi)! - feat(tanstack-query): support generating `meta` fields ([#2399](https://github.com/hey-api/hey-api/pull/2399))
+- Thanks [@dovca](https://github.com/dovca)! - feat(clients): pass raw `body` to interceptors, provide serialized body in `serializedBody` ([#2406](https://github.com/hey-api/hey-api/pull/2406))
+- Thanks [@flow96](https://github.com/flow96)! - fix(sdk): prevent infinite loop when a schema tag matches operation ID ([#2407](https://github.com/hey-api/hey-api/pull/2407))
 
 ---
 
@@ -2698,7 +2698,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrclrchtr](https://github.com/mrclrchtr)! - fix: resolve Yarn PnP compatibility issues with client bundle generation ([#2401](https://github.com/hey-api/openapi-ts/pull/2401))
+- Thanks [@mrclrchtr](https://github.com/mrclrchtr)! - fix: resolve Yarn PnP compatibility issues with client bundle generation ([#2401](https://github.com/hey-api/hey-api/pull/2401))
 
 ---
 
@@ -2706,7 +2706,7 @@ export default {
 
 ### Updates
 
-- Thanks [@ahmedrowaihi](https://github.com/ahmedrowaihi)! - fix(tanstack-query): add `queryKeys.tags` and `infiniteQueryKeys.tags` options ([#2391](https://github.com/hey-api/openapi-ts/pull/2391))
+- Thanks [@ahmedrowaihi](https://github.com/ahmedrowaihi)! - fix(tanstack-query): add `queryKeys.tags` and `infiniteQueryKeys.tags` options ([#2391](https://github.com/hey-api/hey-api/pull/2391))
 
 ---
 
@@ -2714,7 +2714,7 @@ export default {
 
 ### Updates
 
-- Thanks [@MaxwellAt](https://github.com/MaxwellAt)! - fix(zod): improve handling of additional properties ([#2287](https://github.com/hey-api/openapi-ts/pull/2287))
+- Thanks [@MaxwellAt](https://github.com/MaxwellAt)! - fix(zod): improve handling of additional properties ([#2287](https://github.com/hey-api/hey-api/pull/2287))
 
 ---
 
@@ -2724,8 +2724,8 @@ export default {
 
 ### Updates
 
-- Thanks [@j-ibarra](https://github.com/j-ibarra)! - fix(transformers): add `typeTransformers` option allowing passing custom transform functions ([#2383](https://github.com/hey-api/openapi-ts/pull/2383))
-- Thanks [@idbenami](https://github.com/idbenami)! - fix(client-axios): allow passing `AxiosInstance` into `axios` field ([#2382](https://github.com/hey-api/openapi-ts/pull/2382))
+- Thanks [@j-ibarra](https://github.com/j-ibarra)! - fix(transformers): add `typeTransformers` option allowing passing custom transform functions ([#2383](https://github.com/hey-api/hey-api/pull/2383))
+- Thanks [@idbenami](https://github.com/idbenami)! - fix(client-axios): allow passing `AxiosInstance` into `axios` field ([#2382](https://github.com/hey-api/hey-api/pull/2382))
 
 ---
 
@@ -2735,7 +2735,7 @@ export default {
 
 ### Updates
 
-- Thanks [@Daschi1](https://github.com/Daschi1)! - fix(valibot): expand support for `format: int64` ([#2344](https://github.com/hey-api/openapi-ts/pull/2344))
+- Thanks [@Daschi1](https://github.com/Daschi1)! - fix(valibot): expand support for `format: int64` ([#2344](https://github.com/hey-api/hey-api/pull/2344))
 
 ---
 
@@ -2745,7 +2745,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(zod): add support for Zod 4 and Zod Mini ([#2341](https://github.com/hey-api/openapi-ts/pull/2341))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(zod): add support for Zod 4 and Zod Mini ([#2341](https://github.com/hey-api/hey-api/pull/2341))
 
   ### Added Zod 4 and Zod Mini
 
@@ -2787,8 +2787,8 @@ export default {
 
 ### Updates
 
-- Thanks [@Le0Developer](https://github.com/Le0Developer)! - fix(typescript): add support for TypeID types ([#2034](https://github.com/hey-api/openapi-ts/pull/2034))
-- Thanks [@alexvuka1](https://github.com/alexvuka1)! - fix(parser): respect `output.case` when generating operation id ([#2041](https://github.com/hey-api/openapi-ts/pull/2041))
+- Thanks [@Le0Developer](https://github.com/Le0Developer)! - fix(typescript): add support for TypeID types ([#2034](https://github.com/hey-api/hey-api/pull/2034))
+- Thanks [@alexvuka1](https://github.com/alexvuka1)! - fix(parser): respect `output.case` when generating operation id ([#2041](https://github.com/hey-api/hey-api/pull/2041))
 
 ---
 
@@ -2798,10 +2798,10 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: respect NO_INTERACTIVE and NO_INTERACTION environment variables ([#2336](https://github.com/hey-api/openapi-ts/pull/2336))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): update Axios headers types ([#2331](https://github.com/hey-api/openapi-ts/pull/2331))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve handlebars types for jsr compliance ([#2334](https://github.com/hey-api/openapi-ts/pull/2334))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): set query key base url from options if defined ([#2333](https://github.com/hey-api/openapi-ts/pull/2333))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: respect NO_INTERACTIVE and NO_INTERACTION environment variables ([#2336](https://github.com/hey-api/hey-api/pull/2336))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): update Axios headers types ([#2331](https://github.com/hey-api/hey-api/pull/2331))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve handlebars types for jsr compliance ([#2334](https://github.com/hey-api/hey-api/pull/2334))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): set query key base url from options if defined ([#2333](https://github.com/hey-api/hey-api/pull/2333))
 
 ---
 
@@ -2809,7 +2809,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): removed `typescript+namespace` enums mode ([#2284](https://github.com/hey-api/openapi-ts/pull/2284))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): removed `typescript+namespace` enums mode ([#2284](https://github.com/hey-api/hey-api/pull/2284))
 
   ### Removed `typescript+namespace` enums mode
 
@@ -2823,7 +2823,7 @@ export default {
 
 ### Updates
 
-- Thanks [@btmnk](https://github.com/btmnk)! - fix(client): improve types to pass `@total-typescript/ts-reset` rules ([#2290](https://github.com/hey-api/openapi-ts/pull/2290))
+- Thanks [@btmnk](https://github.com/btmnk)! - fix(client): improve types to pass `@total-typescript/ts-reset` rules ([#2290](https://github.com/hey-api/hey-api/pull/2290))
 
 ---
 
@@ -2833,7 +2833,7 @@ export default {
 
 ### Updates
 
-- Thanks [@j-ibarra](https://github.com/j-ibarra)! - fix(transformers): add `transformers` option allowing passing custom transform functions ([#2281](https://github.com/hey-api/openapi-ts/pull/2281))
+- Thanks [@j-ibarra](https://github.com/j-ibarra)! - fix(transformers): add `transformers` option allowing passing custom transform functions ([#2281](https://github.com/hey-api/hey-api/pull/2281))
 
 ---
 
@@ -2843,10 +2843,10 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): properly handle array minLength and maxLength ([#2275](https://github.com/hey-api/openapi-ts/pull/2275))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle additionalProperties in propertyNames ([#2279](https://github.com/hey-api/openapi-ts/pull/2279))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(clients): annotate serializer return types ([#2277](https://github.com/hey-api/openapi-ts/pull/2277))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): add `dates.offset` option ([#2280](https://github.com/hey-api/openapi-ts/pull/2280))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): properly handle array minLength and maxLength ([#2275](https://github.com/hey-api/hey-api/pull/2275))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle additionalProperties in propertyNames ([#2279](https://github.com/hey-api/hey-api/pull/2279))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(clients): annotate serializer return types ([#2277](https://github.com/hey-api/hey-api/pull/2277))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): add `dates.offset` option ([#2280](https://github.com/hey-api/hey-api/pull/2280))
 
 ---
 
@@ -2856,7 +2856,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(config): add `parser` options ([#2246](https://github.com/hey-api/openapi-ts/pull/2246))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(config): add `parser` options ([#2246](https://github.com/hey-api/hey-api/pull/2246))
 
   ### Added `parser` options
 
@@ -2894,7 +2894,7 @@ export default {
   ### Updated `readWrite.responses` name
 
   Additionally, the naming pattern for response schemas has changed from `{name}Readable` to `{name}`. This is to prevent your code from breaking by default when using a schema that gets updated with a write-only field.
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(config): add `operations` option to `parser.patch` ([#2246](https://github.com/hey-api/openapi-ts/pull/2246))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(config): add `operations` option to `parser.patch` ([#2246](https://github.com/hey-api/hey-api/pull/2246))
 
 ---
 
@@ -2904,12 +2904,12 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - refactor(plugin): add `DefinePlugin` utility types ([#2227](https://github.com/hey-api/openapi-ts/pull/2227))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - refactor(plugin): add `DefinePlugin` utility types ([#2227](https://github.com/hey-api/hey-api/pull/2227))
 
   ### Updated Plugin API
 
   Please refer to the [custom plugin](https://heyapi.dev/openapi-ts/plugins/custom) tutorial for the latest guide.
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): update `validator` option ([#2227](https://github.com/hey-api/openapi-ts/pull/2227))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): update `validator` option ([#2227](https://github.com/hey-api/hey-api/pull/2227))
 
   ### Updated `sdk.validator` option
 
@@ -2931,7 +2931,7 @@ export default {
     ],
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): add requestValidator option ([#2227](https://github.com/hey-api/openapi-ts/pull/2227))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(client): add requestValidator option ([#2227](https://github.com/hey-api/hey-api/pull/2227))
 
 ---
 
@@ -2941,7 +2941,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(valibot): generate a single schema for requests ([#2226](https://github.com/hey-api/openapi-ts/pull/2226))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(valibot): generate a single schema for requests ([#2226](https://github.com/hey-api/hey-api/pull/2226))
 
   ### Single Valibot schema per request
 
@@ -2964,8 +2964,8 @@ export default {
   ```
 
   If you need to access individual fields, you can do so using the [`.entries`](https://valibot.dev/api/object/) API. For example, we can get the request body schema with `vData.entries.body`.
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): prefer JSON media type ([#2221](https://github.com/hey-api/openapi-ts/pull/2221))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): add `metadata` option to generate additional metadata for documentation, code generation, AI structured outputs, form validation, and other purposes ([#2226](https://github.com/hey-api/openapi-ts/pull/2226))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): prefer JSON media type ([#2221](https://github.com/hey-api/hey-api/pull/2221))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): add `metadata` option to generate additional metadata for documentation, code generation, AI structured outputs, form validation, and other purposes ([#2226](https://github.com/hey-api/hey-api/pull/2226))
 
 ---
 
@@ -2975,7 +2975,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): replace `plugin.subscribe()` with `plugin.forEach()` ([#2215](https://github.com/hey-api/openapi-ts/pull/2215))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): replace `plugin.subscribe()` with `plugin.forEach()` ([#2215](https://github.com/hey-api/hey-api/pull/2215))
 
   ### Added `plugin.forEach()` method
 
@@ -2986,7 +2986,7 @@ export default {
     // do something with event
   });
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(tanstack-query): add name and case options ([#2218](https://github.com/hey-api/openapi-ts/pull/2218))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(tanstack-query): add name and case options ([#2218](https://github.com/hey-api/hey-api/pull/2218))
 
   ### Updated TanStack Query options
 
@@ -2997,10 +2997,10 @@ export default {
   - `mutationOptionsNameBuilder` renamed to `mutationOptions`
   - `queryKeyNameBuilder` renamed to `queryKeys`
   - `infiniteQueryKeyNameBuilder` renamed to `infiniteQueryKeys`
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make output pass stricter tsconfig configurations" ([#2219](https://github.com/hey-api/openapi-ts/pull/2219))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): handle additional properties object when no other properties are defined ([#2213](https://github.com/hey-api/openapi-ts/pull/2213))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): add `meta` and `version` options to input.patch ([#2216](https://github.com/hey-api/openapi-ts/pull/2216))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(cli): correctly detect watch mode ([#2210](https://github.com/hey-api/openapi-ts/pull/2210))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make output pass stricter tsconfig configurations" ([#2219](https://github.com/hey-api/hey-api/pull/2219))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): handle additional properties object when no other properties are defined ([#2213](https://github.com/hey-api/hey-api/pull/2213))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): add `meta` and `version` options to input.patch ([#2216](https://github.com/hey-api/hey-api/pull/2216))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(cli): correctly detect watch mode ([#2210](https://github.com/hey-api/hey-api/pull/2210))
 
 ---
 
@@ -3010,7 +3010,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(zod): generate a single schema for requests ([#2201](https://github.com/hey-api/openapi-ts/pull/2201))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(zod): generate a single schema for requests ([#2201](https://github.com/hey-api/hey-api/pull/2201))
 
   ### Single Zod schema per request
 
@@ -3033,8 +3033,8 @@ export default {
   ```
 
   If you need to access individual fields, you can do so using the [`.shape`](https://zod.dev/api?id=shape) API. For example, we can get the request body schema with `zData.shape.body`.
-- Thanks [@Daschi1](https://github.com/Daschi1)! - fix(valibot): use `isoTimestamp` instead of `isoDateTime` for date-time format ([#2192](https://github.com/hey-api/openapi-ts/pull/2192))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): do not mark schemas as duplicate if they have different format ([#2201](https://github.com/hey-api/openapi-ts/pull/2201))
+- Thanks [@Daschi1](https://github.com/Daschi1)! - fix(valibot): use `isoTimestamp` instead of `isoDateTime` for date-time format ([#2192](https://github.com/hey-api/hey-api/pull/2192))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): do not mark schemas as duplicate if they have different format ([#2201](https://github.com/hey-api/hey-api/pull/2201))
 
 ---
 
@@ -3044,7 +3044,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: bundle `@hey-api/client-*` plugins ([#2172](https://github.com/hey-api/openapi-ts/pull/2172))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: bundle `@hey-api/client-*` plugins ([#2172](https://github.com/hey-api/hey-api/pull/2172))
 
   ### Bundle `@hey-api/client-*` plugins
 
@@ -3053,8 +3053,8 @@ export default {
   ```sh
   npm uninstall @hey-api/client-fetch
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: respect logs setting if initialization fails ([#2172](https://github.com/hey-api/openapi-ts/pull/2172))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export default pagination keywords ([#2170](https://github.com/hey-api/openapi-ts/pull/2170))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: respect logs setting if initialization fails ([#2172](https://github.com/hey-api/hey-api/pull/2172))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export default pagination keywords ([#2170](https://github.com/hey-api/hey-api/pull/2170))
 
 ---
 
@@ -3062,7 +3062,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: remove `@hey-api/client-nuxt` dependency ([#2175](https://github.com/hey-api/openapi-ts/pull/2175))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: remove `@hey-api/client-nuxt` dependency ([#2175](https://github.com/hey-api/hey-api/pull/2175))
 
 ---
 
@@ -3072,11 +3072,11 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): add `metadata` option to generate additional metadata for documentation, code generation, AI structured outputs, form validation, and other purposes ([#2163](https://github.com/hey-api/openapi-ts/pull/2163))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): add name builder options for all generated artifacts ([#2167](https://github.com/hey-api/openapi-ts/pull/2167))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): filter orphans only when there are some operations ([#2166](https://github.com/hey-api/openapi-ts/pull/2166))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): support tuple types ([#2166](https://github.com/hey-api/openapi-ts/pull/2166))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): set correct subscription context for plugins ([#2167](https://github.com/hey-api/openapi-ts/pull/2167))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): add `metadata` option to generate additional metadata for documentation, code generation, AI structured outputs, form validation, and other purposes ([#2163](https://github.com/hey-api/hey-api/pull/2163))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): add name builder options for all generated artifacts ([#2167](https://github.com/hey-api/hey-api/pull/2167))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): filter orphans only when there are some operations ([#2166](https://github.com/hey-api/hey-api/pull/2166))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(zod): support tuple types ([#2166](https://github.com/hey-api/hey-api/pull/2166))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): set correct subscription context for plugins ([#2167](https://github.com/hey-api/hey-api/pull/2167))
 
 ---
 
@@ -3086,7 +3086,7 @@ export default {
 
 ### Updates
 
-- Thanks [@Joshua-hypt](https://github.com/Joshua-hypt)! - fix(zod): handle array union types ([#2159](https://github.com/hey-api/openapi-ts/pull/2159))
+- Thanks [@Joshua-hypt](https://github.com/Joshua-hypt)! - fix(zod): handle array union types ([#2159](https://github.com/hey-api/hey-api/pull/2159))
 
 ---
 
@@ -3096,7 +3096,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add `classStructure` option supporting dot or slash `operationId` notation when generating class-based SDKs ([#2141](https://github.com/hey-api/openapi-ts/pull/2141))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add `classStructure` option supporting dot or slash `operationId` notation when generating class-based SDKs ([#2141](https://github.com/hey-api/hey-api/pull/2141))
 
   ### Added `sdk.classStructure` option
 
@@ -3115,10 +3115,10 @@ export default {
     ],
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add crash report prompt ([#2151](https://github.com/hey-api/openapi-ts/pull/2151))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): handle `propertyNames` keyword ([#2153](https://github.com/hey-api/openapi-ts/pull/2153))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): correctly generate default value for `BigInt` ([#2152](https://github.com/hey-api/openapi-ts/pull/2152))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle nested inline objects with write/read only fields ([#2151](https://github.com/hey-api/openapi-ts/pull/2151))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add crash report prompt ([#2151](https://github.com/hey-api/hey-api/pull/2151))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): handle `propertyNames` keyword ([#2153](https://github.com/hey-api/hey-api/pull/2153))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): correctly generate default value for `BigInt` ([#2152](https://github.com/hey-api/hey-api/pull/2152))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle nested inline objects with write/read only fields ([#2151](https://github.com/hey-api/hey-api/pull/2151))
 
 ---
 
@@ -3128,9 +3128,9 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): skip schema if it's an array or tuple and its items don't have any matching readable or writable scopes ([#2139](https://github.com/hey-api/openapi-ts/pull/2139))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): validate operationId keyword ([#2140](https://github.com/hey-api/openapi-ts/pull/2140))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): respect exportFromIndex option when using legacy clients ([#2137](https://github.com/hey-api/openapi-ts/pull/2137))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): skip schema if it's an array or tuple and its items don't have any matching readable or writable scopes ([#2139](https://github.com/hey-api/hey-api/pull/2139))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): validate operationId keyword ([#2140](https://github.com/hey-api/hey-api/pull/2140))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): respect exportFromIndex option when using legacy clients ([#2137](https://github.com/hey-api/hey-api/pull/2137))
 
 ---
 
@@ -3140,10 +3140,10 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): rename `serviceNameBuilder` to `classNameBuilder` ([#2130](https://github.com/hey-api/openapi-ts/pull/2130))
-- Thanks [@johnny-mh](https://github.com/johnny-mh)! - feat(parser): allow patching specs with `input.patch` ([#2117](https://github.com/hey-api/openapi-ts/pull/2117))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): better detect enum namespace ([#2132](https://github.com/hey-api/openapi-ts/pull/2132))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add `instance` option for instantiable SDKs ([#2130](https://github.com/hey-api/openapi-ts/pull/2130))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): rename `serviceNameBuilder` to `classNameBuilder` ([#2130](https://github.com/hey-api/hey-api/pull/2130))
+- Thanks [@johnny-mh](https://github.com/johnny-mh)! - feat(parser): allow patching specs with `input.patch` ([#2117](https://github.com/hey-api/hey-api/pull/2117))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): better detect enum namespace ([#2132](https://github.com/hey-api/hey-api/pull/2132))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add `instance` option for instantiable SDKs ([#2130](https://github.com/hey-api/hey-api/pull/2130))
 
 ---
 
@@ -3153,11 +3153,11 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add responseStyle option ([#2123](https://github.com/hey-api/openapi-ts/pull/2123))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): add responseStyle option ([#2123](https://github.com/hey-api/hey-api/pull/2123))
 
   **BREAKING**: Update your client to the latest version.
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): ensure generated enum uses unique namespace to avoid conflicts with non-enum declarations ([#2116](https://github.com/hey-api/openapi-ts/pull/2116))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle duplicate inline enum names ([#2116](https://github.com/hey-api/openapi-ts/pull/2116))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): ensure generated enum uses unique namespace to avoid conflicts with non-enum declarations ([#2116](https://github.com/hey-api/hey-api/pull/2116))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): handle duplicate inline enum names ([#2116](https://github.com/hey-api/hey-api/pull/2116))
 
 ---
 
@@ -3167,9 +3167,9 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): add validate_EXPERIMENTAL option ([#2110](https://github.com/hey-api/openapi-ts/pull/2110))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): do not wrap regular expression in slashes if the pattern is already wrapped ([#2114](https://github.com/hey-api/openapi-ts/pull/2114))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): create a shallow copy of queryKey in createInfiniteParams function ([#2115](https://github.com/hey-api/openapi-ts/pull/2115))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(parser): add validate_EXPERIMENTAL option ([#2110](https://github.com/hey-api/hey-api/pull/2110))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(validators): do not wrap regular expression in slashes if the pattern is already wrapped ([#2114](https://github.com/hey-api/hey-api/pull/2114))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): create a shallow copy of queryKey in createInfiniteParams function ([#2115](https://github.com/hey-api/hey-api/pull/2115))
 
 ---
 
@@ -3179,10 +3179,10 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): use isoDate instead of date for date strings ([#2109](https://github.com/hey-api/openapi-ts/pull/2109))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): generates union of arrays when items use nested oneOf ([#2108](https://github.com/hey-api/openapi-ts/pull/2108))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(schema): nameBuilder can be a string ([#2106](https://github.com/hey-api/openapi-ts/pull/2106))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): serviceNameBuilder can be a function ([#2106](https://github.com/hey-api/openapi-ts/pull/2106))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(valibot): use isoDate instead of date for date strings ([#2109](https://github.com/hey-api/hey-api/pull/2109))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): generates union of arrays when items use nested oneOf ([#2108](https://github.com/hey-api/hey-api/pull/2108))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(schema): nameBuilder can be a string ([#2106](https://github.com/hey-api/hey-api/pull/2106))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): serviceNameBuilder can be a function ([#2106](https://github.com/hey-api/hey-api/pull/2106))
 
 ---
 
@@ -3192,13 +3192,13 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): use responses/errors map instead of union ([#2094](https://github.com/hey-api/openapi-ts/pull/2094))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(sdk): use responses/errors map instead of union ([#2094](https://github.com/hey-api/hey-api/pull/2094))
 
   **BREAKING**: Update your client to the latest version.
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validators): generate schemas for request parameters ([#2100](https://github.com/hey-api/openapi-ts/pull/2100))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validators): generate schemas for request bodies ([#2099](https://github.com/hey-api/openapi-ts/pull/2099))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): skip spreading required headers when there are conflicting Content-Type headers ([#2097](https://github.com/hey-api/openapi-ts/pull/2097))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(pagination): improved schema resolver for parameters ([#2096](https://github.com/hey-api/openapi-ts/pull/2096))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validators): generate schemas for request parameters ([#2100](https://github.com/hey-api/hey-api/pull/2100))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat(validators): generate schemas for request bodies ([#2099](https://github.com/hey-api/hey-api/pull/2099))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(sdk): skip spreading required headers when there are conflicting Content-Type headers ([#2097](https://github.com/hey-api/hey-api/pull/2097))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(pagination): improved schema resolver for parameters ([#2096](https://github.com/hey-api/hey-api/pull/2096))
 
 ---
 
@@ -3208,8 +3208,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): add back support for regular expressions in input filters ([#2086](https://github.com/hey-api/openapi-ts/pull/2086))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): extend input filters to handle reusable parameters and responses ([#2086](https://github.com/hey-api/openapi-ts/pull/2086))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): add back support for regular expressions in input filters ([#2086](https://github.com/hey-api/hey-api/pull/2086))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(parser): extend input filters to handle reusable parameters and responses ([#2086](https://github.com/hey-api/hey-api/pull/2086))
 
 ---
 
@@ -3217,7 +3217,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: upgraded input filters ([#2072](https://github.com/hey-api/openapi-ts/pull/2072))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: upgraded input filters ([#2072](https://github.com/hey-api/hey-api/pull/2072))
 
   ### Upgraded input filters
 
@@ -3257,9 +3257,9 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): add SDK function comments to TanStack Query output ([#2052](https://github.com/hey-api/openapi-ts/pull/2052))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): exclude $refs in readable/writable schemas when referenced schemas don't contain any readable/writable fields ([#2058](https://github.com/hey-api/openapi-ts/pull/2058))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): add enumsConstantsIgnoreNull option to skip nulls from generated JavaScript objects ([#2059](https://github.com/hey-api/openapi-ts/pull/2059))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(tanstack-query): add SDK function comments to TanStack Query output ([#2052](https://github.com/hey-api/hey-api/pull/2052))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): exclude $refs in readable/writable schemas when referenced schemas don't contain any readable/writable fields ([#2058](https://github.com/hey-api/hey-api/pull/2058))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix(typescript): add enumsConstantsIgnoreNull option to skip nulls from generated JavaScript objects ([#2059](https://github.com/hey-api/hey-api/pull/2059))
 
 ---
 
@@ -3280,7 +3280,7 @@ export default {
 
 ### Updates
 
-- Thanks [@0xfurai](https://github.com/0xfurai)! - fix: handle references to properties ([#2020](https://github.com/hey-api/openapi-ts/pull/2020))
+- Thanks [@0xfurai](https://github.com/0xfurai)! - fix: handle references to properties ([#2020](https://github.com/hey-api/hey-api/pull/2020))
 
 ---
 
@@ -3288,7 +3288,7 @@ export default {
 
 ### Updates
 
-- Thanks [@kennidenni](https://github.com/kennidenni)! - fix: handle relative paths in client's `baseUrl` field ([#2023](https://github.com/hey-api/openapi-ts/pull/2023))
+- Thanks [@kennidenni](https://github.com/kennidenni)! - fix: handle relative paths in client's `baseUrl` field ([#2023](https://github.com/hey-api/hey-api/pull/2023))
 
 ---
 
@@ -3298,7 +3298,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not use named imports from typescript module ([#2010](https://github.com/hey-api/openapi-ts/pull/2010))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not use named imports from typescript module ([#2010](https://github.com/hey-api/hey-api/pull/2010))
 
 ---
 
@@ -3306,7 +3306,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: respect `moduleResolution` value in `tsconfig.json` ([#2003](https://github.com/hey-api/openapi-ts/pull/2003))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: respect `moduleResolution` value in `tsconfig.json` ([#2003](https://github.com/hey-api/hey-api/pull/2003))
 
   ### Respecting `moduleResolution` value in `tsconfig.json`
 
@@ -3321,8 +3321,8 @@ export default {
     },
   };
   ```
-- Thanks [@Liooo](https://github.com/Liooo)! - fix: make discriminator field required when used with `oneOf` keyword ([#2006](https://github.com/hey-api/openapi-ts/pull/2006))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid including underscore for appended types (e.g. data, error, response) when preserving identifier case ([#2009](https://github.com/hey-api/openapi-ts/pull/2009))
+- Thanks [@Liooo](https://github.com/Liooo)! - fix: make discriminator field required when used with `oneOf` keyword ([#2006](https://github.com/hey-api/hey-api/pull/2006))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid including underscore for appended types (e.g. data, error, response) when preserving identifier case ([#2009](https://github.com/hey-api/hey-api/pull/2009))
 
 ---
 
@@ -3332,16 +3332,16 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle schemas with all write-only or read-only fields ([#1981](https://github.com/hey-api/openapi-ts/pull/1981))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid generating duplicate operation ids when sanitizing input ([#1990](https://github.com/hey-api/openapi-ts/pull/1990))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod schemas use .and() instead of .merge() ([#1991](https://github.com/hey-api/openapi-ts/pull/1991))
-- Thanks [@ngalluzzo](https://github.com/ngalluzzo)! - fix: correctly handle numeric property names with signs ([#1919](https://github.com/hey-api/openapi-ts/pull/1919))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod plugin handles nullable enums ([#1984](https://github.com/hey-api/openapi-ts/pull/1984))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle discriminator with multiple mappings to the same schema ([#1986](https://github.com/hey-api/openapi-ts/pull/1986))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod schemas with BigInt and min/max constraints ([#1980](https://github.com/hey-api/openapi-ts/pull/1980))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correct path to nested plugin files when using exportFromIndex ([#1987](https://github.com/hey-api/openapi-ts/pull/1987))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle extended `$ref` with `type` keyword in OpenAPI 3.1 ([#1978](https://github.com/hey-api/openapi-ts/pull/1978))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle additionalProperties empty object as unknown instead of preserving an empty interface ([#1982](https://github.com/hey-api/openapi-ts/pull/1982))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle schemas with all write-only or read-only fields ([#1981](https://github.com/hey-api/hey-api/pull/1981))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid generating duplicate operation ids when sanitizing input ([#1990](https://github.com/hey-api/hey-api/pull/1990))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod schemas use .and() instead of .merge() ([#1991](https://github.com/hey-api/hey-api/pull/1991))
+- Thanks [@ngalluzzo](https://github.com/ngalluzzo)! - fix: correctly handle numeric property names with signs ([#1919](https://github.com/hey-api/hey-api/pull/1919))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod plugin handles nullable enums ([#1984](https://github.com/hey-api/hey-api/pull/1984))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle discriminator with multiple mappings to the same schema ([#1986](https://github.com/hey-api/hey-api/pull/1986))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod schemas with BigInt and min/max constraints ([#1980](https://github.com/hey-api/hey-api/pull/1980))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correct path to nested plugin files when using exportFromIndex ([#1987](https://github.com/hey-api/hey-api/pull/1987))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle extended `$ref` with `type` keyword in OpenAPI 3.1 ([#1978](https://github.com/hey-api/hey-api/pull/1978))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle additionalProperties empty object as unknown instead of preserving an empty interface ([#1982](https://github.com/hey-api/hey-api/pull/1982))
 
 ---
 
@@ -3351,7 +3351,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle Zod circular reference ([#1971](https://github.com/hey-api/openapi-ts/pull/1971))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle Zod circular reference ([#1971](https://github.com/hey-api/hey-api/pull/1971))
 
 ---
 
@@ -3361,8 +3361,8 @@ export default {
 
 ### Updates
 
-- Thanks [@devNameAsyraf](https://github.com/devNameAsyraf)! - fix: don't use JSON serializer for `application/octet-stream` ([#1951](https://github.com/hey-api/openapi-ts/pull/1951))
-- Thanks [@sredni](https://github.com/sredni)! - fix: repeat tuple type `maxItems` times ([#1938](https://github.com/hey-api/openapi-ts/pull/1938))
+- Thanks [@devNameAsyraf](https://github.com/devNameAsyraf)! - fix: don't use JSON serializer for `application/octet-stream` ([#1951](https://github.com/hey-api/hey-api/pull/1951))
+- Thanks [@sredni](https://github.com/sredni)! - fix: repeat tuple type `maxItems` times ([#1938](https://github.com/hey-api/hey-api/pull/1938))
 
 ---
 
@@ -3370,8 +3370,8 @@ export default {
 
 ### Updates
 
-- Thanks [@a1mersnow](https://github.com/a1mersnow)! - fix: avoid duplicate definition of `@hey-api/client-nuxt` plugin ([#1939](https://github.com/hey-api/openapi-ts/pull/1939))
-- Thanks [@a1mersnow](https://github.com/a1mersnow)! - fix: skip watch mode in prepare step ([#1939](https://github.com/hey-api/openapi-ts/pull/1939))
+- Thanks [@a1mersnow](https://github.com/a1mersnow)! - fix: avoid duplicate definition of `@hey-api/client-nuxt` plugin ([#1939](https://github.com/hey-api/hey-api/pull/1939))
+- Thanks [@a1mersnow](https://github.com/a1mersnow)! - fix: skip watch mode in prepare step ([#1939](https://github.com/hey-api/hey-api/pull/1939))
 - Updated dependencies []:
   - @hey-api/client-nuxt@0.4.0
 
@@ -3383,7 +3383,7 @@ export default {
 
 ### Updates
 
-- Thanks [@Freddis](https://github.com/Freddis)! - fix: handle nullable dates in transformers ([#1917](https://github.com/hey-api/openapi-ts/pull/1917))
+- Thanks [@Freddis](https://github.com/Freddis)! - fix: handle nullable dates in transformers ([#1917](https://github.com/hey-api/hey-api/pull/1917))
 
 ---
 
@@ -3393,7 +3393,7 @@ export default {
 
 ### Updates
 
-- Thanks [@BogdanMaier](https://github.com/BogdanMaier)! - fix: prevent crash when optional pagination field is missing ([#1913](https://github.com/hey-api/openapi-ts/pull/1913))
+- Thanks [@BogdanMaier](https://github.com/BogdanMaier)! - fix: prevent crash when optional pagination field is missing ([#1913](https://github.com/hey-api/hey-api/pull/1913))
 
 ---
 
@@ -3403,8 +3403,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: exclude and include expressions can be an array ([#1906](https://github.com/hey-api/openapi-ts/pull/1906))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support excluding deprecated fields with '@deprecated' ([#1906](https://github.com/hey-api/openapi-ts/pull/1906))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: exclude and include expressions can be an array ([#1906](https://github.com/hey-api/hey-api/pull/1906))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support excluding deprecated fields with '@deprecated' ([#1906](https://github.com/hey-api/hey-api/pull/1906))
 
 ---
 
@@ -3414,7 +3414,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support read-only and write-only properties ([#1896](https://github.com/hey-api/openapi-ts/pull/1896))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support read-only and write-only properties ([#1896](https://github.com/hey-api/hey-api/pull/1896))
 
   ### Read-only and write-only fields
 
@@ -3442,9 +3442,9 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support custom clients ([#1889](https://github.com/hey-api/openapi-ts/pull/1889))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing fetch options to the request resolving a specification ([#1892](https://github.com/hey-api/openapi-ts/pull/1892))
-- Thanks [@Matsuuu](https://github.com/Matsuuu)! - feat: ability to disable writing a log file via a `--no-log-file` flag or `logs.file` = `false` ([#1877](https://github.com/hey-api/openapi-ts/pull/1877))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support custom clients ([#1889](https://github.com/hey-api/hey-api/pull/1889))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing fetch options to the request resolving a specification ([#1892](https://github.com/hey-api/hey-api/pull/1892))
+- Thanks [@Matsuuu](https://github.com/Matsuuu)! - feat: ability to disable writing a log file via a `--no-log-file` flag or `logs.file` = `false` ([#1877](https://github.com/hey-api/hey-api/pull/1877))
 
 ---
 
@@ -3463,7 +3463,7 @@ export default {
 
 ### Updates
 
-- Thanks [@kelnos](https://github.com/kelnos)! - feat: add support for cookies auth ([#1850](https://github.com/hey-api/openapi-ts/pull/1850))
+- Thanks [@kelnos](https://github.com/kelnos)! - feat: add support for cookies auth ([#1850](https://github.com/hey-api/hey-api/pull/1850))
 
 ---
 
@@ -3471,7 +3471,7 @@ export default {
 
 ### Updates
 
-- Thanks [@john-cremit](https://github.com/john-cremit)! - feat: allow customizing pagination keywords using `input.pagination.keywords` ([#1827](https://github.com/hey-api/openapi-ts/pull/1827))
+- Thanks [@john-cremit](https://github.com/john-cremit)! - feat: allow customizing pagination keywords using `input.pagination.keywords` ([#1827](https://github.com/hey-api/hey-api/pull/1827))
 
 ---
 
@@ -3490,7 +3490,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: initial release ([#1838](https://github.com/hey-api/openapi-ts/pull/1838))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: initial release ([#1838](https://github.com/hey-api/hey-api/pull/1838))
 
 ---
 
@@ -3500,8 +3500,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bump json-schema-ref-parser package ([#1822](https://github.com/hey-api/openapi-ts/pull/1822))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow config to be a function ([#1826](https://github.com/hey-api/openapi-ts/pull/1826))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bump json-schema-ref-parser package ([#1822](https://github.com/hey-api/hey-api/pull/1822))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow config to be a function ([#1826](https://github.com/hey-api/hey-api/pull/1826))
 
 ---
 
@@ -3509,7 +3509,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: move @hey-api/openapi-ts to peerDependencies ([#1825](https://github.com/hey-api/openapi-ts/pull/1825))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: move @hey-api/openapi-ts to peerDependencies ([#1825](https://github.com/hey-api/hey-api/pull/1825))
 - Updated dependencies [,]:
   - @hey-api/openapi-ts@0.64.13
 
@@ -3521,7 +3521,7 @@ export default {
 
 ### Updates
 
-- Thanks [@shemsiu](https://github.com/shemsiu)! - Allow `scheme` property to be case-insensitive ([#1816](https://github.com/hey-api/openapi-ts/pull/1816))
+- Thanks [@shemsiu](https://github.com/shemsiu)! - Allow `scheme` property to be case-insensitive ([#1816](https://github.com/hey-api/hey-api/pull/1816))
 
 ---
 
@@ -3540,8 +3540,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support Hey API platform input arguments ([#1800](https://github.com/hey-api/openapi-ts/pull/1800))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle raw OpenAPI specification input ([#1800](https://github.com/hey-api/openapi-ts/pull/1800))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support Hey API platform input arguments ([#1800](https://github.com/hey-api/hey-api/pull/1800))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle raw OpenAPI specification input ([#1800](https://github.com/hey-api/hey-api/pull/1800))
 
 ---
 
@@ -3549,7 +3549,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: initial release ([#1800](https://github.com/hey-api/openapi-ts/pull/1800))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: initial release ([#1800](https://github.com/hey-api/hey-api/pull/1800))
 - Updated dependencies [,,]:
   - @hey-api/openapi-ts@0.64.11
   - @hey-api/client-nuxt@0.3.0
@@ -3562,8 +3562,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: don't throw on missing performance marks ([#1779](https://github.com/hey-api/openapi-ts/pull/1779))
-- Thanks [@Schroedi](https://github.com/Schroedi)! - fix: handle nested dates in transformers ([#1767](https://github.com/hey-api/openapi-ts/pull/1767))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: don't throw on missing performance marks ([#1779](https://github.com/hey-api/hey-api/pull/1779))
+- Thanks [@Schroedi](https://github.com/Schroedi)! - fix: handle nested dates in transformers ([#1767](https://github.com/hey-api/hey-api/pull/1767))
 
 ---
 
@@ -3573,7 +3573,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - docs: announce Hey API platform ([#1774](https://github.com/hey-api/openapi-ts/pull/1774))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - docs: announce Hey API platform ([#1774](https://github.com/hey-api/hey-api/pull/1774))
 
 ---
 
@@ -3583,7 +3583,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: reduce minimum Node.js 22 version to 22.10.0 ([#1764](https://github.com/hey-api/openapi-ts/pull/1764))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: reduce minimum Node.js 22 version to 22.10.0 ([#1764](https://github.com/hey-api/hey-api/pull/1764))
 
 ---
 
@@ -3593,7 +3593,7 @@ export default {
 
 ### Updates
 
-- Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap the GET request in watch mode with try-catch to prevent crashes on no-head watch targets ([#1755](https://github.com/hey-api/openapi-ts/pull/1755))
+- Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap the GET request in watch mode with try-catch to prevent crashes on no-head watch targets ([#1755](https://github.com/hey-api/hey-api/pull/1755))
 
 ---
 
@@ -3603,7 +3603,7 @@ export default {
 
 ### Updates
 
-- Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap HEAD request in a try-catch to prevent watch mode crashes on server reloads ([#1748](https://github.com/hey-api/openapi-ts/pull/1748))
+- Thanks [@Matsuuu](https://github.com/Matsuuu)! - fix: Wrap HEAD request in a try-catch to prevent watch mode crashes on server reloads ([#1748](https://github.com/hey-api/hey-api/pull/1748))
 
 ---
 
@@ -3613,7 +3613,7 @@ export default {
 
 ### Updates
 
-- Thanks [@georgesmith46](https://github.com/georgesmith46)! - fix: correctly generate zod regex expressions when using patterns ([#1728](https://github.com/hey-api/openapi-ts/pull/1728))
+- Thanks [@georgesmith46](https://github.com/georgesmith46)! - fix: correctly generate zod regex expressions when using patterns ([#1728](https://github.com/hey-api/hey-api/pull/1728))
 
 ---
 
@@ -3623,7 +3623,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use relative path to custom config file if provided when resolving relative paths ([#1710](https://github.com/hey-api/openapi-ts/pull/1710))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use relative path to custom config file if provided when resolving relative paths ([#1710](https://github.com/hey-api/hey-api/pull/1710))
 
 ---
 
@@ -3633,7 +3633,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly type default value for Nuxt client ([#1701](https://github.com/hey-api/openapi-ts/pull/1701))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly type default value for Nuxt client ([#1701](https://github.com/hey-api/hey-api/pull/1701))
 
 ---
 
@@ -3641,9 +3641,9 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add exportFromIndex option to all plugins ([#1697](https://github.com/hey-api/openapi-ts/pull/1697))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing arbitrary values to SDK functions via `meta` field ([#1699](https://github.com/hey-api/openapi-ts/pull/1699))
-- Thanks [@hunshcn](https://github.com/hunshcn)! - sanitize "+" in uri to avoid plus in function name ([#1687](https://github.com/hey-api/openapi-ts/pull/1687))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add exportFromIndex option to all plugins ([#1697](https://github.com/hey-api/hey-api/pull/1697))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow passing arbitrary values to SDK functions via `meta` field ([#1699](https://github.com/hey-api/hey-api/pull/1699))
+- Thanks [@hunshcn](https://github.com/hunshcn)! - sanitize "+" in uri to avoid plus in function name ([#1687](https://github.com/hey-api/hey-api/pull/1687))
 
 ---
 
@@ -3653,8 +3653,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: watch mode handles servers not exposing HEAD method for spec ([#1668](https://github.com/hey-api/openapi-ts/pull/1668))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add watch.timeout option ([#1668](https://github.com/hey-api/openapi-ts/pull/1668))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: watch mode handles servers not exposing HEAD method for spec ([#1668](https://github.com/hey-api/hey-api/pull/1668))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add watch.timeout option ([#1668](https://github.com/hey-api/hey-api/pull/1668))
 
 ---
 
@@ -3664,7 +3664,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: added `client.baseUrl` option ([#1661](https://github.com/hey-api/openapi-ts/pull/1661))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: added `client.baseUrl` option ([#1661](https://github.com/hey-api/hey-api/pull/1661))
 
   ### Added `client.baseUrl` option
 
@@ -3682,7 +3682,7 @@ export default {
     ],
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make createConfig, CreateClientConfig, and Config accept ClientOptions generic ([#1661](https://github.com/hey-api/openapi-ts/pull/1661))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make createConfig, CreateClientConfig, and Config accept ClientOptions generic ([#1661](https://github.com/hey-api/hey-api/pull/1661))
 
   ### Added `ClientOptions` interface
 
@@ -3701,7 +3701,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: lower Node version requirements ([#1651](https://github.com/hey-api/openapi-ts/pull/1651))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: lower Node version requirements ([#1651](https://github.com/hey-api/hey-api/pull/1651))
 
 ---
 
@@ -3709,10 +3709,10 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update keywords in package.json ([#1637](https://github.com/hey-api/openapi-ts/pull/1637))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add Next.js client ([#1637](https://github.com/hey-api/openapi-ts/pull/1637))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support required client in SDK using sdk.client = false ([#1646](https://github.com/hey-api/openapi-ts/pull/1646))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for openIdConnect auth flow ([#1648](https://github.com/hey-api/openapi-ts/pull/1648))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update keywords in package.json ([#1637](https://github.com/hey-api/hey-api/pull/1637))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add Next.js client ([#1637](https://github.com/hey-api/hey-api/pull/1637))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support required client in SDK using sdk.client = false ([#1646](https://github.com/hey-api/hey-api/pull/1646))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for openIdConnect auth flow ([#1648](https://github.com/hey-api/hey-api/pull/1648))
 
 ---
 
@@ -3722,7 +3722,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: move clients to plugins ([#1626](https://github.com/hey-api/openapi-ts/pull/1626))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: move clients to plugins ([#1626](https://github.com/hey-api/hey-api/pull/1626))
 
   ### Client plugins
 
@@ -3736,7 +3736,7 @@ export default {
     plugins: ["@hey-api/client-fetch"], // [!code ++]
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: move sdk.throwOnError option to client.throwOnError ([#1626](https://github.com/hey-api/openapi-ts/pull/1626))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: move sdk.throwOnError option to client.throwOnError ([#1626](https://github.com/hey-api/hey-api/pull/1626))
 
   ### Moved `sdk.throwOnError` option
 
@@ -3758,7 +3758,7 @@ export default {
     ],
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: sdks import client from client.gen.ts instead of defining it inside the file ([#1626](https://github.com/hey-api/openapi-ts/pull/1626))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: sdks import client from client.gen.ts instead of defining it inside the file ([#1626](https://github.com/hey-api/hey-api/pull/1626))
 
   ### Added `client.gen.ts` file
 
@@ -3768,7 +3768,7 @@ export default {
   import { client } from "client/sdk.gen"; // [!code --]
   import { client } from "client/client.gen"; // [!code ++]
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if inferred plugin not found ([#1626](https://github.com/hey-api/openapi-ts/pull/1626))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if inferred plugin not found ([#1626](https://github.com/hey-api/hey-api/pull/1626))
 
 ---
 
@@ -3778,11 +3778,11 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bundle clients from compiled index file ([#1600](https://github.com/hey-api/openapi-ts/pull/1600))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate correct response for text/plain content type ([#1594](https://github.com/hey-api/openapi-ts/pull/1594))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not use a body serializer on text/plain sdks ([#1596](https://github.com/hey-api/openapi-ts/pull/1596))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support all oauth2 flows in sdk auth ([#1602](https://github.com/hey-api/openapi-ts/pull/1602))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add null to valid bodySerializer types ([#1596](https://github.com/hey-api/openapi-ts/pull/1596))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: bundle clients from compiled index file ([#1600](https://github.com/hey-api/hey-api/pull/1600))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate correct response for text/plain content type ([#1594](https://github.com/hey-api/hey-api/pull/1594))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not use a body serializer on text/plain sdks ([#1596](https://github.com/hey-api/hey-api/pull/1596))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support all oauth2 flows in sdk auth ([#1602](https://github.com/hey-api/hey-api/pull/1602))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add null to valid bodySerializer types ([#1596](https://github.com/hey-api/hey-api/pull/1596))
 
 ---
 
@@ -3792,7 +3792,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for Nuxt client ([#1519](https://github.com/hey-api/openapi-ts/pull/1519))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for Nuxt client ([#1519](https://github.com/hey-api/hey-api/pull/1519))
 
 ---
 
@@ -3802,8 +3802,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate bigint type instead of BigInt ([#1574](https://github.com/hey-api/openapi-ts/pull/1574))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add ability to skip generating index file with output.indexFile ([#1572](https://github.com/hey-api/openapi-ts/pull/1572))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate bigint type instead of BigInt ([#1574](https://github.com/hey-api/hey-api/pull/1574))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add ability to skip generating index file with output.indexFile ([#1572](https://github.com/hey-api/hey-api/pull/1572))
 
 ---
 
@@ -3813,8 +3813,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change the default parser ([#1568](https://github.com/hey-api/openapi-ts/pull/1568))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: spread sdk options at the end to allow overriding generated values ([#1566](https://github.com/hey-api/openapi-ts/pull/1566))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change the default parser ([#1568](https://github.com/hey-api/hey-api/pull/1568))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: spread sdk options at the end to allow overriding generated values ([#1566](https://github.com/hey-api/hey-api/pull/1566))
 
 ---
 
@@ -3824,7 +3824,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use z.coerce before calling z.bigint ([#1552](https://github.com/hey-api/openapi-ts/pull/1552))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use z.coerce before calling z.bigint ([#1552](https://github.com/hey-api/hey-api/pull/1552))
 
 ---
 
@@ -3834,7 +3834,7 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: send GET request only on first spec fetch ([#1543](https://github.com/hey-api/openapi-ts/pull/1543))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: send GET request only on first spec fetch ([#1543](https://github.com/hey-api/hey-api/pull/1543))
 
 ---
 
@@ -3844,8 +3844,8 @@ export default {
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: detect pagination in composite schemas with null type ([#1530](https://github.com/hey-api/openapi-ts/pull/1530))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle primitive constants in Zod and types ([#1535](https://github.com/hey-api/openapi-ts/pull/1535))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: detect pagination in composite schemas with null type ([#1530](https://github.com/hey-api/hey-api/pull/1530))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle primitive constants in Zod and types ([#1535](https://github.com/hey-api/hey-api/pull/1535))
 
 ---
 
@@ -3862,9 +3862,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 - **⚠️ Breaking:** please update `@hey-api/client-*` packages to the latest version
 
   feat: add support for basic http auth
-- Thanks [@chriswiggins](https://github.com/chriswiggins)! - Add support for HTTP Bearer Authentication Scheme ([#1520](https://github.com/hey-api/openapi-ts/pull/1520))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add OpenAPI 2.0 support to experimental parser ([#1525](https://github.com/hey-api/openapi-ts/pull/1525))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add watch mode ([#1511](https://github.com/hey-api/openapi-ts/pull/1511))
+- Thanks [@chriswiggins](https://github.com/chriswiggins)! - Add support for HTTP Bearer Authentication Scheme ([#1520](https://github.com/hey-api/hey-api/pull/1520))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add OpenAPI 2.0 support to experimental parser ([#1525](https://github.com/hey-api/hey-api/pull/1525))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add watch mode ([#1511](https://github.com/hey-api/hey-api/pull/1511))
 
   ## Watch Mode
 
@@ -3894,9 +3894,9 @@ This release has 1 breaking change. Please review the release notes carefully be
     -o src/client \
     -w
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for long integers ([#1529](https://github.com/hey-api/openapi-ts/pull/1529))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add `sdk.throwOnError` option ([#1512](https://github.com/hey-api/openapi-ts/pull/1512))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: preserve leading separators in enum keys ([#1525](https://github.com/hey-api/openapi-ts/pull/1525))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for long integers ([#1529](https://github.com/hey-api/hey-api/pull/1529))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add `sdk.throwOnError` option ([#1512](https://github.com/hey-api/hey-api/pull/1512))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: preserve leading separators in enum keys ([#1525](https://github.com/hey-api/hey-api/pull/1525))
 
 ---
 
@@ -3906,13 +3906,13 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle indexed access checks ([#1468](https://github.com/hey-api/openapi-ts/pull/1468))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: zod: generate patterns and improve plain schemas ([#1469](https://github.com/hey-api/openapi-ts/pull/1469))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add links to the experimental parser callouts ([#1471](https://github.com/hey-api/openapi-ts/pull/1471))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update types for custom plugins so defineConfig does not throw ([#1462](https://github.com/hey-api/openapi-ts/pull/1462))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export IR types ([#1464](https://github.com/hey-api/openapi-ts/pull/1464))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export utils ([#1467](https://github.com/hey-api/openapi-ts/pull/1467))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow plugins to explicitly declare whether they should be re-exported from the index file ([#1457](https://github.com/hey-api/openapi-ts/pull/1457))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle indexed access checks ([#1468](https://github.com/hey-api/hey-api/pull/1468))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: zod: generate patterns and improve plain schemas ([#1469](https://github.com/hey-api/hey-api/pull/1469))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add links to the experimental parser callouts ([#1471](https://github.com/hey-api/hey-api/pull/1471))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update types for custom plugins so defineConfig does not throw ([#1462](https://github.com/hey-api/hey-api/pull/1462))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export IR types ([#1464](https://github.com/hey-api/hey-api/pull/1464))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export utils ([#1467](https://github.com/hey-api/hey-api/pull/1467))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow plugins to explicitly declare whether they should be re-exported from the index file ([#1457](https://github.com/hey-api/hey-api/pull/1457))
 
 ---
 
@@ -3922,7 +3922,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: require sdk.transformer to use generated transformers ([#1430](https://github.com/hey-api/openapi-ts/pull/1430))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: require sdk.transformer to use generated transformers ([#1430](https://github.com/hey-api/hey-api/pull/1430))
 
   ### Added `sdk.transformer` option
 
@@ -3948,8 +3948,8 @@ This release has 1 breaking change. Please review the release notes carefully be
     ],
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: revert license to MIT ([#1447](https://github.com/hey-api/openapi-ts/pull/1447))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: Zod plugin generates response schemas ([#1430](https://github.com/hey-api/openapi-ts/pull/1430))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: revert license to MIT ([#1447](https://github.com/hey-api/hey-api/pull/1447))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: Zod plugin generates response schemas ([#1430](https://github.com/hey-api/hey-api/pull/1430))
 
 ---
 
@@ -3959,10 +3959,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate querySerializer options for Axios client ([#1420](https://github.com/hey-api/openapi-ts/pull/1420))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: infer responseType in SDKs for axios client ([#1419](https://github.com/hey-api/openapi-ts/pull/1419))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support oauth2 and apiKey security schemes ([#1409](https://github.com/hey-api/openapi-ts/pull/1409))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: zod plugin handles recursive schemas ([#1416](https://github.com/hey-api/openapi-ts/pull/1416))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate querySerializer options for Axios client ([#1420](https://github.com/hey-api/hey-api/pull/1420))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: infer responseType in SDKs for axios client ([#1419](https://github.com/hey-api/hey-api/pull/1419))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: support oauth2 and apiKey security schemes ([#1409](https://github.com/hey-api/hey-api/pull/1409))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: zod plugin handles recursive schemas ([#1416](https://github.com/hey-api/hey-api/pull/1416))
 
 ---
 
@@ -3972,8 +3972,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: prefix restricted identifier names with underscore ([#1398](https://github.com/hey-api/openapi-ts/pull/1398))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: disallow additional query parameters in experimental parser output ([#1394](https://github.com/hey-api/openapi-ts/pull/1394))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: prefix restricted identifier names with underscore ([#1398](https://github.com/hey-api/hey-api/pull/1398))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: disallow additional query parameters in experimental parser output ([#1394](https://github.com/hey-api/hey-api/pull/1394))
 
 ---
 
@@ -3983,7 +3983,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add `logs.level` option ([#1387](https://github.com/hey-api/openapi-ts/pull/1387))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add `logs.level` option ([#1387](https://github.com/hey-api/hey-api/pull/1387))
 
   ### Added `logs.level` option
 
@@ -4000,7 +4000,7 @@ This release has 1 breaking change. Please review the release notes carefully be
     output: "src/client",
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: remove `@hey-api/schemas` from default plugins ([#1389](https://github.com/hey-api/openapi-ts/pull/1389))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: remove `@hey-api/schemas` from default plugins ([#1389](https://github.com/hey-api/hey-api/pull/1389))
 
   ### Updated default `plugins`
 
@@ -4020,12 +4020,12 @@ This release has 1 breaking change. Please review the release notes carefully be
     ],
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly resolve required properties in nested allOf composition ([#1382](https://github.com/hey-api/openapi-ts/pull/1382))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add `--silent` or `-s` CLI option for silent log level ([#1387](https://github.com/hey-api/openapi-ts/pull/1387))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transformers handle allOf composition in experimental parser ([#1382](https://github.com/hey-api/openapi-ts/pull/1382))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add `logs` configuration option to customize log directory ([#1387](https://github.com/hey-api/openapi-ts/pull/1387))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow arbitrary object properties when additionalProperties is undefined ([#1390](https://github.com/hey-api/openapi-ts/pull/1390))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support `DEBUG` environment variable ([#1387](https://github.com/hey-api/openapi-ts/pull/1387))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly resolve required properties in nested allOf composition ([#1382](https://github.com/hey-api/hey-api/pull/1382))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add `--silent` or `-s` CLI option for silent log level ([#1387](https://github.com/hey-api/hey-api/pull/1387))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transformers handle allOf composition in experimental parser ([#1382](https://github.com/hey-api/hey-api/pull/1382))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add `logs` configuration option to customize log directory ([#1387](https://github.com/hey-api/hey-api/pull/1387))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow arbitrary object properties when additionalProperties is undefined ([#1390](https://github.com/hey-api/hey-api/pull/1390))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support `DEBUG` environment variable ([#1387](https://github.com/hey-api/hey-api/pull/1387))
 
 ---
 
@@ -4035,7 +4035,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.identifierCase option ([#1353](https://github.com/hey-api/openapi-ts/pull/1353))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.identifierCase option ([#1353](https://github.com/hey-api/hey-api/pull/1353))
 
   ### Added `typescript.identifierCase` option
 
@@ -4056,7 +4056,7 @@ This release has 1 breaking change. Please review the release notes carefully be
     ],
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: remove schemas and transformers re-exports from index.ts ([#1360](https://github.com/hey-api/openapi-ts/pull/1360))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: remove schemas and transformers re-exports from index.ts ([#1360](https://github.com/hey-api/hey-api/pull/1360))
 
   ### Removed `schemas.gen.ts` re-export
 
@@ -4075,7 +4075,7 @@ This release has 1 breaking change. Please review the release notes carefully be
   import { myTransformer } from "client"; // [!code --]
   import { myTransformer } from "client/transformers.gen"; // [!code ++]
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add output.clean option ([#1360](https://github.com/hey-api/openapi-ts/pull/1360))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add output.clean option ([#1360](https://github.com/hey-api/hey-api/pull/1360))
 
   ### Added `output.clean` option
 
@@ -4091,10 +4091,10 @@ This release has 1 breaking change. Please review the release notes carefully be
     },
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.enumsCase option ([#1362](https://github.com/hey-api/openapi-ts/pull/1362))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add before and after to pagination keywords ([#1361](https://github.com/hey-api/openapi-ts/pull/1361))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export Plugin API namespace ([#1368](https://github.com/hey-api/openapi-ts/pull/1368))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: TanStack Query plugin handles conflict with internal function name in experimental parser ([#1369](https://github.com/hey-api/openapi-ts/pull/1369))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.enumsCase option ([#1362](https://github.com/hey-api/hey-api/pull/1362))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add before and after to pagination keywords ([#1361](https://github.com/hey-api/hey-api/pull/1361))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export Plugin API namespace ([#1368](https://github.com/hey-api/hey-api/pull/1368))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: TanStack Query plugin handles conflict with internal function name in experimental parser ([#1369](https://github.com/hey-api/hey-api/pull/1369))
 
 ---
 
@@ -4104,12 +4104,12 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transformers correctly handle an array ([#1335](https://github.com/hey-api/openapi-ts/pull/1335))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve camelcase with abbreviated plurals ([#1332](https://github.com/hey-api/openapi-ts/pull/1332))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser generates url inside data types ([#1333](https://github.com/hey-api/openapi-ts/pull/1333))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser transforms anyOf date and null ([#1336](https://github.com/hey-api/openapi-ts/pull/1336))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser handles empty string and null enum values in JavaScript mode ([#1330](https://github.com/hey-api/openapi-ts/pull/1330))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser exports reusable request bodies ([#1340](https://github.com/hey-api/openapi-ts/pull/1340))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transformers correctly handle an array ([#1335](https://github.com/hey-api/hey-api/pull/1335))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve camelcase with abbreviated plurals ([#1332](https://github.com/hey-api/hey-api/pull/1332))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser generates url inside data types ([#1333](https://github.com/hey-api/hey-api/pull/1333))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser transforms anyOf date and null ([#1336](https://github.com/hey-api/hey-api/pull/1336))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser handles empty string and null enum values in JavaScript mode ([#1330](https://github.com/hey-api/hey-api/pull/1330))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: experimental parser exports reusable request bodies ([#1340](https://github.com/hey-api/hey-api/pull/1340))
 
 ---
 
@@ -4119,7 +4119,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: rename Hey API plugins ([#1324](https://github.com/hey-api/openapi-ts/pull/1324))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: rename Hey API plugins ([#1324](https://github.com/hey-api/hey-api/pull/1324))
 
   ### Renamed `@hey-api/services` plugin
 
@@ -4137,7 +4137,7 @@ This release has 1 breaking change. Please review the release notes carefully be
   ### Renamed `@hey-api/types` plugin
 
   This plugin has been renamed to `@hey-api/typescript`.
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.exportInlineEnums option ([#1327](https://github.com/hey-api/openapi-ts/pull/1327))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add typescript.exportInlineEnums option ([#1327](https://github.com/hey-api/hey-api/pull/1327))
 
   ### Added `typescript.exportInlineEnums` option
 
@@ -4160,7 +4160,7 @@ This release has 1 breaking change. Please review the release notes carefully be
     ],
   };
   ```
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve generated enum keys in experimental parser ([#1326](https://github.com/hey-api/openapi-ts/pull/1326))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve generated enum keys in experimental parser ([#1326](https://github.com/hey-api/hey-api/pull/1326))
 
 ---
 
@@ -4170,7 +4170,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod plugin handles value constraints and defaults ([#1319](https://github.com/hey-api/openapi-ts/pull/1319))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: Zod plugin handles value constraints and defaults ([#1319](https://github.com/hey-api/hey-api/pull/1319))
 
 ---
 
@@ -4180,8 +4180,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add input.exclude option ([#1316](https://github.com/hey-api/openapi-ts/pull/1316))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make Zod plugin available in plugins options ([#1316](https://github.com/hey-api/openapi-ts/pull/1316))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add input.exclude option ([#1316](https://github.com/hey-api/hey-api/pull/1316))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make Zod plugin available in plugins options ([#1316](https://github.com/hey-api/hey-api/pull/1316))
 
 ---
 
@@ -4191,7 +4191,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: gracefully handle invalid schema type in experimental parser ([#1309](https://github.com/hey-api/openapi-ts/pull/1309))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: gracefully handle invalid schema type in experimental parser ([#1309](https://github.com/hey-api/hey-api/pull/1309))
 
 ---
 
@@ -4199,10 +4199,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@jacobinu](https://github.com/jacobinu)! - feat: add `fastify` plugin ([#1286](https://github.com/hey-api/openapi-ts/pull/1286))
-- Thanks [@jacobinu](https://github.com/jacobinu)! - fix: export a map of error and response types by status code ([#1286](https://github.com/hey-api/openapi-ts/pull/1286))
-- Thanks [@jacobinu](https://github.com/jacobinu)! - fix: deprecate types.tree option ([#1286](https://github.com/hey-api/openapi-ts/pull/1286))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle file-like content media type without explicit schema ([#1305](https://github.com/hey-api/openapi-ts/pull/1305))
+- Thanks [@jacobinu](https://github.com/jacobinu)! - feat: add `fastify` plugin ([#1286](https://github.com/hey-api/hey-api/pull/1286))
+- Thanks [@jacobinu](https://github.com/jacobinu)! - fix: export a map of error and response types by status code ([#1286](https://github.com/hey-api/hey-api/pull/1286))
+- Thanks [@jacobinu](https://github.com/jacobinu)! - fix: deprecate types.tree option ([#1286](https://github.com/hey-api/hey-api/pull/1286))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle file-like content media type without explicit schema ([#1305](https://github.com/hey-api/hey-api/pull/1305))
 
 ---
 
@@ -4212,7 +4212,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@hougesen](https://github.com/hougesen)! - feat: add support for oxlint as linter ([#1283](https://github.com/hey-api/openapi-ts/pull/1283))
+- Thanks [@hougesen](https://github.com/hougesen)! - feat: add support for oxlint as linter ([#1283](https://github.com/hey-api/hey-api/pull/1283))
 
 ---
 
@@ -4222,10 +4222,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update sponsorship links ([#1253](https://github.com/hey-api/openapi-ts/pull/1253))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly generate array when items are a oneOf array with length 1 ([#1266](https://github.com/hey-api/openapi-ts/pull/1266))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle non-exploded array query parameters ([#1265](https://github.com/hey-api/openapi-ts/pull/1265))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle discriminators in experimental parser ([#1267](https://github.com/hey-api/openapi-ts/pull/1267))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update sponsorship links ([#1253](https://github.com/hey-api/hey-api/pull/1253))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly generate array when items are a oneOf array with length 1 ([#1266](https://github.com/hey-api/hey-api/pull/1266))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle non-exploded array query parameters ([#1265](https://github.com/hey-api/hey-api/pull/1265))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle discriminators in experimental parser ([#1267](https://github.com/hey-api/hey-api/pull/1267))
 
 ---
 
@@ -4235,9 +4235,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle nullable enums in experimental parser ([#1248](https://github.com/hey-api/openapi-ts/pull/1248))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for custom plugins ([#1251](https://github.com/hey-api/openapi-ts/pull/1251))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: render void for empty response status codes in experimental parser ([#1250](https://github.com/hey-api/openapi-ts/pull/1250))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle nullable enums in experimental parser ([#1248](https://github.com/hey-api/hey-api/pull/1248))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for custom plugins ([#1251](https://github.com/hey-api/hey-api/pull/1251))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: render void for empty response status codes in experimental parser ([#1250](https://github.com/hey-api/hey-api/pull/1250))
 
 ---
 
@@ -4247,8 +4247,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add input.include option ([#1241](https://github.com/hey-api/openapi-ts/pull/1241))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle pagination with basic refs ([#1239](https://github.com/hey-api/openapi-ts/pull/1239))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add input.include option ([#1241](https://github.com/hey-api/hey-api/pull/1241))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle pagination with basic refs ([#1239](https://github.com/hey-api/hey-api/pull/1239))
 
 ---
 
@@ -4258,9 +4258,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: forbid any body, path, or query parameters if not defined in spec ([#1237](https://github.com/hey-api/openapi-ts/pull/1237))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle additionalProperties: boolean in experimental parser ([#1235](https://github.com/hey-api/openapi-ts/pull/1235))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update schemas plugin to handle experimental 3.0.x parser ([#1233](https://github.com/hey-api/openapi-ts/pull/1233))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: forbid any body, path, or query parameters if not defined in spec ([#1237](https://github.com/hey-api/hey-api/pull/1237))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle additionalProperties: boolean in experimental parser ([#1235](https://github.com/hey-api/hey-api/pull/1235))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update schemas plugin to handle experimental 3.0.x parser ([#1233](https://github.com/hey-api/hey-api/pull/1233))
 
   This release adds an experimental parser for OpenAPI versions 3.0.x. In the future, this will become the default parser. If you're using OpenAPI 3.0 or newer, we encourage you to try it out today.
 
@@ -4279,7 +4279,7 @@ This release has 1 breaking change. Please review the release notes carefully be
   npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
   ```
 
-  The generated output should not structurally change, despite few things being generated in a different order. In fact, the output should be cleaner! That's the immediate side effect you should notice. If that's not true, please leave feedback in [GitHub issues](https://github.com/hey-api/openapi-ts/issues).
+  The generated output should not structurally change, despite few things being generated in a different order. In fact, the output should be cleaner! That's the immediate side effect you should notice. If that's not true, please leave feedback in [GitHub issues](https://github.com/hey-api/hey-api/issues).
 
   Hey API parser marks an important milestone towards v1 of `@hey-api/openapi-ts`. More features will be added to the parser in the future and the original parser from `openapi-typescript-codegen` will be deprecated and used only for generating legacy clients.
 
@@ -4293,7 +4293,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add OpenAPI 3.0.x experimental parser ([#1230](https://github.com/hey-api/openapi-ts/pull/1230))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add OpenAPI 3.0.x experimental parser ([#1230](https://github.com/hey-api/hey-api/pull/1230))
 
   This release adds an experimental parser for OpenAPI versions 3.0.x. In the future, this will become the default parser. If you're using OpenAPI 3.0 or newer, we encourage you to try it out today.
 
@@ -4312,7 +4312,7 @@ This release has 1 breaking change. Please review the release notes carefully be
   npx @hey-api/openapi-ts -i path/to/openapi.json -o src/client -c @hey-api/client-fetch -e
   ```
 
-  The generated output should not structurally change, despite few things being generated in a different order. In fact, the output should be cleaner! That's the immediate side effect you should notice. If that's not true, please leave feedback in [GitHub issues](https://github.com/hey-api/openapi-ts/issues).
+  The generated output should not structurally change, despite few things being generated in a different order. In fact, the output should be cleaner! That's the immediate side effect you should notice. If that's not true, please leave feedback in [GitHub issues](https://github.com/hey-api/hey-api/issues).
 
   Hey API parser marks an important milestone towards v1 of `@hey-api/openapi-ts`. More features will be added to the parser in the future and the original parser from `openapi-typescript-codegen` will be deprecated and used only for generating legacy clients.
 
@@ -4326,7 +4326,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add support for @tanstack/angular-query-experimental package ([#1222](https://github.com/hey-api/openapi-ts/pull/1222))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add support for @tanstack/angular-query-experimental package ([#1222](https://github.com/hey-api/hey-api/pull/1222))
 
 ---
 
@@ -4336,8 +4336,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: ignore name option when not used with legacy clients to avoid producing broken output ([#1211](https://github.com/hey-api/openapi-ts/pull/1211))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for OpenAPI 3.1.1 to experimental parser ([#1209](https://github.com/hey-api/openapi-ts/pull/1209))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: ignore name option when not used with legacy clients to avoid producing broken output ([#1211](https://github.com/hey-api/hey-api/pull/1211))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add support for OpenAPI 3.1.1 to experimental parser ([#1209](https://github.com/hey-api/hey-api/pull/1209))
 
 ---
 
@@ -4347,7 +4347,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: make plugins first-class citizens ([#1201](https://github.com/hey-api/openapi-ts/pull/1201))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: make plugins first-class citizens ([#1201](https://github.com/hey-api/hey-api/pull/1201))
 
   This release makes plugins first-class citizens. In order to achieve that, the following breaking changes were introduced.
 
@@ -4521,8 +4521,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: TanStack Query plugin using missing import for infinite query ([#1195](https://github.com/hey-api/openapi-ts/pull/1195))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: pass TanStack query signal to client call ([#1194](https://github.com/hey-api/openapi-ts/pull/1194))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: TanStack Query plugin using missing import for infinite query ([#1195](https://github.com/hey-api/hey-api/pull/1195))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: pass TanStack query signal to client call ([#1194](https://github.com/hey-api/hey-api/pull/1194))
 
 ---
 
@@ -4532,7 +4532,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update website domain, add license documentation ([#1151](https://github.com/hey-api/openapi-ts/pull/1151))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update website domain, add license documentation ([#1151](https://github.com/hey-api/hey-api/pull/1151))
 
 ---
 
@@ -4542,7 +4542,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update license field in package.json to match the license, revert client packages license to MIT ([#1145](https://github.com/hey-api/openapi-ts/pull/1145))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update license field in package.json to match the license, revert client packages license to MIT ([#1145](https://github.com/hey-api/hey-api/pull/1145))
 
 ---
 
@@ -4552,7 +4552,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@BierDav](https://github.com/BierDav)! - Add support for passing mutation specific options to `<operation_id>Mutation(options)` ([#1137](https://github.com/hey-api/openapi-ts/pull/1137))
+- Thanks [@BierDav](https://github.com/BierDav)! - Add support for passing mutation specific options to `<operation_id>Mutation(options)` ([#1137](https://github.com/hey-api/hey-api/pull/1137))
 
 ---
 
@@ -4562,7 +4562,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use correct relative path to bundled client when imported from nested module ([#1123](https://github.com/hey-api/openapi-ts/pull/1123))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use correct relative path to bundled client when imported from nested module ([#1123](https://github.com/hey-api/hey-api/pull/1123))
 
 ---
 
@@ -4572,8 +4572,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: skip nested properties in oneOf and anyOf compositions ([#1113](https://github.com/hey-api/openapi-ts/pull/1113))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: abstract page params logic in TanStack Query plugin ([#1115](https://github.com/hey-api/openapi-ts/pull/1115))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: skip nested properties in oneOf and anyOf compositions ([#1113](https://github.com/hey-api/hey-api/pull/1113))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: abstract page params logic in TanStack Query plugin ([#1115](https://github.com/hey-api/hey-api/pull/1115))
 
 ---
 
@@ -4583,8 +4583,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export spec-compliant OpenAPI 3.1 interface ([#1104](https://github.com/hey-api/openapi-ts/pull/1104))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle multiple form-data parameters in Swagger 2.0 ([#1108](https://github.com/hey-api/openapi-ts/pull/1108))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export spec-compliant OpenAPI 3.1 interface ([#1104](https://github.com/hey-api/hey-api/pull/1104))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle multiple form-data parameters in Swagger 2.0 ([#1108](https://github.com/hey-api/hey-api/pull/1108))
 
 ---
 
@@ -4594,9 +4594,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make TanStack Query plugin work with class-based services ([#1096](https://github.com/hey-api/openapi-ts/pull/1096))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid printing duplicate null nodes ([#1095](https://github.com/hey-api/openapi-ts/pull/1095))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: attach TanStack Query infinite page params only if they exist ([#1094](https://github.com/hey-api/openapi-ts/pull/1094))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make TanStack Query plugin work with class-based services ([#1096](https://github.com/hey-api/hey-api/pull/1096))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: avoid printing duplicate null nodes ([#1095](https://github.com/hey-api/hey-api/pull/1095))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: attach TanStack Query infinite page params only if they exist ([#1094](https://github.com/hey-api/hey-api/pull/1094))
 
 ---
 
@@ -4606,8 +4606,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: import handlebars instead of runtime ([#1087](https://github.com/hey-api/openapi-ts/pull/1087))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support dynamic require in child_process ([#1086](https://github.com/hey-api/openapi-ts/pull/1086))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: import handlebars instead of runtime ([#1087](https://github.com/hey-api/hey-api/pull/1087))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support dynamic require in child_process ([#1086](https://github.com/hey-api/hey-api/pull/1086))
 
 ---
 
@@ -4617,7 +4617,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: properly handle dual publishing and type generation ([#1075](https://github.com/hey-api/openapi-ts/pull/1075))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: properly handle dual publishing and type generation ([#1075](https://github.com/hey-api/hey-api/pull/1075))
 
 ---
 
@@ -4627,11 +4627,11 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle colon in operation path ([#1060](https://github.com/hey-api/openapi-ts/pull/1060))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow overriding generated headers from options ([#1065](https://github.com/hey-api/openapi-ts/pull/1065))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export Operation interface ([#1068](https://github.com/hey-api/openapi-ts/pull/1068))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle named object property with no nested properties ([#1067](https://github.com/hey-api/openapi-ts/pull/1067))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transform any-of nullable dates ([#1066](https://github.com/hey-api/openapi-ts/pull/1066))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle colon in operation path ([#1060](https://github.com/hey-api/hey-api/pull/1060))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow overriding generated headers from options ([#1065](https://github.com/hey-api/hey-api/pull/1065))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export Operation interface ([#1068](https://github.com/hey-api/hey-api/pull/1068))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle named object property with no nested properties ([#1067](https://github.com/hey-api/hey-api/pull/1067))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: transform any-of nullable dates ([#1066](https://github.com/hey-api/hey-api/pull/1066))
 
 ---
 
@@ -4641,7 +4641,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw error on invalid client value ([#1050](https://github.com/hey-api/openapi-ts/pull/1050))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw error on invalid client value ([#1050](https://github.com/hey-api/hey-api/pull/1050))
 
 ---
 
@@ -4651,10 +4651,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: rename legacy clients with 'legacy/' prefix ([#1008](https://github.com/hey-api/openapi-ts/pull/1008))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change schemas name pattern, add schemas.name option ([#1009](https://github.com/hey-api/openapi-ts/pull/1009))
-- Thanks [@jacobinu](https://github.com/jacobinu)! - fix: make UserConfig interface instead of type ([#989](https://github.com/hey-api/openapi-ts/pull/989))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: set query key base url from supplied client if provided ([#1010](https://github.com/hey-api/openapi-ts/pull/1010))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: rename legacy clients with 'legacy/' prefix ([#1008](https://github.com/hey-api/hey-api/pull/1008))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: change schemas name pattern, add schemas.name option ([#1009](https://github.com/hey-api/hey-api/pull/1009))
+- Thanks [@jacobinu](https://github.com/jacobinu)! - fix: make UserConfig interface instead of type ([#989](https://github.com/hey-api/hey-api/pull/989))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: set query key base url from supplied client if provided ([#1010](https://github.com/hey-api/hey-api/pull/1010))
 
 ---
 
@@ -4664,7 +4664,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export query key functions from TanStack Query plugin ([#981](https://github.com/hey-api/openapi-ts/pull/981))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: export query key functions from TanStack Query plugin ([#981](https://github.com/hey-api/hey-api/pull/981))
 
 ---
 
@@ -4674,7 +4674,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@jacobinu](https://github.com/jacobinu)! - fix: handle tree-shakeable angular client case ([#973](https://github.com/hey-api/openapi-ts/pull/973))
+- Thanks [@jacobinu](https://github.com/jacobinu)! - fix: handle tree-shakeable angular client case ([#973](https://github.com/hey-api/hey-api/pull/973))
 
 ---
 
@@ -4684,11 +4684,11 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle schemas with generics from C# ([#948](https://github.com/hey-api/openapi-ts/pull/948))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: rename infinite key in query key to \_infinite ([#949](https://github.com/hey-api/openapi-ts/pull/949))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - chore: warn on duplicate operation ID ([#946](https://github.com/hey-api/openapi-ts/pull/946))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly use parentheses around composed schemas ([#947](https://github.com/hey-api/openapi-ts/pull/947))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly handle integer type in additional properties ([#944](https://github.com/hey-api/openapi-ts/pull/944))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle schemas with generics from C# ([#948](https://github.com/hey-api/hey-api/pull/948))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: rename infinite key in query key to \_infinite ([#949](https://github.com/hey-api/hey-api/pull/949))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - chore: warn on duplicate operation ID ([#946](https://github.com/hey-api/hey-api/pull/946))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly use parentheses around composed schemas ([#947](https://github.com/hey-api/hey-api/pull/947))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly handle integer type in additional properties ([#944](https://github.com/hey-api/hey-api/pull/944))
 
 ---
 
@@ -4698,7 +4698,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: cherry pick keys in mutation page param type ([#932](https://github.com/hey-api/openapi-ts/pull/932))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: cherry pick keys in mutation page param type ([#932](https://github.com/hey-api/hey-api/pull/932))
 
 ---
 
@@ -4706,9 +4706,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle various issues with additionalProperties definitions ([#929](https://github.com/hey-api/openapi-ts/pull/929))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update TanStack Query key to contain base URL ([#927](https://github.com/hey-api/openapi-ts/pull/927))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: change TanStack Query mutation helpers to functions for consistent API ([#927](https://github.com/hey-api/openapi-ts/pull/927))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle various issues with additionalProperties definitions ([#929](https://github.com/hey-api/hey-api/pull/929))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: update TanStack Query key to contain base URL ([#927](https://github.com/hey-api/hey-api/pull/927))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: change TanStack Query mutation helpers to functions for consistent API ([#927](https://github.com/hey-api/hey-api/pull/927))
 
 ---
 
@@ -4718,7 +4718,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add preview version of TanStack Query plugin ([#920](https://github.com/hey-api/openapi-ts/pull/920))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: add preview version of TanStack Query plugin ([#920](https://github.com/hey-api/hey-api/pull/920))
 
 ---
 
@@ -4728,9 +4728,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if prerequisite checks are not met ([#910](https://github.com/hey-api/openapi-ts/pull/910))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly transform string to pascalcase when referenced inside schema ([#907](https://github.com/hey-api/openapi-ts/pull/907))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not generate types tree by default if services are enabled as it is unused ([#908](https://github.com/hey-api/openapi-ts/pull/908))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: throw if prerequisite checks are not met ([#910](https://github.com/hey-api/hey-api/pull/910))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly transform string to pascalcase when referenced inside schema ([#907](https://github.com/hey-api/hey-api/pull/907))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not generate types tree by default if services are enabled as it is unused ([#908](https://github.com/hey-api/hey-api/pull/908))
 
 ---
 
@@ -4740,7 +4740,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: define ThrowOnError generic as the last argument ([#895](https://github.com/hey-api/openapi-ts/pull/895))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: define ThrowOnError generic as the last argument ([#895](https://github.com/hey-api/hey-api/pull/895))
 
 ---
 
@@ -4750,7 +4750,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate ThrowOnError generic for class-based client methods ([#884](https://github.com/hey-api/openapi-ts/pull/884))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate ThrowOnError generic for class-based client methods ([#884](https://github.com/hey-api/hey-api/pull/884))
 
 ---
 
@@ -4760,7 +4760,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@hougesen](https://github.com/hougesen)! - fix: check if key is schema property before removing ([#881](https://github.com/hey-api/openapi-ts/pull/881))
+- Thanks [@hougesen](https://github.com/hougesen)! - fix: check if key is schema property before removing ([#881](https://github.com/hey-api/hey-api/pull/881))
 
 ---
 
@@ -4770,10 +4770,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: define multiple errors type as union instead of intersection ([#855](https://github.com/hey-api/openapi-ts/pull/855))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: remove Content-Type header with multipart/form-data content type ([#853](https://github.com/hey-api/openapi-ts/pull/853))
-- Thanks [@qqilihq](https://github.com/qqilihq)! - fix: Additional properties key ([#861](https://github.com/hey-api/openapi-ts/pull/861))
-- Thanks [@SamuelGuillemet](https://github.com/SamuelGuillemet)! - fix: add conditionnal generation for service related types ([#869](https://github.com/hey-api/openapi-ts/pull/869))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: define multiple errors type as union instead of intersection ([#855](https://github.com/hey-api/hey-api/pull/855))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: remove Content-Type header with multipart/form-data content type ([#853](https://github.com/hey-api/hey-api/pull/853))
+- Thanks [@qqilihq](https://github.com/qqilihq)! - fix: Additional properties key ([#861](https://github.com/hey-api/hey-api/pull/861))
+- Thanks [@SamuelGuillemet](https://github.com/SamuelGuillemet)! - fix: add conditionnal generation for service related types ([#869](https://github.com/hey-api/hey-api/pull/869))
 
 ---
 
@@ -4783,8 +4783,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@LeeChSien](https://github.com/LeeChSien)! - feat: add namespace supporting for enums ([#835](https://github.com/hey-api/openapi-ts/pull/835))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate internal client for services when using standalone package ([#830](https://github.com/hey-api/openapi-ts/pull/830))
+- Thanks [@LeeChSien](https://github.com/LeeChSien)! - feat: add namespace supporting for enums ([#835](https://github.com/hey-api/hey-api/pull/835))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate internal client for services when using standalone package ([#830](https://github.com/hey-api/hey-api/pull/830))
 
 ---
 
@@ -4794,9 +4794,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: make `client` config option required ([#828](https://github.com/hey-api/openapi-ts/pull/828))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly process body parameter for OpenAPI 2.0 specs ([#823](https://github.com/hey-api/openapi-ts/pull/823))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not ignore api-version param in standalone clients ([#827](https://github.com/hey-api/openapi-ts/pull/827))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: make `client` config option required ([#828](https://github.com/hey-api/hey-api/pull/828))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: correctly process body parameter for OpenAPI 2.0 specs ([#823](https://github.com/hey-api/hey-api/pull/823))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: do not ignore api-version param in standalone clients ([#827](https://github.com/hey-api/hey-api/pull/827))
 
 ---
 
@@ -4806,7 +4806,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle fully illegal schema names ([#818](https://github.com/hey-api/openapi-ts/pull/818))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle fully illegal schema names ([#818](https://github.com/hey-api/hey-api/pull/818))
 
 ---
 
@@ -4816,8 +4816,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate types only for filtered services ([#807](https://github.com/hey-api/openapi-ts/pull/807))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow any key/value pair in object types with empty properties object ([#807](https://github.com/hey-api/openapi-ts/pull/807))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate types only for filtered services ([#807](https://github.com/hey-api/hey-api/pull/807))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow any key/value pair in object types with empty properties object ([#807](https://github.com/hey-api/hey-api/pull/807))
 
 ---
 
@@ -4827,7 +4827,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: allow bundling standalone clients with `client.bundle = true` ([#790](https://github.com/hey-api/openapi-ts/pull/790))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: allow bundling standalone clients with `client.bundle = true` ([#790](https://github.com/hey-api/hey-api/pull/790))
 
 ---
 
@@ -4837,10 +4837,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: allow filtering service endpoints with `services.filter` ([#787](https://github.com/hey-api/openapi-ts/pull/787))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: suffix illegal service names ([#784](https://github.com/hey-api/openapi-ts/pull/784))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle references to schemas with illegal names ([#786](https://github.com/hey-api/openapi-ts/pull/786))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle application/x-www-form-urlencoded content in request body ([#788](https://github.com/hey-api/openapi-ts/pull/788))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: allow filtering service endpoints with `services.filter` ([#787](https://github.com/hey-api/hey-api/pull/787))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: suffix illegal service names ([#784](https://github.com/hey-api/hey-api/pull/784))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle references to schemas with illegal names ([#786](https://github.com/hey-api/hey-api/pull/786))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle application/x-www-form-urlencoded content in request body ([#788](https://github.com/hey-api/hey-api/pull/788))
 
 ---
 
@@ -4850,8 +4850,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use methodNameBuilder when asClass is false ([#781](https://github.com/hey-api/openapi-ts/pull/781))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow not generating types tree with types.tree = false ([#782](https://github.com/hey-api/openapi-ts/pull/782))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: use methodNameBuilder when asClass is false ([#781](https://github.com/hey-api/hey-api/pull/781))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: allow not generating types tree with types.tree = false ([#782](https://github.com/hey-api/hey-api/pull/782))
 
 ---
 
@@ -4861,10 +4861,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle formData parameters in generated types ([#746](https://github.com/hey-api/openapi-ts/pull/746))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: ignore services.asClass setting for named clients ([#742](https://github.com/hey-api/openapi-ts/pull/742))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve default response type detection ([#744](https://github.com/hey-api/openapi-ts/pull/744))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle properties in one-of composition ([#745](https://github.com/hey-api/openapi-ts/pull/745))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle formData parameters in generated types ([#746](https://github.com/hey-api/hey-api/pull/746))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: ignore services.asClass setting for named clients ([#742](https://github.com/hey-api/hey-api/pull/742))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve default response type detection ([#744](https://github.com/hey-api/hey-api/pull/744))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle properties in one-of composition ([#745](https://github.com/hey-api/hey-api/pull/745))
 
 ---
 
@@ -4874,9 +4874,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate service types when types are enabled, even if services are disabled ([#734](https://github.com/hey-api/openapi-ts/pull/734))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support custom config file path ([#737](https://github.com/hey-api/openapi-ts/pull/737))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle async response transformers ([#736](https://github.com/hey-api/openapi-ts/pull/736))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: generate service types when types are enabled, even if services are disabled ([#734](https://github.com/hey-api/hey-api/pull/734))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: support custom config file path ([#737](https://github.com/hey-api/hey-api/pull/737))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle async response transformers ([#736](https://github.com/hey-api/hey-api/pull/736))
 
 ---
 
@@ -4886,9 +4886,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@anchan828](https://github.com/anchan828)! - feat: pass the Operation object to methodNameBuilder ([#696](https://github.com/hey-api/openapi-ts/pull/696))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make getHeaders() accept generic ([#708](https://github.com/hey-api/openapi-ts/pull/708))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle void responses in transformers ([#712](https://github.com/hey-api/openapi-ts/pull/712))
+- Thanks [@anchan828](https://github.com/anchan828)! - feat: pass the Operation object to methodNameBuilder ([#696](https://github.com/hey-api/hey-api/pull/696))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: make getHeaders() accept generic ([#708](https://github.com/hey-api/hey-api/pull/708))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle void responses in transformers ([#712](https://github.com/hey-api/hey-api/pull/712))
 
 ---
 
@@ -4898,7 +4898,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add initial implementation of prefixItems ([#701](https://github.com/hey-api/openapi-ts/pull/701))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add initial implementation of prefixItems ([#701](https://github.com/hey-api/hey-api/pull/701))
 
 ---
 
@@ -4908,7 +4908,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@Nick-Lucas](https://github.com/Nick-Lucas)! - Fix an issue where transforms for endpoints with array returns were not generated correctly ([#690](https://github.com/hey-api/openapi-ts/pull/690))
+- Thanks [@Nick-Lucas](https://github.com/Nick-Lucas)! - Fix an issue where transforms for endpoints with array returns were not generated correctly ([#690](https://github.com/hey-api/hey-api/pull/690))
 
 ---
 
@@ -4918,8 +4918,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add initial support for response transformers (string -> Date) ([#685](https://github.com/hey-api/openapi-ts/pull/685))
-- Thanks [@Stono](https://github.com/Stono)! - Add support for customizing method names with `services.methodNameBuilder()` ([#663](https://github.com/hey-api/openapi-ts/pull/663))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - feat: add initial support for response transformers (string -> Date) ([#685](https://github.com/hey-api/hey-api/pull/685))
+- Thanks [@Stono](https://github.com/Stono)! - Add support for customizing method names with `services.methodNameBuilder()` ([#663](https://github.com/hey-api/hey-api/pull/663))
 
 ---
 
@@ -4929,11 +4929,11 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Thanks [@SimenB](https://github.com/SimenB)! - Add explicit type annotations to `Interceptors` ([#594](https://github.com/hey-api/openapi-ts/pull/594))
+- Thanks [@SimenB](https://github.com/SimenB)! - Add explicit type annotations to `Interceptors` ([#594](https://github.com/hey-api/hey-api/pull/594))
 
   This allows the generated code to work with TypeScript 5.5's new `isolatedDeclarations` configuration.
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle 1XX response status codes ([#635](https://github.com/hey-api/openapi-ts/pull/635))
-- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve default response status code classification ([#636](https://github.com/hey-api/openapi-ts/pull/636))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: handle 1XX response status codes ([#635](https://github.com/hey-api/hey-api/pull/635))
+- Thanks [@mrlubos](https://github.com/mrlubos)! - fix: improve default response status code classification ([#636](https://github.com/hey-api/hey-api/pull/636))
 
 ---
 
@@ -4943,7 +4943,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: do not transform property names for standalone clients ([#616](https://github.com/hey-api/openapi-ts/pull/616))
+- fix: do not transform property names for standalone clients ([#616](https://github.com/hey-api/hey-api/pull/616))
 
 ---
 
@@ -4953,7 +4953,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: handle application/json content type in parameter definitions ([#614](https://github.com/hey-api/openapi-ts/pull/614))
+- fix: handle application/json content type in parameter definitions ([#614](https://github.com/hey-api/hey-api/pull/614))
 
 ---
 
@@ -4963,7 +4963,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat: tree-shakeable services ([#602](https://github.com/hey-api/openapi-ts/pull/602))
+- feat: tree-shakeable services ([#602](https://github.com/hey-api/hey-api/pull/602))
 
 ---
 
@@ -4973,7 +4973,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: use generated types in request object instead of inlined duplicated params ([#582](https://github.com/hey-api/openapi-ts/pull/582))
+- fix: use generated types in request object instead of inlined duplicated params ([#582](https://github.com/hey-api/hey-api/pull/582))
 
 ---
 
@@ -4983,9 +4983,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat: remove client inference ([#569](https://github.com/hey-api/openapi-ts/pull/569))
-- fix: deduplicate inlined enums ([#573](https://github.com/hey-api/openapi-ts/pull/573))
-- fix: generate correct optional key in types when using positional arguments (useOptions: false) ([#572](https://github.com/hey-api/openapi-ts/pull/572))
+- feat: remove client inference ([#569](https://github.com/hey-api/hey-api/pull/569))
+- fix: deduplicate inlined enums ([#573](https://github.com/hey-api/hey-api/pull/573))
+- fix: generate correct optional key in types when using positional arguments (useOptions: false) ([#572](https://github.com/hey-api/hey-api/pull/572))
 
 ---
 
@@ -4995,11 +4995,11 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat: move format and lint config options to output object ([#546](https://github.com/hey-api/openapi-ts/pull/546))
-- fix: comment position in JavaScript enums ([#544](https://github.com/hey-api/openapi-ts/pull/544))
-- fix: export inlined enums from components ([#563](https://github.com/hey-api/openapi-ts/pull/563))
-- fix: remove unused enums option from CLI ([#565](https://github.com/hey-api/openapi-ts/pull/565))
-- fix: Support typescript in peerDependencies ([#551](https://github.com/hey-api/openapi-ts/pull/551))
+- feat: move format and lint config options to output object ([#546](https://github.com/hey-api/hey-api/pull/546))
+- fix: comment position in JavaScript enums ([#544](https://github.com/hey-api/hey-api/pull/544))
+- fix: export inlined enums from components ([#563](https://github.com/hey-api/hey-api/pull/563))
+- fix: remove unused enums option from CLI ([#565](https://github.com/hey-api/hey-api/pull/565))
+- fix: Support typescript in peerDependencies ([#551](https://github.com/hey-api/hey-api/pull/551))
 
 ---
 
@@ -5009,7 +5009,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: deduplicate exported data and response types ([#538](https://github.com/hey-api/openapi-ts/pull/538))
+- fix: deduplicate exported data and response types ([#538](https://github.com/hey-api/hey-api/pull/538))
 
 ---
 
@@ -5019,9 +5019,9 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: use optional chaining in bin catch block ([#528](https://github.com/hey-api/openapi-ts/pull/528))
-- fix: broken encoding ([#532](https://github.com/hey-api/openapi-ts/pull/532))
-- fix(parser): handle type array ([#533](https://github.com/hey-api/openapi-ts/pull/533))
+- fix: use optional chaining in bin catch block ([#528](https://github.com/hey-api/hey-api/pull/528))
+- fix: broken encoding ([#532](https://github.com/hey-api/hey-api/pull/532))
+- fix(parser): handle type array ([#533](https://github.com/hey-api/hey-api/pull/533))
 
 ---
 
@@ -5031,16 +5031,16 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat: remove enum postfix, use typescript enums in types when generated, export enums from types.gen.ts ([#498](https://github.com/hey-api/openapi-ts/pull/498))
-- fix: negative numbers in numeric enums ([#470](https://github.com/hey-api/openapi-ts/pull/470))
-- fix: escape keys in schemas starting with digit but containing non-digit characters ([#502](https://github.com/hey-api/openapi-ts/pull/502))
-- fix: issue causing code to not generate (t.filter is not a function) ([#507](https://github.com/hey-api/openapi-ts/pull/507))
-- fix: handle additional properties union ([#499](https://github.com/hey-api/openapi-ts/pull/499))
-- fix: do not export inline enums ([#508](https://github.com/hey-api/openapi-ts/pull/508))
-- fix: prefix parameter type exports to avoid conflicts ([#501](https://github.com/hey-api/openapi-ts/pull/501))
-- fix: export operation data and response types ([#500](https://github.com/hey-api/openapi-ts/pull/500))
-- fix: handle cases where packages are installed globally ([#471](https://github.com/hey-api/openapi-ts/pull/471))
-- fix: handle cases where package.json does not exist ([#471](https://github.com/hey-api/openapi-ts/pull/471))
+- feat: remove enum postfix, use typescript enums in types when generated, export enums from types.gen.ts ([#498](https://github.com/hey-api/hey-api/pull/498))
+- fix: negative numbers in numeric enums ([#470](https://github.com/hey-api/hey-api/pull/470))
+- fix: escape keys in schemas starting with digit but containing non-digit characters ([#502](https://github.com/hey-api/hey-api/pull/502))
+- fix: issue causing code to not generate (t.filter is not a function) ([#507](https://github.com/hey-api/hey-api/pull/507))
+- fix: handle additional properties union ([#499](https://github.com/hey-api/hey-api/pull/499))
+- fix: do not export inline enums ([#508](https://github.com/hey-api/hey-api/pull/508))
+- fix: prefix parameter type exports to avoid conflicts ([#501](https://github.com/hey-api/hey-api/pull/501))
+- fix: export operation data and response types ([#500](https://github.com/hey-api/hey-api/pull/500))
+- fix: handle cases where packages are installed globally ([#471](https://github.com/hey-api/hey-api/pull/471))
+- fix: handle cases where package.json does not exist ([#471](https://github.com/hey-api/hey-api/pull/471))
 
 ---
 
@@ -5050,7 +5050,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: properly set formData and body when using options ([#461](https://github.com/hey-api/openapi-ts/pull/461))
+- fix: properly set formData and body when using options ([#461](https://github.com/hey-api/hey-api/pull/461))
 
 ---
 
@@ -5060,17 +5060,17 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- change: config option `lint: true` has changed to `lint: 'eslint'` ([#455](https://github.com/hey-api/openapi-ts/pull/455))
-- change: disable formatting with prettier by default ([#457](https://github.com/hey-api/openapi-ts/pull/457))
-- change: config option `format: true` has changed to `format: 'prettier'` ([#455](https://github.com/hey-api/openapi-ts/pull/455))
-- feat: add support for biomejs as a formatter ([#455](https://github.com/hey-api/openapi-ts/pull/455))
-- feat: add operation error type mappings ([#442](https://github.com/hey-api/openapi-ts/pull/442))
-- feat: add support for biomejs as a linter ([#455](https://github.com/hey-api/openapi-ts/pull/455))
-- feat: move operationId config option to services object ([#441](https://github.com/hey-api/openapi-ts/pull/441))
-- feat: automatically handle dates in query string ([#443](https://github.com/hey-api/openapi-ts/pull/443))
-- fix: add jsdoc comments with use options ([#439](https://github.com/hey-api/openapi-ts/pull/439))
-- fix: do not destructure data when using use options ([#450](https://github.com/hey-api/openapi-ts/pull/450))
-- fix: only remove core directory when export core is true ([#449](https://github.com/hey-api/openapi-ts/pull/449))
+- change: config option `lint: true` has changed to `lint: 'eslint'` ([#455](https://github.com/hey-api/hey-api/pull/455))
+- change: disable formatting with prettier by default ([#457](https://github.com/hey-api/hey-api/pull/457))
+- change: config option `format: true` has changed to `format: 'prettier'` ([#455](https://github.com/hey-api/hey-api/pull/455))
+- feat: add support for biomejs as a formatter ([#455](https://github.com/hey-api/hey-api/pull/455))
+- feat: add operation error type mappings ([#442](https://github.com/hey-api/hey-api/pull/442))
+- feat: add support for biomejs as a linter ([#455](https://github.com/hey-api/hey-api/pull/455))
+- feat: move operationId config option to services object ([#441](https://github.com/hey-api/hey-api/pull/441))
+- feat: automatically handle dates in query string ([#443](https://github.com/hey-api/hey-api/pull/443))
+- fix: add jsdoc comments with use options ([#439](https://github.com/hey-api/hey-api/pull/439))
+- fix: do not destructure data when using use options ([#450](https://github.com/hey-api/hey-api/pull/450))
+- fix: only remove core directory when export core is true ([#449](https://github.com/hey-api/hey-api/pull/449))
 
 ---
 
@@ -5080,15 +5080,15 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat: add form type option for schemas ([#433](https://github.com/hey-api/openapi-ts/pull/433))
-- feat: replace useDateType with option in types object ([#435](https://github.com/hey-api/openapi-ts/pull/435))
-- feat: replace serviceResponse with option in services object ([#434](https://github.com/hey-api/openapi-ts/pull/434))
-- feat: replace postfixServices with configuration object ([#430](https://github.com/hey-api/openapi-ts/pull/430))
-- fix: properly escape backticks in template literals ([#431](https://github.com/hey-api/openapi-ts/pull/431))
-- fix: transform names of referenced types ([#422](https://github.com/hey-api/openapi-ts/pull/422))
-- fix: use config interceptors passed to constructor when using named client ([#432](https://github.com/hey-api/openapi-ts/pull/432))
-- fix: properly escape expressions in template literals ([#431](https://github.com/hey-api/openapi-ts/pull/431))
-- fix: do not export common properties as schemas ([#424](https://github.com/hey-api/openapi-ts/pull/424))
+- feat: add form type option for schemas ([#433](https://github.com/hey-api/hey-api/pull/433))
+- feat: replace useDateType with option in types object ([#435](https://github.com/hey-api/hey-api/pull/435))
+- feat: replace serviceResponse with option in services object ([#434](https://github.com/hey-api/hey-api/pull/434))
+- feat: replace postfixServices with configuration object ([#430](https://github.com/hey-api/hey-api/pull/430))
+- fix: properly escape backticks in template literals ([#431](https://github.com/hey-api/hey-api/pull/431))
+- fix: transform names of referenced types ([#422](https://github.com/hey-api/hey-api/pull/422))
+- fix: use config interceptors passed to constructor when using named client ([#432](https://github.com/hey-api/hey-api/pull/432))
+- fix: properly escape expressions in template literals ([#431](https://github.com/hey-api/hey-api/pull/431))
+- fix: do not export common properties as schemas ([#424](https://github.com/hey-api/hey-api/pull/424))
 
 ---
 
@@ -5098,7 +5098,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: unhandled SyntaxKind unknown when specification has numeric enums ([#417](https://github.com/hey-api/openapi-ts/pull/417))
+- fix: unhandled SyntaxKind unknown when specification has numeric enums ([#417](https://github.com/hey-api/hey-api/pull/417))
 
 ---
 
@@ -5106,7 +5106,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: revert to generating commonjs for esm and commonjs support ([#409](https://github.com/hey-api/openapi-ts/pull/409))
+- fix: revert to generating commonjs for esm and commonjs support ([#409](https://github.com/hey-api/hey-api/pull/409))
 
 ---
 
@@ -5116,10 +5116,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat: allow choosing naming convention for types ([#402](https://github.com/hey-api/openapi-ts/pull/402))
-- fix: rename exportModels to types ([#402](https://github.com/hey-api/openapi-ts/pull/402))
-- fix: rename models.gen.ts to types.gen.ts ([#399](https://github.com/hey-api/openapi-ts/pull/399))
-- fix: export enums from index.ts ([#399](https://github.com/hey-api/openapi-ts/pull/399))
+- feat: allow choosing naming convention for types ([#402](https://github.com/hey-api/hey-api/pull/402))
+- fix: rename exportModels to types ([#402](https://github.com/hey-api/hey-api/pull/402))
+- fix: rename models.gen.ts to types.gen.ts ([#399](https://github.com/hey-api/hey-api/pull/399))
+- fix: export enums from index.ts ([#399](https://github.com/hey-api/hey-api/pull/399))
 
 ---
 
@@ -5129,16 +5129,16 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat: add JSON-LD to content parsing ([#390](https://github.com/hey-api/openapi-ts/pull/390))
-- feat: rename generated files ([#363](https://github.com/hey-api/openapi-ts/pull/363))
-- fix: generate enums into their own file ([#358](https://github.com/hey-api/openapi-ts/pull/358))
-- fix: remove file if no contents to write to it ([#373](https://github.com/hey-api/openapi-ts/pull/373))
-- fix: eslint properly fixes output ([#375](https://github.com/hey-api/openapi-ts/pull/375))
-- fix: invalid typescript Record generated with circular dependencies ([#374](https://github.com/hey-api/openapi-ts/pull/374))
-- fix: prefer unknown type over any ([#392](https://github.com/hey-api/openapi-ts/pull/392))
-- fix: only delete generated files instead of whole output directory ([#362](https://github.com/hey-api/openapi-ts/pull/362))
-- fix: handle decoding models with `%` in description ([#360](https://github.com/hey-api/openapi-ts/pull/360))
-- fix: throw error when typescript is missing ([#366](https://github.com/hey-api/openapi-ts/pull/366))
+- feat: add JSON-LD to content parsing ([#390](https://github.com/hey-api/hey-api/pull/390))
+- feat: rename generated files ([#363](https://github.com/hey-api/hey-api/pull/363))
+- fix: generate enums into their own file ([#358](https://github.com/hey-api/hey-api/pull/358))
+- fix: remove file if no contents to write to it ([#373](https://github.com/hey-api/hey-api/pull/373))
+- fix: eslint properly fixes output ([#375](https://github.com/hey-api/hey-api/pull/375))
+- fix: invalid typescript Record generated with circular dependencies ([#374](https://github.com/hey-api/hey-api/pull/374))
+- fix: prefer unknown type over any ([#392](https://github.com/hey-api/hey-api/pull/392))
+- fix: only delete generated files instead of whole output directory ([#362](https://github.com/hey-api/hey-api/pull/362))
+- fix: handle decoding models with `%` in description ([#360](https://github.com/hey-api/hey-api/pull/360))
+- fix: throw error when typescript is missing ([#366](https://github.com/hey-api/hey-api/pull/366))
 
 ---
 
@@ -5148,8 +5148,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: inconsistent indentation in models file when not using `format: true` ([#349](https://github.com/hey-api/openapi-ts/pull/349))
-- fix: output path no longer required to be within cwd ([#353](https://github.com/hey-api/openapi-ts/pull/353))
+- fix: inconsistent indentation in models file when not using `format: true` ([#349](https://github.com/hey-api/hey-api/pull/349))
+- fix: output path no longer required to be within cwd ([#353](https://github.com/hey-api/hey-api/pull/353))
 
 ---
 
@@ -5157,13 +5157,13 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: rename write to dryRun and invert value ([#326](https://github.com/hey-api/openapi-ts/pull/326))
-- fix: generate constant size array types properly ([#345](https://github.com/hey-api/openapi-ts/pull/345))
-- fix: support x-enumNames for custom enum names ([#334](https://github.com/hey-api/openapi-ts/pull/334))
-- fix: export service types from single namespace ([#341](https://github.com/hey-api/openapi-ts/pull/341))
-- fix: generate models with proper indentation when formatting is false ([#340](https://github.com/hey-api/openapi-ts/pull/340))
-- fix: log errors to file ([#329](https://github.com/hey-api/openapi-ts/pull/329))
-- fix: cleanup some styling issues when generating client without formatting ([#330](https://github.com/hey-api/openapi-ts/pull/330))
+- fix: rename write to dryRun and invert value ([#326](https://github.com/hey-api/hey-api/pull/326))
+- fix: generate constant size array types properly ([#345](https://github.com/hey-api/hey-api/pull/345))
+- fix: support x-enumNames for custom enum names ([#334](https://github.com/hey-api/hey-api/pull/334))
+- fix: export service types from single namespace ([#341](https://github.com/hey-api/hey-api/pull/341))
+- fix: generate models with proper indentation when formatting is false ([#340](https://github.com/hey-api/hey-api/pull/340))
+- fix: log errors to file ([#329](https://github.com/hey-api/hey-api/pull/329))
+- fix: cleanup some styling issues when generating client without formatting ([#330](https://github.com/hey-api/hey-api/pull/330))
 
 ---
 
@@ -5173,7 +5173,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: do not ignore additionalProperties when object with properties object ([#323](https://github.com/hey-api/openapi-ts/pull/323))
+- fix: do not ignore additionalProperties when object with properties object ([#323](https://github.com/hey-api/hey-api/pull/323))
 
 ---
 
@@ -5181,8 +5181,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: escape schema names ([#317](https://github.com/hey-api/openapi-ts/pull/317))
-- fix: escape backticks in strings starting with backtick ([#315](https://github.com/hey-api/openapi-ts/pull/315))
+- fix: escape schema names ([#317](https://github.com/hey-api/hey-api/pull/317))
+- fix: escape backticks in strings starting with backtick ([#315](https://github.com/hey-api/hey-api/pull/315))
 
 ---
 
@@ -5190,7 +5190,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: ensure strings with both single/double quotes and backticks are escaped properly ([#310](https://github.com/hey-api/openapi-ts/pull/310))
+- fix: ensure strings with both single/double quotes and backticks are escaped properly ([#310](https://github.com/hey-api/hey-api/pull/310))
 
 ---
 
@@ -5198,8 +5198,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: escape dollar sign in operation names ([#307](https://github.com/hey-api/openapi-ts/pull/307))
-- remove: `generics` as valid option for serviceResponse ([#299](https://github.com/hey-api/openapi-ts/pull/299))
+- fix: escape dollar sign in operation names ([#307](https://github.com/hey-api/hey-api/pull/307))
+- remove: `generics` as valid option for serviceResponse ([#299](https://github.com/hey-api/hey-api/pull/299))
 
 ---
 
@@ -5207,7 +5207,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: move service types into models file ([#292](https://github.com/hey-api/openapi-ts/pull/292))
+- fix: move service types into models file ([#292](https://github.com/hey-api/hey-api/pull/292))
 
 ---
 
@@ -5217,7 +5217,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix: do not throw when failing to decode URI ([#296](https://github.com/hey-api/openapi-ts/pull/296))
+- fix: do not throw when failing to decode URI ([#296](https://github.com/hey-api/hey-api/pull/296))
 
 ---
 
@@ -5225,8 +5225,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat: export schemas directly from OpenAPI specification (ie. support exporting JSON schemas draft 2020-12 ([#285](https://github.com/hey-api/openapi-ts/pull/285))
-- fix(config): rename exportSchemas to schemas ([#288](https://github.com/hey-api/openapi-ts/pull/288))
+- feat: export schemas directly from OpenAPI specification (ie. support exporting JSON schemas draft 2020-12 ([#285](https://github.com/hey-api/hey-api/pull/285))
+- fix(config): rename exportSchemas to schemas ([#288](https://github.com/hey-api/hey-api/pull/288))
 
 ---
 
@@ -5234,11 +5234,11 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix(api): use TypeScript Compiler API to create schemas ([#271](https://github.com/hey-api/openapi-ts/pull/271))
-- fix(client): do not send default params ([#267](https://github.com/hey-api/openapi-ts/pull/267))
-- fix(client): export APIResult when using serviceResponse as 'response' ([#283](https://github.com/hey-api/openapi-ts/pull/283))
-- fix(config): remove postfixModels option ([#266](https://github.com/hey-api/openapi-ts/pull/266))
-- fix(parser): use only isRequired to determine if field is required ([#264](https://github.com/hey-api/openapi-ts/pull/264))
+- fix(api): use TypeScript Compiler API to create schemas ([#271](https://github.com/hey-api/hey-api/pull/271))
+- fix(client): do not send default params ([#267](https://github.com/hey-api/hey-api/pull/267))
+- fix(client): export APIResult when using serviceResponse as 'response' ([#283](https://github.com/hey-api/hey-api/pull/283))
+- fix(config): remove postfixModels option ([#266](https://github.com/hey-api/hey-api/pull/266))
+- fix(parser): use only isRequired to determine if field is required ([#264](https://github.com/hey-api/hey-api/pull/264))
 
 ---
 
@@ -5248,7 +5248,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix(client): access service data type in namespace properly ([#258](https://github.com/hey-api/openapi-ts/pull/258))
+- fix(client): access service data type in namespace properly ([#258](https://github.com/hey-api/hey-api/pull/258))
 
 ---
 
@@ -5256,7 +5256,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix(client): namespace service data types ([#246](https://github.com/hey-api/openapi-ts/pull/246))
+- fix(client): namespace service data types ([#246](https://github.com/hey-api/hey-api/pull/246))
 
 ---
 
@@ -5264,7 +5264,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix(docs): link to docs hosted on vercel ([#244](https://github.com/hey-api/openapi-ts/pull/244))
+- fix(docs): link to docs hosted on vercel ([#244](https://github.com/hey-api/hey-api/pull/244))
 
 ---
 
@@ -5272,7 +5272,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- docs(readme): update broken contributing link ([#236](https://github.com/hey-api/openapi-ts/pull/236))
+- docs(readme): update broken contributing link ([#236](https://github.com/hey-api/hey-api/pull/236))
 - fix(config): support ts config files and `defineConfig` syntax
 
 ---
@@ -5283,7 +5283,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix(docs): ensure README is shown on NPMJS ([#229](https://github.com/hey-api/openapi-ts/pull/229))
+- fix(docs): ensure README is shown on NPMJS ([#229](https://github.com/hey-api/hey-api/pull/229))
 
 ---
 
@@ -5291,11 +5291,11 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- feat(client): generate all services in single `services.ts` file ([#215](https://github.com/hey-api/openapi-ts/pull/215))
-- feat(schema): add support for default values ([#197](https://github.com/hey-api/openapi-ts/pull/197))
-- feat(schema): add array of enum values for enums ([#197](https://github.com/hey-api/openapi-ts/pull/197))
-- fix(axios): use builtin form data to ensure blob form data works in node environment ([#211](https://github.com/hey-api/openapi-ts/pull/211))
-- fix(enum): append index number on duplicate name ([#220](https://github.com/hey-api/openapi-ts/pull/220))
+- feat(client): generate all services in single `services.ts` file ([#215](https://github.com/hey-api/hey-api/pull/215))
+- feat(schema): add support for default values ([#197](https://github.com/hey-api/hey-api/pull/197))
+- feat(schema): add array of enum values for enums ([#197](https://github.com/hey-api/hey-api/pull/197))
+- fix(axios): use builtin form data to ensure blob form data works in node environment ([#211](https://github.com/hey-api/hey-api/pull/211))
+- fix(enum): append index number on duplicate name ([#220](https://github.com/hey-api/hey-api/pull/220))
 
 ---
 
@@ -5305,7 +5305,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix(axios): properly type content-type headers assignment ([#206](https://github.com/hey-api/openapi-ts/pull/206))
+- fix(axios): properly type content-type headers assignment ([#206](https://github.com/hey-api/hey-api/pull/206))
 
 ---
 
@@ -5315,7 +5315,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix(axios): set content type to multipart/form-data when using form data ([#204](https://github.com/hey-api/openapi-ts/pull/204))
+- fix(axios): set content type to multipart/form-data when using form data ([#204](https://github.com/hey-api/hey-api/pull/204))
 
 ---
 
@@ -5323,10 +5323,10 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- client(angular/fetch/xhr): detect all application/json or +json as JSON ([#195](https://github.com/hey-api/openapi-ts/pull/195))
-- feat(fetch): add application/octet-stream, application/pdf, and application/zip as binary response types ([#195](https://github.com/hey-api/openapi-ts/pull/195))
-- feat(fetch): detect form data repsonses properly ([#195](https://github.com/hey-api/openapi-ts/pull/195))
-- fix(client): do not create or export empty files ([#200](https://github.com/hey-api/openapi-ts/pull/200))
+- client(angular/fetch/xhr): detect all application/json or +json as JSON ([#195](https://github.com/hey-api/hey-api/pull/195))
+- feat(fetch): add application/octet-stream, application/pdf, and application/zip as binary response types ([#195](https://github.com/hey-api/hey-api/pull/195))
+- feat(fetch): detect form data repsonses properly ([#195](https://github.com/hey-api/hey-api/pull/195))
+- fix(client): do not create or export empty files ([#200](https://github.com/hey-api/hey-api/pull/200))
 
 ---
 
@@ -5336,8 +5336,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix(axios): let axios handle serializing form data ([#192](https://github.com/hey-api/openapi-ts/pull/192))
-- fix(schema): allow minimums/maximums to be 0 ([#194](https://github.com/hey-api/openapi-ts/pull/194))
+- fix(axios): let axios handle serializing form data ([#192](https://github.com/hey-api/hey-api/pull/192))
+- fix(schema): allow minimums/maximums to be 0 ([#194](https://github.com/hey-api/hey-api/pull/194))
 
 ---
 
@@ -5345,12 +5345,12 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Support all HTTP error codes ([#188](https://github.com/hey-api/openapi-ts/pull/188))
-- Use File or Blob type for binary types ([#186](https://github.com/hey-api/openapi-ts/pull/186))
-- Check value instanceof Blob when using isBlob ([#186](https://github.com/hey-api/openapi-ts/pull/186))
-- Attempt to use body type as content type when sending Blob in node client ([#185](https://github.com/hey-api/openapi-ts/pull/185))
-- fix(api): add experimental flag ([#191](https://github.com/hey-api/openapi-ts/pull/191))
-- fix(cli): properly handle booleans ([#190](https://github.com/hey-api/openapi-ts/pull/190))
+- Support all HTTP error codes ([#188](https://github.com/hey-api/hey-api/pull/188))
+- Use File or Blob type for binary types ([#186](https://github.com/hey-api/hey-api/pull/186))
+- Check value instanceof Blob when using isBlob ([#186](https://github.com/hey-api/hey-api/pull/186))
+- Attempt to use body type as content type when sending Blob in node client ([#185](https://github.com/hey-api/hey-api/pull/185))
+- fix(api): add experimental flag ([#191](https://github.com/hey-api/hey-api/pull/191))
+- fix(cli): properly handle booleans ([#190](https://github.com/hey-api/hey-api/pull/190))
 
 ---
 
@@ -5360,8 +5360,8 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- merge enums and useLegacyEnums into one option ([#178](https://github.com/hey-api/openapi-ts/pull/178))
-- use FormData from node-fetch in node client ([#173](https://github.com/hey-api/openapi-ts/pull/173))
+- merge enums and useLegacyEnums into one option ([#178](https://github.com/hey-api/hey-api/pull/178))
+- use FormData from node-fetch in node client ([#173](https://github.com/hey-api/hey-api/pull/173))
 
 ---
 
@@ -5369,15 +5369,15 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- fix async response interceptors when using angular client ([#167](https://github.com/hey-api/openapi-ts/pull/167))
-- fix deprecation warning on `throwError` in Angular client ([#167](https://github.com/hey-api/openapi-ts/pull/167))
-- Fix issue causing type error when targeting lower than ES2015 ([#171](https://github.com/hey-api/openapi-ts/pull/171))
-- fix various warnings in generated client code ([#164](https://github.com/hey-api/openapi-ts/pull/164))
-- fix providing interceptors in Angular client ([#167](https://github.com/hey-api/openapi-ts/pull/167))
-- Import all required models for a service in one import ([#172](https://github.com/hey-api/openapi-ts/pull/172))
-- generate all models in single `models.ts` file ([#168](https://github.com/hey-api/openapi-ts/pull/168))
-- generate all schemas in single `schemas.ts` file ([#168](https://github.com/hey-api/openapi-ts/pull/168))
-- Do not create or export CancelablePromise when using Angular client ([#167](https://github.com/hey-api/openapi-ts/pull/167))
+- fix async response interceptors when using angular client ([#167](https://github.com/hey-api/hey-api/pull/167))
+- fix deprecation warning on `throwError` in Angular client ([#167](https://github.com/hey-api/hey-api/pull/167))
+- Fix issue causing type error when targeting lower than ES2015 ([#171](https://github.com/hey-api/hey-api/pull/171))
+- fix various warnings in generated client code ([#164](https://github.com/hey-api/hey-api/pull/164))
+- fix providing interceptors in Angular client ([#167](https://github.com/hey-api/hey-api/pull/167))
+- Import all required models for a service in one import ([#172](https://github.com/hey-api/hey-api/pull/172))
+- generate all models in single `models.ts` file ([#168](https://github.com/hey-api/hey-api/pull/168))
+- generate all schemas in single `schemas.ts` file ([#168](https://github.com/hey-api/hey-api/pull/168))
+- Do not create or export CancelablePromise when using Angular client ([#167](https://github.com/hey-api/hey-api/pull/167))
 
 ---
 
@@ -5387,7 +5387,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- add support for interceptors ([#153](https://github.com/hey-api/openapi-ts/pull/153))
+- add support for interceptors ([#153](https://github.com/hey-api/hey-api/pull/153))
 
 ---
 
@@ -5395,7 +5395,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Fix export types as type only when using useLegacyEnums ([#160](https://github.com/hey-api/openapi-ts/pull/160))
+- Fix export types as type only when using useLegacyEnums ([#160](https://github.com/hey-api/hey-api/pull/160))
 
 ---
 
@@ -5403,7 +5403,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Properly export enums when using useLegacyEnums ([#158](https://github.com/hey-api/openapi-ts/pull/158))
+- Properly export enums when using useLegacyEnums ([#158](https://github.com/hey-api/hey-api/pull/158))
 
 ---
 
@@ -5413,7 +5413,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Add useLegacyEnums options to generate TypeScript enums ([#147](https://github.com/hey-api/openapi-ts/pull/147))
+- Add useLegacyEnums options to generate TypeScript enums ([#147](https://github.com/hey-api/hey-api/pull/147))
 
 ---
 
@@ -5423,7 +5423,7 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Add `index.ts` file to models, schemas, and services ([#137](https://github.com/hey-api/openapi-ts/pull/137))
+- Add `index.ts` file to models, schemas, and services ([#137](https://github.com/hey-api/hey-api/pull/137))
 
 ---
 
@@ -5433,5 +5433,5 @@ This release has 1 breaking change. Please review the release notes carefully be
 
 ### Updates
 
-- Warn users about missing dependencies used in the generated client ([#124](https://github.com/hey-api/openapi-ts/pull/124))
-- Use AbortController in Axios client instead of deprecated CancelToken ([#124](https://github.com/hey-api/openapi-ts/pull/124))
+- Warn users about missing dependencies used in the generated client ([#124](https://github.com/hey-api/hey-api/pull/124))
+- Use AbortController in Axios client instead of deprecated CancelToken ([#124](https://github.com/hey-api/hey-api/pull/124))

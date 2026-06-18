@@ -51,7 +51,7 @@ interface Social {
 
 const socials = [
   {
-    handle: 'hey-api/openapi-ts',
+    handle: 'hey-api/hey-api',
     icon: 'github',
     label: 'Star us on GitHub',
     link: GITHUB_URL,
@@ -79,8 +79,8 @@ const socials = [
 const entry = Astro.locals.starlightRoute?.entry;
 const isSplash = entry?.data?.template === 'splash';
 
-const pathname = Astro.url.pathname;
-const isSponsorsPage = pathname === '/sponsors';
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const isSponsorsPage = currentPath === '/sponsors';
 ---
 
 {isSplash ? (
