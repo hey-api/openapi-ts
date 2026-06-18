@@ -53,7 +53,6 @@ export function arrayToAst({
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.array;
-  const result = resolver?.(ctx);
-  return result ?? arrayResolver(ctx);
+  const resolver = plugin.config.$resolvers?.array ?? plugin.config['~resolvers']?.array;
+  return resolver?.(ctx) ?? arrayResolver(ctx);
 }

@@ -93,7 +93,6 @@ export function unionToAst({
     schemas,
   };
 
-  const resolver = plugin.config['~resolvers']?.union;
-  const result = resolver?.(ctx);
-  return result ?? unionResolver(ctx);
+  const resolver = plugin.config.$resolvers?.union ?? plugin.config['~resolvers']?.union;
+  return resolver?.(ctx) ?? unionResolver(ctx);
 }

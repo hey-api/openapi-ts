@@ -119,7 +119,6 @@ export function stringToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.string;
-  const result = resolver?.(ctx);
-  return result ?? stringResolver(ctx);
+  const resolver = plugin.config.$resolvers?.string ?? plugin.config['~resolvers']?.string;
+  return resolver?.(ctx) ?? stringResolver(ctx);
 }

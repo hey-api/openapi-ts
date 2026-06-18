@@ -41,6 +41,6 @@ export function undefinedToAst({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.undefined;
+  const resolver = plugin.config.$resolvers?.undefined ?? plugin.config['~resolvers']?.undefined;
   return resolver?.(ctx) ?? undefinedResolver(ctx);
 }

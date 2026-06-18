@@ -42,7 +42,7 @@ export function nullToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.null;
+  const resolver = plugin.config.$resolvers?.null ?? plugin.config['~resolvers']?.null;
   const node = resolver?.(resolverCtx) ?? nullResolver(resolverCtx);
   return resolverCtx.pipes.toNode(node, plugin);
 }

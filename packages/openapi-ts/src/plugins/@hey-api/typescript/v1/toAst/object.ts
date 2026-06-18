@@ -124,7 +124,6 @@ export function objectToAst({
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.object;
-  const result = resolver?.(ctx);
-  return result ?? objectResolver(ctx);
+  const resolver = plugin.config.$resolvers?.object ?? plugin.config['~resolvers']?.object;
+  return resolver?.(ctx) ?? objectResolver(ctx);
 }

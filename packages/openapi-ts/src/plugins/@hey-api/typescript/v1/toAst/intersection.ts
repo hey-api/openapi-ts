@@ -38,7 +38,7 @@ export function intersectionToAst({
     schemas,
   };
 
-  const resolver = plugin.config['~resolvers']?.intersection;
-  const result = resolver?.(ctx);
-  return result ?? intersectionResolver(ctx);
+  const resolver =
+    plugin.config.$resolvers?.intersection ?? plugin.config['~resolvers']?.intersection;
+  return resolver?.(ctx) ?? intersectionResolver(ctx);
 }

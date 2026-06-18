@@ -30,7 +30,6 @@ export function unknownToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.unknown;
-  const result = resolver?.(ctx);
-  return result ?? unknownResolver(ctx);
+  const resolver = plugin.config.$resolvers?.unknown ?? plugin.config['~resolvers']?.unknown;
+  return resolver?.(ctx) ?? unknownResolver(ctx);
 }

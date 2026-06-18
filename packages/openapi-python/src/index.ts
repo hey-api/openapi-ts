@@ -126,7 +126,7 @@ export namespace Plugins {
   }
 
   export namespace Pydantic {
-    export type Resolvers = Required<PydanticResolvers>['~resolvers'];
+    export type Resolvers = Required<PydanticResolvers>['$resolvers'];
     export type Types = PydanticPlugin;
   }
 }

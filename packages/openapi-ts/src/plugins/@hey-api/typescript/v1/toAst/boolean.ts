@@ -41,7 +41,6 @@ export function booleanToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.boolean;
-  const result = resolver?.(ctx);
-  return result ?? booleanResolver(ctx);
+  const resolver = plugin.config.$resolvers?.boolean ?? plugin.config['~resolvers']?.boolean;
+  return resolver?.(ctx) ?? booleanResolver(ctx);
 }

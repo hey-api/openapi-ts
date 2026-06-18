@@ -22,7 +22,7 @@ This page demonstrates resolvers through a few common scenarios.
 
 ## Terminology
 
-Before we look at examples, let's go through the resolvers API to help you understand how they work. Plugins that support resolvers expose them through the `~resolvers` option. Each resolver is a function that receives context and returns an implemented node (or patches existing ones).
+Before we look at examples, let's go through the resolvers API to help you understand how they work. Plugins that support resolvers expose them through the `$resolvers` option. Each resolver is a function that receives context and returns an implemented node (or patches existing ones).
 
 The resolver context will usually contain:
 
@@ -51,7 +51,7 @@ We can override this behavior by patching the `nodes.format` function only for s
 ```js title="openapi-ts.config.ts"
 {
   name: 'valibot',
-  '~resolvers': {
+  $resolvers: {
     string(ctx) {
       const { $, schema, symbols } = ctx;
       const { v } = symbols;
@@ -99,7 +99,7 @@ In this case, you'll want to use a third-party library to validate your values. 
 ```js title="openapi-ts.config.ts"
 {
   name: 'valibot',
-  '~resolvers': {
+  $resolvers: {
     number(ctx) {
       const { $, plugin, symbols } = ctx;
       const { v } = symbols;
@@ -147,7 +147,7 @@ Let's say we want to interpret any schema without explicitly defined additional 
 ```js title="openapi-ts.config.ts"
 {
   name: 'valibot',
-  '~resolvers': {
+  $resolvers: {
     object(ctx) {
       const { $, symbols } = ctx;
       const { v } = symbols;
@@ -195,7 +195,7 @@ You might want to accept unknown enum values, for example when the API adds new 
 ```js title="openapi-ts.config.ts"
 {
   name: 'zod',
-  '~resolvers': {
+  $resolvers: {
     enum(ctx) {
       const { $, symbols } = ctx;
       const { z } = symbols;

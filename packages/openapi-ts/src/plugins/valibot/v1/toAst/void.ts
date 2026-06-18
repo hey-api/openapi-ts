@@ -42,7 +42,7 @@ export function voidToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.void;
+  const resolver = plugin.config.$resolvers?.void ?? plugin.config['~resolvers']?.void;
   const node = resolver?.(resolverCtx) ?? voidResolver(resolverCtx);
   return resolverCtx.pipes.toNode(node, plugin);
 }

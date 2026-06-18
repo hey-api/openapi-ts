@@ -152,7 +152,7 @@ export function unionToAst({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.union;
+  const resolver = plugin.config.$resolvers?.union ?? plugin.config['~resolvers']?.union;
   const chain = resolver?.(ctx) ?? unionResolver(ctx);
 
   return {

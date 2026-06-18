@@ -62,7 +62,8 @@ export function intersectionToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.intersection;
+  const resolver =
+    plugin.config.$resolvers?.intersection ?? plugin.config['~resolvers']?.intersection;
   const node = resolver?.(resolverCtx) ?? intersectionResolver(resolverCtx);
 
   return {

@@ -102,7 +102,8 @@ function responseValidatorResolver(
 }
 
 function runRequestResolver(ctx: RequestValidatorResolverContext): ArrowFunc | undefined {
-  const validator = ctx.plugin.config['~resolvers']?.validator;
+  const validator =
+    ctx.plugin.config.$resolvers?.validator ?? ctx.plugin.config['~resolvers']?.validator;
   const resolver = typeof validator === 'function' ? validator : validator?.request;
   const candidates = [resolver, requestValidatorResolver];
   for (const candidate of candidates) {
@@ -118,7 +119,8 @@ function runRequestResolver(ctx: RequestValidatorResolverContext): ArrowFunc | u
 }
 
 function runResponseResolver(ctx: ResponseValidatorResolverContext): ArrowFunc | undefined {
-  const validator = ctx.plugin.config['~resolvers']?.validator;
+  const validator =
+    ctx.plugin.config.$resolvers?.validator ?? ctx.plugin.config['~resolvers']?.validator;
   const resolver = typeof validator === 'function' ? validator : validator?.response;
   const candidates = [resolver, responseValidatorResolver];
   for (const candidate of candidates) {

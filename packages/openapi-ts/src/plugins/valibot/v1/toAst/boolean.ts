@@ -58,7 +58,7 @@ export function booleanToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.boolean;
+  const resolver = plugin.config.$resolvers?.boolean ?? plugin.config['~resolvers']?.boolean;
   const node = resolver?.(resolverCtx) ?? booleanResolver(resolverCtx);
   return resolverCtx.pipes.toNode(node, plugin);
 }

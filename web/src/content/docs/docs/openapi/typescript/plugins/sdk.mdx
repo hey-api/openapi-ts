@@ -202,6 +202,78 @@ export default {
   </TabItem>
 </Tabs>
 
+## Parameters
+
+By default, all SDK methods accept an object with namespaced properties for each parameter type: `query`, `path`, `header`, and `body`.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="app.ts"
+import { addPet } from './sdk.gen.ts';
+
+await addPet({
+  body: {
+    name: 'Fluffy',
+    type: 'cat',
+  },
+  path: {
+    petId: 1234,
+  },
+  query: {
+    color: 'red',
+  },
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/sdk',
+      paramsStructure: 'grouped',
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+If you prefer a more compact syntax, you can set `paramsStructure` to `flat`. This will merge all parameter types into a single object, which is especially useful for endpoints with only one parameter type.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="app.ts"
+import { addPet } from './sdk.gen.ts';
+
+await addPet({
+  color: 'red',
+  name: 'Fluffy',
+  petId: 1234,
+  type: 'cat',
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-ts.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: '@hey-api/sdk',
+      paramsStructure: 'flat',
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
 ## Auth
 
 Most APIs require some form of authentication, which is why the SDK plugin provides built-in auth mechanisms by default. All you need to do is return the data from the `auth()` function, and the SDK will handle serialization and encoding for you. There are several ways to do this, for example on the client instance.
@@ -367,7 +439,7 @@ Learn more about available transformers on the [Validators](/docs/openapi/typesc
 Every SDK method accepts an optional `meta` object. You can use it to pass arbitrary values that aren't part of the SDK function and read them back in your [client](/docs/openapi/typescript/clients) interceptors or middleware.
 
 ```ts title="app.ts"
-import { addPet } from "./sdk.gen.ts";
+import { addPet } from './sdk.gen.ts';
 
 await addPet({
   meta: {
@@ -391,7 +463,7 @@ declare module '@hey-api/client-fetch' {
   </TabItem>
   <TabItem label="usage">
 ```ts title="app.ts"
-import { addPet } from "./sdk.gen.ts";
+import { addPet } from './sdk.gen.ts';
 
 await addPet({
   meta: {

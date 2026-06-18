@@ -34,6 +34,6 @@ export function neverToType({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.never;
+  const resolver = plugin.config.$resolvers?.never ?? plugin.config['~resolvers']?.never;
   return resolver?.(ctx) ?? neverResolver(ctx);
 }

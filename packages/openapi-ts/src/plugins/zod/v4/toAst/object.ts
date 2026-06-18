@@ -119,7 +119,7 @@ export function objectToAst({
     },
     walk,
   };
-  const resolver = plugin.config['~resolvers']?.object;
+  const resolver = plugin.config.$resolvers?.object ?? plugin.config['~resolvers']?.object;
   const node = resolver?.(ctx) ?? objectResolver(ctx);
 
   return {

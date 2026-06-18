@@ -87,7 +87,7 @@ export function arrayToType(
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.array;
+  const resolver = plugin.config.$resolvers?.array ?? plugin.config['~resolvers']?.array;
   const resolved = resolver?.(resolverCtx) ?? arrayResolver(resolverCtx);
 
   if (!resolved.type) {

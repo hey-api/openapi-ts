@@ -42,7 +42,7 @@ export function unknownToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.unknown;
+  const resolver = plugin.config.$resolvers?.unknown ?? plugin.config['~resolvers']?.unknown;
   const node = resolver?.(resolverCtx) ?? unknownResolver(resolverCtx);
   return resolverCtx.pipes.toNode(node, plugin);
 }

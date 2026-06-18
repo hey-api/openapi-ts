@@ -100,7 +100,7 @@ export function enumToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.enum;
+  const resolver = plugin.config.$resolvers?.enum ?? plugin.config['~resolvers']?.enum;
   const type = resolver?.(ctx) ?? enumResolver(ctx);
 
   return {

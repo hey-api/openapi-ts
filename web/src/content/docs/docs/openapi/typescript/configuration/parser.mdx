@@ -552,7 +552,7 @@ export default {
 
 ## Hooks
 
-Hooks affect runtime behavior but aren't tied to any single plugin. They can be configured globally via `hooks` or per plugin through the `~hooks` property.
+Hooks affect runtime behavior but aren't tied to any single plugin. They can be configured globally via `hooks` or per plugin through the `$hooks` property.
 
 <Tabs>
   <TabItem label="parser">
@@ -574,7 +574,7 @@ export default {
   plugins: [
     {
       name: '@tanstack/react-query',
-      '~hooks': {}, // configure plugin hooks
+      $hooks: {}, // configure plugin hooks
     },
   ],
 };
@@ -726,7 +726,7 @@ export default {
     {
       enums: 'javascript',
       name: '@hey-api/typescript',
-      '~hooks': {
+      $hooks: {
         symbols: {
           getName({ meta, name, schema }) {
             if (schema?.type === 'enum' && meta.category === 'type') {

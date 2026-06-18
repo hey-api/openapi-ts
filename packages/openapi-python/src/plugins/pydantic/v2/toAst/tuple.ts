@@ -67,7 +67,7 @@ export function tupleToType(
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.tuple;
+  const resolver = plugin.config.$resolvers?.tuple ?? plugin.config['~resolvers']?.tuple;
   const resolved = resolver?.(resolverCtx) ?? tupleResolver(resolverCtx);
 
   return {

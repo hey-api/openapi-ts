@@ -224,7 +224,7 @@ export const handler: MyPlugin['Handler'] = ({ plugin }) => {
 
 Imports are a type-safe way to reference external symbols your plugin works with. Rather than querying or constructing identifiers manually, you declare them once and access them through `plugin.imports` anywhere in your handler.
 
-Imports are also visible to users customizing your plugin's behavior. When a user provides hooks like `~resolvers`, they receive the `plugin` instance and can access `plugin.imports` to reference your plugin's imports directly.
+Imports are also visible to users customizing your plugin's behavior. When a user provides hooks like `$resolvers`, they receive the `plugin` instance and can access `plugin.imports` to reference your plugin's imports directly.
 
 <Tabs>
   <TabItem label="imports">

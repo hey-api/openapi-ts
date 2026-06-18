@@ -30,7 +30,6 @@ export function nullToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.null;
-  const result = resolver?.(ctx);
-  return result ?? nullResolver(ctx);
+  const resolver = plugin.config.$resolvers?.null ?? plugin.config['~resolvers']?.null;
+  return resolver?.(ctx) ?? nullResolver(ctx);
 }
