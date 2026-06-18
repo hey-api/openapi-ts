@@ -17,7 +17,7 @@ export function heyApiPlugin(options?: HeyApiPluginOptions): Plugin {
     enforce: 'pre',
     ...options?.vite,
     async configResolved() {
-      await createClient(options?.config);
+      await createClient(options?.config ?? ({} as Parameters<typeof createClient>[0]));
     },
     name: 'hey-api-plugin',
   };
