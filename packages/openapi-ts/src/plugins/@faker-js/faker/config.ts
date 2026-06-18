@@ -27,7 +27,7 @@ export const defaultConfig: FakerJsFakerPlugin['Config'] = {
       artifact: '@faker-js/faker',
     };
   },
-  tags: ['mocker'],
+  tags: ['source'],
 };
 
 /**

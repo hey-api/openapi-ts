@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import { parseUrl } from '@hey-api/shared';
+import { getBaseUrl } from '@hey-api/shared';
 
 import { getTypedConfig } from '../../../config/utils';
 import { clientFolderAbsolutePath } from '../../../generate/client';
@@ -29,26 +29,6 @@ export function resolveRuntimeConfigPath({
   return relative.startsWith('.') ? relative : `./${relative}`;
 }
 
-function resolveBaseUrlString({ plugin }: Parameters<PluginHandler>[0]): string | undefined {
-  const { baseUrl } = plugin.config;
-
-  if (baseUrl === false) {
-    return;
-  }
-
-  if (typeof baseUrl === 'string') {
-    return baseUrl;
-  }
-
-  const { servers } = plugin.context.ir;
-
-  if (!servers) {
-    return;
-  }
-
-  return servers[typeof baseUrl === 'number' ? baseUrl : 0]?.url;
-}
-
 export const createClient: PluginHandler = ({ plugin }) => {
   const clientModule = clientFolderAbsolutePath(getTypedConfig(plugin));
   const symbolCreateClient = plugin.symbol('createClient', {
@@ -74,26 +54,13 @@ export const createClient: PluginHandler = ({ plugin }) => {
       })
     : undefined;
 
-  const defaultVals = $.object();
+  const baseUrl = getBaseUrl(plugin.config.baseUrl ?? true, plugin.context.ir);
 
-  const resolvedBaseUrl = resolveBaseUrlString({
-    plugin: plugin as any,
-  });
-  if (resolvedBaseUrl) {
-    const url = parseUrl(resolvedBaseUrl);
-    if (url.protocol && url.host && !resolvedBaseUrl.includes('{')) {
-      defaultVals.prop(getClientBaseUrlKey(getTypedConfig(plugin)), $.literal(resolvedBaseUrl));
-    } else if (resolvedBaseUrl !== '/' && resolvedBaseUrl.startsWith('/')) {
-      const baseUrl = resolvedBaseUrl.endsWith('/')
-        ? resolvedBaseUrl.slice(0, -1)
-        : resolvedBaseUrl;
-      defaultVals.prop(getClientBaseUrlKey(getTypedConfig(plugin)), $.literal(baseUrl));
-    }
-  }
-
-  if ('throwOnError' in plugin.config && plugin.config.throwOnError) {
-    defaultVals.prop('throwOnError', $.literal(true));
-  }
+  const defaultVals = $.object()
+    .$if(baseUrl, (o, v) => o.prop(getClientBaseUrlKey(getTypedConfig(plugin)), $.literal(v)))
+    .$if('throwOnError' in plugin.config && plugin.config.throwOnError, (o) =>
+      o.prop('throwOnError', $.literal(true)),
+    );
 
   const createConfigParameters = [
     $(symbolCreateConfig)

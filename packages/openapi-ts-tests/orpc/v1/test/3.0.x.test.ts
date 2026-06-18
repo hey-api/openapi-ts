@@ -17,7 +17,7 @@ describe(`OpenAPI ${version}`, () => {
   const scenarios = [
     {
       config: createConfig({
-        input: 'orpc.yaml',
+        input: 'rpc.yaml',
         output: 'default',
         plugins: ['orpc', 'zod'],
       }),
@@ -25,7 +25,7 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
-        input: 'orpc.yaml',
+        input: 'rpc.yaml',
         output: 'custom-names',
         plugins: [
           'valibot',

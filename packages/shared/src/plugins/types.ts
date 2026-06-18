@@ -20,7 +20,7 @@ export type PluginNames = keyof PluginConfigMap extends never ? string : keyof P
 
 export type AnyPluginName = PluginNames | AnyString;
 
-export type PluginTag = 'client' | 'mocker' | 'sdk' | 'transformer' | 'validator';
+export type PluginTag = 'client' | 'handler' | 'sdk' | 'source' | 'transformer' | 'validator';
 
 type ResolveTagOptions<T extends AnyPluginName = AnyPluginName> = {
   /**
