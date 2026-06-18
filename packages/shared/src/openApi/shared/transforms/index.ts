@@ -1,4 +1,5 @@
 import type { Context } from '../../../ir/context';
+import { removeUnresolvableRefs } from '../../../utils/ref';
 import { enumsTransform } from './enums';
 import { propertiesRequiredByDefaultTransform } from './propertiesRequiredByDefault';
 import { readWriteTransform } from './readWrite';
@@ -7,6 +8,8 @@ import { schemaNameTransform } from './schemas';
 export const transformOpenApiSpec = ({ context }: { context: Context }) => {
   const { logger } = context;
   const eventTransformOpenApiSpec = logger.timeEvent('transform-openapi-spec');
+
+  removeUnresolvableRefs(context.spec);
 
   if (context.config.parser.transforms.schemaName) {
     schemaNameTransform({

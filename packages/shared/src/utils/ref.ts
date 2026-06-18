@@ -134,6 +134,33 @@ export function isTopLevelComponent(refOrPath: string | ReadonlyArray<string | n
   return false;
 }
 
+export function removeUnresolvableRefs(spec: Record<string, any>): void {
+  const walk = (obj: unknown): void => {
+    if (!obj || typeof obj !== 'object' || ArrayBuffer.isView(obj)) return;
+
+    if (Array.isArray(obj)) {
+      for (const item of obj) walk(item);
+      return;
+    }
+
+    const record = obj as Record<string, any>;
+
+    if ('$ref' in record && typeof record.$ref === 'string') {
+      try {
+        resolveRef({ $ref: record.$ref, spec });
+      } catch {
+        delete record.$ref;
+      }
+    }
+
+    for (const value of Object.values(record)) {
+      walk(value);
+    }
+  };
+
+  walk(spec);
+}
+
 export function resolveRef<T>({ $ref, spec }: { $ref: string; spec: Record<string, any> }): T {
   const path = jsonPointerToPath($ref);
 
