@@ -211,7 +211,7 @@ export namespace Plugins {
 
   export namespace FakerJsFaker {
     export type Types = FakerJsFakerPlugin;
-    export type Resolvers = Required<FakerJsFakerResolvers>['~resolvers'];
+    export type Resolvers = Required<FakerJsFakerResolvers>['$resolvers'];
   }
 
   export namespace Fastify {
@@ -266,7 +266,7 @@ export namespace Plugins {
   }
 
   export namespace HeyApiTypeScript {
-    export type Resolvers = Required<HeyApiTypeScriptResolvers>['~resolvers'];
+    export type Resolvers = Required<HeyApiTypeScriptResolvers>['$resolvers'];
     export type Types = HeyApiTypeScriptPlugin;
   }
 
@@ -311,12 +311,12 @@ export namespace Plugins {
   }
 
   export namespace Valibot {
-    export type Resolvers = Required<ValibotResolvers>['~resolvers'];
+    export type Resolvers = Required<ValibotResolvers>['$resolvers'];
     export type Types = ValibotPlugin;
   }
 
   export namespace Zod {
-    export type Resolvers = Required<ZodResolvers>['~resolvers'];
+    export type Resolvers = Required<ZodResolvers>['$resolvers'];
     export type Types = ZodPlugin;
   }
 }

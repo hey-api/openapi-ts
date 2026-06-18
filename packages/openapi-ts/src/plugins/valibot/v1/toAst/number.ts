@@ -157,7 +157,7 @@ export function numberToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.number;
+  const resolver = plugin.config.$resolvers?.number ?? plugin.config['~resolvers']?.number;
   const node = resolver?.(resolverCtx) ?? numberResolver(resolverCtx);
   return resolverCtx.pipes.toNode(node, plugin);
 }

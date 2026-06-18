@@ -72,8 +72,14 @@ export type PluginImports = {
 type BaseApi = Record<string, unknown>;
 
 type PluginBaseConfig = UserIndexExportOption & {
-  name: AnyPluginName;
   /** Hooks to override default plugin behavior. */
+  $hooks?: ParserHooks;
+  name: AnyPluginName;
+  /**
+   * Hooks to override default plugin behavior.
+   *
+   * @deprecated Use `$hooks` instead.
+   */
   '~hooks'?: ParserHooks;
 };
 
@@ -106,7 +112,7 @@ export namespace Plugin {
   export type UserExports = UserIndexExportOption;
 
   /** Generic wrapper for plugin hooks. */
-  export type Hooks = Pick<PluginBaseConfig, '~hooks'>;
+  export type Hooks = Pick<PluginBaseConfig, '$hooks' | '~hooks'>;
 
   export interface Name<Name extends PluginNames> {
     name: Name;
@@ -115,7 +121,7 @@ export namespace Plugin {
   /**
    * Generic wrapper for plugin resolvers.
    *
-   * Provides a namespaced configuration entry (`~resolvers`)
+   * Provides a namespaced configuration entry (`$resolvers`)
    * where plugins can define how specific schema constructs
    * should be resolved or overridden.
    */
@@ -125,6 +131,15 @@ export namespace Plugin {
      *
      * Used to define how specific schema constructs are
      * resolved into AST or runtime logic.
+     */
+    $resolvers?: T;
+    /**
+     * Custom behavior resolvers.
+     *
+     * Used to define how specific schema constructs are
+     * resolved into AST or runtime logic.
+     *
+     * @deprecated Use `$resolvers` instead.
      */
     '~resolvers'?: T;
   };

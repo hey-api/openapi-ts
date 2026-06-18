@@ -129,7 +129,7 @@ export function arrayToPipes(
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.array;
+  const resolver = plugin.config.$resolvers?.array ?? plugin.config['~resolvers']?.array;
   const node = resolver?.(resolverCtx) ?? arrayResolver(resolverCtx);
 
   return {

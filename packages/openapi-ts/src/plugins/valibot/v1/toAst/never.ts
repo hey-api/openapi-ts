@@ -42,7 +42,7 @@ export function neverToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.never;
+  const resolver = plugin.config.$resolvers?.never ?? plugin.config['~resolvers']?.never;
   const node = resolver?.(resolverCtx) ?? neverResolver(resolverCtx);
   return resolverCtx.pipes.toNode(node, plugin);
 }

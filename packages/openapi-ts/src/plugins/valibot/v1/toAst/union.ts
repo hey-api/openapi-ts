@@ -133,7 +133,7 @@ export function unionToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.union;
+  const resolver = plugin.config.$resolvers?.union ?? plugin.config['~resolvers']?.union;
   const node = resolver?.(resolverCtx) ?? unionResolver(resolverCtx);
 
   return {

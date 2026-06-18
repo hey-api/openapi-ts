@@ -92,7 +92,7 @@ export function tupleToAst({
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.tuple;
+  const resolver = plugin.config.$resolvers?.tuple ?? plugin.config['~resolvers']?.tuple;
   const chain = resolver?.(ctx) ?? tupleResolver(ctx);
 
   return {

@@ -49,7 +49,6 @@ export function numberToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.number;
-  const result = resolver?.(ctx);
-  return result ?? numberResolver(ctx);
+  const resolver = plugin.config.$resolvers?.number ?? plugin.config['~resolvers']?.number;
+  return resolver?.(ctx) ?? numberResolver(ctx);
 }

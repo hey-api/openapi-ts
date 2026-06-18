@@ -199,9 +199,7 @@ for (const zodVersion of zodVersions) {
           output: 'enum-resolver-permissive',
           plugins: [
             {
-              compatibilityVersion: zodVersion.compatibilityVersion,
-              name: 'zod',
-              '~resolvers': {
+              $resolvers: {
                 enum(ctx) {
                   const { $, symbols } = ctx;
                   const { z } = symbols;
@@ -219,6 +217,8 @@ for (const zodVersion of zodVersions) {
                     .call($.array(enumSchema, $(z).attr('string').call()));
                 },
               },
+              compatibilityVersion: zodVersion.compatibilityVersion,
+              name: 'zod',
             },
           ],
         }),

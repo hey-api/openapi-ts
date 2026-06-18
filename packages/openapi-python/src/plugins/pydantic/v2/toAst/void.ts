@@ -36,6 +36,6 @@ export function voidToType({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.void;
+  const resolver = plugin.config.$resolvers?.void ?? plugin.config['~resolvers']?.void;
   return resolver?.(ctx) ?? voidResolver(ctx);
 }

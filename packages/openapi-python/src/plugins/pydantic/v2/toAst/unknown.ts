@@ -36,6 +36,6 @@ export function unknownToType({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.unknown;
+  const resolver = plugin.config.$resolvers?.unknown ?? plugin.config['~resolvers']?.unknown;
   return resolver?.(ctx) ?? unknownResolver(ctx);
 }

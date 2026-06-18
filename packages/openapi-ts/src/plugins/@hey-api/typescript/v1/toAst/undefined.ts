@@ -30,7 +30,6 @@ export function undefinedToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.undefined;
-  const result = resolver?.(ctx);
-  return result ?? undefinedResolver(ctx);
+  const resolver = plugin.config.$resolvers?.undefined ?? plugin.config['~resolvers']?.undefined;
+  return resolver?.(ctx) ?? undefinedResolver(ctx);
 }

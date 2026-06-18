@@ -42,7 +42,7 @@ export function undefinedToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.undefined;
+  const resolver = plugin.config.$resolvers?.undefined ?? plugin.config['~resolvers']?.undefined;
   const node = resolver?.(resolverCtx) ?? undefinedResolver(resolverCtx);
   return resolverCtx.pipes.toNode(node, plugin);
 }

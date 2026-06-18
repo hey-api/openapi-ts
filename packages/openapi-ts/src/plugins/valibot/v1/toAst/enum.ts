@@ -107,7 +107,7 @@ export function enumToPipes({
     symbols: { v },
   };
 
-  const resolver = plugin.config['~resolvers']?.enum;
+  const resolver = plugin.config.$resolvers?.enum ?? plugin.config['~resolvers']?.enum;
   const node = resolver?.(resolverCtx) ?? enumResolver(resolverCtx);
 
   return resolverCtx.pipes.toNode(node, plugin);

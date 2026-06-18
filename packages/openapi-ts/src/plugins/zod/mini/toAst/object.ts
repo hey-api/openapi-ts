@@ -98,7 +98,7 @@ export function objectToAst(options: ObjectToAstOptions): CompositeHandlerResult
     },
     walk,
   };
-  const resolver = plugin.config['~resolvers']?.object;
+  const resolver = plugin.config.$resolvers?.object ?? plugin.config['~resolvers']?.object;
   const node = resolver?.(ctx) ?? objectResolver(ctx);
 
   return {

@@ -89,7 +89,7 @@ export function unionToType({
     schemas,
   };
 
-  const resolver = plugin.config['~resolvers']?.union;
+  const resolver = plugin.config.$resolvers?.union ?? plugin.config['~resolvers']?.union;
   let resolved = resolver?.(resolverCtx) ?? unionResolver(resolverCtx);
 
   if (parentSchema.description !== undefined) {

@@ -100,7 +100,7 @@ export function objectToPipes(
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.object;
+  const resolver = plugin.config.$resolvers?.object ?? plugin.config['~resolvers']?.object;
   const node = resolver?.(resolverCtx) ?? objectResolver(resolverCtx);
 
   return {

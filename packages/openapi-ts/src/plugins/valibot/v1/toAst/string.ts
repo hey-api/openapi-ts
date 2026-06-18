@@ -137,7 +137,7 @@ export function stringToPipes({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.string;
+  const resolver = plugin.config.$resolvers?.string ?? plugin.config['~resolvers']?.string;
   const node = resolver?.(resolverCtx) ?? stringResolver(resolverCtx);
   return resolverCtx.pipes.toNode(node, plugin);
 }

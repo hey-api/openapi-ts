@@ -30,7 +30,6 @@ export function voidToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.void;
-  const result = resolver?.(ctx);
-  return result ?? voidResolver(ctx);
+  const resolver = plugin.config.$resolvers?.void ?? plugin.config['~resolvers']?.void;
+  return resolver?.(ctx) ?? voidResolver(ctx);
 }

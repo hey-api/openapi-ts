@@ -117,6 +117,6 @@ export function stringToType({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.string;
+  const resolver = plugin.config.$resolvers?.string ?? plugin.config['~resolvers']?.string;
   return resolver?.(ctx) ?? stringResolver(ctx);
 }

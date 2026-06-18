@@ -140,7 +140,7 @@ export function objectToFields(
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.object;
+  const resolver = plugin.config.$resolvers?.object ?? plugin.config['~resolvers']?.object;
   const resolved = resolver?.(extendedCtx) ?? objectResolver(extendedCtx);
 
   return { childResults, ...resolved };

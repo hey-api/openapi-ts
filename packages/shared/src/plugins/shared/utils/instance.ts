@@ -105,6 +105,7 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     // this.context are set, as hooks may rely on them
     this.eventHooks = SymbolFactory.buildEventHooks([
       this.config['~hooks']?.events,
+      this.config.$hooks?.events,
       this.context.config.parser.hooks.events,
     ]);
     this.symbolFactory = new SymbolFactory({
@@ -268,8 +269,10 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
     for (const hook of customHooks) {
       if (hook) result.push(hook);
     }
-    const local = selector(this.config['~hooks'] ?? {});
+    const local = selector(this.config.$hooks ?? {});
     if (local) result.push(local);
+    const localDeprecated = selector(this.config['~hooks'] ?? {});
+    if (localDeprecated) result.push(localDeprecated);
     const global = selector(this.context.config.parser.hooks);
     if (global) result.push(global);
     return result;
@@ -453,6 +456,8 @@ export class PluginInstance<T extends Plugin.Types = Plugin.Types> {
   private isOperationKind(operation: IR.OperationObject, kind: 'mutation' | 'query'): boolean {
     const method = kind === 'query' ? 'isQuery' : 'isMutation';
     const hooks = [
+      this.config.$hooks?.operations?.[method],
+      this.config.$hooks?.operations?.getKind,
       this.config['~hooks']?.operations?.[method],
       this.config['~hooks']?.operations?.getKind,
       this.context.config.parser.hooks.operations?.[method],

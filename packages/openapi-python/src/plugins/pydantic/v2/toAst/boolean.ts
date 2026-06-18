@@ -53,6 +53,6 @@ export function booleanToType({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.boolean;
+  const resolver = plugin.config.$resolvers?.boolean ?? plugin.config['~resolvers']?.boolean;
   return resolver?.(ctx) ?? booleanResolver(ctx);
 }

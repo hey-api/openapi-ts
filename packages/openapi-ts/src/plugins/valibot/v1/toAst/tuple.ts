@@ -100,7 +100,7 @@ export function tupleToPipes(
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.tuple;
+  const resolver = plugin.config.$resolvers?.tuple ?? plugin.config['~resolvers']?.tuple;
   const node = resolver?.(resolverCtx) ?? tupleResolver(resolverCtx);
 
   return {

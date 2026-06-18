@@ -112,7 +112,7 @@ export function enumToType({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.enum;
+  const resolver = plugin.config.$resolvers?.enum ?? plugin.config['~resolvers']?.enum;
   const resolved = resolver?.(ctx) ?? enumResolver(ctx);
 
   const { enumMembers, isNullable } = ctx.nodes.items(ctx);

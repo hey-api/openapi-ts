@@ -41,6 +41,6 @@ export function nullToAst({
     },
   };
 
-  const resolver = plugin.config['~resolvers']?.null;
+  const resolver = plugin.config.$resolvers?.null ?? plugin.config['~resolvers']?.null;
   return resolver?.(ctx) ?? nullResolver(ctx);
 }

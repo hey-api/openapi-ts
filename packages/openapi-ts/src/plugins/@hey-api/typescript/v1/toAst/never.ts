@@ -30,7 +30,6 @@ export function neverToAst({
     schema,
   };
 
-  const resolver = plugin.config['~resolvers']?.never;
-  const result = resolver?.(ctx);
-  return result ?? neverResolver(ctx);
+  const resolver = plugin.config.$resolvers?.never ?? plugin.config['~resolvers']?.never;
+  return resolver?.(ctx) ?? neverResolver(ctx);
 }

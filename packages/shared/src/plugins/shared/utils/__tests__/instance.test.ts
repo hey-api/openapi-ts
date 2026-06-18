@@ -234,7 +234,7 @@ describe('PluginInstance.symbol', () => {
     const gen = createMockGen();
     const context = createMockContext();
     const instance = new PluginInstance({
-      config: { '~hooks': { events: { 'symbol:register:before': beforeHook } } },
+      config: { $hooks: { events: { 'symbol:register:before': beforeHook } } },
       context,
       dependencies: new Set(),
       gen: gen as any,
@@ -255,7 +255,7 @@ describe('PluginInstance.symbol', () => {
     const gen = createMockGen();
     const context = createMockContext();
     const instance = new PluginInstance({
-      config: { '~hooks': { events: { 'symbol:register:after': afterHook } } },
+      config: { $hooks: { events: { 'symbol:register:after': afterHook } } },
       context,
       dependencies: new Set(),
       gen: gen as any,

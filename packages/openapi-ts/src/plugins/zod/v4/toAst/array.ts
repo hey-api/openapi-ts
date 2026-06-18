@@ -161,7 +161,7 @@ export function arrayToAst({
     walk,
   };
 
-  const resolver = plugin.config['~resolvers']?.array;
+  const resolver = plugin.config.$resolvers?.array ?? plugin.config['~resolvers']?.array;
   const chain = resolver?.(ctx) ?? arrayResolver(ctx);
 
   return {
