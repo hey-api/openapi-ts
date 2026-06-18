@@ -996,16 +996,20 @@ function parseRef({
   const isComponentsRef = isTopLevelComponent(schema.$ref);
   if (!isComponentsRef) {
     if (!state.circularReferenceTracker.has(schema.$ref)) {
-      const refSchema = context.resolveRef<OpenAPIV3.SchemaObject>(schema.$ref);
-      const originalRef = state.$ref;
-      state.$ref = schema.$ref;
-      const irSchema = schemaToIrSchema({
-        context,
-        schema: refSchema,
-        state,
-      });
-      state.$ref = originalRef;
-      return irSchema;
+      try {
+        const refSchema = context.resolveRef<OpenAPIV3.SchemaObject>(schema.$ref);
+        const originalRef = state.$ref;
+        state.$ref = schema.$ref;
+        const irSchema = schemaToIrSchema({
+          context,
+          schema: refSchema,
+          state,
+        });
+        state.$ref = originalRef;
+        return irSchema;
+      } catch {
+        console.warn(`Skipping unresolvable $ref: ${schema.$ref}`);
+      }
     }
     // Fallback to preserving the ref if circular
   }
@@ -1015,15 +1019,19 @@ function parseRef({
   irSchema.$ref = schema.$ref;
 
   if (!state.circularReferenceTracker.has(schema.$ref)) {
-    const refSchema = context.resolveRef<OpenAPIV3.SchemaObject>(schema.$ref);
-    const originalRef = state.$ref;
-    state.$ref = schema.$ref;
-    schemaToIrSchema({
-      context,
-      schema: refSchema,
-      state,
-    });
-    state.$ref = originalRef;
+    try {
+      const refSchema = context.resolveRef<OpenAPIV3.SchemaObject>(schema.$ref);
+      const originalRef = state.$ref;
+      state.$ref = schema.$ref;
+      schemaToIrSchema({
+        context,
+        schema: refSchema,
+        state,
+      });
+      state.$ref = originalRef;
+    } catch {
+      console.warn(`Skipping unresolvable $ref: ${schema.$ref}`);
+    }
   }
 
   return irSchema;
