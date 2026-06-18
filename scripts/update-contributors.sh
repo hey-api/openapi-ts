@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPO="hey-api/openapi-ts"
+REPO="hey-api/hey-api"
 PER_PAGE=100
 PAGE=1
 USERS=()

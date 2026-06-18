@@ -1,12 +1,19 @@
 ---
-import defaultOgImage from '@/assets/openapi-ts-hero-640w.png';
+import openapiTypeScriptImage from '@/assets/openapi-ts-hero-640w.png';
+import openapiPythonImage from '@/assets/openapi-python-hero-640w.png';
 
 const { entry, head } = Astro.locals.starlightRoute;
 const site = Astro.site;
 
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const isOpenapiPythonDocs = currentPath.startsWith('/docs/openapi/python');
+const defaultOgImage = isOpenapiPythonDocs
+  ? openapiPythonImage.src
+  : openapiTypeScriptImage.src;
+
 const ogImage = entry.data.og?.image
   ? entry.data.og.image.src
-  : defaultOgImage.src;
+  : defaultOgImage;
 
 const version = entry.data.custom?.versionSynonym ?? entry.data.custom?.version;
 

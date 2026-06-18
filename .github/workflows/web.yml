@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    if: github.repository == 'hey-api/openapi-ts'
+    if: github.repository == 'hey-api/hey-api'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deploy hook

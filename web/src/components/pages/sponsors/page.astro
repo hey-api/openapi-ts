@@ -16,7 +16,7 @@ import Hero from './Hero.astro';
 
 const [tsDownloads, repoStars] = await Promise.all([
   fetchWeeklyDownloads('@hey-api/openapi-ts'),
-  fetchRepoStars('hey-api/openapi-ts'),
+  fetchRepoStars('hey-api/hey-api'),
 ]);
 
 function formatStars(n: number): string {

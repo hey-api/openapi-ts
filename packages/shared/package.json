@@ -4,7 +4,7 @@
   "description": "Temporary home for cross-package utilities. Contents will migrate to proper packages as architecture stabilizes.",
   "homepage": "https://heyapi.dev/",
   "bugs": {
-    "url": "https://github.com/hey-api/openapi-ts/issues"
+    "url": "https://github.com/hey-api/hey-api/issues"
   },
   "license": "MIT",
   "author": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hey-api/openapi-ts.git"
+    "url": "git+https://github.com/hey-api/hey-api.git"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "files": [

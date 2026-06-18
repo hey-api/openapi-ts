@@ -1,0 +1,270 @@
+---
+title: Pydantic v2 Plugin
+description: Generate Pydantic v2 models from OpenAPI with the Pydantic plugin for openapi-python. Fully compatible with validators, transformers, and all core features.
+sidebar:
+  label: Pydantic
+custom:
+  version: v2
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import Examples from '@/components/Examples.astro';
+
+# Pydantic
+
+### About
+
+[Pydantic](https://pydantic.dev/docs/validation/latest/get-started/) is the most widely used data validation library for Python. Fast and extensible, Pydantic plays nicely with your linters/IDE/brain.
+
+The Pydantic plugin for Hey API generates models from your OpenAPI spec, fully compatible with validators, transformers, and all core features.
+
+## Features
+
+- Pydantic v2 support
+- seamless integration with `@hey-api/openapi-python` ecosystem
+- Pydantic models for requests, responses, and reusable definitions
+- minimal learning curve thanks to extending the underlying technology
+
+## Installation
+
+In your [configuration](/docs/openapi/python/get-started), add `pydantic` to your plugins and you'll be ready to generate Pydantic artifacts. 🎉
+
+```js {6} title="openapi-python.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    'pydantic',
+  ],
+};
+```
+
+### SDKs
+
+Pydantic can validate or transform data directly in your SDK. Set `validator` or `transformer` to `true` on the SDK plugin to enable it.
+
+<Tabs>
+  <TabItem label="validator">
+```js {7-10} title="openapi-python.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    'pydantic',
+    {
+      name: '@hey-api/sdk',
+      validator: true,
+    },
+  ],
+};
+```
+  </TabItem>
+  <TabItem label="transformer">
+```js {7-10} title="openapi-python.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    'pydantic',
+    {
+      name: '@hey-api/sdk',
+      transformer: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+The SDK page covers [validators](/docs/openapi/python/plugins/sdk#validators) and [transformers](/docs/openapi/python/plugins/sdk#transformers) in more detail.
+
+## Output
+
+The Pydantic plugin will generate the following artifacts, depending on the input specification.
+
+## Requests
+
+A Pydantic model is generated for every request layer of each endpoint.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="pydantic.gen.ts"
+const vDeletePetHeaders = v.object({
+  api_key: v.optional(v.string()),
+});
+
+const vDeletePetPath = v.object({
+  petId: v.number(),
+});
+
+const vDeletePetQuery = v.object({
+  additionalMetadata: v.string(),
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-python.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'pydantic',
+      requests: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `requests` schemas using the `.name` and `.case` options.
+
+## Responses
+
+A single Pydantic model is generated for all endpoint's responses. If the endpoint describes multiple responses, the generated model is a union of all possible response shapes.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="pydantic.gen.ts"
+const vResponse = v.union([
+  v.object({
+    foo: v.optional(v.string()),
+  }),
+  v.object({
+    bar: v.optional(v.number()),
+  }),
+]);
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-python.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'pydantic',
+      responses: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `responses` schemas using the `.name` and `.case` options.
+
+## Definitions
+
+A Pydantic model is generated for every reusable definition from your input.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="pydantic.gen.ts"
+const vFoo = v.pipe(v.number(), v.integer());
+
+const vBar = v.object({
+  bar: v.optional(v.array(v.pipe(v.number(), v.integer()))),
+});
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-python.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'pydantic',
+      definitions: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+You can customize the naming and casing pattern for `definitions` schemas using the `.name` and `.case` options.
+
+## Metadata
+
+It's often useful to associate a schema with some additional [metadata](https://pydantic-docs.helpmanual.io/usage/schema/#metadata) for documentation, code generation, AI structured outputs, form validation, and other purposes. You can set `metadata` to `true` to attach descriptions to schemas when available.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="pydantic.gen.ts"
+export const vFoo = v.pipe(
+  v.string(),
+  v.metadata({
+    description: 'Additional metadata',
+  }),
+);
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8} title="openapi-python.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'pydantic',
+      metadata: true,
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+For more control over metadata, you can provide your own function. It receives the source `schema`, the target `node` object, and the `$` builder for populating metadata.
+
+<Tabs>
+  <TabItem label="example">
+```ts title="pydantic.gen.ts"
+export const vFoo = v.pipe(
+  v.string(),
+  v.metadata({
+    hasTitle: false,
+    createdAt: 1735732800000,
+  }),
+);
+```
+  </TabItem>
+  <TabItem label="config">
+```js {8-11} title="openapi-python.config.ts"
+export default {
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
+  plugins: [
+    // ...other plugins
+    {
+      name: 'pydantic',
+      metadata({ $, node, schema }) {
+        node.prop('hasTitle', $.literal(Boolean(schema.title)));
+        node.prop('createdAt', $.literal(Date.now()));
+      },
+    },
+  ],
+};
+```
+  </TabItem>
+</Tabs>
+
+## Resolvers
+
+You can further customize this plugin's behavior using [resolvers](/docs/openapi/python/plugins/concepts/resolvers).
+
+## API
+
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-python/src/plugins/pydantic/types.ts) interface.
+
+{/* <Examples /> */}

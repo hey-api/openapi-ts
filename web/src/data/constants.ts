@@ -1,4 +1,4 @@
-export const GITHUB_URL = 'https://github.com/hey-api/openapi-ts';
+export const GITHUB_URL = 'https://github.com/hey-api/hey-api';
 
 export const EMAIL_CTA_ID = 'python';
 

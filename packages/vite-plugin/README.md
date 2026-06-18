@@ -7,15 +7,15 @@
 <p align="center">
   <a href="https://www.devtrends.dev/trends?c=v1.kZIAzQaO"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fvite-plugin?period=month&style=flat&view=value" alt="DevTrends badge for @hey-api/vite-plugin" /></a>
   <a href="https://www.devtrends.dev/trends?c=v1.kZIAzQaO&v=change"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fvite-plugin?period=year&style=flat&view=change" alt="DevTrends badge for @hey-api/vite-plugin" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
-  <a href="https://github.com/hey-api/openapi-ts"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
+  <a href="https://github.com/hey-api/hey-api/actions?query=branch%3Amain"><img src="https://github.com/hey-api/hey-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
+  <a href="https://github.com/hey-api/hey-api"><img src="https://img.shields.io/github/stars/hey-api/hey-api?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
+  <a href="https://github.com/hey-api/hey-api/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/hey-api/hey-api" alt="MIT License"></a>
 </p>
 
 <p align="center">
   <a href="https://heyapi.dev">Manual</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
+  <a href="https://github.com/hey-api/hey-api/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://heyapi.dev/docs/openapi/typescript/community/contributing">Contribute</a>
 </p>
@@ -24,7 +24,7 @@
 
 [Vite](https://vite.dev) is a blazing fast frontend build tool powering the next generation of web applications.
 
-The Vite plugin integrates [`@hey-api/openapi-ts`](https://heyapi.dev/openapi-ts) into the Vite build pipeline, running automatically whenever Vite resolves its configuration – no separate script or manual step required.
+The Vite plugin integrates [`@hey-api/openapi-ts`](https://heyapi.dev/docs/openapi/typescript) into the Vite build pipeline, running automatically whenever Vite resolves its configuration – no separate script or manual step required.
 
 Part of the Hey API ecosystem.
 
@@ -33,7 +33,7 @@ Part of the Hey API ecosystem.
 - runs automatically as part of your Vite build
 - reads your existing configuration (or accepts inline config)
 - supports Vite 5, 6, 7, and 8
-- [sync with Hey API Registry](https://heyapi.dev/openapi-ts/integrations) for spec management
+- [sync with Hey API Registry](https://heyapi.dev/docs/openapi/typescript/integrations) for spec management
 
 <!-- template-contributing-start -->
 
@@ -216,7 +216,7 @@ export default defineConfig({
 });
 ```
 
-The plugin will automatically pick up your [configuration](https://heyapi.dev/openapi-ts/configuration) file. You can also pass options inline using the `config` option:
+The plugin will automatically pick up your [configuration](https://heyapi.dev/docs/openapi/typescript/configuration) file. You can also pass options inline using the `config` option:
 
 ```ts
 import { heyApiPlugin } from '@hey-api/vite-plugin';
@@ -238,6 +238,6 @@ export default defineConfig({
 
 ## License
 
-Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+Released under the [MIT License](https://github.com/hey-api/hey-api/blob/main/LICENSE.md).
 
 <!-- template-license-end -->

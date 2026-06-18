@@ -16,7 +16,7 @@
 - granular request and response customization options
 - minimal learning curve thanks to extending the underlying technology
 - support bundling inside the generated output
-- [platform](https://heyapi.dev/openapi-ts/integrations) for automating codegen builds
+- [platform](https://heyapi.dev/docs/openapi/typescript/integrations) for automating codegen builds
 
 ## Dashboard
 
@@ -168,12 +168,12 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
 
 ## Migrating
 
-You can learn more on the [Migrating](https://heyapi.dev/openapi-ts/migrating) page.
+You can learn more on the [Migrating](https://heyapi.dev/docs/openapi/typescript/migrating) page.
 
 <!-- template-license-start -->
 
 ## License
 
-Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+Released under the [MIT License](https://github.com/hey-api/hey-api/blob/main/LICENSE.md).
 
 <!-- template-license-end -->

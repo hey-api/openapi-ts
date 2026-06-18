@@ -7,15 +7,15 @@
 <p align="center">
   <a href="https://www.devtrends.dev/trends?c=v1.kZIBzQM2"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fspec-types?period=month&style=flat&view=value" alt="DevTrends badge for @hey-api/spec-types" /></a>
   <a href="https://www.devtrends.dev/trends?c=v1.kZIBzQM2&v=change"><img src="https://api.devtrends.dev/badge/npm/%40hey-api%2Fspec-types?period=year&style=flat&view=change" alt="DevTrends badge for @hey-api/spec-types" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
-  <a href="https://github.com/hey-api/openapi-ts"><img src="https://img.shields.io/github/stars/hey-api/openapi-ts?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
-  <a href="https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
+  <a href="https://github.com/hey-api/hey-api/actions?query=branch%3Amain"><img src="https://github.com/hey-api/hey-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
+  <a href="https://github.com/hey-api/hey-api"><img src="https://img.shields.io/github/stars/hey-api/hey-api?style=flat&logo=github&label=GitHub&color=54C82D" alt="GitHub stars" /></a>
+  <a href="https://github.com/hey-api/hey-api/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/hey-api/hey-api" alt="MIT License"></a>
 </p>
 
 <p align="center">
   <a href="https://heyapi.dev">Manual</a>
   <span>&nbsp;•&nbsp;</span>
-  <a href="https://github.com/hey-api/openapi-ts/issues">Issues</a>
+  <a href="https://github.com/hey-api/hey-api/issues">Issues</a>
   <span>&nbsp;•&nbsp;</span>
   <a href="https://heyapi.dev/docs/openapi/typescript/community/contributing">Contribute</a>
 </p>
@@ -240,6 +240,6 @@ const doc = {
 
 ## License
 
-Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+Released under the [MIT License](https://github.com/hey-api/hey-api/blob/main/LICENSE.md).
 
 <!-- template-license-end -->

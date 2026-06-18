@@ -1,7 +1,7 @@
 swagger: 2.0
 info:
   title: OpenAPI 2.0 schema unknown example
-  description: https://github.com/hey-api/openapi-ts/issues/1402
+  description: https://github.com/hey-api/hey-api/issues/1402
   version: 1
 host: api.postmarkapp.com
 basePath: /

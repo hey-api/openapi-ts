@@ -123,7 +123,7 @@
 
 ### Patch Changes
 
-- **cli**: show environment value in development ([#3546](https://github.com/hey-api/openapi-ts/pull/3546)) ([`571bc8a`](https://github.com/hey-api/openapi-ts/commit/571bc8a32b55647083bb506d4a5b575c4736cb94)) by [@mrlubos](https://github.com/mrlubos)
+- **cli**: show environment value in development ([#3546](https://github.com/hey-api/hey-api/pull/3546)) ([`571bc8a`](https://github.com/hey-api/hey-api/commit/571bc8a32b55647083bb506d4a5b575c4736cb94)) by [@mrlubos](https://github.com/mrlubos)
 
 ### Updated Dependencies:
 

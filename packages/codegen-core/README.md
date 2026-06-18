@@ -6,8 +6,8 @@
 <br/>
 
 <p align="center">
-  <a href="https://opensource.org/license/mit" rel="nofollow"><img src="https://img.shields.io/github/license/hey-api/openapi-ts" alt="MIT License"></a>
-  <a href="https://github.com/hey-api/openapi-ts/actions?query=branch%3Amain"><img src="https://github.com/hey-api/openapi-ts/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
+  <a href="https://opensource.org/license/mit" rel="nofollow"><img src="https://img.shields.io/github/license/hey-api/hey-api" alt="MIT License"></a>
+  <a href="https://github.com/hey-api/hey-api/actions?query=branch%3Amain"><img src="https://github.com/hey-api/hey-api/actions/workflows/ci.yml/badge.svg?event=push&branch=main" alt="CI status" /></a>
 </p>
 
 ## Notice
@@ -158,6 +158,6 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
 
 ## License
 
-Released under the [MIT License](https://github.com/hey-api/openapi-ts/blob/main/LICENSE.md).
+Released under the [MIT License](https://github.com/hey-api/hey-api/blob/main/LICENSE.md).
 
 <!-- template-license-end -->
