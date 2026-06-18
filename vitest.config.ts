@@ -22,6 +22,13 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@hey-api/vite-plugin',
+          root: 'packages/vite-plugin',
+        },
+      },
+      {
+        extends: true,
+        test: {
           globalSetup: ['./src/py-compiler/__tests__/global-teardown.ts'],
           name: '@hey-api/openapi-python',
           root: 'packages/openapi-python',
