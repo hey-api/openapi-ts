@@ -44,7 +44,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Sync
-        run: scripts/mirror-sync.sh ${{ matrix.package }} mirror
+        run: monorepo/scripts/mirror-sync.sh ${{ matrix.package }} mirror
 
       - name: Commit and push
         working-directory: mirror
