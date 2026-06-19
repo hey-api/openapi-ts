@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout monorepo
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          path: monorepo
 
       - name: Generate GitHub App token
         id: app-token
@@ -37,15 +39,15 @@ jobs:
       - name: Checkout mirror
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
-          path: _mirror
+          path: mirror
           repository: hey-api/${{ matrix.repo }}
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Sync
-        run: scripts/mirror-sync.sh ${{ matrix.package }} _mirror
+        run: scripts/mirror-sync.sh ${{ matrix.package }} mirror
 
       - name: Commit and push
-        working-directory: _mirror
+        working-directory: mirror
         env:
           GIT_AUTHOR_NAME: hey-api[bot]
           GIT_AUTHOR_EMAIL: hey-api[bot]@users.noreply.github.com
