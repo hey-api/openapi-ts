@@ -18,10 +18,8 @@ fi
 
 NPM_NAME=$(jq -r '.name' "$PACKAGE_DIR/package.json" 2>/dev/null || echo "@hey-api/$PACKAGE_NAME")
 
-find "$MIRROR_DIR" -maxdepth 1 \
+find "$MIRROR_DIR" -mindepth 1 -maxdepth 1 \
   -not -name '.git' \
-  -not -name '.' \
-  -not -name '..' \
   -exec rm -rf {} +
 
 cp -a "$PACKAGE_DIR/." "$MIRROR_DIR/"
