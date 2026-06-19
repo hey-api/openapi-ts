@@ -1,0 +1,48 @@
+import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
+
+import { $ } from '../../../../ts-dsl';
+import type { UndefinedResolverContext } from '../../resolvers';
+import type { Pipe, PipeResult, Pipes } from '../../shared/pipes';
+import { pipes } from '../../shared/pipes';
+import type { ValibotPlugin } from '../../types';
+import { identifiers } from '../constants';
+
+function baseNode(ctx: UndefinedResolverContext): PipeResult {
+  const { v } = ctx.plugin.imports;
+  return $(v).attr(identifiers.schemas.undefined).call();
+}
+
+function undefinedResolver(ctx: UndefinedResolverContext): Pipes {
+  const base = ctx.nodes.base(ctx);
+  ctx.pipes.push(ctx.pipes.current, base);
+  return ctx.pipes.current;
+}
+
+export function undefinedToPipes({
+  path,
+  plugin,
+  schema,
+}: SchemaVisitorContext<ValibotPlugin['Instance']> & {
+  schema: SchemaWithType<'undefined'>;
+}): Pipe {
+  const resolverCtx: UndefinedResolverContext = {
+    $,
+    nodes: {
+      base: baseNode,
+    },
+    path,
+    pipes: {
+      ...pipes,
+      current: [],
+    },
+    plugin,
+    schema,
+    symbols: {
+      v: plugin.imports.v,
+    },
+  };
+
+  const resolver = plugin.config.$resolvers?.undefined ?? plugin.config['~resolvers']?.undefined;
+  const node = resolver?.(resolverCtx) ?? undefinedResolver(resolverCtx);
+  return resolverCtx.pipes.toNode(node, plugin);
+}

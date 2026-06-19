@@ -1,0 +1,112 @@
+import { childContext } from '@hey-api/shared';
+
+import { $ } from '../../../../ts-dsl';
+import { identifiers } from '../../constants';
+import type { TupleResolverContext } from '../../resolvers';
+import type { Chain, ChainResult } from '../../shared/chain';
+import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
+
+function baseNode(ctx: TupleResolverContext): Chain {
+  const { applyModifiers, childResults } = ctx;
+  const { z } = ctx.plugin.imports;
+
+  const tupleFn = $(z).attr(identifiers.tuple);
+
+  if (!childResults.length) {
+    return tupleFn.call($.array());
+  }
+
+  const tupleElements = childResults.map(
+    (result) => applyModifiers(result, { optional: false }).chain,
+  );
+
+  return tupleFn.call($.array(...tupleElements));
+}
+
+function constNode(ctx: TupleResolverContext): ChainResult {
+  const { schema } = ctx;
+  const { z } = ctx.plugin.imports;
+
+  if (!schema.const || !Array.isArray(schema.const)) return;
+
+  const tupleElements = schema.const.map((value) =>
+    $(z).attr(identifiers.literal).call($.fromValue(value)),
+  );
+
+  return $(z)
+    .attr(identifiers.tuple)
+    .call($.array(...tupleElements));
+}
+
+function tupleResolver(ctx: TupleResolverContext): Chain {
+  const constResult = ctx.nodes.const(ctx);
+  if (constResult) {
+    ctx.chain.current = constResult;
+    return ctx.chain.current;
+  }
+
+  const baseResult = ctx.nodes.base(ctx);
+  ctx.chain.current = baseResult;
+
+  return ctx.chain.current;
+}
+
+export function tupleToAst({
+  applyModifiers,
+  path,
+  plugin,
+  schema,
+  walk,
+}: Pick<
+  TupleResolverContext,
+  'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'
+>): CompositeHandlerResult {
+  const childResults: Array<ZodResult> = [];
+
+  const z = plugin.imports.z;
+
+  if (schema.items) {
+    schema.items.forEach((item, index) => {
+      const itemResult = walk(
+        item,
+        childContext(
+          {
+            path,
+            plugin,
+          },
+          'items',
+          index,
+        ),
+      );
+      childResults.push(itemResult);
+    });
+  }
+
+  const ctx: TupleResolverContext = {
+    $,
+    applyModifiers,
+    chain: {
+      current: $(z),
+    },
+    childResults,
+    nodes: {
+      base: baseNode,
+      const: constNode,
+    },
+    path,
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+    walk,
+  };
+
+  const resolver = plugin.config.$resolvers?.tuple ?? plugin.config['~resolvers']?.tuple;
+  const chain = resolver?.(ctx) ?? tupleResolver(ctx);
+
+  return {
+    chain,
+    childResults,
+  };
+}

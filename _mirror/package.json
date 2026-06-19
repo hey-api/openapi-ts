@@ -1,0 +1,122 @@
+{
+  "name": "@hey-api/openapi-ts",
+  "version": "0.98.2",
+  "description": "🌀 OpenAPI to TypeScript codegen. Production-grade SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Used by Vercel, OpenCode, and PayPal.",
+  "keywords": [
+    "angular",
+    "arktype",
+    "axios",
+    "codegen",
+    "faker",
+    "fakerjs",
+    "fastify",
+    "fetch",
+    "generator",
+    "http",
+    "javascript",
+    "json",
+    "ky",
+    "nest.js",
+    "next",
+    "next.js",
+    "node",
+    "nuxt",
+    "ofetch",
+    "openapi",
+    "orpc",
+    "pinia",
+    "rest",
+    "sdk",
+    "swagger",
+    "swr",
+    "typescript",
+    "valibot",
+    "xhr",
+    "yaml",
+    "zod"
+  ],
+  "homepage": "https://heyapi.dev/",
+  "bugs": {
+    "url": "https://github.com/hey-api/hey-api/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Hey API",
+    "email": "lubos@heyapi.dev",
+    "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/hey-api.git"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "bin": {
+    "openapi-ts": "./bin/run.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./internal": {
+      "types": "./dist/internal.d.mts",
+      "import": "./dist/internal.mjs"
+    },
+    "./plugins": {
+      "types": "./dist/plugins.d.mts",
+      "import": "./dist/plugins.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "prepublishOnly": "pnpm build",
+    "typecheck": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "@hey-api/codegen-core": "workspace:*",
+    "@hey-api/json-schema-ref-parser": "workspace:*",
+    "@hey-api/shared": "workspace:*",
+    "@hey-api/spec-types": "workspace:*",
+    "@hey-api/types": "workspace:*",
+    "@lukeed/ms": "2.0.2",
+    "ansi-colors": "4.1.3",
+    "color-support": "1.1.3",
+    "commander": "15.0.0",
+    "get-tsconfig": "4.14.0"
+  },
+  "devDependencies": {
+    "@angular/common": "21.2.17",
+    "@angular/compiler": "21.2.17",
+    "@angular/compiler-cli": "21.2.17",
+    "@angular/core": "21.2.17",
+    "@angular/platform-browser": "21.2.17",
+    "@angular/platform-browser-dynamic": "21.2.17",
+    "@angular/router": "21.2.17",
+    "axios": "1.13.4",
+    "eslint": "9.39.4",
+    "ky": "1.14.3",
+    "nuxt": "3.14.1592",
+    "ofetch": "1.5.1",
+    "rxjs": "7.8.2",
+    "typescript": "6.0.3",
+    "vue": "3.5.25",
+    "zone.js": "0.16.2"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.5.3 || >=6.0.0 || 6.0.1-rc"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  }
+}

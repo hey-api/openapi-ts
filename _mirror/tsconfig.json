@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["vitest/globals", "node"]
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../types" },
+    { "path": "../codegen-core" },
+    { "path": "../shared" },
+    { "path": "../json-schema-ref-parser" }
+  ]
+}

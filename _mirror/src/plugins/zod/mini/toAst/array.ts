@@ -1,0 +1,152 @@
+import { childContext, deduplicateSchema } from '@hey-api/shared';
+
+import { $ } from '../../../../ts-dsl';
+import { identifiers } from '../../constants';
+import type { ArrayResolverContext } from '../../resolvers';
+import type { Chain, ChainResult } from '../../shared/chain';
+import type { CompositeHandlerResult, ZodResult } from '../../shared/types';
+import { unknownToAst } from './unknown';
+
+function baseNode(ctx: ArrayResolverContext): Chain {
+  const { applyModifiers, childResults, path, plugin, schema } = ctx;
+  const { z } = plugin.imports;
+
+  const arrayFn = $(z).attr(identifiers.array);
+
+  let normalizedSchema = schema;
+  if (normalizedSchema.items) {
+    normalizedSchema = deduplicateSchema({ schema: normalizedSchema });
+  }
+
+  if (!normalizedSchema.items) {
+    return arrayFn.call(unknownToAst({ path, plugin }));
+  }
+
+  if (childResults.length === 1) {
+    const itemNode = applyModifiers(childResults[0]!, { optional: false }).chain;
+    return arrayFn.call(itemNode);
+  }
+
+  if (childResults.length > 1) {
+    const itemExpressions: Array<Chain> = childResults.map(
+      (result) => applyModifiers(result, { optional: false }).chain,
+    );
+
+    if (normalizedSchema.logicalOperator === 'and') {
+      return arrayFn.call(
+        $(z)
+          .attr(identifiers.intersection)
+          .call(...itemExpressions),
+      );
+    } else {
+      return arrayFn.call(
+        $(z)
+          .attr(identifiers.union)
+          .call($.array(...itemExpressions)),
+      );
+    }
+  }
+
+  return arrayFn.call(unknownToAst({ path, plugin }));
+}
+
+function lengthNode(ctx: ArrayResolverContext): ChainResult {
+  const { schema } = ctx;
+  if (schema.minItems === schema.maxItems && schema.minItems !== undefined) {
+    return ctx.chain.current.attr(identifiers.length).call($.fromValue(schema.minItems));
+  }
+}
+
+function maxLengthNode(ctx: ArrayResolverContext): ChainResult {
+  const { schema } = ctx;
+  const { z } = ctx.plugin.imports;
+  if (schema.maxItems === undefined) return;
+  return $(z).attr(identifiers.maxLength).call($.fromValue(schema.maxItems));
+}
+
+function minLengthNode(ctx: ArrayResolverContext): ChainResult {
+  const { schema } = ctx;
+  const { z } = ctx.plugin.imports;
+  if (schema.minItems === undefined) return;
+  return $(z).attr(identifiers.minLength).call($.fromValue(schema.minItems));
+}
+
+function arrayResolver(ctx: ArrayResolverContext): Chain {
+  const baseResult = ctx.nodes.base(ctx);
+  ctx.chain.current = baseResult;
+
+  const lengthResult = ctx.nodes.length(ctx);
+  if (lengthResult) {
+    ctx.chain.current = lengthResult;
+  } else {
+    const minLengthResult = ctx.nodes.minLength(ctx);
+    const maxLengthResult = ctx.nodes.maxLength(ctx);
+
+    if (minLengthResult && maxLengthResult) {
+      ctx.chain.current = ctx.chain.current
+        .attr(identifiers.check)
+        .call(minLengthResult, maxLengthResult);
+    } else if (minLengthResult) {
+      ctx.chain.current = ctx.chain.current.attr(identifiers.check).call(minLengthResult);
+    } else if (maxLengthResult) {
+      ctx.chain.current = ctx.chain.current.attr(identifiers.check).call(maxLengthResult);
+    }
+  }
+
+  return ctx.chain.current;
+}
+
+export function arrayToAst({
+  applyModifiers,
+  path,
+  plugin,
+  schema,
+  walk,
+}: Pick<
+  ArrayResolverContext,
+  'applyModifiers' | 'path' | 'plugin' | 'schema' | 'walk'
+>): CompositeHandlerResult {
+  const childResults: Array<ZodResult> = [];
+  let schemaCopy = schema;
+
+  const z = plugin.imports.z;
+
+  if (schemaCopy.items) {
+    schemaCopy = deduplicateSchema({ schema: schemaCopy });
+
+    schemaCopy.items!.forEach((item, index) => {
+      const itemResult = walk(item, childContext({ path, plugin }, 'items', index));
+      childResults.push(itemResult);
+    });
+  }
+
+  const ctx: ArrayResolverContext = {
+    $,
+    applyModifiers,
+    chain: {
+      current: $(z),
+    },
+    childResults,
+    nodes: {
+      base: baseNode,
+      length: lengthNode,
+      maxLength: maxLengthNode,
+      minLength: minLengthNode,
+    },
+    path,
+    plugin,
+    schema,
+    symbols: {
+      z,
+    },
+    walk,
+  };
+
+  const resolver = plugin.config.$resolvers?.array ?? plugin.config['~resolvers']?.array;
+  const chain = resolver?.(ctx) ?? arrayResolver(ctx);
+
+  return {
+    chain,
+    childResults,
+  };
+}
