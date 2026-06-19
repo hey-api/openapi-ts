@@ -32,7 +32,7 @@
 			</picture>
 		</span>
 
-		to your new<br />SvelteKit app
+		to your new<br/>SvelteKit app
 	</h1>
 
 	{#if $query.isPending}
