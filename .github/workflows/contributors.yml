@@ -10,22 +10,27 @@ jobs:
     if: github.repository == 'hey-api/hey-api'
     runs-on: ubuntu-latest
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.GIT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GIT_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y jq curl
 
       - name: Run update contributors script
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          chmod +x ./scripts/update-contributors.sh
-          ./scripts/update-contributors.sh
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: scripts/update-contributors.sh
 
-      - name: Commit and push if updated
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./CONTRIBUTORS.md
-          git diff --cached --quiet || git commit -m "chore: update contributors list"
-          git push
+      - name: Commit and push
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        with:
+          commit_message: 'chore: update contributors list'
+          file_pattern: CONTRIBUTORS.md
