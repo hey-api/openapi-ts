@@ -47,5 +47,5 @@ jobs:
       - name: Commit and push
         uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         with:
-          repository: _mirror
           commit_message: 'ci: sync from hey-api/hey-api@${{ github.sha }}'
+          repository: _mirror
