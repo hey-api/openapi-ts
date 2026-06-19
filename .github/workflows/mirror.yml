@@ -45,7 +45,17 @@ jobs:
         run: scripts/mirror-sync.sh ${{ matrix.package }} _mirror
 
       - name: Commit and push
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
-        with:
-          commit_message: 'ci: sync from hey-api/hey-api@${{ github.sha }}'
-          repository: _mirror
+        working-directory: _mirror
+        env:
+          GIT_AUTHOR_NAME: hey-api[bot]
+          GIT_AUTHOR_EMAIL: hey-api[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: hey-api[bot]
+          GIT_COMMITTER_EMAIL: hey-api[bot]@users.noreply.github.com
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to mirror"
+            exit 0
+          fi
+          git commit -m "ci: sync from hey-api/hey-api@${GITHUB_SHA:0:7}"
+          git push
