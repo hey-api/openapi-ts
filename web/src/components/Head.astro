@@ -1,4 +1,5 @@
 ---
+import heyApiImage from '@/assets/hey-api-hero-640w.png';
 import openapiTypeScriptImage from '@/assets/openapi-ts-hero-640w.png';
 import openapiPythonImage from '@/assets/openapi-python-hero-640w.png';
 
@@ -7,9 +8,12 @@ const site = Astro.site;
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
 const isOpenapiPythonDocs = currentPath.startsWith('/docs/openapi/python');
+const isOpenapiTypeScriptDocs = currentPath.startsWith('/docs/openapi/typescript');
 const defaultOgImage = isOpenapiPythonDocs
   ? openapiPythonImage.src
-  : openapiTypeScriptImage.src;
+  : isOpenapiTypeScriptDocs
+    ? openapiTypeScriptImage.src
+    : heyApiImage.src;
 
 const ogImage = entry.data.og?.image
   ? entry.data.og.image.src

@@ -89,6 +89,23 @@ const images: ReadonlyArray<{
         width: 1280,
       },
     ],
+    source: 'hey-api-hero.png',
+  },
+  {
+    sizes: [
+      {
+        formats: ['png'],
+        width: 300,
+      },
+      {
+        formats: ['png'],
+        width: 640,
+      },
+      {
+        formats: ['png'],
+        width: 1280,
+      },
+    ],
     source: 'openapi-python-hero.png',
   },
   {
