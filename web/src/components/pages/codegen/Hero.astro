@@ -9,7 +9,8 @@ import { announcement } from '@/data/announcement';
 import { CODEGEN_OUTPUT_ATTR } from '@/utils/codegen-context';
 import { CODEGEN_DEFAULT_OUTPUT } from '@/utils/codegen-url';
 import type { CodegenOutput } from '@/utils/codegen-url';
-import { fetchWeeklyDownloads, formatDownloads } from '@/utils/npm';
+import { formatCount } from '@/utils/format-count';
+import { fetchWeeklyDownloads } from '@/utils/npm';
 
 import InstallCommand from './InstallCommand.astro';
 import type { PreviewFile } from './PreviewWindow.astro';
@@ -51,7 +52,7 @@ const [tsDownloads, pyDownloads] = await Promise.all([
 const OUTPUT_OPTIONS: Array<InputOutputOption> = [
   {
     description: 'Production-grade API infrastructure. Typed SDKs, Zod schemas, TanStack Query hooks, and 20+ plugins. Free and open source.',
-    downloads: tsDownloads ? `${formatDownloads(tsDownloads)} downloads last week` : undefined,
+    downloads: tsDownloads ? `${formatCount(tsDownloads.count)} downloads last week` : undefined,
     icon: typescriptSvg,
     installCommand: 'npx @hey-api/openapi-ts',
     label: 'TypeScript',
@@ -67,7 +68,7 @@ const OUTPUT_OPTIONS: Array<InputOutputOption> = [
   },
   {
     description: 'Production-grade API infrastructure. Typed SDKs and Pydantic models. Free and open source.',
-    downloads: pyDownloads ? `${formatDownloads(pyDownloads)} downloads last week` : undefined,
+    downloads: pyDownloads ? `${formatCount(pyDownloads.count)} downloads last week` : undefined,
     icon: pythonSvg,
     installCommand: 'npx @hey-api/openapi-python',
     label: 'Python',

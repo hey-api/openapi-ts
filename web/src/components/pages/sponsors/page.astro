@@ -9,8 +9,9 @@ import mapSvg from '@/assets/icons/map.svg?raw';
 import starSvg from '@/assets/icons/star.svg?raw';
 import CurrentSponsors from '@/components/Sponsors.astro';
 import { SPONSOR_TIERS, SPONSORS_URL } from '@/data/constants';
+import { formatCount } from '@/utils/format-count';
 import { fetchRepoStars } from '@/utils/github';
-import { fetchWeeklyDownloads, formatDownloads } from '@/utils/npm';
+import { fetchWeeklyDownloads } from '@/utils/npm';
 
 import Hero from './Hero.astro';
 
@@ -19,19 +20,14 @@ const [tsDownloads, repoStars] = await Promise.all([
   fetchRepoStars('hey-api/hey-api'),
 ]);
 
-function formatStars(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
-  return String(n);
-}
-
 const eyebrow = 'Open source';
 const titleStart = 'Fuel the future of';
 const titleAccent = 'API tooling.';
 const heroBody = 'The open source API tooling standard. Built to last, not to exit. Your sponsorship funds full-time development and keeps the project independent.';
 
 const stats = [
-  { num: tsDownloads ? formatDownloads(tsDownloads) : undefined, label: 'weekly downloads' },
-  { num: repoStars !== null ? formatStars(repoStars) : undefined, label: 'GitHub stars' },
+  { num: tsDownloads ? formatCount(tsDownloads.count) : undefined, label: 'weekly downloads' },
+  { num: repoStars !== null ? formatCount(repoStars) : undefined, label: 'GitHub stars' },
   { num: '1', label: 'maintainer' },
 ];
 
