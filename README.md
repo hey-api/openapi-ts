@@ -28,10 +28,36 @@ This is the monorepo containing all open source Hey API packages. For package-sp
 
 ## Packages
 
-| Package                                     | Description                                                                                                                                                                                                                                             |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`openapi-ts`](packages/openapi-ts)         | TypeScript code generator with 20+ plugins for SDKs, Zod schemas, TanStack Query hooks, and more.<br/> [Manual](https://heyapi.dev/docs/openapi/typescript/get-started) <span>&nbsp;•&nbsp;</span> [npm](https://npmjs.com/package/@hey-api/openapi-ts) |
-| [`openapi-python`](packages/openapi-python) | Python code generator for SDKs and Pydantic models.<br/> [Manual](https://heyapi.dev/docs/openapi/python/get-started) <span>&nbsp;•&nbsp;</span> [npm](https://npmjs.com/package/@hey-api/openapi-python)                                               |
+<table>
+  <tr>
+    <th width="240">Package</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="packages/openapi-ts"><code>openapi-ts</code></a>
+    </td>
+    <td>
+      TypeScript code generator with 20+ plugins for SDKs, Zod schemas, TanStack Query hooks, and more.
+      <br/>
+      <a href="https://heyapi.dev/docs/openapi/typescript/get-started">Manual</a>
+      <span>&nbsp;•&nbsp;</span>
+      <a href="https://npmjs.com/package/@hey-api/openapi-ts">npm</a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <a href="packages/openapi-python"><code>openapi-python</code></a>
+    </td>
+    <td>
+      Python code generator for SDKs and Pydantic models.
+      <br/>
+      <a href="https://heyapi.dev/docs/openapi/python/get-started">Manual</a>
+      <span>&nbsp;•&nbsp;</span>
+      <a href="https://npmjs.com/package/@hey-api/openapi-python">npm</a>
+    </td>
+  </tr>
+</table>
 
 ## Highlights
 
@@ -45,9 +71,22 @@ This is the monorepo containing all open source Hey API packages. For package-sp
 
 ## Libraries
 
-| Package                             | Description                                                                                                                                                     |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`spec-types`](packages/spec-types) | TypeScript definitions for OpenAPI and JSON Schema specifications with complete inline documentation.<br/> [npm](https://npmjs.com/package/@hey-api/spec-types) |
+<table>
+  <tr>
+    <th width="240">Package</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="packages/spec-types"><code>spec-types</code></a>
+    </td>
+    <td>
+      TypeScript definitions for OpenAPI and JSON Schema specifications with complete inline documentation.
+      <br/>
+      <a href="https://npmjs.com/package/@hey-api/spec-types">npm</a>
+    </td>
+  </tr>
+</table>
 
 <!-- template-contributing-start -->
 
