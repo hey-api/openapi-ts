@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Hey API presents openapi-ts" height="214" src="https://heyapi.dev/assets/.gen/openapi-ts-hero-640w.png" width="438">
+  <img alt="Hey API" height="214" src="https://heyapi.dev/assets/.gen/hey-api-hero-640w.png" width="438">
   <h1><b>Hey API</b></h1>
   <p><em>"OpenAPI codegen that just works."</em><br/><sub>— Guillermo Rauch, CEO of Vercel</sub></p>
 </div>
