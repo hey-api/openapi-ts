@@ -1,11 +1,15 @@
 {
   "name": "@hey-api/openapi-python",
   "version": "0.0.23",
-  "description": "🐍 OpenAPI to Python codegen. Production-grade SDKs and Pydantic models.",
+  "description": "🐍 OpenAPI to Python code generator. Production-grade SDKs and Pydantic models.",
   "keywords": [
+    "api-client",
+    "code-generation",
     "codegen",
+    "fastapi",
     "generator",
     "http",
+    "httpx",
     "javascript",
     "json",
     "node",
@@ -18,7 +22,7 @@
     "typescript",
     "yaml"
   ],
-  "homepage": "https://heyapi.dev/",
+  "homepage": "https://heyapi.dev/docs/openapi/python/get-started",
   "bugs": {
     "url": "https://github.com/hey-api/hey-api/issues"
   },
@@ -30,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hey-api/hey-api.git"
+    "url": "git+https://github.com/hey-api/openapi-python.git"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "bin": {
