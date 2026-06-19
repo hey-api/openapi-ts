@@ -36,4 +36,7 @@ if [ -f "$MIRROR_DIR/README.md" ]; then
   mv "$MIRROR_DIR/README.tmp" "$MIRROR_DIR/README.md"
 fi
 
+mkdir -p "$MIRROR_DIR/.github"
+cp "$REPO_ROOT/.github/FUNDING.yml" "$MIRROR_DIR/.github/FUNDING.yml" 2>/dev/null || true
+
 echo "✓ Synced packages/$PACKAGE_NAME → $MIRROR_DIR ($NPM_NAME)"
