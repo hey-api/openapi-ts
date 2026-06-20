@@ -5,10 +5,10 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
 <h3 align="center">Gold</h3>
 
 <!-- template-sponsors-table-gold-start -->
-<table align="center" style="justify-content: center;align-items: center;display: flex;">
+<table align="center">
   <tbody>
     <tr>
-      <td align="center" width="336px">
+      <td align="center" width="50%">
         <p></p>
         <p>
           <a href="https://kutt.to/pkEZyc" target="_blank">
@@ -26,7 +26,7 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
         </p>
         <p></p>
       </td>
-      <td align="center" width="336px">
+      <td align="center" width="50%">
         <p></p>
         <p>
           <a href="https://kutt.to/QM9Q2N" target="_blank">
@@ -52,10 +52,10 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
 <h3 align="center">Silver</h3>
 
 <!-- template-sponsors-table-silver-start -->
-<table align="center" style="justify-content: center;align-items: center;display: flex;">
+<table align="center">
   <tbody>
     <tr>
-      <td align="center" width="172px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/skQUVd" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/scalar/logo-light.svg">
@@ -67,7 +67,7 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           scalar.com
         </a>
       </td>
-      <td align="center" width="172px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/Dr9GuW" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/fastapi/logo-light.svg">
@@ -79,7 +79,7 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           fastapi.tiangolo.com
         </a>
       </td>
-      <td align="center" width="172px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/yZVkdV" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/brands/unblocked/logo-light.svg">
@@ -99,10 +99,10 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
 <h3 align="center">Bronze</h3>
 
 <!-- template-sponsors-table-bronze-start -->
-<table align="center" style="justify-content: center;align-items: center;display: flex;">
+<table align="center">
   <tbody>
     <tr>
-      <td align="center" width="136px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/YpaKsX" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/kinde-logo-wordmark-dark-480w.webp">
@@ -110,7 +110,7 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           </picture>
         </a>
       </td>
-      <td align="center" width="136px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/KkqSaw" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/cella/logo-light.svg">
@@ -118,7 +118,7 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
           </picture>
         </a>
       </td>
-      <td align="center" width="136px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/HW4GYR" target="_blank">
           <picture height="34px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/photon/logo-light.svg">
