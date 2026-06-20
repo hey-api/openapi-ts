@@ -23,17 +23,27 @@ async function run() {
   client.setConfig({
     baseUrl: 'https://api.example.com',
   });
-  const sdk = new OpenCode({ client });
-  sdk.tui.publish({
-    body: {
-      properties: {
-        message: 'Hello from Hey API OpenAPI TypeScript Playground!',
-        variant: 'success',
-      },
-      type: 'tui.toast.show',
-    },
-    directory: 'main',
+  client.interceptors.request.use((req) => {
+    console.log(req);
+    return req;
   });
+  const sdk = new OpenCode({ client });
+  sdk.getFoo({
+    foo: {
+      bar: true,
+      foo: 'hello',
+    },
+  });
+  // sdk.tui.publish({
+  //   body: {
+  //     properties: {
+  //       message: 'Hello from Hey API OpenAPI TypeScript Playground!',
+  //       variant: 'success',
+  //     },
+  //     type: 'tui.toast.show',
+  //   },
+  //   directory: 'main',
+  // });
 }
 
 run();
