@@ -1,7 +1,7 @@
-<table align="center" style="justify-content: center;align-items: center;display: flex;">
+<table align="center">
   <tbody>
     <tr>
-      <td align="center" width="336px">
+      <td align="center" width="50%">
         <p></p>
         <p>
           <a href="https://kutt.to/pkEZyc" target="_blank">
@@ -19,7 +19,7 @@
         </p>
         <p></p>
       </td>
-      <td align="center" width="336px">
+      <td align="center" width="50%">
         <p></p>
         <p>
           <a href="https://kutt.to/QM9Q2N" target="_blank">

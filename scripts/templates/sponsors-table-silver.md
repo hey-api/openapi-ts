@@ -1,7 +1,7 @@
-<table align="center" style="justify-content: center;align-items: center;display: flex;">
+<table align="center">
   <tbody>
     <tr>
-      <td align="center" width="172px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/skQUVd" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/scalar/logo-light.svg">
@@ -13,7 +13,7 @@
           scalar.com
         </a>
       </td>
-      <td align="center" width="172px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/Dr9GuW" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/fastapi/logo-light.svg">
@@ -25,7 +25,7 @@
           fastapi.tiangolo.com
         </a>
       </td>
-      <td align="center" width="172px">
+      <td align="center" width="33.333%">
         <a href="https://kutt.to/yZVkdV" target="_blank">
           <picture height="40px">
             <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/brands/unblocked/logo-light.svg">
