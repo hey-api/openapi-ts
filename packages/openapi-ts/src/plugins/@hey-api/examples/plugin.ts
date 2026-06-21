@@ -88,7 +88,7 @@ export const handler: HeyApiExamplesPlugin['Handler'] = ({ plugin }) => {
 
       generateOperationFactory({
         examples: operationExamples,
-        functionName: `${toCase(operation.operationId!, 'camelCase')}Example`,
+        functionName: `${toCase(operation.operationId ?? '', 'camelCase')}Example`,
         plugin,
       });
     }
@@ -279,9 +279,10 @@ function generateSingularSchemaFactory({
     },
   });
 
-  const func = $.func(symbol).decl();
-  // @ts-expect-error TODO
-  func.$do($.return($.fromValue(schemaExample, { layout: 'pretty' })));
+  const func = $.func(symbol)
+    .decl()
+    .export()
+    .do($.return($.fromValue(schemaExample, { layout: 'pretty' })));
 
   plugin.node(func);
 }
@@ -308,12 +309,11 @@ function generatePluralSchemaFactory({
     },
   });
 
-  const func = $.func(symbol).decl();
-  // @ts-expect-error TODO
-  func.param($.param('options'));
-
-  // @ts-expect-error TODO
-  func.$do($.return($.fromValue(schemaExample[firstKey]!, { layout: 'pretty' })));
+  const func = $.func(symbol)
+    .decl()
+    .export()
+    // .param('options')
+    .do($.return($.fromValue(schemaExample[firstKey]!, { layout: 'pretty' })));
 
   plugin.node(func);
 }
@@ -341,20 +341,20 @@ function generateOperationFactory({
     },
   });
 
-  const func = $.func(symbol).decl();
-  // @ts-expect-error TODO
-  func.param($.param('options'));
-
-  func.do(
-    $.return(
-      $.fromValue(
-        statusCodes[0]?.[1]?.examples.basic ??
-          // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-          statusCodes[0]?.[1]?.examples[Object.keys(statusCodes[0]?.[1]?.examples ?? {})[0]!]!,
-        { layout: 'pretty' },
+  const func = $.func(symbol)
+    .decl()
+    .export()
+    // .param('options')
+    .do(
+      $.return(
+        $.fromValue(
+          statusCodes[0]?.[1]?.examples.basic ??
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            statusCodes[0]?.[1]?.examples[Object.keys(statusCodes[0]?.[1]?.examples ?? {})[0]!]!,
+          { layout: 'pretty' },
+        ),
       ),
-    ),
-  );
+    );
 
   plugin.node(func);
 }

@@ -24,6 +24,7 @@ export const tanstackSvelteQuery = pluginHelper('@tanstack/svelte-query');
 export const tanstackVueQuery = pluginHelper('@tanstack/vue-query');
 export const arktype = pluginHelper('arktype');
 export const fastify = pluginHelper('fastify');
+export const msw = pluginHelper('msw');
 export const nestjs = pluginHelper('nestjs');
 export const orpc = pluginHelper('orpc');
 export const swr = pluginHelper('swr');

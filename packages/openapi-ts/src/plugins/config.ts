@@ -23,6 +23,7 @@ import { defaultConfig as tanStackSvelteQuery } from './@tanstack/svelte-query';
 import { defaultConfig as tanStackVueQuery } from './@tanstack/vue-query';
 import { defaultConfig as arktype } from './arktype';
 import { defaultConfig as fastify } from './fastify';
+import { defaultConfig as msw } from './msw';
 import { defaultConfig as nestjs } from './nestjs';
 import { defaultConfig as orpc } from './orpc';
 import { defaultConfig as swr } from './swr';
@@ -63,6 +64,7 @@ export const defaultPluginConfigs: {
   '@tanstack/vue-query': tanStackVueQuery,
   arktype,
   fastify,
+  msw,
   nestjs,
   orpc,
   swr,

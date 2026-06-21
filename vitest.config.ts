@@ -69,6 +69,15 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          globalSetup: ['./test/global-teardown.ts'],
+          name: '@test/openapi-ts-msw-v2',
+          root: 'packages/openapi-ts-tests/msw/v2',
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@test/openapi-ts-nestjs-v11',
           root: 'packages/openapi-ts-tests/nestjs/v11',
           setupFiles: ['./vitest.setup.ts'],

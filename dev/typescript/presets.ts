@@ -31,6 +31,11 @@ export const presets = {
       },
     }),
   ],
+  msw: () => [
+    /** SDK + MSW handlers */
+    plugins.sdk(),
+    plugins.msw(),
+  ],
   none: () => [
     /** No plugins at all */
   ],
