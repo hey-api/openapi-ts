@@ -9,6 +9,7 @@ custom:
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import Examples from '@/components/Examples.astro';
+import UserConfig from '@/components/UserConfig.astro';
 
 # Valibot
 
@@ -263,8 +264,5 @@ export default {
 
 You can further customize this plugin's behavior using [resolvers](/docs/openapi/typescript/plugins/concepts/resolvers).
 
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-ts/src/plugins/valibot/types.ts) interface.
-
+<UserConfig plugin="valibot" />
 <Examples />

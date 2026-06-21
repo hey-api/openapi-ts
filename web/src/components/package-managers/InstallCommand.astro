@@ -11,7 +11,7 @@ const {
   exactVersion = true,
   isDevDependency = true,
   packageName,
-} = Astro.props as Props;
+} = Astro.props;
 
 if (!packageName) {
   throw new Error('InstallCommand requires a "packageName" prop.');

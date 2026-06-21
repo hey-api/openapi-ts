@@ -8,6 +8,7 @@ sidebar:
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import AuthorsList from '@/components/AuthorsList.astro';
 import Examples from '@/components/Examples.astro';
+import UserConfig from '@/components/UserConfig.astro';
 import { dmitriyBrolnickij } from '@/data/people';
 
 # OFetch
@@ -345,8 +346,5 @@ client.setConfig({
 
 You can use any of the approaches mentioned in [Configuration](#configuration), depending on how granular you want your custom instance to be.
 
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-ofetch/types.ts) interface.
-
+<UserConfig plugin="@hey-api/client-ofetch" />
 <Examples />

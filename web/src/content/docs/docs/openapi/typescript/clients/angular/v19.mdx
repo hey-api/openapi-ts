@@ -9,6 +9,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 import AuthorsList from '@/components/AuthorsList.astro';
 import Examples from '@/components/Examples.astro';
 import FeatureStatus from '@/components/FeatureStatus.astro';
+import UserConfig from '@/components/UserConfig.astro';
 import { maxScopp } from '@/data/people';
 
 # Angular
@@ -243,8 +244,5 @@ You can use any of the approaches mentioned in [Configuration](#configuration), 
 
 You might be also interested in the [Angular](/docs/openapi/typescript/plugins/angular/v19) plugin.
 
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-ts/src/plugins/@hey-api/client-angular/types.ts) interface.
-
+<UserConfig plugin="@hey-api/client-angular" />
 <Examples />

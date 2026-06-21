@@ -10,6 +10,7 @@ custom:
 import AuthorsList from '@/components/AuthorsList.astro';
 import Examples from '@/components/Examples.astro';
 import FeatureStatus from '@/components/FeatureStatus.astro';
+import UserConfig from '@/components/UserConfig.astro';
 import { malcolmKee } from '@/data/people';
 
 # MSW
@@ -232,8 +233,5 @@ const mockServer = setupServer(getPetByIdMock({ result: { id: 1, name: 'Fido' } 
 - Query parameters are not typed in the resolver. MSW doesn't provide typed query params natively — use `new URL(request.url).searchParams` instead.
 - The response type generic is omitted from `HttpResponseResolver` to avoid MSW's `DefaultBodyType` constraint issues with union and void response types.
 
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-ts/src/plugins/msw/types.ts) interface.
-
+<UserConfig plugin="msw" />
 <Examples />
