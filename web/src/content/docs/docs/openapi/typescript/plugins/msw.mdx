@@ -14,11 +14,7 @@ import { malcolmKee } from '@/data/people';
 
 # MSW
 
-::: warning
-MSW plugin is currently in beta. The interface might change before it becomes stable. We encourage you to leave feedback on [GitHub](https://github.com/hey-api/openapi-ts/issues).
-:::
-
-<FeatureStatus issueNumber={1486} status="planned" />
+<FeatureStatus issueNumber={1486} status="in-progress" />
 
 ### About
 
@@ -39,15 +35,15 @@ The MSW plugin for Hey API generates type-safe mock handler factories from your 
 
 ## Installation
 
-In your [configuration](/openapi-ts/get-started), add `msw` to your plugins and you'll be ready to generate MSW artifacts. :tada:
+In your [configuration](/docs/openapi/typescript/get-started), add `msw` to your plugins and you'll be ready to generate MSW artifacts. 🎉
 
-```js
+```js {6} title="openapi-ts.config.ts"
 export default {
   input: 'hey-api/backend', // sign up at app.heyapi.dev
   output: 'src/client',
   plugins: [
     // ...other plugins
-    'msw', // [!code ++]
+    'msw',
   ],
 };
 ```
@@ -111,7 +107,7 @@ const mockServer = setupServer(
 );
 ```
 
-::: tip
+:::note
 Path parameters are typed as `string` because MSW normalizes all path parameters to strings. Use `Number()` or similar conversions if you need numeric values.
 :::
 
@@ -145,24 +141,21 @@ const mockServer = setupServer(
 );
 ```
 
-By default, `valueSources` is set to `['example']`, which embeds OpenAPI examples in the generated output. To disable this, set `valueSources` to an empty array.
+By default, `source` is set to `['@hey-api/examples']`, which embeds OpenAPI examples in the generated output. To disable this, set `source` to an empty array.
 
-::: code-group
-
-```js [config]
+```js {8} title="openapi-ts.config.ts"
 export default {
-  // ...other options
+  input: 'hey-api/backend', // sign up at app.heyapi.dev
+  output: 'src/client',
   plugins: [
     // ...other plugins
     {
       name: 'msw',
-      valueSources: [], // [!code ++]
+      source: [],
     },
   ],
 };
 ```
-
-:::
 
 ### All Handlers (`getAllMocks`)
 
@@ -241,6 +234,6 @@ const mockServer = setupServer(getPetByIdMock({ result: { id: 1, name: 'Fido' } 
 
 ## API
 
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/openapi-ts/blob/main/packages/openapi-ts/src/plugins/msw/types.ts) interface.
+You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-ts/src/plugins/msw/types.ts) interface.
 
 <Examples />
