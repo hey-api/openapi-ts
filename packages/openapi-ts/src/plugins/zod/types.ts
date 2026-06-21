@@ -15,6 +15,8 @@ import type { ZodImports } from './imports';
 import type { ZodResolvers } from './resolvers';
 import type { TypeOptions } from './shared/types';
 
+export type ZodCompatibilityVersion = 3 | 4 | 'mini';
+
 export type UserConfig = Plugin.Name<'zod'> &
   Plugin.Hooks &
   Plugin.UserComments &
@@ -36,7 +38,7 @@ export type UserConfig = Plugin.Name<'zod'> &
      *
      * @default 4
      */
-    compatibilityVersion?: 3 | 4 | 'mini';
+    compatibilityVersion?: ZodCompatibilityVersion;
     /**
      * Configuration for date handling in generated Zod schemas.
      *
@@ -1329,7 +1331,7 @@ export type Config = Plugin.Name<'zod'> &
     /** Casing convention for generated names. */
     case: Casing;
     /** The compatibility version to target for generated output. */
-    compatibilityVersion: 3 | 4 | 'mini';
+    compatibilityVersion: ZodCompatibilityVersion;
     /** Configuration for date handling in generated Zod schemas. */
     dates: {
       /** Whether to allow unqualified (timezone-less) datetimes. */

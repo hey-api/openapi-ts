@@ -7,22 +7,7 @@ interface Props {
   plugin?: string;
 }
 
-const { folder, package: _package, plugin } = Astro.props;
-
-const currentPath = Astro.url.pathname.replace(/\/$/, '');
-const isOpenapiPythonDocs = currentPath.startsWith('/docs/openapi/python');
-const isOpenapiTypeScriptDocs = currentPath.startsWith('/docs/openapi/typescript');
-
-let packageName: string;
-if (_package) {
-  packageName = _package;
-} else if (isOpenapiPythonDocs) {
-  packageName = 'openapi-python';
-} else if (isOpenapiTypeScriptDocs) {
-  packageName = 'openapi-ts';
-} else {
-  throw new Error('UserConfig component could not determine the package name. Please provide it as a prop.');
-}
+const { folder, package: packageName, plugin } = Astro.props;
 
 let srcPath: string;
 if (folder) {

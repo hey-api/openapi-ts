@@ -1,12 +1,11 @@
-import { coerce, definePluginConfig, type PluginContext } from '@hey-api/shared';
+import type { PluginContext } from '@hey-api/shared';
+import { coerce, definePluginConfig } from '@hey-api/shared';
 import colors from 'ansi-colors';
 
 import { Api } from './api';
 import { zodImports } from './imports';
 import { handler } from './plugin';
-import type { ZodPlugin } from './types';
-
-type CompatibilityVersion = NonNullable<ZodPlugin['Types']['config']['compatibilityVersion']>;
+import type { ZodCompatibilityVersion, ZodPlugin } from './types';
 
 export const defaultConfig: ZodPlugin['Config'] = {
   api: new Api(),
@@ -18,7 +17,7 @@ export const defaultConfig: ZodPlugin['Config'] = {
       const packageName = 'zod';
       const version = (context as PluginContext).package.getVersion(packageName);
 
-      function inferCompatibleVersion(): CompatibilityVersion {
+      function inferCompatibleVersion(): ZodCompatibilityVersion {
         if (version && (version.major === 4 || version.major === 3)) {
           return version.major;
         }

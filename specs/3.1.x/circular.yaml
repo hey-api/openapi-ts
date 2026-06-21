@@ -1,0 +1,138 @@
+openapi: 3.1.0
+info:
+  title: Circular references examples - including self reference and mutual recursive
+  version: '1'
+components:
+  schemas:
+    # Self-referencing (A → A)
+    TreeNode:
+      type: object
+      properties:
+        id:
+          type: string
+        value:
+          type: string
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/TreeNode'
+      required:
+        - id
+        - value
+
+    # Mutual reference (A → B → A)
+    Org:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
+      required:
+        - id
+        - name
+
+    Member:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        org:
+          $ref: '#/components/schemas/Org'
+      required:
+        - id
+        - name
+
+    # Three-way circular reference (A → B → C → A)
+    Department:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+      required:
+        - id
+        - name
+
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+      required:
+        - id
+        - name
+        - projects
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        department:
+          $ref: '#/components/schemas/Department'
+      required:
+        - id
+        - name
+
+    # Non-circular schema referencing a circular schema (feedback #2)
+    Wrapper:
+      type: object
+      properties:
+        label:
+          type: string
+        tree:
+          $ref: '#/components/schemas/TreeNode'
+      required:
+        - label
+        - tree
+
+    # Tuple containing a $ref to a circular schema (feedback #3)
+    Pair:
+      type: object
+      properties:
+        nodes:
+          type: array
+          prefixItems:
+            - $ref: '#/components/schemas/TreeNode'
+            - $ref: '#/components/schemas/TreeNode'
+          minItems: 2
+          maxItems: 2
+      required:
+        - nodes
+
+    # Nullable circular reference (required property, nullable type)
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        parent:
+          oneOf:
+            - $ref: '#/components/schemas/Comment'
+            - type: 'null'
+      required:
+        - id
+        - text
+        - parent

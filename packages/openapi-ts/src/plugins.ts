@@ -14,7 +14,7 @@ export const transformers = pluginHelper('@hey-api/transformers');
 export const typescript = pluginHelper('@hey-api/typescript');
 // Other
 export const angularCommon = pluginHelper('@angular/common');
-export const fakerJsFaker = pluginHelper('@faker-js/faker');
+export const faker = pluginHelper('@faker-js/faker');
 export const piniaColada = pluginHelper('@pinia/colada');
 export const tanstackAngularQuery = pluginHelper('@tanstack/angular-query-experimental');
 export const tanstackPreactQuery = pluginHelper('@tanstack/preact-query');

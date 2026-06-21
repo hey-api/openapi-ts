@@ -1,0 +1,14 @@
+{
+  "name": "@test/openapi-ts-faker-v10",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsgo --noEmit"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "10.5.0",
+    "@hey-api/openapi-ts": "workspace:*",
+    "typescript": "6.0.3"
+  }
+}
