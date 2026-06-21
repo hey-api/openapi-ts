@@ -5,7 +5,7 @@ import * as z from 'zod/v4';
 export const zBaz = z.string().regex(/foo\nbar/).readonly().default('baz');
 
 export const zFoo = z.object({
-    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
+    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/, 'Must be a valid SSN format (###-##-####)').optional(),
     bar: z.lazy((): any => zBar).optional(),
     baz: z.array(z.lazy((): any => zFoo)).optional(),
     qux: z.int().gt(0).optional().default(0)

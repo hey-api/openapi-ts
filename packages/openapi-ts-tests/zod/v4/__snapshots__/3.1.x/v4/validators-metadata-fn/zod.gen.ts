@@ -12,7 +12,7 @@ export const zQux = z.record(z.string(), z.object({
  * This is Foo schema.
  */
 export const zFoo = z.object({
-    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).register(z.globalRegistry, { custom: 'value', title: 'This is foo property.' }).optional(),
+    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/, 'Must be a valid SSN format (###-##-####)').register(z.globalRegistry, { custom: 'value', title: 'This is foo property.' }).optional(),
     bar: z.lazy((): any => zBar).optional(),
     baz: z.array(z.lazy((): any => zFoo)).register(z.globalRegistry, { custom: 'value', title: 'This is baz property.' }).optional(),
     qux: z.int().gt(0).register(z.globalRegistry, { custom: 'value', title: 'This is qux property.' }).optional().default(0)

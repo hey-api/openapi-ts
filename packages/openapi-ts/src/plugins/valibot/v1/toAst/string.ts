@@ -3,6 +3,7 @@ import type { SchemaVisitorContext, SchemaWithType } from '@hey-api/shared';
 import { $ } from '../../../../ts-dsl';
 import { shouldCoerceToBigInt } from '../../../shared/utils/coerce';
 import type { StringResolverContext } from '../../resolvers';
+import { getPatternMessage } from '../../shared/extensions';
 import type { Pipe, PipeResult, Pipes } from '../../shared/pipes';
 import { pipes } from '../../shared/pipes';
 import type { ValibotPlugin } from '../../types';
@@ -69,7 +70,10 @@ function patternNode(ctx: StringResolverContext): PipeResult {
   const { v } = ctx.plugin.imports;
   if (!schema.pattern) return;
   const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
-  return $(v).attr(identifiers.actions.regex).call($.regexp(schema.pattern, flags));
+  const message = getPatternMessage(schema);
+  return $(v)
+    .attr(identifiers.actions.regex)
+    .call($.regexp(schema.pattern, flags), ...(message ? [$.literal(message)] : []));
 }
 
 function stringResolver(ctx: StringResolverContext): Pipes {

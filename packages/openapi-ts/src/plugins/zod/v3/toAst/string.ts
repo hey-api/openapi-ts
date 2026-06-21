@@ -4,6 +4,7 @@ import { $ } from '../../../../ts-dsl';
 import { identifiers } from '../../constants';
 import type { StringResolverContext } from '../../resolvers';
 import type { Chain, ChainResult } from '../../shared/chain';
+import { getPatternMessage } from '../../shared/extensions';
 import type { ZodPlugin } from '../../types';
 
 function baseNode(ctx: StringResolverContext): Chain {
@@ -68,7 +69,10 @@ function patternNode(ctx: StringResolverContext): ChainResult {
   const { chain, schema } = ctx;
   if (!schema.pattern) return;
   const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
-  return chain.current.attr(identifiers.regex).call($.regexp(schema.pattern, flags));
+  const message = getPatternMessage(schema);
+  return chain.current
+    .attr(identifiers.regex)
+    .call($.regexp(schema.pattern, flags), ...(message ? [$.literal(message)] : []));
 }
 
 function stringResolver(ctx: StringResolverContext): Chain {
