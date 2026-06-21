@@ -4,7 +4,7 @@ import { applyNaming } from '@hey-api/shared';
 
 import { $ } from '../../../ts-dsl';
 import type { MswPlugin } from '../types';
-import { computeDominantResponse, type DominantResponse } from './computeDominantResponse';
+import { computeDominantResponse, type DominantResponse } from './compute-dominant-response';
 import { getOperationComment } from './operation';
 import { sanitizeParamName, sanitizePath } from './path';
 import { createHttpResponse } from './response';

@@ -2,7 +2,7 @@ import type { Symbol } from '@hey-api/codegen-core';
 
 import { $ } from '../../../ts-dsl';
 import type { MswPlugin } from '../types';
-import type { DominantResponse } from './computeDominantResponse';
+import type { DominantResponse } from './compute-dominant-response';
 
 export function createHttpResponse({
   plugin,
