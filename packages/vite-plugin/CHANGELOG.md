@@ -1,5 +1,11 @@
 # @hey-api/vite-plugin
 
+## 0.3.2
+
+### Patch Changes
+
+- **config**: fix: use configuration file when called without arguments ([#4088](https://github.com/hey-api/hey-api/pull/4088)) ([`bdf3a26`](https://github.com/hey-api/hey-api/commit/bdf3a26b083fdb8e8e27e51ad58b6d144f6815b6)) by [@pullfrog](https://github.com/apps/pullfrog)
+
 ## 0.3.1
 
 ### Patch Changes

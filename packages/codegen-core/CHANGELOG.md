@@ -1,5 +1,13 @@
 # @hey-api/codegen-core
 
+## 0.9.1
+
+### Patch Changes
+
+- **utils**: tighten up object identity check ([`089ed2e`](https://github.com/hey-api/hey-api/commit/089ed2ed065ff92accb7d98cdeb95c66cf88f2f6)) by [@mrlubos](https://github.com/mrlubos)
+
+- **symbol**: add priority field ([`7dbfe4e`](https://github.com/hey-api/hey-api/commit/7dbfe4e7d4a958389c63167c7dbbfa7254a787d1)) by [@mrlubos](https://github.com/mrlubos)
+
 ## 0.9.0
 
 ### Minor Changes
