@@ -281,6 +281,7 @@ function generateSingularSchemaFactory({
 
   const func = $.func(symbol)
     .decl()
+    .export()
     .do($.return($.fromValue(schemaExample, { layout: 'pretty' })));
 
   plugin.node(func);
@@ -310,7 +311,8 @@ function generatePluralSchemaFactory({
 
   const func = $.func(symbol)
     .decl()
-    .param('options')
+    .export()
+    // .param('options')
     .do($.return($.fromValue(schemaExample[firstKey]!, { layout: 'pretty' })));
 
   plugin.node(func);
@@ -341,7 +343,8 @@ function generateOperationFactory({
 
   const func = $.func(symbol)
     .decl()
-    .param('options')
+    .export()
+    // .param('options')
     .do(
       $.return(
         $.fromValue(
