@@ -40,6 +40,7 @@ export const sponsors: Array<Sponsor> = [
       type: 'svg+img',
     },
     name: 'Stainless',
+    past: true,
     tagline: 'Best-in-class interfaces for developers and agents.',
     tier: 'gold',
     url: 'https://kutt.to/pkEZyc',

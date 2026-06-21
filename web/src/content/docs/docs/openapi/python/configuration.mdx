@@ -9,6 +9,7 @@ import { FileTree, Tabs, TabItem } from '@astrojs/starlight/components';
 import Examples from '@/components/Examples.astro';
 import InputTabs from '@/components/code-groups/InputTabs.mdx';
 import OutputTabs from '@/components/code-groups/OutputTabs.mdx';
+import UserConfig from '@/components/UserConfig.astro';
 
 # Configuration
 
@@ -190,8 +191,5 @@ export default {
   </TabItem>
 </Tabs>
 
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-python/src/config/types.ts) interface.
-
+<UserConfig folder="config" />
 {/* <Examples /> */}

@@ -11,6 +11,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 import AuthorsList from '@/components/AuthorsList.astro';
 import Examples from '@/components/Examples.astro';
 import FeatureStatus from '@/components/FeatureStatus.astro';
+import UserConfig from '@/components/UserConfig.astro';
 import { yuriMikhin } from '@/data/people';
 
 # NestJS
@@ -96,8 +97,5 @@ export class PetsController implements Pick<
   </TabItem>
 </Tabs>
 
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-ts/src/plugins/nestjs/types.ts) interface.
-
+<UserConfig plugin="nestjs" />
 <Examples githubExamplePath="/openapi-ts-nestjs" />

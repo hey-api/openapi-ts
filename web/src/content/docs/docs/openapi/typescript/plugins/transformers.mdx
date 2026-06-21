@@ -4,6 +4,7 @@ description: Learn about transforming data with @hey-api/openapi-ts.
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import UserConfig from '@/components/UserConfig.astro';
 
 # Transformers
 
@@ -201,6 +202,4 @@ export type GetFooResponse = Baz;
   </TabItem>
 </Tabs>
 
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-ts/src/plugins/@hey-api/transformers/types.ts) interface.
+<UserConfig plugin="@hey-api/transformers" />

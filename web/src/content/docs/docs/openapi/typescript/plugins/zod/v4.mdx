@@ -9,6 +9,7 @@ custom:
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import Examples from '@/components/Examples.astro';
+import UserConfig from '@/components/UserConfig.astro';
 
 # Zod
 
@@ -355,8 +356,5 @@ You can customize the naming and casing pattern for schema-specific `types` usin
 
 You can further customize this plugin's behavior using [resolvers](/docs/openapi/typescript/plugins/concepts/resolvers).
 
-## API
-
-You can view the complete list of options in the [UserConfig](https://github.com/hey-api/hey-api/blob/main/packages/openapi-ts/src/plugins/zod/types.ts) interface.
-
+<UserConfig plugin="zod" />
 <Examples />

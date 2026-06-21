@@ -1,0 +1,41 @@
+---
+import { GITHUB_URL } from '@/data/constants';
+
+interface Props {
+  folder?: string;
+  package?: string;
+  plugin?: string;
+}
+
+const { folder, package: _package, plugin } = Astro.props;
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const isOpenapiPythonDocs = currentPath.startsWith('/docs/openapi/python');
+const isOpenapiTypeScriptDocs = currentPath.startsWith('/docs/openapi/typescript');
+
+let packageName: string;
+if (_package) {
+  packageName = _package;
+} else if (isOpenapiPythonDocs) {
+  packageName = 'openapi-python';
+} else if (isOpenapiTypeScriptDocs) {
+  packageName = 'openapi-ts';
+} else {
+  throw new Error('UserConfig component could not determine the package name. Please provide it as a prop.');
+}
+
+let srcPath: string;
+if (folder) {
+  srcPath = `src/${folder}/types.ts`;
+} else if (plugin) {
+  srcPath = `src/plugins/${plugin}/types.ts`;
+} else {
+  throw new Error('UserConfig component could not determine the source path. Please provide either a folder or a plugin prop.');
+}
+---
+
+<h2>API</h2>
+
+<p>
+  You can view the complete list of options in the <a href={`${GITHUB_URL}/blob/main/packages/${packageName}/${srcPath}`}>UserConfig</a> interface.
+</p>
