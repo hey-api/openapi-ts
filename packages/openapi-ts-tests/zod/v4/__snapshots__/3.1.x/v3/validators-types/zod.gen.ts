@@ -24,7 +24,7 @@ export type QuxZodOutput = z.output<typeof zQux>;
  * This is Foo schema.
  */
 export const zFoo: z.ZodTypeAny = z.object({
-    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/).optional(),
+    foo: z.string().regex(/^\d{3}-\d{2}-\d{4}$/, 'Must be a valid SSN format (###-##-####)').optional(),
     bar: z.lazy(() => zBar).optional(),
     baz: z.array(z.lazy(() => zFoo)).optional(),
     qux: z.number().int().gt(0).optional().default(0)

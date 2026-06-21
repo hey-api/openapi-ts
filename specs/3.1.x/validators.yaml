@@ -78,6 +78,7 @@ components:
           description: 'This is foo property.'
           pattern: ^\d{3}-\d{2}-\d{4}$
           type: string
+          x-pattern-message: 'Must be a valid SSN format (###-##-####)'
         bar:
           $ref: '#/components/schemas/Bar'
         baz:
