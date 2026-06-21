@@ -5,7 +5,7 @@ import * as v from 'valibot';
 export const vBaz = v.optional(v.pipe(v.pipe(v.string(), v.regex(/foo\nbar/)), v.readonly()), 'baz');
 
 export const vFoo: v.GenericSchema = v.nullish(v.object({
-    foo: v.optional(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/))),
+    foo: v.optional(v.pipe(v.string(), v.regex(/^\d{3}-\d{2}-\d{4}$/, 'Must be a valid SSN format (###-##-####)'))),
     bar: v.optional(v.lazy(() => vBar)),
     baz: v.optional(v.array(v.lazy(() => vFoo))),
     qux: v.optional(v.pipe(v.number(), v.integer(), v.gtValue(0)), 0)

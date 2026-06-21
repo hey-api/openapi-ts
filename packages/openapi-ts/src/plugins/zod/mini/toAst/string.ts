@@ -79,7 +79,10 @@ function patternNode(ctx: StringResolverContext): ChainResult {
   const { z } = ctx.plugin.imports;
   if (!schema.pattern) return;
   const flags = /\\[pP]\{/.test(schema.pattern) ? 'u' : undefined;
-  return $(z).attr(identifiers.regex).call($.regexp(schema.pattern, flags));
+  const message = schema['x-pattern-message'];
+  return $(z)
+    .attr(identifiers.regex)
+    .call($.regexp(schema.pattern, flags), ...(message ? [$.literal(message as string)] : []));
 }
 
 function stringResolver(ctx: StringResolverContext): Chain {
