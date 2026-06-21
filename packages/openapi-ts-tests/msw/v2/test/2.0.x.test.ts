@@ -7,7 +7,7 @@ import { getFilePaths } from '../../../utils';
 import { snapshotsDir, tmpDir } from './constants';
 import { createConfigFactory } from './utils';
 
-const version = '3.0.x';
+const version = '2.0.x';
 
 const outputDir = path.join(tmpDir, version);
 
