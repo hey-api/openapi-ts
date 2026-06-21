@@ -289,12 +289,12 @@ export const fakeTeam = (options?: Options): Team => ({
 
 export const fakePetOrTag = (options?: Options): PetOrTag => {
     const f = options?.faker ?? faker;
-    return f.helpers.arrayElement([fakePet(options), fakeTag(options)]);
+    return f.helpers.arrayElement([fakePet(options), fakeTag(options)]) as any;
 };
 
 export const fakeStringOrNumber = (options?: Options): StringOrNumber => {
     const f = options?.faker ?? faker;
-    return f.helpers.arrayElement([f.string.sample(), f.number.float()]);
+    return f.helpers.arrayElement([f.string.sample(), f.number.float()]) as any;
 };
 
 export const fakeNullablePetOrTag = (options?: Options): NullablePetOrTag => {
@@ -303,7 +303,7 @@ export const fakeNullablePetOrTag = (options?: Options): NullablePetOrTag => {
         fakePet(options),
         fakeTag(options),
         null
-    ]);
+    ]) as any;
 };
 
 export const fakePetWithOwner = (options?: Options): PetWithOwner => {
@@ -331,7 +331,7 @@ export const fakeSquare = (options?: Options): Square => {
 
 export const fakeShape = (options?: Options): Shape => {
     const f = options?.faker ?? faker;
-    return f.helpers.arrayElement([fakeCircle(options), fakeSquare(options)]);
+    return f.helpers.arrayElement([fakeCircle(options), fakeSquare(options)]) as any;
 };
 
 export const fakeDog = (options?: Options): Dog => {
@@ -352,7 +352,7 @@ export const fakeCat = (options?: Options): Cat => {
 
 export const fakeAnimal = (options?: Options): Animal => {
     const f = options?.faker ?? faker;
-    return f.helpers.arrayElement([fakeDog(options), fakeCat(options)]);
+    return f.helpers.arrayElement([fakeDog(options), fakeCat(options)]) as any;
 };
 
 export const fakePersonProfile = (options?: Options): PersonProfile => {

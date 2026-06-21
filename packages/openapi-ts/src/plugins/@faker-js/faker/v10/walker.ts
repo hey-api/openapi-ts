@@ -390,7 +390,8 @@ export function createVisitor(
         fakerCtx.fakerAccessor
           .attr('helpers')
           .attr('arrayElement')
-          .call($.array(...possibleValues)),
+          .call($.array(...possibleValues))
+          .as('any'),
       );
 
       const hasCircularRef = items.some((item) => item.hasCircularRef);

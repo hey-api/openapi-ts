@@ -195,7 +195,7 @@ export const fakeArrayWithAnyOfProperties = (options?: Options): ArrayWithAnyOfP
             ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { foo: resolveCondition(options?.useDefault ?? false, f) ? 'test' : f.string.sample() }
         }, {
             ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { bar: f.string.sample() }
-        }]));
+        }]) as any);
 };
 
 export const fakeAnyOfAnyAndNull = (options?: Options): AnyOfAnyAndNull => {
@@ -212,7 +212,7 @@ export const fakeAnyOfArrays = (options?: Options): AnyOfArrays => {
                     ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { foo: f.string.sample() }
                 }, {
                     ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { bar: f.string.sample() }
-                }])) }
+                }]) as any) }
     };
 };
 
@@ -428,7 +428,7 @@ export const fakeCompositionWithOneOf = (options?: Options): CompositionWithOneO
                 fakeModelWithEnum(options),
                 fakeModelWithArray(options),
                 fakeModelWithDictionary(options)
-            ]) }
+            ]) as any }
     };
 };
 
@@ -441,7 +441,7 @@ export const fakeCompositionWithOneOfAnonymous = (options?: Options): Compositio
                 },
                 f.string.sample(),
                 f.number.int()
-            ]) }
+            ]) as any }
     };
 };
 
@@ -463,7 +463,7 @@ export const fakeModelSquare = (options?: Options): ModelSquare => {
 
 export const fakeCompositionWithOneOfDiscriminator = (options?: Options): CompositionWithOneOfDiscriminator => {
     const f = options?.faker ?? faker;
-    return f.helpers.arrayElement([fakeModelCircle(options), fakeModelSquare(options)]);
+    return f.helpers.arrayElement([fakeModelCircle(options), fakeModelSquare(options)]) as any;
 };
 
 export const fakeCompositionWithAnyOf = (options?: Options): CompositionWithAnyOf => {
@@ -474,7 +474,7 @@ export const fakeCompositionWithAnyOf = (options?: Options): CompositionWithAnyO
                 fakeModelWithEnum(options),
                 fakeModelWithArray(options),
                 fakeModelWithDictionary(options)
-            ]) }
+            ]) as any }
     };
 };
 
@@ -487,14 +487,14 @@ export const fakeCompositionWithAnyOfAnonymous = (options?: Options): Compositio
                 },
                 f.string.sample(),
                 f.number.int()
-            ]) }
+            ]) as any }
     };
 };
 
 export const fakeCompositionWithNestedAnyAndTypeNull = (options?: Options): CompositionWithNestedAnyAndTypeNull => {
     const f = options?.faker ?? faker;
     return {
-        ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { propA: f.helpers.arrayElement([f.helpers.multiple(() => f.datatype.boolean() ? fakeModelWithDictionary(options) : null), f.helpers.multiple(() => f.datatype.boolean() ? fakeModelWithArray(options) : null)]) }
+        ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { propA: f.helpers.arrayElement([f.helpers.multiple(() => f.datatype.boolean() ? fakeModelWithDictionary(options) : null), f.helpers.multiple(() => f.datatype.boolean() ? fakeModelWithArray(options) : null)]) as any }
     };
 };
 
@@ -508,7 +508,7 @@ export const fakeConstValue = (): ConstValue => 'ConstValue';
 export const fakeCompositionWithNestedAnyOfAndNull = (options?: Options): CompositionWithNestedAnyOfAndNull => {
     const f = options?.faker ?? faker;
     return {
-        ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { propA: f.datatype.boolean() ? f.helpers.multiple(() => f.helpers.arrayElement([fake3eNum1Период(options), fakeConstValue()])) : null }
+        ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { propA: f.datatype.boolean() ? f.helpers.multiple(() => f.helpers.arrayElement([fake3eNum1Период(options), fakeConstValue()]) as any) : null }
     };
 };
 
@@ -523,7 +523,7 @@ export const fakeCompositionWithOneOfAndNullable = (options?: Options): Composit
                 fakeModelWithArray(options),
                 fakeModelWithDictionary(options),
                 null
-            ]) }
+            ]) as any }
     };
 };
 
@@ -532,7 +532,7 @@ export const fakeCompositionWithOneOfAndSimpleDictionary = (options?: Options): 
     return {
         ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { propA: f.helpers.arrayElement([f.datatype.boolean(), !resolveCondition(options?.includeOptional ?? true, f) ? {} as {} : {
                     additionalProp: f.number.float()
-                }]) }
+                }]) as any }
     };
 };
 
@@ -541,7 +541,7 @@ export const fakeCompositionWithOneOfAndSimpleArrayDictionary = (options?: Optio
     return {
         ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { propA: f.helpers.arrayElement([f.datatype.boolean(), !resolveCondition(options?.includeOptional ?? true, f) ? {} as {} : {
                     additionalProp: f.helpers.multiple(() => f.datatype.boolean())
-                }]) }
+                }]) as any }
     };
 };
 
@@ -549,8 +549,8 @@ export const fakeCompositionWithOneOfAndComplexArrayDictionary = (options?: Opti
     const f = options?.faker ?? faker;
     return {
         ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { propA: f.helpers.arrayElement([f.datatype.boolean(), !resolveCondition(options?.includeOptional ?? true, f) ? {} as {} : {
-                    additionalProp: f.helpers.multiple(() => f.helpers.arrayElement([f.number.float(), f.string.sample()]))
-                }]) }
+                    additionalProp: f.helpers.multiple(() => f.helpers.arrayElement([f.number.float(), f.string.sample()]) as any)
+                }]) as any }
     };
 };
 
@@ -574,7 +574,7 @@ export const fakeCompositionWithAnyOfAndNullable = (options?: Options): Composit
                 fakeModelWithArray(options),
                 fakeModelWithDictionary(options),
                 null
-            ]) }
+            ]) as any }
     };
 };
 
@@ -741,7 +741,7 @@ export const fakeModelWithAdditionalPropertiesEqTrue = (options?: Options): Mode
 export const fakeNestedAnyOfArraysNullable = (options?: Options): NestedAnyOfArraysNullable => {
     const f = options?.faker ?? faker;
     return {
-        ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { nullableArray: f.datatype.boolean() ? f.helpers.multiple(() => f.helpers.arrayElement([f.string.sample(), f.datatype.boolean()])) : null }
+        ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { nullableArray: f.datatype.boolean() ? f.helpers.multiple(() => f.helpers.arrayElement([f.string.sample(), f.datatype.boolean()]) as any) : null }
     };
 };
 
@@ -791,7 +791,7 @@ export const fakeModelWithOneOfEnum = (options?: Options): ModelWithOneOfEnum =>
             content: [f.date.recent().toISOString(), f.string.sample()],
             foo: 'Corge'
         }
-    ]);
+    ]) as any;
 };
 
 export const fakeModelWithNestedArrayEnumsDataFoo = (options?: Options): ModelWithNestedArrayEnumsDataFoo => {
@@ -852,9 +852,9 @@ export const fakeModelWithConstantSizeArray = (options?: Options): ModelWithCons
 export const fakeModelWithAnyOfConstantSizeArray = (options?: Options): ModelWithAnyOfConstantSizeArray => {
     const f = options?.faker ?? faker;
     return [
-        f.helpers.arrayElement([f.number.float(), f.string.sample()]),
-        f.helpers.arrayElement([f.number.float(), f.string.sample()]),
-        f.helpers.arrayElement([f.number.float(), f.string.sample()])
+        f.helpers.arrayElement([f.number.float(), f.string.sample()]) as any,
+        f.helpers.arrayElement([f.number.float(), f.string.sample()]) as any,
+        f.helpers.arrayElement([f.number.float(), f.string.sample()]) as any
     ];
 };
 
@@ -862,7 +862,7 @@ export const fakeModelWithPrefixItemsConstantSizeArray = (options?: Options): Mo
     const f = options?.faker ?? faker;
     return [
         fakeModelWithInteger(options),
-        f.helpers.arrayElement([f.number.float(), f.string.sample()]),
+        f.helpers.arrayElement([f.number.float(), f.string.sample()]) as any,
         f.string.sample()
     ];
 };
@@ -874,17 +874,17 @@ export const fakeModelWithAnyOfConstantSizeArrayNullable = (options?: Options): 
             f.number.float(),
             f.string.sample(),
             null
-        ]),
+        ]) as any,
         f.helpers.arrayElement([
             f.number.float(),
             f.string.sample(),
             null
-        ]),
+        ]) as any,
         f.helpers.arrayElement([
             f.number.float(),
             f.string.sample(),
             null
-        ])
+        ]) as any
     ];
 };
 
@@ -942,7 +942,7 @@ export const fakeImport = (options?: Options): Import => {
 
 export const fakeModelWithAnyOfConstantSizeArrayWithNSizeAndOptions = (options?: Options): ModelWithAnyOfConstantSizeArrayWithNSizeAndOptions => {
     const f = options?.faker ?? faker;
-    return [f.helpers.arrayElement([f.number.float(), fakeImport(options)]), f.helpers.arrayElement([f.number.float(), fakeImport(options)])];
+    return [f.helpers.arrayElement([f.number.float(), fakeImport(options)]) as any, f.helpers.arrayElement([f.number.float(), fakeImport(options)]) as any];
 };
 
 export const fakeSchemaWithFormRestrictedKeys = (options?: Options): SchemaWithFormRestrictedKeys => {
@@ -988,14 +988,14 @@ export const fakeIoK8sApimachineryPkgApisMetaV1DeleteOptions = (options?: Option
 export const fakeAdditionalPropertiesUnknownIssue = (options?: Options): AdditionalPropertiesUnknownIssue => {
     const f = options?.faker ?? faker;
     return !resolveCondition(options?.includeOptional ?? true, f) ? {} as {} : {
-        additionalProp: f.helpers.arrayElement([f.string.sample(), f.number.float()])
+        additionalProp: f.helpers.arrayElement([f.string.sample(), f.number.float()]) as any
     };
 };
 
 export const fakeAdditionalPropertiesUnknownIssue2 = (options?: Options): AdditionalPropertiesUnknownIssue2 => {
     const f = options?.faker ?? faker;
     return !resolveCondition(options?.includeOptional ?? true, f) ? {} as {} : {
-        additionalProp: f.helpers.arrayElement([f.string.sample(), f.number.float()])
+        additionalProp: f.helpers.arrayElement([f.string.sample(), f.number.float()]) as any
     };
 };
 
@@ -1101,13 +1101,13 @@ export const fakeModelWithArrayReadOnlyAndWriteOnlyWritable = (options?: Options
 
 export const fakeModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable = (options?: Options): ModelWithAnyOfConstantSizeArrayWithNSizeAndOptionsWritable => {
     const f = options?.faker ?? faker;
-    return [f.helpers.arrayElement([f.number.float(), fakeImport(options)]), f.helpers.arrayElement([f.number.float(), fakeImport(options)])];
+    return [f.helpers.arrayElement([f.number.float(), fakeImport(options)]) as any, f.helpers.arrayElement([f.number.float(), fakeImport(options)]) as any];
 };
 
 export const fakeAdditionalPropertiesUnknownIssueWritable = (options?: Options): AdditionalPropertiesUnknownIssueWritable => {
     const f = options?.faker ?? faker;
     return !resolveCondition(options?.includeOptional ?? true, f) ? {} as {} : {
-        additionalProp: f.helpers.arrayElement([f.string.sample(), f.number.float()])
+        additionalProp: f.helpers.arrayElement([f.string.sample(), f.number.float()]) as any
     };
 };
 
@@ -1141,7 +1141,7 @@ export const fakeCompositionWithOneOfAndProperties = (options?: Options): Compos
             foo: fakeSimpleParameter(options)
         }, {
             bar: fakeNonAsciiStringæøåÆøÅöôêÊ字符串(options)
-        }]), {
+        }]) as any, {
         baz: f.datatype.boolean() ? f.number.int({ min: 0 }) : null,
         qux: f.number.int({ min: 0 })
     });
@@ -1158,7 +1158,7 @@ export const fakePatchApiVbyApiVersionNoTagResponse = () => undefined;
 export const fakeImportRequest = (options?: Options): Omit<ImportData, 'url'> => {
     const f = options?.faker ?? faker;
     return {
-        body: f.helpers.arrayElement([fakeModelWithReadOnlyAndWriteOnlyWritable(options), fakeModelWithArrayReadOnlyAndWriteOnlyWritable(options)])
+        body: f.helpers.arrayElement([fakeModelWithReadOnlyAndWriteOnlyWritable(options), fakeModelWithArrayReadOnlyAndWriteOnlyWritable(options)]) as any
     };
 };
 
@@ -1174,7 +1174,7 @@ export const fakeGetApiVbyApiVersionSimpleOperationRequest = (options?: Options)
     const f = options?.faker ?? faker;
     return {
         path: {
-            foo_param: f.helpers.arrayElement([f.string.sample(), f.string.uuid()])
+            foo_param: f.helpers.arrayElement([f.string.sample(), f.string.uuid()]) as any
         }
     };
 };
@@ -1435,7 +1435,7 @@ export const fakeTypesRequest = (options?: Options): Omit<TypesData, 'url'> => {
                 'Warning',
                 'Error',
                 null
-            ])
+            ]) as any
         }
     };
 };
@@ -1552,7 +1552,7 @@ export const fakeComplexParamsRequest = (options?: Options): Omit<ComplexParamsD
                 fakeModelWithEnum(options),
                 fakeModelWithArray(options),
                 fakeModelWithDictionary(options)
-            ]),
+            ]) as any,
             ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { user: {
                     ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { id: f.number.int() },
                     ...!resolveCondition(options?.includeOptional ?? true, f) ? {} : { name: f.datatype.boolean() ? f.person.fullName() : null }

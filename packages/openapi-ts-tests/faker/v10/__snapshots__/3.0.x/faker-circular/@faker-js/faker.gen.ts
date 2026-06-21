@@ -74,7 +74,7 @@ export const fakeBaz = (options: Options = {}, _callDepth = 0): Baz => {
 
 export const fakeQux = (options: Options = {}, _callDepth = 0): Qux => {
     const f = options?.faker ?? faker;
-    return f.helpers.arrayElement([fakeCorge(options, _callDepth + 1), fakeFoo(options, _callDepth + 1)]);
+    return f.helpers.arrayElement([fakeCorge(options, _callDepth + 1), fakeFoo(options, _callDepth + 1)]) as any;
 };
 
 export const fakeQuux = (options: Options = {}, _callDepth = 0): Quux => {

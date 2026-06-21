@@ -15,6 +15,7 @@ export const presets = {
   ],
   fake: () => [
     /** Just the faker */
+    plugins.typescript(),
     plugins.faker(),
   ],
   full: () => [
