@@ -1,5 +1,89 @@
 # @hey-api/openapi-ts
 
+## 0.99.0
+
+### Minor Changes
+
+- **BREAKING** **plugin**: rename `.symbols` to `.imports` ([#4052](https://github.com/hey-api/hey-api/pull/4052)) ([`57fac5e`](https://github.com/hey-api/hey-api/commit/57fac5ef22bca2b4ac47c8df136270f967f85ed1)) by [@mrlubos](https://github.com/mrlubos)
+
+To better represent its functionality, the `plugin.symbols` property has been renamed to `plugin.imports`.
+
+- **BREAKING** **config**: merge duplicate plugin configurations ([`089ed2e`](https://github.com/hey-api/hey-api/commit/089ed2ed065ff92accb7d98cdeb95c66cf88f2f6)) by [@mrlubos](https://github.com/mrlubos)
+
+### Plugin duplicates behavior
+
+If you specified the same plugin multiple times, only the last instance would be used. We eventually added a warning for this behavior, but that didn't treat the root issue. This release changes that by merging duplicate plugin configurations.
+
+- **BREAKING** **plugin(@hey-api/schemas)**: widen `schema` type in `nameBuilder` to unknown ([#4076](https://github.com/hey-api/hey-api/pull/4076)) ([`98ce35e`](https://github.com/hey-api/hey-api/commit/98ce35e3b51bd4d4fd58ebe9b81b6632ca654416)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **plugin**: remove `.external()` method ([#4052](https://github.com/hey-api/hey-api/pull/4052)) ([`57fac5e`](https://github.com/hey-api/hey-api/commit/57fac5ef22bca2b4ac47c8df136270f967f85ed1)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed `plugin.external()` function
+
+This function was used to reference external symbols. All plugins now use the Imports API, which allows you to reference external symbols in a type-safe way through `plugin.imports`.
+
+### Patch Changes
+
+- **api**: replace `~` fields with `$` ([#4086](https://github.com/hey-api/hey-api/pull/4086)) ([`d5ca286`](https://github.com/hey-api/hey-api/commit/d5ca286729e8b881387d5a7ac9234512af58dcd4)) by [@mrlubos](https://github.com/mrlubos)
+
+- **config**: add Presets API ([`3b4ee7a`](https://github.com/hey-api/hey-api/commit/3b4ee7a5d3fd454aa8416ad1ed4a565119632be1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-angular)**: fix: send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070)) ([`ab522ef`](https://github.com/hey-api/hey-api/commit/ab522ef77953ccb2c55cbdcc369a27eed90de3d3)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **client**: use `getBaseUrl()` function to determine default value ([#3772](https://github.com/hey-api/hey-api/pull/3772)) ([`4026955`](https://github.com/hey-api/hey-api/commit/4026955318aed9282b46464b15a75ab1cdc7243a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(zod)**: improve discriminator handling ([`680b947`](https://github.com/hey-api/hey-api/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/preact-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/hey-api/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/solid-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/hey-api/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(valibot)**: support custom regular expression error messages with `x-pattern-message` ([#4117](https://github.com/hey-api/hey-api/pull/4117)) ([`3ed3afb`](https://github.com/hey-api/hey-api/commit/3ed3afbe785d9a79f9eec02ab6240d2041d4f49a)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@hey-api/client-next)**: fix: send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070)) ([`f6d4512`](https://github.com/hey-api/hey-api/commit/f6d45122223ac91996907a0e7e188712bfea741c)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/client-axios)**: fix: send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070)) ([`f6d4512`](https://github.com/hey-api/hey-api/commit/f6d45122223ac91996907a0e7e188712bfea741c)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(zod)**: support creating optional request schemas ([`11315c7`](https://github.com/hey-api/hey-api/commit/11315c763a6a8ba9f7b2396466bfaf5a9e257fee)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/react-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/hey-api/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ky)**: fix: send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070)) ([`f6d4512`](https://github.com/hey-api/hey-api/commit/f6d45122223ac91996907a0e7e188712bfea741c)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(valibot)**: support creating optional request schemas ([`11315c7`](https://github.com/hey-api/hey-api/commit/11315c763a6a8ba9f7b2396466bfaf5a9e257fee)) by [@mrlubos](https://github.com/mrlubos)
+
+- **exports**: add `/plugins` exported module ([#4076](https://github.com/hey-api/hey-api/pull/4076)) ([`93129b7`](https://github.com/hey-api/hey-api/commit/93129b7f5d9d2d45c46161f22b7d7945f95b7a58)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@tanstack/svelte-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/hey-api/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-nuxt)**: fix: send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070)) ([`f6d4512`](https://github.com/hey-api/hey-api/commit/f6d45122223ac91996907a0e7e188712bfea741c)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(zod)**: support custom regular expression error messages with `x-pattern-message` ([#4117](https://github.com/hey-api/hey-api/pull/4117)) ([`3ed3afb`](https://github.com/hey-api/hey-api/commit/3ed3afbe785d9a79f9eec02ab6240d2041d4f49a)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@tanstack/angular-query-experimental)**: fix: strip `initialData` from the inferred result types for infinite query options ([`7a4b0cf`](https://github.com/hey-api/hey-api/commit/7a4b0cf9687adc6ad80531b4eadf90825d4366e7)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(@hey-api/client-ofetch)**: fix: send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070)) ([`f6d4512`](https://github.com/hey-api/hey-api/commit/f6d45122223ac91996907a0e7e188712bfea741c)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/client-fetch)**: fix: send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070)) ([`f6d4512`](https://github.com/hey-api/hey-api/commit/f6d45122223ac91996907a0e7e188712bfea741c)) by [@matthewjamesadam](https://github.com/matthewjamesadam)
+
+- **plugin(@hey-api/typescript)**: improve discriminator handling ([`680b947`](https://github.com/hey-api/hey-api/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin(orpc)**: make `.input()` optional if all layers are optional ([`11315c7`](https://github.com/hey-api/hey-api/commit/11315c763a6a8ba9f7b2396466bfaf5a9e257fee)) by [@mrlubos](https://github.com/mrlubos)
+
+- \*_parser_: fix: delete unresolvable `$ref` keywords ([#4087](https://github.com/hey-api/hey-api/pull/4087)) ([`6c21d81`](https://github.com/hey-api/hey-api/commit/6c21d818f95d5ecf324d35fd96a4b18941e26546)) by [@pullfrog](https://github.com/apps/pullfrog)
+
+- **plugin(@tanstack/vue-query)**: fix: strip `initialData` from the inferred result types for infinite query options ([`8d91bd5`](https://github.com/hey-api/hey-api/commit/8d91bd5dfb70f4cf1db1d7b1277f49f57066b831)) by [@magicismight](https://github.com/magicismight)
+
+- **plugin(valibot)**: improve discriminator handling ([`680b947`](https://github.com/hey-api/hey-api/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **exports**: export `plugins` type helpers ([#4076](https://github.com/hey-api/hey-api/pull/4076)) ([`93129b7`](https://github.com/hey-api/hey-api/commit/93129b7f5d9d2d45c46161f22b7d7945f95b7a58)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/shared@0.5.0
+- @hey-api/json-schema-ref-parser@1.4.4
+- @hey-api/codegen-core@0.9.1
+
 ## 0.98.2
 
 ### Patch Changes

@@ -1,5 +1,54 @@
 # @hey-api/shared
 
+## 0.5.0
+
+### Minor Changes
+
+- **plugin**: remove `.querySymbols()` method ([#4067](https://github.com/hey-api/hey-api/pull/4067)) ([`4d49551`](https://github.com/hey-api/hey-api/commit/4d495516bbace683fc22afd53743eaf642fc3be1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: rename `symbols` to `imports` ([#4052](https://github.com/hey-api/hey-api/pull/4052)) ([`57fac5e`](https://github.com/hey-api/hey-api/commit/57fac5ef22bca2b4ac47c8df136270f967f85ed1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **plugin**: remove `registerSymbol()` function ([#4078](https://github.com/hey-api/hey-api/pull/4078)) ([`4ee65d5`](https://github.com/hey-api/hey-api/commit/4ee65d52f31176b7a2bae87a27ed4e478c2eb447)) by [@mrlubos](https://github.com/mrlubos)
+
+### Removed `plugin.registerSymbol()` function
+
+This function was an alias for `plugin.symbol()` accepting a single argument. It has been removed in favor of `plugin.symbol()` which can now also accept a single argument.
+
+- **parser**: improve discriminator handling ([`680b947`](https://github.com/hey-api/hey-api/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **utils**: remove `warnOnConflictingDuplicatePlugins` export ([`089ed2e`](https://github.com/hey-api/hey-api/commit/089ed2ed065ff92accb7d98cdeb95c66cf88f2f6)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **plugin**: remove `.external()` method ([#4052](https://github.com/hey-api/hey-api/pull/4052)) ([`57fac5e`](https://github.com/hey-api/hey-api/commit/57fac5ef22bca2b4ac47c8df136270f967f85ed1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **plugin**: rename `.symbols` to `.imports` ([#4052](https://github.com/hey-api/hey-api/pull/4052)) ([`57fac5e`](https://github.com/hey-api/hey-api/commit/57fac5ef22bca2b4ac47c8df136270f967f85ed1)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- **config**: handle array values in `$dependencies` ([#4114](https://github.com/hey-api/hey-api/pull/4114)) ([`835c230`](https://github.com/hey-api/hey-api/commit/835c2304843be396e1e799b260868af56239d5ba)) by [@mrlubos](https://github.com/mrlubos)
+
+- **config**: add Presets API ([`3b4ee7a`](https://github.com/hey-api/hey-api/commit/3b4ee7a5d3fd454aa8416ad1ed4a565119632be1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **utils**: export `deepMerge`, `resolvePlugins` methods, `PluginResolutionInput`, `PluginResolutionResult` types ([`089ed2e`](https://github.com/hey-api/hey-api/commit/089ed2ed065ff92accb7d98cdeb95c66cf88f2f6)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: add `outerOptional` option to `RequestSchemaContext` ([`11315c7`](https://github.com/hey-api/hey-api/commit/11315c763a6a8ba9f7b2396466bfaf5a9e257fee)) by [@mrlubos](https://github.com/mrlubos)
+
+- **utils**: export `getBaseUrl()` function ([#3772](https://github.com/hey-api/hey-api/pull/3772)) ([`4026955`](https://github.com/hey-api/hey-api/commit/4026955318aed9282b46464b15a75ab1cdc7243a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **symbol**: add implicit priority ([`7dbfe4e`](https://github.com/hey-api/hey-api/commit/7dbfe4e7d4a958389c63167c7dbbfa7254a787d1)) by [@mrlubos](https://github.com/mrlubos)
+
+- **utils**: export discriminator utilities ([`680b947`](https://github.com/hey-api/hey-api/commit/680b94766855232fdfe8cf34029224c3900821f8)) by [@mrlubos](https://github.com/mrlubos)
+
+- **plugin**: add `symbolMeta` field ([#4051](https://github.com/hey-api/hey-api/pull/4051)) ([`51818a7`](https://github.com/hey-api/hey-api/commit/51818a70af3a8d3641e2c7a958c5d23cab42f45a)) by [@mrlubos](https://github.com/mrlubos)
+
+- **api**: replace `~` fields with `$` ([#4086](https://github.com/hey-api/hey-api/pull/4086)) ([`d5ca286`](https://github.com/hey-api/hey-api/commit/d5ca286729e8b881387d5a7ac9234512af58dcd4)) by [@mrlubos](https://github.com/mrlubos)
+
+- **utils**: export `pluginHelper()` function ([#4076](https://github.com/hey-api/hey-api/pull/4076)) ([`93129b7`](https://github.com/hey-api/hey-api/commit/93129b7f5d9d2d45c46161f22b7d7945f95b7a58)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/json-schema-ref-parser@1.4.4
+- @hey-api/codegen-core@0.9.1
+
 ## 0.4.8
 
 ### Patch Changes

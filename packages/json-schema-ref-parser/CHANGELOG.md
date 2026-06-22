@@ -1,5 +1,13 @@
 # @hey-api/json-schema-ref-parser
 
+## 1.4.4
+
+### Patch Changes
+
+- **package**: remove `cjs` from files array ([`3b4ee7a`](https://github.com/hey-api/hey-api/commit/3b4ee7a5d3fd454aa8416ad1ed4a565119632be1)) by [@mrlubos](https://github.com/mrlubos)
+
+- \*_parser_: fix: delete unresolvable `$ref` keywords ([#4087](https://github.com/hey-api/hey-api/pull/4087)) ([`6c21d81`](https://github.com/hey-api/hey-api/commit/6c21d818f95d5ecf324d35fd96a4b18941e26546)) by [@pullfrog](https://github.com/apps/pullfrog)
+
 ## 1.4.3
 
 ### Patch Changes
