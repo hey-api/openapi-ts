@@ -267,10 +267,14 @@ function readmeSync(): void {
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name);
 
+  const readmePaths = [
+    path.join(__dirname, '..', 'README.md'),
+    ...packages.map((pkg) => path.join(PACKAGES_DIR, pkg, 'README.md')),
+  ];
+
   let updated = 0;
 
-  for (const pkg of packages) {
-    const readmePath = path.join(PACKAGES_DIR, pkg, 'README.md');
+  for (const readmePath of readmePaths) {
     let content: string;
     try {
       content = fs.readFileSync(readmePath, 'utf-8');
