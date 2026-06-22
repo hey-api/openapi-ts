@@ -147,8 +147,8 @@ importers:
         specifier: 5.92.9
         version: 5.92.9(vue@3.5.25(typescript@6.0.3))
       arktype:
-        specifier: 2.2.0
-        version: 2.2.0
+        specifier: 2.2.1
+        version: 2.2.1
       msw:
         specifier: 2.13.2
         version: 2.13.2(@types/node@24.13.2)(typescript@6.0.3)
@@ -1530,8 +1530,8 @@ importers:
         specifier: 8.20.0
         version: 8.20.0
       arktype:
-        specifier: 2.2.0
-        version: 2.2.0
+        specifier: 2.2.1
+        version: 2.2.1
       axios:
         specifier: 1.13.4
         version: 1.13.4(debug@4.4.3)
@@ -8584,11 +8584,11 @@ packages:
     resolution: {integrity: sha512-COROpnaoap1E2F000S62r6A60uHZnmlvomhfyT2DlTcrY1OrBKn2UhH7qn5wTC9zMvD0AY7csdPSNwKP+7WiQw==}
     engines: {node: '>= 0.4'}
 
-  arkregex@0.0.5:
-    resolution: {integrity: sha512-ncYjBdLlh5/QnVsAA8De16Tc9EqmYM7y/WU9j+236KcyYNUXogpz3sC4ATIZYzzLxwI+0sEOaQLEmLmRleaEXw==}
+  arkregex@0.0.6:
+    resolution: {integrity: sha512-9mvuMKQuibfWhBrsNYhsKhNb6k9oEHoAJ/FvDiqe8h+E9Siwe0/cro1WVOGgpajXQ9ZHd24yCOf2k35Q/QqUQw==}
 
-  arktype@2.2.0:
-    resolution: {integrity: sha512-t54MZ7ti5BhOEvzEkgKnWvqj+UbDfWig+DHr5I34xatymPusKLS0lQpNJd8M6DzmIto2QGszHfNKoFIT8tMCZQ==}
+  arktype@2.2.1:
+    resolution: {integrity: sha512-CWPJxNoSxrS+NYGB3ufwc/blFonESEW5vBQyYPVS0rf4STu8VWoAWfKJSl5vVVm56h4yxpwbODeYwy6XFKvojA==}
 
   array-buffer-byte-length@1.0.2:
     resolution: {integrity: sha512-LHE+8BuR7RYGDKvnrmcuSq3tDcKv9OFEXQt/HpbZhY7V6h0zlUXutnAD82GiFx9rdieCMjkvtcsPqBwgUl1Iiw==}
@@ -23758,15 +23758,15 @@ snapshots:
 
   aria-query@5.3.2: {}
 
-  arkregex@0.0.5:
+  arkregex@0.0.6:
     dependencies:
       '@ark/util': 0.56.0
 
-  arktype@2.2.0:
+  arktype@2.2.1:
     dependencies:
       '@ark/schema': 0.56.0
       '@ark/util': 0.56.0
-      arkregex: 0.0.5
+      arkregex: 0.0.6
 
   array-buffer-byte-length@1.0.2:
     dependencies:
