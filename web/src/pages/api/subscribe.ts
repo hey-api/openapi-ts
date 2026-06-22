@@ -60,7 +60,7 @@ export const POST: APIRoute = async ({ request }) => {
     email,
     segments: [
       {
-        id: '0bec1178-c5a2-46fb-8b26-f9baf0890c27', // Python
+        id: '2e24e984-a744-4388-ba2d-9af7add8868d', // Python
       },
     ],
     unsubscribed: false,
