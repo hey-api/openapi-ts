@@ -1,6 +1,186 @@
 # Changelog
 
+# 2026-06-22
+
+## @hey-api/openapi-python 0.0.24
+
+No user-facing changes.
+
+---
+
+## @hey-api/openapi-ts 0.99.0
+
+### ⚠️ Breaking
+
+This release has 4 breaking changes. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- \*_parser_: delete unresolvable `$ref` keywords ([#4087](https://github.com/hey-api/hey-api/pull/4087))
+- api: replace `~` fields with `$` ([#4086](https://github.com/hey-api/hey-api/pull/4086))
+- client: use `getBaseUrl()` function to determine default value ([#3772](https://github.com/hey-api/hey-api/pull/3772))
+- **⚠️ Breaking:** config: merge duplicate plugin configurations
+
+### Plugin duplicates behavior
+
+If you specified the same plugin multiple times, only the last instance would be used. We eventually added a warning for this behavior, but that didn't treat the root issue. This release changes that by merging duplicate plugin configurations.
+- config: add Presets API
+- exports: add `/plugins` exported module ([#4076](https://github.com/hey-api/hey-api/pull/4076))
+- exports: export `plugins` type helpers ([#4076](https://github.com/hey-api/hey-api/pull/4076))
+- **⚠️ Breaking:** plugin: rename `.symbols` to `.imports` ([#4052](https://github.com/hey-api/hey-api/pull/4052))
+
+To better represent its functionality, the `plugin.symbols` property has been renamed to `plugin.imports`.
+- **⚠️ Breaking:** plugin: remove `.external()` method ([#4052](https://github.com/hey-api/hey-api/pull/4052))
+
+### Removed `plugin.external()` function
+
+This function was used to reference external symbols. All plugins now use the Imports API, which allows you to reference external symbols in a type-safe way through `plugin.imports`.
+
+### Plugins
+
+#### @hey-api/client-angular
+
+- send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070))
+
+#### @hey-api/client-axios
+
+- send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070))
+
+#### @hey-api/client-fetch
+
+- send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070))
+
+#### @hey-api/client-ky
+
+- send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070))
+
+#### @hey-api/client-next
+
+- send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070))
+
+#### @hey-api/client-nuxt
+
+- send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070))
+
+#### @hey-api/client-ofetch
+
+- send an empty object request body when explicitly provided in flat parameters mode ([#4070](https://github.com/hey-api/hey-api/pull/4070))
+
+#### @hey-api/schemas
+
+- **⚠️ Breaking:** widen `schema` type in `nameBuilder` to unknown ([#4076](https://github.com/hey-api/hey-api/pull/4076))
+
+#### @hey-api/typescript
+
+- improve discriminator handling
+
+#### @tanstack/angular-query-experimental
+
+- strip `initialData` from the inferred result types for infinite query options
+
+#### @tanstack/preact-query
+
+- strip `initialData` from the inferred result types for infinite query options
+
+#### @tanstack/react-query
+
+- strip `initialData` from the inferred result types for infinite query options
+
+#### @tanstack/solid-query
+
+- strip `initialData` from the inferred result types for infinite query options
+
+#### @tanstack/svelte-query
+
+- strip `initialData` from the inferred result types for infinite query options
+
+#### @tanstack/vue-query
+
+- strip `initialData` from the inferred result types for infinite query options
+
+#### orpc
+
+- make `.input()` optional if all layers are optional
+
+#### valibot
+
+- support custom regular expression error messages with `x-pattern-message` ([#4117](https://github.com/hey-api/hey-api/pull/4117))
+- support creating optional request schemas
+- improve discriminator handling
+
+#### zod
+
+- improve discriminator handling
+- support creating optional request schemas
+- support custom regular expression error messages with `x-pattern-message` ([#4117](https://github.com/hey-api/hey-api/pull/4117))
+
+---
+
+## @hey-api/codegen-core 0.9.1
+
+### Updates
+
+- symbol: add priority field
+- utils: tighten up object identity check
+
+---
+
+## @hey-api/json-schema-ref-parser 1.4.4
+
+### Updates
+
+- \*_parser_: delete unresolvable `$ref` keywords ([#4087](https://github.com/hey-api/hey-api/pull/4087))
+- package: remove `cjs` from files array
+
+---
+
+## @hey-api/shared 0.5.0
+
+### ⚠️ Breaking
+
+This release has 4 breaking changes. Please review the release notes carefully before upgrading.
+
+### Updates
+
+- **⚠️ Breaking:** plugin: remove `.external()` method ([#4052](https://github.com/hey-api/hey-api/pull/4052))
+- **⚠️ Breaking:** plugin: remove `registerSymbol()` function ([#4078](https://github.com/hey-api/hey-api/pull/4078))
+
+### Removed `plugin.registerSymbol()` function
+
+This function was an alias for `plugin.symbol()` accepting a single argument. It has been removed in favor of `plugin.symbol()` which can now also accept a single argument.
+- **⚠️ Breaking:** plugin: rename `.symbols` to `.imports` ([#4052](https://github.com/hey-api/hey-api/pull/4052))
+- **⚠️ Breaking:** utils: remove `warnOnConflictingDuplicatePlugins` export
+- config: add Presets API
+- plugin: add `outerOptional` option to `RequestSchemaContext`
+- plugin: add `symbolMeta` field ([#4051](https://github.com/hey-api/hey-api/pull/4051))
+- symbol: add implicit priority
+- api: replace `~` fields with `$` ([#4086](https://github.com/hey-api/hey-api/pull/4086))
+- config: handle array values in `$dependencies` ([#4114](https://github.com/hey-api/hey-api/pull/4114))
+- parser: improve discriminator handling
+- plugin: remove `.querySymbols()` method ([#4067](https://github.com/hey-api/hey-api/pull/4067))
+- plugin: rename `symbols` to `imports` ([#4052](https://github.com/hey-api/hey-api/pull/4052))
+- utils: export `deepMerge`, `resolvePlugins` methods, `PluginResolutionInput`, `PluginResolutionResult` types
+- utils: export `getBaseUrl()` function ([#3772](https://github.com/hey-api/hey-api/pull/3772))
+- utils: export `pluginHelper()` function ([#4076](https://github.com/hey-api/hey-api/pull/4076))
+- utils: export discriminator utilities
+
+---
+
+## @hey-api/vite-plugin 0.3.2
+
+### Updates
+
+- config: use configuration file when called without arguments ([#4088](https://github.com/hey-api/hey-api/pull/4088))
+
+---
+
 # 2026-06-08
+
+## @hey-api/openapi-python 0.0.23
+
+No user-facing changes.
+
+---
 
 ## @hey-api/openapi-ts 0.98.2
 
@@ -62,6 +242,12 @@
 ---
 
 # 2026-06-01
+
+## @hey-api/openapi-python 0.0.22
+
+No user-facing changes.
+
+---
 
 ## @hey-api/openapi-ts 0.98.1
 
@@ -201,6 +387,12 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 ---
 
 # 2026-05-31
+
+## @hey-api/openapi-python 0.0.21
+
+No user-facing changes.
+
+---
 
 ## @hey-api/openapi-ts 0.98.0
 
@@ -393,6 +585,12 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 # 2026-05-24
 
+## @hey-api/openapi-python 0.0.20
+
+No user-facing changes.
+
+---
+
 ## @hey-api/openapi-ts 0.97.3
 
 ### Plugins
@@ -479,6 +677,12 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 # 2026-05-17
 
+## @hey-api/openapi-python 0.0.19
+
+No user-facing changes.
+
+---
+
 ## @hey-api/openapi-ts 0.97.2
 
 ### Updates
@@ -564,6 +768,12 @@ This is an internal change that simplifies the configuration and plugin APIs. Th
 
 # 2026-04-30
 
+## @hey-api/openapi-python 0.0.18
+
+No user-facing changes.
+
+---
+
 ## @hey-api/openapi-ts 0.97.1
 
 ### Plugins
@@ -589,6 +799,12 @@ No user-facing changes.
 ---
 
 # 2026-04-28
+
+## @hey-api/openapi-python 0.0.17
+
+No user-facing changes.
+
+---
 
 ## @hey-api/openapi-ts 0.97.0
 
@@ -693,6 +909,12 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 
 # 2026-04-20
 
+## @hey-api/openapi-python 0.0.16
+
+No user-facing changes.
+
+---
+
 ## @hey-api/openapi-ts 0.96.1
 
 ### Updates
@@ -763,6 +985,12 @@ The Ky client was updated to be more intuitive. Some Ky options now need to be p
 ---
 
 # 2026-04-13
+
+## @hey-api/openapi-python 0.0.15
+
+No user-facing changes.
+
+---
 
 ## @hey-api/openapi-ts 0.96.0
 
