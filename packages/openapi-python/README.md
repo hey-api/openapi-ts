@@ -61,25 +61,6 @@ Partners behind the future of API tooling. [Become a sponsor](https://github.com
 
 <table align="center">
   <tbody>
-    <tr>
-      <td align="center" width="50%">
-        <p></p>
-        <p>
-          <a href="https://kutt.to/pkEZyc" target="_blank">
-            <picture height="50px">
-              <source media="(prefers-color-scheme: dark)" srcset="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
-              <img alt="Stainless logo" height="50px" src="https://heyapi.dev/assets/.gen/stainless-logo-wordmark-480w.jpeg">
-            </picture>
-          </a>
-          <br/>
-          Best-in-class developer interfaces for your API.
-          <br/>
-          <a href="https://kutt.to/pkEZyc" style="text-decoration:none;" target="_blank">
-            stainless.com
-          </a>
-        </p>
-        <p></p>
-      </td>
       <td align="center" width="50%">
         <p></p>
         <p>
