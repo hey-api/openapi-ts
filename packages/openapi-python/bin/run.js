@@ -1,18 +1,11 @@
 #!/usr/bin/env node
-import { spawnSync } from 'node:child_process';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const target = path.join(__dirname, '..', 'dist', 'run.mjs');
-
-if (!fs.existsSync(target)) {
-  console.error('openapi-python not built (expect dist/run.mjs)');
-  process.exit(1);
+try {
+  await import('../dist/run.mjs');
+} catch (error) {
+  if (error.code === 'ERR_MODULE_NOT_FOUND') {
+    console.error('openapi-python not built (expected dist/run.mjs)');
+    process.exit(1);
+  }
+  throw error;
 }
-
-const res = spawnSync(process.execPath, [target, ...process.argv.slice(2)], {
-  stdio: 'inherit',
-});
-process.exit(res.status ?? 0);

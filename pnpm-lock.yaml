@@ -1237,6 +1237,19 @@ importers:
         specifier: 3.2.4
         version: 3.2.4(typescript@6.0.3)
 
+  packages/codegen-cli:
+    dependencies:
+      citty:
+        specifier: 0.2.2
+        version: 0.2.2
+    devDependencies:
+      eslint:
+        specifier: 9.39.4
+        version: 9.39.4(jiti@2.6.1)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   packages/codegen-core:
     dependencies:
       '@hey-api/types':
@@ -1329,6 +1342,9 @@ importers:
 
   packages/openapi-python:
     dependencies:
+      '@hey-api/codegen-cli':
+        specifier: workspace:*
+        version: link:../codegen-cli
       '@hey-api/codegen-core':
         specifier: workspace:*
         version: link:../codegen-core
@@ -1353,9 +1369,6 @@ importers:
       color-support:
         specifier: 1.1.3
         version: 1.1.3
-      commander:
-        specifier: 15.0.0
-        version: 15.0.0
     devDependencies:
       eslint:
         specifier: 9.39.4
@@ -1384,6 +1397,9 @@ importers:
 
   packages/openapi-ts:
     dependencies:
+      '@hey-api/codegen-cli':
+        specifier: workspace:*
+        version: link:../codegen-cli
       '@hey-api/codegen-core':
         specifier: workspace:*
         version: link:../codegen-core
@@ -1408,9 +1424,6 @@ importers:
       color-support:
         specifier: 1.1.3
         version: 1.1.3
-      commander:
-        specifier: 15.0.0
-        version: 15.0.0
       get-tsconfig:
         specifier: 4.14.0
         version: 4.14.0
@@ -9030,9 +9043,6 @@ packages:
   citty@0.1.6:
     resolution: {integrity: sha512-tskPPKEs8D2KPafUypv2gxwJP8h/OaJmC82QQGGDQcHvXX43xF2VDACcJVmZ0EuSxkpO9Kc4MlrA3q0+FG58AQ==}
 
-  citty@0.2.0:
-    resolution: {integrity: sha512-8csy5IBFI2ex2hTVpaHN2j+LNE199AgiI7y4dMintrr8i0lQiFn+0AWMZrWdHKIgMOer65f8IThysYhoReqjWA==}
-
   citty@0.2.2:
     resolution: {integrity: sha512-+6vJA3L98yv+IdfKGZHBNiGW5KHn22e/JwID0Strsz8h4S/csAu/OuICwxrg44k5MRiZHWIo8XXuJgQTriRP4w==}
 
@@ -9132,10 +9142,6 @@ packages:
   commander@11.1.0:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
     engines: {node: '>=16'}
-
-  commander@15.0.0:
-    resolution: {integrity: sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==}
-    engines: {node: '>=22.12.0'}
 
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -12490,9 +12496,6 @@ packages:
 
   obuf@1.1.2:
     resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
-
-  obug@2.1.1:
-    resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
 
   obug@2.1.3:
     resolution: {integrity: sha512-9miFgM2OFba7hB+pRgvtV84pYTBaoTHohvmIgiRt6dRIzbwEOIaNaP+dIlGs2fNFoB0SeISs0Jz5WFVRid6Xyg==}
@@ -24488,8 +24491,6 @@ snapshots:
     dependencies:
       consola: 3.4.2
 
-  citty@0.2.0: {}
-
   citty@0.2.2: {}
 
   cjs-module-lexer@1.4.3: {}
@@ -24582,8 +24583,6 @@ snapshots:
   commander@10.0.1: {}
 
   commander@11.1.0: {}
-
-  commander@15.0.0: {}
 
   commander@2.20.3: {}
 
@@ -29361,7 +29360,7 @@ snapshots:
 
   nypm@0.6.5:
     dependencies:
-      citty: 0.2.0
+      citty: 0.2.2
       pathe: 2.0.3
       tinyexec: 1.2.4
 
@@ -29416,8 +29415,6 @@ snapshots:
       es-object-atoms: 1.1.1
 
   obuf@1.1.2: {}
-
-  obug@2.1.1: {}
 
   obug@2.1.3: {}
 

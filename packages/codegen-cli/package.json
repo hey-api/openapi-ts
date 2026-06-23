@@ -1,17 +1,14 @@
 {
-  "name": "@hey-api/vite-plugin",
-  "version": "0.3.2",
-  "description": "🚀 Vite plugin for `@hey-api/openapi-ts` codegen.",
+  "name": "@hey-api/codegen-cli",
+  "version": "0.0.1",
+  "description": "⚡ Shared CLI framework for Hey API code generators.",
   "keywords": [
+    "cli",
     "codegen",
     "generator",
-    "hey-api",
-    "heyapi",
-    "openapi",
-    "plugin",
-    "swagger",
-    "vite",
-    "vite-plugin"
+    "javascript",
+    "node",
+    "typescript"
   ],
   "homepage": "https://heyapi.dev/",
   "bugs": {
@@ -26,7 +23,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hey-api/hey-api.git",
-    "directory": "packages/vite-plugin"
+    "directory": "packages/codegen-cli"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "files": [
@@ -50,13 +47,14 @@
     "prepublishOnly": "pnpm build",
     "typecheck": "tsgo --noEmit"
   },
-  "devDependencies": {
-    "@hey-api/openapi-ts": "workspace:*",
-    "typescript": "6.0.3",
-    "vite": "8.0.16"
+  "dependencies": {
+    "citty": "0.2.2"
   },
-  "peerDependencies": {
-    "@hey-api/openapi-ts": "<2",
-    "vite": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
+  "devDependencies": {
+    "eslint": "9.39.4",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

@@ -8,9 +8,10 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../types" },
+    { "path": "../codegen-cli" },
     { "path": "../codegen-core" },
+    { "path": "../json-schema-ref-parser" },
     { "path": "../shared" },
-    { "path": "../json-schema-ref-parser" }
+    { "path": "../types" }
   ]
 }

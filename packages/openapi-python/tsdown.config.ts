@@ -14,7 +14,13 @@ export default defineConfig({
   entry: ['./src/{index,plugins,run}.ts'],
   onSuccess: async () => {
     // Copy client files to dist folder for runtime access
-    const pluginNames = ['client-httpx'];
+    const pluginNames = [
+      'client-aiohttp',
+      'client-core',
+      'client-httpx',
+      'client-requests',
+      'client-urllib3',
+    ];
 
     for (const pluginName of pluginNames) {
       const srcPath = path.resolve(__dirname, 'src', 'plugins', '@hey-api', pluginName, 'bundle');
