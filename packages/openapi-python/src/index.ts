@@ -43,7 +43,10 @@ declare module '@hey-api/codegen-core' {
 
 declare module '@hey-api/shared' {
   interface PluginConfigMap {
+    '@hey-api/client-aiohttp': Plugins.HeyApiClientAiohttp.Types['Types'];
     '@hey-api/client-httpx': Plugins.HeyApiClientHttpx.Types['Types'];
+    '@hey-api/client-requests': Plugins.HeyApiClientRequests.Types['Types'];
+    '@hey-api/client-urllib3': Plugins.HeyApiClientUrllib3.Types['Types'];
     '@hey-api/python-sdk': Plugins.HeyApiSdk.Types['Types'];
     pydantic: Plugins.Pydantic.Types['Types'];
   }
@@ -58,7 +61,10 @@ import colorSupport from 'color-support';
 
 import type { PythonVersion } from './config/output/types';
 import type { UserConfig } from './config/types';
+import type { HeyApiClientAiohttpPlugin } from './plugins/@hey-api/client-aiohttp';
 import type { HeyApiClientHttpxPlugin } from './plugins/@hey-api/client-httpx';
+import type { HeyApiClientRequestsPlugin } from './plugins/@hey-api/client-requests';
+import type { HeyApiClientUrllib3Plugin } from './plugins/@hey-api/client-urllib3';
 import type { HeyApiSdkPlugin } from './plugins/@hey-api/sdk';
 import type { PydanticPlugin, PydanticResolvers } from './plugins/pydantic';
 import type { EnumSymbols } from './symbols/enum';
@@ -84,6 +90,7 @@ export async function defineConfig<T extends MaybeArray<UserConfig>>(
 export type { UserConfig } from './config/types';
 export * as plugins from './plugins';
 export { defaultPlugins } from './plugins/config';
+export * from './py-dsl';
 export { Logger } from '@hey-api/codegen-core';
 export type {
   AnyPluginName,
@@ -117,8 +124,20 @@ export {
 } from '@hey-api/shared';
 
 export namespace Plugins {
+  export namespace HeyApiClientAiohttp {
+    export type Types = HeyApiClientAiohttpPlugin;
+  }
+
   export namespace HeyApiClientHttpx {
     export type Types = HeyApiClientHttpxPlugin;
+  }
+
+  export namespace HeyApiClientRequests {
+    export type Types = HeyApiClientRequestsPlugin;
+  }
+
+  export namespace HeyApiClientUrllib3 {
+    export type Types = HeyApiClientUrllib3Plugin;
   }
 
   export namespace HeyApiSdk {

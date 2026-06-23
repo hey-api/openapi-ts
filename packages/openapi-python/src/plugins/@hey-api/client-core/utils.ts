@@ -15,6 +15,7 @@ export function getClientPlugin(
 
   return {
     config: {
+      // @ts-expect-error
       name: '',
     },
     // @ts-expect-error
