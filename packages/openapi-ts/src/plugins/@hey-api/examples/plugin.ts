@@ -64,7 +64,10 @@ export const handler: HeyApiExamplesPlugin['Handler'] = ({ plugin }) => {
   }
 
   for (const [, pathItem] of Object.entries(spec.paths)) {
-    for (const [, operation] of Object.entries(pathItem)) {
+    for (const [key, operation] of Object.entries(pathItem)) {
+      if (key.startsWith('x-')) {
+        continue;
+      }
       if ('parameters' in operation || 'summary' in operation || 'description' in operation) {
         continue;
       }
