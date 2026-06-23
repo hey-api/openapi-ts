@@ -73,8 +73,6 @@ export function createCommand(options: RunCliOptions) {
     },
     async run({ args }) {
       const config = cliToConfig(args);
-      console.log('[args]', args);
-      console.log('[config]', config);
       const context = await options.createClient(config);
       const hasActiveWatch = context[0]?.config.input.some((input) => input.watch?.enabled);
       if (!hasActiveWatch) {
