@@ -10,9 +10,9 @@ import type { Output, UserOutput } from './output/types';
 
 export type UserConfig = BaseUserConfig<UserOutput> & {
   /**
-   * Plugins generate artifacts from `input`. By default, we generate SDK
-   * functions and TypeScript interfaces. If you manually define `plugins`,
-   * you need to include the default plugins if you wish to use them.
+   * Plugins generate artifacts from `input`. By default, we generate an SDK
+   * and Pydantic models. If you manually define `plugins`, you need to include
+   * the default plugins if you wish to use them.
    *
    * @default ['@hey-api/python-sdk']
    */

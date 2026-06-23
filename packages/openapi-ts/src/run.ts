@@ -1,5 +1,17 @@
 #!/usr/bin/env node
 
-import { runCli } from './cli';
+import { runCli } from '@hey-api/codegen-cli';
 
-runCli();
+import pkg from '../package.json';
+import { createClient } from './index';
+
+const binName = Object.keys(pkg.bin)[0]!;
+
+runCli({
+  createClient,
+  meta: {
+    description: 'Generate TypeScript code from OpenAPI specifications',
+    name: binName,
+    version: pkg.version,
+  },
+});

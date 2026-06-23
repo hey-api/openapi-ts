@@ -1,6 +1,7 @@
 {
   "files": [],
   "references": [
+    { "path": "./packages/codegen-cli" },
     { "path": "./packages/codegen-core" },
     { "path": "./packages/json-schema-ref-parser" },
     { "path": "./packages/openapi-python" },
