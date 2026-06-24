@@ -20,7 +20,7 @@ export const defaultConfig: MyClientPlugin['Config'] = {
   ...clientDefaultMeta,
   config: clientDefaultConfig,
   handler: clientPluginHandler as MyClientPlugin['Handler'],
-  name: __filename,
+  name: import.meta.filename,
 };
 
 /**
