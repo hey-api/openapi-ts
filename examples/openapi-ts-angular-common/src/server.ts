@@ -1,5 +1,4 @@
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
 import {
   AngularNodeAppEngine,
@@ -9,8 +8,7 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 
-const serverDistFolder = dirname(fileURLToPath(import.meta.url));
-const browserDistFolder = resolve(serverDistFolder, '../browser');
+const browserDistFolder = path.resolve(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();

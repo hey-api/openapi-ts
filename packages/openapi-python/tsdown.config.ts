@@ -1,10 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'tsdown';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   attw: {
@@ -23,9 +20,16 @@ export default defineConfig({
     ];
 
     for (const pluginName of pluginNames) {
-      const srcPath = path.resolve(__dirname, 'src', 'plugins', '@hey-api', pluginName, 'bundle');
+      const srcPath = path.resolve(
+        import.meta.dirname,
+        'src',
+        'plugins',
+        '@hey-api',
+        pluginName,
+        'bundle',
+      );
       const destPath = path.resolve(
-        __dirname,
+        import.meta.dirname,
         'dist',
         'clients',
         pluginName.slice('client-'.length),

@@ -1,4 +1,4 @@
-import { fileURLToPath, URL } from 'node:url';
+import path from 'node:path';
 
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
@@ -21,7 +21,7 @@ export default {
   plugins: [vue(), vueJsx(), vueDevTools()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': path.join(import.meta.dirname, 'src'),
     },
   },
 };

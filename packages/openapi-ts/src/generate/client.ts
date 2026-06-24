@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import type { IProject } from '@hey-api/codegen-core';
 import type { BaseOutput, DefinePlugin, OutputHeader } from '@hey-api/shared';
@@ -9,9 +8,6 @@ import { ensureDirSync, isEnvironment, outputHeaderToPrefix } from '@hey-api/sha
 import type { Config } from '../config/types';
 import type { Client } from '../plugins/@hey-api/client-core/types';
 import { getClientPlugin } from '../plugins/@hey-api/client-core/utils';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /**
  * Returns paths to client bundle files based on execution context
@@ -24,7 +20,7 @@ function getClientBundlePaths(pluginName: string): {
 
   if (isEnvironment('development')) {
     // Dev: source bundle folders at src/plugins/@hey-api/{client}/bundle
-    const pluginsDir = path.resolve(__dirname, '..', 'plugins', '@hey-api');
+    const pluginsDir = path.resolve(import.meta.dirname, '..', 'plugins', '@hey-api');
     return {
       clientPath: path.resolve(pluginsDir, `client-${clientName}`, 'bundle'),
       corePath: path.resolve(pluginsDir, 'client-core', 'bundle'),
@@ -33,8 +29,8 @@ function getClientBundlePaths(pluginName: string): {
 
   // Prod: copied to dist/clients/{clientName}
   return {
-    clientPath: path.resolve(__dirname, 'clients', clientName),
-    corePath: path.resolve(__dirname, 'clients', 'core'),
+    clientPath: path.resolve(import.meta.dirname, 'clients', clientName),
+    corePath: path.resolve(import.meta.dirname, 'clients', 'core'),
   };
 }
 
