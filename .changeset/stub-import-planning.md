@@ -2,4 +2,4 @@
 "@hey-api/codegen-core": patch
 ---
 
-fix: correct import planning for schemas referenced as both nullable and non-nullable
+**planner**: fix: use canonical symbols for dependencies

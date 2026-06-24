@@ -79,7 +79,7 @@ export class Planner {
 
       ctx.walkScopes((dependency) => {
         const dep = fromRef(dependency).canonical;
-        if (dep.external && dep.isCanonical && !dep.file) {
+        if (dep.external && !dep.file) {
           const file = this.project.files.register({
             external: true,
             language: dep.node?.language,
