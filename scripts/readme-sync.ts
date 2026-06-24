@@ -1,10 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import url from 'node:url';
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const TEMPLATES_DIR = path.join(__dirname, 'templates');
-const PACKAGES_DIR = path.join(__dirname, '..', 'packages');
+const TEMPLATES_DIR = path.join(import.meta.dirname, 'templates');
+const PACKAGES_DIR = path.join(import.meta.dirname, '..', 'packages');
 const TEMPLATE_MARKER_REGEX = /<!-- template-([a-z0-9-]+)-(start|end) -->/g;
 
 interface MarkerEvent {
@@ -268,7 +266,7 @@ function readmeSync(): void {
     .map((entry) => entry.name);
 
   const readmePaths = [
-    path.join(__dirname, '..', 'README.md'),
+    path.join(import.meta.dirname, '..', 'README.md'),
     ...packages.map((pkg) => path.join(PACKAGES_DIR, pkg, 'README.md')),
   ];
 

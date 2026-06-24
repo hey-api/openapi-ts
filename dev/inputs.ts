@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-const specsPath = path.join(__dirname, '..', 'specs');
+const specsPath = path.join(import.meta.dirname, '..', 'specs');
 
 export const inputs = {
   circular: path.resolve(specsPath, '3.0.x', 'circular.yaml'),

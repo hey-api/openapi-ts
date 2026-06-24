@@ -1,6 +1,3 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { Logger } from '@hey-api/codegen-core';
 import type { Context } from '@hey-api/shared';
 import {
@@ -21,9 +18,6 @@ import type { Configs } from './config/init';
 import { resolveJobs } from './config/init';
 import type { UserConfig } from './config/types';
 import { createClient as pCreateClient } from './create-client';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /**
  * Generate a client from the provided configuration.
@@ -58,7 +52,7 @@ export async function createClient(
     const dependencies = resolved.dependencies;
     jobs = resolved.jobs;
     const printIntro = jobs.some((job) => job.config.logs.level !== 'silent');
-    if (printIntro) printCliIntro(__dirname);
+    if (printIntro) printCliIntro(import.meta.dirname);
     eventConfig.timeEnd();
 
     const configErrors = jobs.flatMap((job) =>
@@ -114,7 +108,7 @@ export async function createClient(
         userConfigs.some((config) => config.interactive) ??
         false;
       if (await shouldReportCrash({ error: normalizedError, isInteractive })) {
-        await openGitHubIssueWithCrashReport(error, __dirname);
+        await openGitHubIssueWithCrashReport(error, import.meta.dirname);
       }
     }
 

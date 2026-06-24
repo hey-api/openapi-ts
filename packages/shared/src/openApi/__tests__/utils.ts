@@ -4,7 +4,7 @@ import path from 'node:path';
 import { load } from 'js-yaml';
 
 export const getSpecsPath = (): string =>
-  path.join(__dirname, '..', '..', '..', '..', '..', 'specs');
+  path.join(import.meta.dirname, '..', '..', '..', '..', '..', 'specs');
 
 export const specFileToJson = (file: string) => {
   const raw = fs.readFileSync(file, 'utf8');

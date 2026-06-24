@@ -1,17 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const version = '3.0.x';
 
-const outputDir = path.join(__dirname, 'generated', version);
+const outputDir = path.join(import.meta.dirname, 'generated', version);
 
 describe(`OpenAPI ${version}`, () => {
   const createConfig = (userConfig: UserConfig) => {
@@ -791,7 +787,12 @@ describe(`OpenAPI ${version}`, () => {
       filePaths.map(async (filePath) => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         await expect(fileContent).toMatchFileSnapshot(
-          path.join(__dirname, '__snapshots__', version, filePath.slice(outputDir.length + 1)),
+          path.join(
+            import.meta.dirname,
+            '__snapshots__',
+            version,
+            filePath.slice(outputDir.length + 1),
+          ),
         );
       }),
     );

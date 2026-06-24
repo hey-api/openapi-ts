@@ -1,16 +1,12 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { $RefParser } from '..';
 import { getSpecsPath } from './utils';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const getSnapshotsPath = () => path.join(__dirname, '__snapshots__');
-const getTempSnapshotsPath = () => path.join(__dirname, '.gen', 'snapshots');
+const getSnapshotsPath = () => path.join(import.meta.dirname, '__snapshots__');
+const getTempSnapshotsPath = () => path.join(import.meta.dirname, '.gen', 'snapshots');
 
 const writeJsonFile = (filePath: string, value: unknown) => {
   fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
