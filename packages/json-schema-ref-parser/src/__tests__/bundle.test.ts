@@ -565,12 +565,7 @@ describe('bundle', () => {
 
   describe('mergeMany', () => {
     it('resolves external $refs that point to the first input without crashing', async () => {
-      // Regression test for https://github.com/hey-api/hey-api/issues/4146
-      // When the first input file is also referenced externally from another
-      // input, the merged root previously overwrote its $refs entry. Later
-      // pointer resolution failed because the merged schema renames components
-      // with prefixes, so `#/components/schemas/Post/properties/...` no longer
-      // exists.
+      // regression test for https://github.com/hey-api/hey-api/issues/4146
       const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'json-schema-ref-parser-'));
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
@@ -633,7 +628,6 @@ describe('bundle', () => {
                     content: {
                       'application/json': {
                         schema: {
-                          // Reference the file that is also the first mergeMany input
                           $ref: 'secondary.yaml#/components/schemas/Post/properties/author',
                         },
                       },

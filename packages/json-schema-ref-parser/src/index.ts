@@ -572,14 +572,8 @@ export class $RefParser {
       merged.tags = tags;
     }
 
-    // Rebuild $refs root under a synthetic path. Using the first input's path causes
-    // key collisions when another input contains a $ref to that same file; any such
-    // $ref is then resolved against the merged (prefixed) schema instead of the
-    // original file. A synthetic root path avoids that collision and lets external
-    // refs be parsed from their true source.
-    const rootPath = '/__merged__';
     this.$refs = new $Refs();
-    const rootRef = this.$refs._add(rootPath);
+    const rootRef = this.$refs._add('/__merged__');
     rootRef.pathType = 'file';
     rootRef.value = merged;
     this.schema = merged;
