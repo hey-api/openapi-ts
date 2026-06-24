@@ -572,11 +572,9 @@ export class $RefParser {
       merged.tags = tags;
     }
 
-    // Rebuild $refs root using the first input's path to preserve external resolution semantics
-    const rootPath = this.schemaManySources[0] || url.cwd();
     this.$refs = new $Refs();
-    const rootRef = this.$refs._add(rootPath);
-    rootRef.pathType = url.isFileSystemPath(rootPath) ? 'file' : 'http';
+    const rootRef = this.$refs._add('/__merged__');
+    rootRef.pathType = 'file';
     rootRef.value = merged;
     this.schema = merged;
     return merged as JSONSchema;
