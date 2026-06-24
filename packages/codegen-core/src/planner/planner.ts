@@ -78,8 +78,8 @@ export class Planner {
       }
 
       ctx.walkScopes((dependency) => {
-        const dep = fromRef(dependency);
-        if (dep.external && dep.isCanonical && !dep.file) {
+        const dep = fromRef(dependency).canonical;
+        if (dep.external && !dep.file) {
           const file = this.project.files.register({
             external: true,
             language: dep.node?.language,
@@ -115,7 +115,7 @@ export class Planner {
       const file = node.file;
       if (!file) return;
       ctx.walkScopes((dependency) => {
-        const dep = fromRef(dependency);
+        const dep = fromRef(dependency).canonical;
         // top-level or external symbol
         if (dep.file || dep.external) return;
         // TODO: pass node
@@ -280,7 +280,7 @@ export class Planner {
       }
 
       ctx.walkScopes((dependency) => {
-        const dep = fromRef(dependency);
+        const dep = fromRef(dependency).canonical;
         if (!dep.file || dep.file.id === file.id) return;
 
         if (dep.external) {

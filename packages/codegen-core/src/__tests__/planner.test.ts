@@ -1,3 +1,4 @@
+import type { ISymbolMeta } from '../extensions';
 import type { INode } from '../nodes/node';
 import { Project } from '../project/project';
 import { ref } from '../refs/refs';
@@ -11,6 +12,7 @@ const createMockNode = (args: {
   dependencies?: Array<Symbol>;
   filePath: string;
   language?: 'typescript' | 'javascript';
+  meta?: ISymbolMeta;
   name: string;
   project: Project;
   symbolKind?: SymbolKind;
@@ -19,6 +21,7 @@ const createMockNode = (args: {
     dependencies = [],
     filePath,
     language = 'typescript',
+    meta,
     name,
     project,
     symbolKind = 'var',
@@ -28,6 +31,7 @@ const createMockNode = (args: {
     exported: true,
     getFilePath: () => filePath,
     kind: symbolKind,
+    meta,
     name,
   });
 
@@ -275,5 +279,46 @@ describe('Planner imports deduplication', () => {
     expect(imports[0]!.imports).toHaveLength(1);
     expect(imports[0]!.imports[0]!.isTypeOnly).toBe(false);
     expect(imports[0]!.imports[0]!.localName).toBe('MySymbol');
+  });
+});
+
+describe('Planner with stub symbols', () => {
+  it('does not throw when a dependency is a canonicalized stub', () => {
+    const project = new Project({ root: '/root' });
+
+    const sharedMeta = { key: 'stub-reference' };
+    const stub = project.symbols.reference(sharedMeta);
+
+    const { symbol: sourceSymbol } = createMockNode({
+      filePath: 'source',
+      meta: sharedMeta,
+      name: 'Real',
+      project,
+      symbolKind: 'type',
+    });
+
+    expect(stub.canonical).toBe(sourceSymbol);
+
+    createMockNode({
+      dependencies: [stub],
+      filePath: 'consumer',
+      name: 'Consumer',
+      project,
+      symbolKind: 'type',
+    });
+
+    expect(() => project.plan()).not.toThrow();
+
+    const consumerFile = [...project.files.registered()].find((f) => f.name === 'consumer');
+    expect(consumerFile).toBeDefined();
+
+    const sourceFile = sourceSymbol.file;
+    expect(sourceFile).toBeDefined();
+    expect(consumerFile!.imports).toHaveLength(1);
+    expect(consumerFile!.imports[0]!.from).toBe(sourceFile);
+
+    // the canonical symbol received the import, not the stub
+    expect(sourceSymbol.imports).toHaveLength(1);
+    expect(sourceSymbol.imports[0]!.file).toBe(consumerFile);
   });
 });
