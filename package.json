@@ -75,7 +75,7 @@
     "eslint-plugin-vue": "10.7.0",
     "globals": "17.6.0",
     "husky": "9.1.7",
-    "lint-staged": "17.0.7",
+    "lint-staged": "17.0.8",
     "oxfmt": "0.55.0",
     "publint": "0.3.21",
     "tsdown": "0.22.3",
