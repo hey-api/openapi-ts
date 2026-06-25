@@ -40,6 +40,14 @@ export async function generateOutput(context: Context): Promise<{ fileCount: num
 
   context.gen.plan();
 
+  if (process.env.HEY_API_DUMP_REGISTRY) {
+    const dumpPath = path.resolve(outputPath, 'registry-dump.json');
+    await fsPromises.mkdir(outputPath, { recursive: true });
+    await fsPromises.writeFile(dumpPath, JSON.stringify(context.gen.symbols.dump(), null, 2), {
+      encoding: 'utf8',
+    });
+  }
+
   const ctx = new IntentContext(context.spec);
   for (const intent of context.intents) {
     await intent.run(ctx);

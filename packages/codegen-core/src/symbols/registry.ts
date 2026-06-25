@@ -1,6 +1,6 @@
 import type { ISymbolMeta } from '../extensions';
 import { Symbol } from './symbol';
-import type { ISymbolIdentifier, ISymbolIn, ISymbolRegistry } from './types';
+import type { ISymbolIdentifier, ISymbolIn, ISymbolRegistry, RegistryDumpEntry } from './types';
 
 type IndexEntry = readonly [key: string, value: unknown, serialized: string];
 type IndexKeySpace = ReadonlyArray<IndexEntry>;
@@ -19,6 +19,16 @@ export class SymbolRegistry implements ISymbolRegistry {
   private _stubs: Set<SymbolId> = new Set();
   private _stubCache: Map<QueryCacheKey, SymbolId> = new Map();
   private _values: Map<SymbolId, Symbol> = new Map();
+
+  dump(): ReadonlyArray<RegistryDumpEntry> {
+    return Array.from(
+      this._values,
+      ([id, symbol]): RegistryDumpEntry => ({
+        ...symbol.toDump(),
+        status: this._registered.has(id) ? 'registered' : 'stub',
+      }),
+    );
+  }
 
   get(identifier: ISymbolIdentifier): Symbol | undefined {
     return typeof identifier === 'number'
