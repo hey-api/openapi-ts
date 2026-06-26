@@ -1,0 +1,60 @@
+{
+  "name": "@hey-api/codegen-cli",
+  "version": "0.0.1",
+  "description": "⚡ Shared CLI framework for Hey API code generators.",
+  "keywords": [
+    "cli",
+    "codegen",
+    "generator",
+    "javascript",
+    "node",
+    "typescript"
+  ],
+  "homepage": "https://heyapi.dev/",
+  "bugs": {
+    "url": "https://github.com/hey-api/hey-api/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Hey API",
+    "email": "lubos@heyapi.dev",
+    "url": "https://heyapi.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-api/hey-api.git",
+    "directory": "packages/codegen-cli"
+  },
+  "funding": "https://github.com/sponsors/hey-api",
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "prepublishOnly": "pnpm build",
+    "typecheck": "tsgo --noEmit"
+  },
+  "dependencies": {
+    "citty": "0.2.2"
+  },
+  "devDependencies": {
+    "eslint": "9.39.4",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  }
+}

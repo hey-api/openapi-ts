@@ -5,11 +5,7 @@ import url from 'node:url';
 import type { ChangelogPackage, PackageJson } from './types';
 
 export const AGENT_USERS = new Set(['copilot-swe-agent', 'claude']);
-export const REPOSITORY_ROOT = path.resolve(
-  path.dirname(url.fileURLToPath(import.meta.url)),
-  '..',
-  '..',
-);
+export const REPOSITORY_ROOT = path.resolve(import.meta.dirname, '..', '..');
 export const CONFIG_PATH = path.resolve(REPOSITORY_ROOT, '.heyapi.json');
 
 export const SPONSORS_TABLE_GOLD_PATH = path.resolve(

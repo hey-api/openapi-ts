@@ -1,5 +1,4 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { log } from '@hey-api/codegen-core';
 import type { PostProcessor, UserPostProcessor } from '@hey-api/shared';
@@ -10,9 +9,6 @@ import { parseTsconfig } from 'get-tsconfig';
 
 import { postProcessors } from './postprocess';
 import type { Output, UserOutput } from './types';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 function resolveLegacyPostProcess(input: UserOutput): ReadonlyArray<UserPostProcessor> {
   const result: Array<UserPostProcessor> = [];
@@ -95,7 +91,7 @@ export const outputConfig = defineConfig<UserOutput, Output>({
       }
     }
 
-    config.tsConfig = loadTsConfig(findTsConfigPath(__dirname, config.tsConfigPath));
+    config.tsConfig = loadTsConfig(findTsConfigPath(import.meta.dirname, config.tsConfigPath));
     if (
       config.module.extension === undefined &&
       (config.tsConfig?.compilerOptions?.moduleResolution === 'nodenext' ||

@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hey-api/hey-api.git"
+    "url": "git+https://github.com/hey-api/hey-api.git",
+    "directory": "packages/shared"
   },
   "funding": "https://github.com/sponsors/hey-api",
   "files": [

@@ -15,6 +15,13 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@hey-api/codegen-cli',
+          root: 'packages/codegen-cli',
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@hey-api/codegen-core',
           root: 'packages/codegen-core',
         },

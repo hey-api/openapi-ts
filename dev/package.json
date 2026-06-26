@@ -14,7 +14,7 @@
     "@hey-api/openapi-python": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
     "@msw/source": "0.6.1",
-    "@opencode-ai/sdk": "1.17.8",
+    "@opencode-ai/sdk": "1.17.9",
     "@orpc/contract": "1.14.6",
     "@pinia/colada": "0.19.1",
     "@tanstack/angular-query-experimental": "5.90.25",

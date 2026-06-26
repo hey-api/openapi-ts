@@ -1,16 +1,12 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { $RefParser } from '..';
 import { getSpecsPath } from './utils';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const getSnapshotsPath = () => path.join(__dirname, '__snapshots__');
-const getTempSnapshotsPath = () => path.join(__dirname, '.gen', 'snapshots');
+const getSnapshotsPath = () => path.join(import.meta.dirname, '__snapshots__');
+const getTempSnapshotsPath = () => path.join(import.meta.dirname, '.gen', 'snapshots');
 
 const writeJsonFile = (filePath: string, value: unknown) => {
   fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
@@ -568,6 +564,112 @@ describe('bundle', () => {
   });
 
   describe('mergeMany', () => {
+    it('resolves external $refs that point to the first input without crashing', async () => {
+      // regression test for https://github.com/hey-api/hey-api/issues/4146
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'json-schema-ref-parser-'));
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      try {
+        const secondaryPath = path.join(tempDir, 'secondary.yaml');
+        const primaryPath = path.join(tempDir, 'primary.yaml');
+
+        writeJsonFile(secondaryPath, {
+          components: {
+            schemas: {
+              Author: {
+                properties: {
+                  name: {
+                    type: 'string',
+                  },
+                },
+                type: 'object',
+              },
+              Post: {
+                properties: {
+                  author: {
+                    $ref: '#/components/schemas/Author',
+                  },
+                  title: {
+                    type: 'string',
+                  },
+                },
+                type: 'object',
+              },
+            },
+          },
+          openapi: '3.0.0',
+          paths: {
+            '/posts': {
+              get: {
+                responses: {
+                  '200': {
+                    content: {
+                      'application/json': {
+                        schema: {
+                          $ref: '#/components/schemas/Post',
+                        },
+                      },
+                    },
+                    description: 'ok',
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        writeJsonFile(primaryPath, {
+          openapi: '3.0.0',
+          paths: {
+            '/comments': {
+              get: {
+                responses: {
+                  '200': {
+                    content: {
+                      'application/json': {
+                        schema: {
+                          $ref: 'secondary.yaml#/components/schemas/Post/properties/author',
+                        },
+                      },
+                    },
+                    description: 'ok',
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const refParser = new $RefParser();
+        const merged = (await refParser.bundleMany({
+          pathOrUrlOrSchemas: [secondaryPath, primaryPath],
+        })) as any;
+
+        expect(merged.paths['/posts']).toBeDefined();
+        expect(merged.paths['/comments']).toBeDefined();
+
+        const authorRef =
+          merged.paths['/comments'].get.responses['200'].content['application/json'].schema.$ref;
+        expect(authorRef).toMatch(/^#\/components\/schemas\//);
+        expect(merged.components.schemas[authorRef.replace('#/components/schemas/', '')]).toEqual({
+          properties: {
+            name: {
+              type: 'string',
+            },
+          },
+          type: 'object',
+        });
+
+        const unresolvableWarnings = warnSpy.mock.calls.filter(
+          (args) => typeof args[0] === 'string' && args[0].includes('Skipping unresolvable $ref'),
+        );
+        expect(unresolvableWarnings).toHaveLength(0);
+      } finally {
+        warnSpy.mockRestore();
+        fs.rmSync(tempDir, { force: true, recursive: true });
+      }
+    });
+
     it('merges paths with non-conflicting methods under the same path', async () => {
       const refParser = new $RefParser();
       const spec1 = {

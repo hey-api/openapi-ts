@@ -12,7 +12,7 @@ describe('bin', () => {
       '--input',
       path.resolve(specs, '3.1.x', 'full.yaml'),
       '--output',
-      path.resolve(__dirname, '.gen'),
+      path.resolve(import.meta.dirname, '.gen'),
       '--dry-run',
     ]);
     expect(result.error).toBeFalsy();

@@ -9,7 +9,7 @@ import { getPreset } from './typescript/presets';
 
 process.env = {
   ...process.env,
-  ...parseEnv(fs.readFileSync(path.resolve(__dirname, '.env'), 'utf-8')),
+  ...parseEnv(fs.readFileSync(path.resolve(import.meta.dirname, '.env'), 'utf-8')),
 };
 
 export default defineConfig(() => [
@@ -19,7 +19,7 @@ export default defineConfig(() => [
       path: './logs',
     },
     output: {
-      path: path.resolve(__dirname, 'gen', 'typescript'),
+      path: path.resolve(import.meta.dirname, 'gen', 'typescript'),
     },
     plugins: [...getPreset()],
   },

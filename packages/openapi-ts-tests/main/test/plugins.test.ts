@@ -1,20 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { createClient, type DefinePlugin, type UserConfig } from '@hey-api/openapi-ts';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const versions = ['2.0.x', '3.0.x', '3.1.x'];
 
 for (const version of versions) {
   const namespace = 'plugins';
 
-  const outputDir = path.join(__dirname, 'generated', version, namespace);
+  const outputDir = path.join(import.meta.dirname, 'generated', version, namespace);
 
   describe(`OpenAPI ${version} ${namespace}`, () => {
     const createConfig = (
@@ -215,7 +211,7 @@ for (const version of versions) {
           const fileContent = fs.readFileSync(filePath, 'utf-8');
           await expect(fileContent).toMatchFileSnapshot(
             path.join(
-              __dirname,
+              import.meta.dirname,
               '__snapshots__',
               version,
               namespace,
@@ -248,7 +244,7 @@ describe('custom plugin', () => {
       logs: {
         level: 'silent',
       },
-      output: path.join(__dirname, 'generated', 'my-plugin', 'default'),
+      output: path.join(import.meta.dirname, 'generated', 'my-plugin', 'default'),
       plugins: [myPlugin, '@hey-api/client-fetch'],
     });
 
@@ -272,7 +268,7 @@ describe('custom plugin', () => {
         logs: {
           level: 'silent',
         },
-        output: path.join(__dirname, 'generated', 'my-plugin', 'default'),
+        output: path.join(import.meta.dirname, 'generated', 'my-plugin', 'default'),
         plugins: [myPlugin, '@hey-api/client-fetch'],
       }),
     ).rejects.toThrowError(/Found 1 configuration error./g);

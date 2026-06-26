@@ -1,19 +1,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { createClient, type UserConfig } from '@hey-api/openapi-ts';
 
 import { getFilePaths, getSpecsPath } from '../../../utils';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const versions = ['2.0.x', '3.0.x', '3.1.x'];
 
 for (const version of versions) {
-  const outputDir = path.join(__dirname, '..', '.gen', 'snapshots', version);
-  const snapshotsDir = path.join(__dirname, '..', '__snapshots__', version);
+  const outputDir = path.join(import.meta.dirname, '..', '.gen', 'snapshots', version);
+  const snapshotsDir = path.join(import.meta.dirname, '..', '__snapshots__', version);
 
   describe(`OpenAPI ${version} nestjs`, () => {
     const createConfig = (
