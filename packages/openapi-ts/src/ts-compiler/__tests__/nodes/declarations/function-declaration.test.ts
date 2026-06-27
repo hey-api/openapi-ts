@@ -11,10 +11,7 @@ describe('function-declaration', () => {
         undefined,
         [],
         undefined,
-        ts.factory.createVariableStatement(
-          undefined,
-          ts.factory.createVariableDeclarationList([], ts.NodeFlags.Const),
-        ),
+        ts.factory.createBlock([]),
       ),
     ]);
     await assertPrintedMatchesSnapshot(file, 'no-params-with-body.ts');

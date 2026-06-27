@@ -20,10 +20,7 @@ describe('array-binding-pattern', () => {
           ),
         ],
         undefined,
-        ts.factory.createVariableStatement(
-          undefined,
-          ts.factory.createVariableDeclarationList([], ts.NodeFlags.Const),
-        ),
+        ts.factory.createBlock([]),
       ),
     ]);
     await assertPrintedMatchesSnapshot(file, 'named-elements.ts');

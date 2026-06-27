@@ -26,6 +26,7 @@ export interface TsPrinterOptions {
 
 interface PrintContext {
   inline?: boolean;
+  skipComments?: boolean;
 }
 
 const TOKEN_TEXT: Record<SyntaxKind, string> = {
@@ -129,7 +130,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         const block = `/*${comment}*/`;
         parts.push(...block.split('\n').map((line) => printLine(line)));
       } else {
-        parts.push(printLine(`// ${comment}`));
+        parts.push(printLine(`//${comment}`));
       }
     }
     if (indent) indentLevel -= 1;
@@ -194,7 +195,7 @@ export function createPrinter(options?: TsPrinterOptions) {
   function printNode(node: TsNode, context: PrintContext = {}): string {
     const parts: Array<string> = [];
 
-    if (node.leadingComments) {
+    if (node.leadingComments && !context.skipComments) {
       printComments(parts, node.leadingComments);
     }
 
@@ -235,7 +236,20 @@ export function createPrinter(options?: TsPrinterOptions) {
         let text = printModifiers(node.modifiers);
         text += printTypeParameters(node.typeParameters);
         const parameters = node.parameters.map((parameter) => printInline(parameter)).join(', ');
-        text += `(${parameters})`;
+        const onlyParameter = node.parameters.length === 1 ? node.parameters[0] : undefined;
+        const bareParameter =
+          !node.type &&
+          !node.modifiers?.length &&
+          !node.typeParameters?.length &&
+          onlyParameter !== undefined &&
+          !onlyParameter.type &&
+          !onlyParameter.questionToken &&
+          !onlyParameter.dotDotDotToken &&
+          !onlyParameter.initializer &&
+          !onlyParameter.modifiers?.length &&
+          (typeof onlyParameter.name === 'string' ||
+            onlyParameter.name.kind === TsNodeKind.Identifier);
+        text += bareParameter ? parameters : `(${parameters})`;
         if (node.type) text += `: ${printInline(node.type)}`;
         const body =
           node.body.kind === TsNodeKind.ObjectLiteralExpression
@@ -298,7 +312,17 @@ export function createPrinter(options?: TsPrinterOptions) {
         let text = printAccessTarget(node.expression);
         if (node.typeArguments && node.typeArguments.length > 0)
           text += `<${node.typeArguments.map((typeArgument) => printInline(typeArgument)).join(', ')}>`;
-        text += `(${node.arguments.map((argument) => printInline(argument)).join(', ')})`;
+        if (node.arguments.some((argument) => argument.leadingComments?.length)) {
+          const renderedArguments = node.arguments.map((argument) => {
+            const argumentParts: Array<string> = [];
+            if (argument.leadingComments) printComments(argumentParts, argument.leadingComments);
+            argumentParts.push(printLine(printNode(argument, { skipComments: true })));
+            return argumentParts.join('\n');
+          });
+          text += `(\n${renderedArguments.join(',\n')})`;
+        } else {
+          text += `(${node.arguments.map((argument) => printInline(argument)).join(', ')})`;
+        }
         parts.push(text);
         break;
       }
@@ -675,6 +699,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
 
       case TsNodeKind.MappedType: {
+        indentLevel += 1;
         let member = '';
         if (node.readonlyToken) {
           member +=
@@ -694,7 +719,6 @@ export function createPrinter(options?: TsPrinterOptions) {
               : `${printInline(node.questionToken)}?`;
         }
         if (node.type) member += `: ${printInline(node.type)}`;
-        indentLevel += 1;
         const memberLine = printLine(`${member};`);
         indentLevel -= 1;
         parts.push(['{', memberLine, printLine('}')].join('\n'));

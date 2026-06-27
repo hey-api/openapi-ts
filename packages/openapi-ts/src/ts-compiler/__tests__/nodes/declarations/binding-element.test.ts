@@ -30,10 +30,7 @@ describe('binding-element', () => {
           ),
         ],
         undefined,
-        ts.factory.createVariableStatement(
-          undefined,
-          ts.factory.createVariableDeclarationList([], ts.NodeFlags.Const),
-        ),
+        ts.factory.createBlock([]),
       ),
     ]);
     await assertPrintedMatchesSnapshot(file, 'default-renamed-rest.ts');
