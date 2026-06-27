@@ -5,6 +5,12 @@ import { SyntaxKind } from './nodes/syntax-kind';
 
 export interface TsPrinterOptions {
   /**
+   * Number of spaces per indentation level.
+   *
+   * @default 2
+   */
+  indentSize?: number;
+  /**
    * Maximum line length before the printer wraps elements
    * such as parameters, fields, or list items.
    * Set to `0` to disable wrapping.
@@ -17,8 +23,6 @@ export interface TsPrinterOptions {
 interface PrintContext {
   inline?: boolean;
 }
-
-const INDENT = '  ';
 
 const TOKEN_TEXT: Record<SyntaxKind, string> = {
   [SyntaxKind.AmpersandAmpersandToken]: '&&',
@@ -108,8 +112,8 @@ function formatTemplateText(text: string): string {
   return text.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function createPrinter(options?: TsPrinterOptions) {
+  const indentUnit = ' '.repeat(options?.indentSize ?? 2);
   let indentLevel = 0;
 
   function printComments(
@@ -123,7 +127,7 @@ export function createPrinter(options?: TsPrinterOptions) {
   }
 
   function printLine(line: string): string {
-    return INDENT.repeat(indentLevel) + line;
+    return indentUnit.repeat(indentLevel) + line;
   }
 
   function printInline(node: TsNode, context: PrintContext = {}): string {
