@@ -484,7 +484,11 @@ export function createPrinter(options?: TsPrinterOptions) {
         signature += printTypeParameters(node.typeParameters);
         signature += `(${parameters})`;
         if (node.type) signature += `: ${printInline(node.type)}`;
-        parts.push(printLine(node.body ? `${signature} {}` : `${signature};`));
+        parts.push(
+          node.body
+            ? `${printLine(signature)} ${printInline(node.body)}`
+            : printLine(`${signature};`),
+        );
         break;
       }
 
