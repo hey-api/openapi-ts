@@ -119,6 +119,8 @@ import type { TsReturnStatement as _TsReturnStatement } from './nodes/statements
 import type { TsThrowStatement as _TsThrowStatement } from './nodes/statements/throw-statement';
 import type { TsTryStatement as _TsTryStatement } from './nodes/statements/try-statement';
 import type { TsSourceFile as _TsSourceFile } from './nodes/structure/source-file';
+import { parseSourceFile } from './nodes/structure/source-file';
+import type { SyntaxKind as _SyntaxKindEnum } from './nodes/syntax-kind';
 import { SyntaxKind } from './nodes/syntax-kind';
 import {
   addSyntheticLeadingComment,
@@ -129,6 +131,7 @@ import {
 import type { TsToken as _TsToken } from './nodes/token';
 import type { TsTypeNode as _TsTypeNode } from './nodes/type';
 import type { TsArrayTypeNode as _TsArrayTypeNode } from './nodes/types/array-type-node';
+import type { TsConditionalTypeNode as _TsConditionalTypeNode } from './nodes/types/conditional-type-node';
 import type { TsFunctionTypeNode as _TsFunctionTypeNode } from './nodes/types/function-type-node';
 import type { TsIndexedAccessTypeNode as _TsIndexedAccessTypeNode } from './nodes/types/indexed-access-type-node';
 import type { TsIntersectionTypeNode as _TsIntersectionTypeNode } from './nodes/types/intersection-type-node';
@@ -158,10 +161,13 @@ export namespace ts {
   export type AwaitExpression = _TsAwaitExpression;
   export type BigIntLiteral = _TsBigIntLiteral;
   export type BinaryExpression = _TsBinaryExpression;
+  export type BinaryOperator = _SyntaxKindEnum;
+  export type BinaryOperatorToken = _TsToken;
   export type BindingElement = _TsBindingElement;
   export type BindingName = _TsBindingName;
   export type BindingPattern = _TsBindingPattern;
   export type Block = _TsBlock;
+  export type BooleanLiteral = _TsToken;
   export type CallExpression = _TsCallExpression;
   export type CatchClause = _TsCatchClause;
   export type ClassDeclaration = _TsClassDeclaration;
@@ -169,6 +175,7 @@ export namespace ts {
   export type ComputedPropertyName = _TsComputedPropertyName;
   export type ConciseBody = _TsConciseBody;
   export type ConditionalExpression = _TsConditionalExpression;
+  export type ConditionalTypeNode = _TsConditionalTypeNode;
   export type ConstructorDeclaration = _TsConstructorDeclaration;
   export type Decorator = _TsDecorator;
   export type DeleteExpression = _TsDeleteExpression;
@@ -203,11 +210,15 @@ export namespace ts {
   export type JSDocComment = _TsJSDocComment;
   export type JSDocText = _TsJSDocText;
   export type KeywordTypeNode = _TsKeywordTypeNode;
+  export type KeywordTypeSyntaxKind = _SyntaxKindEnum;
   export type LiteralTypeNode = _TsLiteralTypeNode;
   export type LiteralValue = bigint | boolean | null | number | string;
   export type MappedTypeNode = _TsMappedTypeNode;
+  export type MemberName = _TsIdentifier | _TsPrivateIdentifier;
   export type MethodDeclaration = _TsMethodDeclaration;
+  export type Modifier = _TsToken;
   export type ModifierLike = _TsModifierLike;
+  export type ModifierSyntaxKind = _SyntaxKindEnum;
   export type ModuleExportName = _TsModuleExportName;
   export type NamedExports = _TsNamedExports;
   export type NamedImports = _TsNamedImports;
@@ -218,9 +229,11 @@ export namespace ts {
   export type Node = _TsNode;
   export type NodeArray = ReadonlyArray<ts.Node>;
   export type NodeBase = _TsNodeBase;
+  export type NodeFlags = TsNodeFlags;
   export type NodeKind = TsNodeKind;
   export type NonNullExpression = _TsNonNullExpression;
   export type NoSubstitutionTemplateLiteral = _TsNoSubstitutionTemplateLiteral;
+  export type NullLiteral = _TsToken;
   export type NumericLiteral = _TsNumericLiteral;
   export type ObjectBindingPattern = _TsObjectBindingPattern;
   export type ObjectLiteralElementLike = _TsObjectLiteralElementLike;
@@ -228,7 +241,9 @@ export namespace ts {
   export type ParameterDeclaration = _TsParameterDeclaration;
   export type ParenthesizedExpression = _TsParenthesizedExpression;
   export type PostfixUnaryExpression = _TsPostfixUnaryExpression;
+  export type PostfixUnaryOperator = _SyntaxKindEnum;
   export type PrefixUnaryExpression = _TsPrefixUnaryExpression;
+  export type PrefixUnaryOperator = _SyntaxKindEnum;
   export type PrinterOptions = _TsPrinterOptions;
   export type PrivateIdentifier = _TsPrivateIdentifier;
   export type PropertyAccessExpression = _TsPropertyAccessExpression;
@@ -247,16 +262,91 @@ export namespace ts {
   export type SpreadElement = _TsSpreadElement;
   export type Statement = _TsStatement;
   export type StringLiteral = _TsStringLiteral;
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  export namespace SyntaxKind {
+    export type AbstractKeyword = _SyntaxKindEnum.AbstractKeyword;
+    export type AccessorKeyword = _SyntaxKindEnum.AccessorKeyword;
+    export type AmpersandAmpersandToken = _SyntaxKindEnum.AmpersandAmpersandToken;
+    export type AmpersandToken = _SyntaxKindEnum.AmpersandToken;
+    export type AnyKeyword = _SyntaxKindEnum.AnyKeyword;
+    export type AsteriskAsteriskToken = _SyntaxKindEnum.AsteriskAsteriskToken;
+    export type AsteriskToken = _SyntaxKindEnum.AsteriskToken;
+    export type AsyncKeyword = _SyntaxKindEnum.AsyncKeyword;
+    export type AwaitKeyword = _SyntaxKindEnum.AwaitKeyword;
+    export type BarBarToken = _SyntaxKindEnum.BarBarToken;
+    export type BarToken = _SyntaxKindEnum.BarToken;
+    export type BigIntKeyword = _SyntaxKindEnum.BigIntKeyword;
+    export type BooleanKeyword = _SyntaxKindEnum.BooleanKeyword;
+    export type CaretToken = _SyntaxKindEnum.CaretToken;
+    export type ColonToken = _SyntaxKindEnum.ColonToken;
+    export type ConstKeyword = _SyntaxKindEnum.ConstKeyword;
+    export type DeclareKeyword = _SyntaxKindEnum.DeclareKeyword;
+    export type DefaultKeyword = _SyntaxKindEnum.DefaultKeyword;
+    export type DotDotDotToken = _SyntaxKindEnum.DotDotDotToken;
+    export type EqualsEqualsEqualsToken = _SyntaxKindEnum.EqualsEqualsEqualsToken;
+    export type EqualsEqualsToken = _SyntaxKindEnum.EqualsEqualsToken;
+    export type EqualsGreaterThanToken = _SyntaxKindEnum.EqualsGreaterThanToken;
+    export type EqualsToken = _SyntaxKindEnum.EqualsToken;
+    export type ExclamationEqualsEqualsToken = _SyntaxKindEnum.ExclamationEqualsEqualsToken;
+    export type ExclamationEqualsToken = _SyntaxKindEnum.ExclamationEqualsToken;
+    export type ExclamationToken = _SyntaxKindEnum.ExclamationToken;
+    export type ExportKeyword = _SyntaxKindEnum.ExportKeyword;
+    export type ExtendsKeyword = _SyntaxKindEnum.ExtendsKeyword;
+    export type FalseKeyword = _SyntaxKindEnum.FalseKeyword;
+    export type GreaterThanEqualsToken = _SyntaxKindEnum.GreaterThanEqualsToken;
+    export type GreaterThanToken = _SyntaxKindEnum.GreaterThanToken;
+    export type ImplementsKeyword = _SyntaxKindEnum.ImplementsKeyword;
+    export type InKeyword = _SyntaxKindEnum.InKeyword;
+    export type KeyOfKeyword = _SyntaxKindEnum.KeyOfKeyword;
+    export type LessThanEqualsToken = _SyntaxKindEnum.LessThanEqualsToken;
+    export type LessThanToken = _SyntaxKindEnum.LessThanToken;
+    export type MinusMinusToken = _SyntaxKindEnum.MinusMinusToken;
+    export type MinusToken = _SyntaxKindEnum.MinusToken;
+    export type MultiLineCommentTrivia = _SyntaxKindEnum.MultiLineCommentTrivia;
+    export type NeverKeyword = _SyntaxKindEnum.NeverKeyword;
+    export type NullKeyword = _SyntaxKindEnum.NullKeyword;
+    export type NumberKeyword = _SyntaxKindEnum.NumberKeyword;
+    export type ObjectKeyword = _SyntaxKindEnum.ObjectKeyword;
+    export type OutKeyword = _SyntaxKindEnum.OutKeyword;
+    export type OverrideKeyword = _SyntaxKindEnum.OverrideKeyword;
+    export type PercentToken = _SyntaxKindEnum.PercentToken;
+    export type PlusPlusToken = _SyntaxKindEnum.PlusPlusToken;
+    export type PlusToken = _SyntaxKindEnum.PlusToken;
+    export type PrivateKeyword = _SyntaxKindEnum.PrivateKeyword;
+    export type ProtectedKeyword = _SyntaxKindEnum.ProtectedKeyword;
+    export type PublicKeyword = _SyntaxKindEnum.PublicKeyword;
+    export type QuestionDotToken = _SyntaxKindEnum.QuestionDotToken;
+    export type QuestionQuestionEqualsToken = _SyntaxKindEnum.QuestionQuestionEqualsToken;
+    export type QuestionQuestionToken = _SyntaxKindEnum.QuestionQuestionToken;
+    export type QuestionToken = _SyntaxKindEnum.QuestionToken;
+    export type ReadonlyKeyword = _SyntaxKindEnum.ReadonlyKeyword;
+    export type SingleLineCommentTrivia = _SyntaxKindEnum.SingleLineCommentTrivia;
+    export type SlashToken = _SyntaxKindEnum.SlashToken;
+    export type StaticKeyword = _SyntaxKindEnum.StaticKeyword;
+    export type StringKeyword = _SyntaxKindEnum.StringKeyword;
+    export type SymbolKeyword = _SyntaxKindEnum.SymbolKeyword;
+    export type TildeToken = _SyntaxKindEnum.TildeToken;
+    export type TrueKeyword = _SyntaxKindEnum.TrueKeyword;
+    export type TypeKeyword = _SyntaxKindEnum.TypeKeyword;
+    export type UndefinedKeyword = _SyntaxKindEnum.UndefinedKeyword;
+    export type UniqueKeyword = _SyntaxKindEnum.UniqueKeyword;
+    export type UnknownKeyword = _SyntaxKindEnum.UnknownKeyword;
+    export type VoidKeyword = _SyntaxKindEnum.VoidKeyword;
+  }
+  export type SyntaxKind = _SyntaxKindEnum;
   export type TaggedTemplateExpression = _TsTaggedTemplateExpression;
   export type TemplateExpression = _TsTemplateExpression;
   export type TemplateHead = _TsTemplateHead;
   export type TemplateLiteralType = _TsTemplateLiteralType;
+  export type TemplateLiteralTypeNode = _TsTemplateLiteralType;
   export type TemplateLiteralTypeSpan = _TsTemplateLiteralTypeSpan;
   export type TemplateMiddle = _TsTemplateMiddle;
   export type TemplateSpan = _TsTemplateSpan;
   export type TemplateTail = _TsTemplateTail;
   export type ThrowStatement = _TsThrowStatement;
-  export type Token = _TsToken;
+  export type Token<TKind extends _SyntaxKindEnum = _SyntaxKindEnum> = _TsToken & {
+    syntaxKind: TKind;
+  };
   export type TryStatement = _TsTryStatement;
   export type TupleTypeNode = _TsTupleTypeNode;
   export type TypeAliasDeclaration = _TsTypeAliasDeclaration;
@@ -286,6 +376,7 @@ export const ts = {
   addSyntheticLeadingComment,
   addSyntheticTrailingComment,
   createPrinter,
+  createSourceFile: parseSourceFile,
   factory,
   isEntityName,
   isExportDeclaration,

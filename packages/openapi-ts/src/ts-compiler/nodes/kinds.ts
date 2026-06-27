@@ -14,6 +14,7 @@ export enum TsNodeKind {
   ClassDeclaration = 'ClassDeclaration',
   ComputedPropertyName = 'ComputedPropertyName',
   ConditionalExpression = 'ConditionalExpression',
+  ConditionalType = 'ConditionalType',
   Constructor = 'Constructor',
   Decorator = 'Decorator',
   DeleteExpression = 'DeleteExpression',

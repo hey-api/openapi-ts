@@ -1,3 +1,3 @@
 enum Status {
-  Active = 'active',
+  Active = 'active'
 }

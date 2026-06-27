@@ -1,5 +1,6 @@
 import type { TsNodeBase } from '../base';
 import { TsNodeKind } from '../kinds';
+import type { TsPropertyName } from '../property-name';
 import type { TsStatement } from '../statement';
 import type { TsToken } from '../token';
 import type { TsTypeNode } from '../type';
@@ -12,7 +13,7 @@ export interface TsMethodDeclaration extends TsNodeBase {
   body?: TsStatement;
   kind: TsNodeKind.MethodDeclaration;
   modifiers?: ReadonlyArray<TsModifierLike>;
-  name: string;
+  name: string | TsPropertyName;
   parameters: ReadonlyArray<TsParameterDeclaration>;
   questionToken?: TsToken;
   type?: TsTypeNode;
@@ -22,7 +23,7 @@ export interface TsMethodDeclaration extends TsNodeBase {
 export function createMethodDeclaration(
   modifiers: ReadonlyArray<TsModifierLike> | undefined,
   asteriskToken: TsToken | undefined,
-  name: string,
+  name: string | TsPropertyName,
   questionToken: TsToken | undefined,
   typeParameters: ReadonlyArray<TsTypeParameterDeclaration> | undefined,
   parameters: ReadonlyArray<TsParameterDeclaration>,

@@ -2,7 +2,8 @@ import type { TsNodeBase } from '../base';
 import type { TsIdentifier } from '../expressions/identifier';
 import { TsNodeKind } from '../kinds';
 import type { TsModuleExportName } from '../module-export-name';
-import type { TsToken } from '../token';
+import { SyntaxKind } from '../syntax-kind';
+import { createToken, type TsToken } from '../token';
 
 export interface TsImportSpecifier extends TsNodeBase {
   kind: TsNodeKind.ImportSpecifier;
@@ -12,7 +13,7 @@ export interface TsImportSpecifier extends TsNodeBase {
 }
 
 export function createImportSpecifier(
-  typeOnlyToken: TsToken | undefined,
+  isTypeOnly: boolean,
   propertyName: TsModuleExportName | undefined,
   name: TsIdentifier,
 ): TsImportSpecifier {
@@ -20,6 +21,6 @@ export function createImportSpecifier(
     kind: TsNodeKind.ImportSpecifier,
     name,
     propertyName,
-    typeOnlyToken,
+    typeOnlyToken: isTypeOnly ? createToken(SyntaxKind.TypeKeyword) : undefined,
   };
 }

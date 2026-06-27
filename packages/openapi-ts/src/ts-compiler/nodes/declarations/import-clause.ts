@@ -1,7 +1,8 @@
 import type { TsNodeBase } from '../base';
 import type { TsIdentifier } from '../expressions/identifier';
 import { TsNodeKind } from '../kinds';
-import type { TsToken } from '../token';
+import { SyntaxKind } from '../syntax-kind';
+import { createToken, type TsToken } from '../token';
 import type { TsNamedImports } from './named-imports';
 import type { TsNamespaceImport } from './namespace-import';
 
@@ -13,7 +14,7 @@ export interface TsImportClause extends TsNodeBase {
 }
 
 export function createImportClause(
-  phaseModifier: TsToken | undefined,
+  isTypeOnly: boolean,
   name: TsIdentifier | undefined,
   namedBindings: TsNamedImports | TsNamespaceImport | undefined,
 ): TsImportClause {
@@ -21,6 +22,6 @@ export function createImportClause(
     kind: TsNodeKind.ImportClause,
     name,
     namedBindings,
-    phaseModifier,
+    phaseModifier: isTypeOnly ? createToken(SyntaxKind.TypeKeyword) : undefined,
   };
 }

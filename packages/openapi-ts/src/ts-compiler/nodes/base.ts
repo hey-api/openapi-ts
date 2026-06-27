@@ -30,6 +30,7 @@ import type { TsToken } from './token';
 import type { TsTypeNode } from './type';
 
 export interface TsNodeBase {
+  getSourceFile?(): TsSourceFile;
   kind: TsNodeKind;
   leadingComments?: ReadonlyArray<string>;
   trailingComments?: ReadonlyArray<string>;

@@ -1,7 +1,7 @@
 import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
-import tsOld from 'typescript';
 
 import type { ts } from '../../ts-compiler';
+import { ts as tsOld } from '../../ts-compiler';
 import { TsDsl } from '../base';
 import { LiteralTsDsl } from '../expr/literal';
 

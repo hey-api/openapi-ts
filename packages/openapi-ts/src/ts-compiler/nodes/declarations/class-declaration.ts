@@ -1,4 +1,5 @@
 import type { TsNodeBase } from '../base';
+import type { TsIdentifier } from '../expressions/identifier';
 import { TsNodeKind } from '../kinds';
 import type { TsConstructorDeclaration } from './constructor-declaration';
 import type { TsGetAccessorDeclaration } from './get-accessor-declaration';
@@ -21,13 +22,13 @@ export interface TsClassDeclaration extends TsNodeBase {
   kind: TsNodeKind.ClassDeclaration;
   members: ReadonlyArray<TsClassElement>;
   modifiers?: ReadonlyArray<TsModifierLike>;
-  name?: string;
+  name?: string | TsIdentifier;
   typeParameters?: ReadonlyArray<TsTypeParameterDeclaration>;
 }
 
 export function createClassDeclaration(
   modifiers: ReadonlyArray<TsModifierLike> | undefined,
-  name: string | undefined,
+  name: string | TsIdentifier | undefined,
   typeParameters: ReadonlyArray<TsTypeParameterDeclaration> | undefined,
   heritageClauses: ReadonlyArray<TsHeritageClause> | undefined,
   members: ReadonlyArray<TsClassElement>,

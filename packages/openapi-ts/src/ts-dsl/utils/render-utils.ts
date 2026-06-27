@@ -1,9 +1,11 @@
 import path from 'node:path';
 
 import type { ExportModule, File, ImportModule } from '@hey-api/codegen-core';
-import ts from 'typescript';
+
+import { ts } from '../../ts-compiler';
 
 const printer = ts.createPrinter({
+  indentSize: 4,
   newLine: ts.NewLineKind.LineFeed,
   removeComments: false,
 });

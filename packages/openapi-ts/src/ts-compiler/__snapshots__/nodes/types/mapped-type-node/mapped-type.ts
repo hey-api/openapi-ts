@@ -1,1 +1,3 @@
-const x = value as { readonly [K in keyof T]?: string };
+const x = value as {
+  readonly [K in keyof T]?: string;
+};

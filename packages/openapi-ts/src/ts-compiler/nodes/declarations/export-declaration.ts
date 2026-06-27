@@ -1,7 +1,8 @@
 import type { TsNodeBase } from '../base';
 import type { TsExpression } from '../expression';
 import { TsNodeKind } from '../kinds';
-import type { TsToken } from '../token';
+import { SyntaxKind } from '../syntax-kind';
+import { createToken, type TsToken } from '../token';
 import type { TsNamedExports } from './named-exports';
 import type { TsNamespaceExport } from './namespace-export';
 
@@ -15,7 +16,7 @@ export interface TsExportDeclaration extends TsNodeBase {
 
 export function createExportDeclaration(
   modifiers: ReadonlyArray<TsToken> | undefined,
-  typeOnlyToken: TsToken | undefined,
+  isTypeOnly: boolean,
   exportClause: TsNamedExports | TsNamespaceExport | undefined,
   moduleSpecifier?: TsExpression,
 ): TsExportDeclaration {
@@ -24,6 +25,6 @@ export function createExportDeclaration(
     kind: TsNodeKind.ExportDeclaration,
     modifiers,
     moduleSpecifier,
-    typeOnlyToken,
+    typeOnlyToken: isTypeOnly ? createToken(SyntaxKind.TypeKeyword) : undefined,
   };
 }

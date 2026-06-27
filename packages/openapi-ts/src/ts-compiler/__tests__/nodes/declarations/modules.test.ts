@@ -6,7 +6,7 @@ describe('modules', () => {
     const file = ts.factory.createSourceFile([
       ts.factory.createImportDeclaration(
         undefined,
-        ts.factory.createImportClause(undefined, ts.factory.createIdentifier('React'), undefined),
+        ts.factory.createImportClause(false, ts.factory.createIdentifier('React'), undefined),
         ts.factory.createStringLiteral('react'),
       ),
     ]);
@@ -29,16 +29,16 @@ describe('modules', () => {
       ts.factory.createImportDeclaration(
         undefined,
         ts.factory.createImportClause(
-          undefined,
+          false,
           undefined,
           ts.factory.createNamedImports([
             ts.factory.createImportSpecifier(
-              undefined,
+              false,
               undefined,
               ts.factory.createIdentifier('useState'),
             ),
             ts.factory.createImportSpecifier(
-              undefined,
+              false,
               ts.factory.createIdentifier('useEffect'),
               ts.factory.createIdentifier('effect'),
             ),
@@ -55,11 +55,11 @@ describe('modules', () => {
       ts.factory.createImportDeclaration(
         undefined,
         ts.factory.createImportClause(
-          ts.factory.createToken(ts.SyntaxKind.TypeKeyword),
+          true,
           undefined,
           ts.factory.createNamedImports([
             ts.factory.createImportSpecifier(
-              undefined,
+              false,
               undefined,
               ts.factory.createIdentifier('Config'),
             ),
@@ -76,7 +76,7 @@ describe('modules', () => {
       ts.factory.createImportDeclaration(
         undefined,
         ts.factory.createImportClause(
-          undefined,
+          false,
           undefined,
           ts.factory.createNamespaceImport(ts.factory.createIdentifier('path')),
         ),
@@ -91,11 +91,11 @@ describe('modules', () => {
       ts.factory.createImportDeclaration(
         undefined,
         ts.factory.createImportClause(
-          undefined,
+          false,
           ts.factory.createIdentifier('React'),
           ts.factory.createNamedImports([
             ts.factory.createImportSpecifier(
-              undefined,
+              false,
               undefined,
               ts.factory.createIdentifier('useState'),
             ),
@@ -111,15 +111,11 @@ describe('modules', () => {
     const file = ts.factory.createSourceFile([
       ts.factory.createExportDeclaration(
         undefined,
-        undefined,
+        false,
         ts.factory.createNamedExports([
+          ts.factory.createExportSpecifier(false, undefined, ts.factory.createIdentifier('foo')),
           ts.factory.createExportSpecifier(
-            undefined,
-            undefined,
-            ts.factory.createIdentifier('foo'),
-          ),
-          ts.factory.createExportSpecifier(
-            undefined,
+            false,
             ts.factory.createIdentifier('bar'),
             ts.factory.createIdentifier('baz'),
           ),
@@ -134,13 +130,9 @@ describe('modules', () => {
     const file = ts.factory.createSourceFile([
       ts.factory.createExportDeclaration(
         undefined,
-        undefined,
+        false,
         ts.factory.createNamedExports([
-          ts.factory.createExportSpecifier(
-            undefined,
-            undefined,
-            ts.factory.createIdentifier('foo'),
-          ),
+          ts.factory.createExportSpecifier(false, undefined, ts.factory.createIdentifier('foo')),
         ]),
         ts.factory.createStringLiteral('./foo'),
       ),
@@ -152,7 +144,7 @@ describe('modules', () => {
     const file = ts.factory.createSourceFile([
       ts.factory.createExportDeclaration(
         undefined,
-        undefined,
+        false,
         undefined,
         ts.factory.createStringLiteral('./utils'),
       ),
@@ -164,7 +156,7 @@ describe('modules', () => {
     const file = ts.factory.createSourceFile([
       ts.factory.createExportDeclaration(
         undefined,
-        undefined,
+        false,
         ts.factory.createNamespaceExport(ts.factory.createIdentifier('utils')),
         ts.factory.createStringLiteral('./utils'),
       ),
@@ -176,13 +168,9 @@ describe('modules', () => {
     const file = ts.factory.createSourceFile([
       ts.factory.createExportDeclaration(
         undefined,
-        ts.factory.createToken(ts.SyntaxKind.TypeKeyword),
+        true,
         ts.factory.createNamedExports([
-          ts.factory.createExportSpecifier(
-            undefined,
-            undefined,
-            ts.factory.createIdentifier('Config'),
-          ),
+          ts.factory.createExportSpecifier(false, undefined, ts.factory.createIdentifier('Config')),
         ]),
         undefined,
       ),
@@ -194,13 +182,9 @@ describe('modules', () => {
     const file = ts.factory.createSourceFile([
       ts.factory.createExportDeclaration(
         undefined,
-        undefined,
+        false,
         ts.factory.createNamedExports([
-          ts.factory.createExportSpecifier(
-            ts.factory.createToken(ts.SyntaxKind.TypeKeyword),
-            undefined,
-            ts.factory.createIdentifier('Config'),
-          ),
+          ts.factory.createExportSpecifier(true, undefined, ts.factory.createIdentifier('Config')),
         ]),
         undefined,
       ),

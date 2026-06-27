@@ -15,8 +15,8 @@ import type {
 } from '@hey-api/codegen-core';
 import { fromRef, isNode, isRef, isSymbol, nodeBrand, ref } from '@hey-api/codegen-core';
 import type { AnyString } from '@hey-api/types';
-import ts from 'typescript';
 
+import { ts } from '../ts-compiler';
 import type { AccessOptions } from './utils/context';
 
 export abstract class TsDsl<
@@ -249,8 +249,11 @@ type NodeOf<I> =
           ? I
           : never;
 
-export type MaybeTsDsl<T> =
-  T extends TsDsl<infer U> ? U | TsDsl<U> : T extends ts.Node ? T | TsDsl<T> : never;
+export type MaybeTsDsl<T> = [T] extends [TsDsl<infer U>]
+  ? U | TsDsl<U>
+  : [T] extends [ts.Node]
+    ? T | TsDsl<T>
+    : never;
 
 export abstract class TypeTsDsl<
   T extends

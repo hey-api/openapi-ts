@@ -1,4 +1,5 @@
 import type { TsArrayTypeNode } from './types/array-type-node';
+import type { TsConditionalTypeNode } from './types/conditional-type-node';
 import type { TsFunctionTypeNode } from './types/function-type-node';
 import type { TsIndexedAccessTypeNode } from './types/indexed-access-type-node';
 import type { TsIntersectionTypeNode } from './types/intersection-type-node';
@@ -17,6 +18,7 @@ import type { TsUnionTypeNode } from './types/union-type-node';
 
 export type TsTypeNode =
   | TsArrayTypeNode
+  | TsConditionalTypeNode
   | TsFunctionTypeNode
   | TsIndexedAccessTypeNode
   | TsIntersectionTypeNode

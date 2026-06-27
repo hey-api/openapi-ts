@@ -1,6 +1,7 @@
 import type { TsNodeBase } from '../base';
 import type { TsExpression } from '../expression';
 import { TsNodeKind } from '../kinds';
+import type { TsPropertyName } from '../property-name';
 import { SyntaxKind } from '../syntax-kind';
 import type { TsToken } from '../token';
 import type { TsTypeNode } from '../type';
@@ -11,14 +12,14 @@ export interface TsPropertyDeclaration extends TsNodeBase {
   initializer?: TsExpression;
   kind: TsNodeKind.PropertyDeclaration;
   modifiers?: ReadonlyArray<TsModifierLike>;
-  name: string;
+  name: string | TsPropertyName;
   questionToken?: TsToken;
   type?: TsTypeNode;
 }
 
 export function createPropertyDeclaration(
   modifiers: ReadonlyArray<TsModifierLike> | undefined,
-  name: string,
+  name: string | TsPropertyName,
   questionOrExclamationToken: TsToken | undefined,
   type: TsTypeNode | undefined,
   initializer: TsExpression | undefined,

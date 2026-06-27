@@ -1,5 +1,6 @@
 import type { TsNodeBase } from '../base';
 import { TsNodeKind } from '../kinds';
+import type { TsPropertyName } from '../property-name';
 import type { TsStatement } from '../statement';
 import type { TsTypeNode } from '../type';
 import type { TsModifierLike } from './modifier-like';
@@ -9,14 +10,14 @@ export interface TsGetAccessorDeclaration extends TsNodeBase {
   body?: TsStatement;
   kind: TsNodeKind.GetAccessor;
   modifiers?: ReadonlyArray<TsModifierLike>;
-  name: string;
+  name: string | TsPropertyName;
   parameters: ReadonlyArray<TsParameterDeclaration>;
   type?: TsTypeNode;
 }
 
 export function createGetAccessorDeclaration(
   modifiers: ReadonlyArray<TsModifierLike> | undefined,
-  name: string,
+  name: string | TsPropertyName,
   parameters: ReadonlyArray<TsParameterDeclaration>,
   type: TsTypeNode | undefined,
   body: TsStatement | undefined,

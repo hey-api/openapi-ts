@@ -1,1 +1,4 @@
-const x = value as [string, number];
+const x = value as [
+  string,
+  number
+];

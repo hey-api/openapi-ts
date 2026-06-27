@@ -1,7 +1,8 @@
 import type { TsNodeBase } from '../base';
 import { TsNodeKind } from '../kinds';
 import type { TsModuleExportName } from '../module-export-name';
-import type { TsToken } from '../token';
+import { SyntaxKind } from '../syntax-kind';
+import { createToken, type TsToken } from '../token';
 
 export interface TsExportSpecifier extends TsNodeBase {
   kind: TsNodeKind.ExportSpecifier;
@@ -11,7 +12,7 @@ export interface TsExportSpecifier extends TsNodeBase {
 }
 
 export function createExportSpecifier(
-  typeOnlyToken: TsToken | undefined,
+  isTypeOnly: boolean,
   propertyName: TsModuleExportName | undefined,
   name: TsModuleExportName,
 ): TsExportSpecifier {
@@ -19,6 +20,6 @@ export function createExportSpecifier(
     kind: TsNodeKind.ExportSpecifier,
     name,
     propertyName,
-    typeOnlyToken,
+    typeOnlyToken: isTypeOnly ? createToken(SyntaxKind.TypeKeyword) : undefined,
   };
 }

@@ -93,6 +93,7 @@ import { createTryStatement } from './statements/try-statement';
 import { createSourceFile } from './structure/source-file';
 import { createModifier, createToken } from './token';
 import { createArrayTypeNode } from './types/array-type-node';
+import { createConditionalTypeNode } from './types/conditional-type-node';
 import { createFunctionTypeNode } from './types/function-type-node';
 import { createIndexedAccessTypeNode } from './types/indexed-access-type-node';
 import { createIntersectionTypeNode } from './types/intersection-type-node';
@@ -125,6 +126,7 @@ export const factory = {
   createClassDeclaration,
   createComputedPropertyName,
   createConditionalExpression,
+  createConditionalTypeNode,
   createConstructorDeclaration,
   createDecorator,
   createDeleteExpression,

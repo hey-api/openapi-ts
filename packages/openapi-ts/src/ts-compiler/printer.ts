@@ -1,5 +1,7 @@
 import type { TsNode } from './nodes/base';
+import type { EmitHint } from './nodes/emit-hint';
 import { TsNodeKind } from './nodes/kinds';
+import type { NewLineKind } from './nodes/new-line-kind';
 import { TsNodeFlags } from './nodes/node-flags';
 import { SyntaxKind } from './nodes/syntax-kind';
 
@@ -18,6 +20,8 @@ export interface TsPrinterOptions {
    * @default 80
    */
   maxLineLength?: number;
+  newLine?: NewLineKind;
+  removeComments?: boolean;
 }
 
 interface PrintContext {
@@ -96,16 +100,13 @@ const TOKEN_TEXT: Record<SyntaxKind, string> = {
 };
 
 function formatStringLiteral(text: string): string {
-  const single = (text.match(/'/g) ?? []).length;
-  const double = (text.match(/"/g) ?? []).length;
-  const quote = single > double ? '"' : "'";
   const escaped = text
     .replace(/\\/g, '\\\\')
-    .replaceAll(quote, `\\${quote}`)
+    .replaceAll("'", "\\'")
     .replace(/\n/g, '\\n')
     .replace(/\r/g, '\\r')
     .replace(/\t/g, '\\t');
-  return `${quote}${escaped}${quote}`;
+  return `'${escaped}'`;
 }
 
 function formatTemplateText(text: string): string {
@@ -122,7 +123,15 @@ export function createPrinter(options?: TsPrinterOptions) {
     indent?: boolean,
   ): void {
     if (indent) indentLevel += 1;
-    parts.push(...lines.map((line) => printLine(`// ${line}`)));
+    for (const comment of lines) {
+      // JSDoc/block trivia carries its own framing across lines; '//' is for single-line trivia.
+      if (comment.includes('\n') || comment.startsWith('*')) {
+        const block = `/*${comment}*/`;
+        parts.push(...block.split('\n').map((line) => printLine(line)));
+      } else {
+        parts.push(printLine(`// ${comment}`));
+      }
+    }
     if (indent) indentLevel -= 1;
   }
 
@@ -139,9 +148,47 @@ export function createPrinter(options?: TsPrinterOptions) {
     return `${modifiers.map((modifier) => printInline(modifier)).join(' ')} `;
   }
 
+  function printName(name: string | TsNode): string {
+    return typeof name === 'string' ? name : printInline(name);
+  }
+
   function printTypeParameters(typeParameters: ReadonlyArray<TsNode> | undefined): string {
     if (!typeParameters || typeParameters.length === 0) return '';
     return `<${typeParameters.map((typeParameter) => printInline(typeParameter)).join(', ')}>`;
+  }
+
+  function printAccessTarget(expression: TsNode): string {
+    const text = printInline(expression);
+    return expression.kind === TsNodeKind.BinaryExpression ||
+      expression.kind === TsNodeKind.ConditionalExpression ||
+      expression.kind === TsNodeKind.ArrowFunction ||
+      expression.kind === TsNodeKind.AwaitExpression ||
+      expression.kind === TsNodeKind.FunctionExpression ||
+      expression.kind === TsNodeKind.AsExpression ||
+      expression.kind === TsNodeKind.SatisfiesExpression ||
+      expression.kind === TsNodeKind.TypeOfExpression ||
+      expression.kind === TsNodeKind.VoidExpression ||
+      expression.kind === TsNodeKind.DeleteExpression
+      ? `(${text})`
+      : text;
+  }
+
+  function printIntersectionMember(type: TsNode): string {
+    const text = printInline(type);
+    return type.kind === TsNodeKind.UnionType ||
+      type.kind === TsNodeKind.FunctionType ||
+      type.kind === TsNodeKind.ConditionalType
+      ? `(${text})`
+      : text;
+  }
+
+  function printUnionMember(type: TsNode): string {
+    const text = printInline(type);
+    return type.kind === TsNodeKind.IntersectionType ||
+      type.kind === TsNodeKind.FunctionType ||
+      type.kind === TsNodeKind.ConditionalType
+      ? `(${text})`
+      : text;
   }
 
   function printNode(node: TsNode, context: PrintContext = {}): string {
@@ -159,8 +206,24 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.ArrayLiteralExpression: {
-        const elements = node.elements.map((element) => printInline(element)).join(', ');
-        parts.push(`[${elements}]`);
+        if (node.multiLine && node.elements.length > 0) {
+          const lines: Array<string> = ['['];
+          indentLevel += 1;
+          node.elements.forEach((element, index) => {
+            const text = printLine(printInline(element));
+            lines.push(index < node.elements.length - 1 ? `${text},` : text);
+          });
+          indentLevel -= 1;
+          lines.push(printLine(']'));
+          parts.push(lines.join('\n'));
+          break;
+        }
+        indentLevel += 1;
+        const arrayElements = node.elements.map((element) => printInline(element));
+        indentLevel -= 1;
+        // tsc keeps an inline array's leading `{`/`[` on the bracket line, indenting
+        // the broken element one extra level (`[{` ... `}]`).
+        parts.push(`[${arrayElements.join(', ')}]`);
         break;
       }
 
@@ -174,7 +237,11 @@ export function createPrinter(options?: TsPrinterOptions) {
         const parameters = node.parameters.map((parameter) => printInline(parameter)).join(', ');
         text += `(${parameters})`;
         if (node.type) text += `: ${printInline(node.type)}`;
-        text += ` ${printInline(node.equalsGreaterThanToken)} ${printInline(node.body)}`;
+        const body =
+          node.body.kind === TsNodeKind.ObjectLiteralExpression
+            ? `(${printInline(node.body)})`
+            : printInline(node.body);
+        text += ` ${printInline(node.equalsGreaterThanToken)} ${body}`;
         parts.push(text);
         break;
       }
@@ -228,8 +295,8 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.CallExpression: {
-        let text = printInline(node.expression);
-        if (node.typeArguments)
+        let text = printAccessTarget(node.expression);
+        if (node.typeArguments && node.typeArguments.length > 0)
           text += `<${node.typeArguments.map((typeArgument) => printInline(typeArgument)).join(', ')}>`;
         text += `(${node.arguments.map((argument) => printInline(argument)).join(', ')})`;
         parts.push(text);
@@ -245,9 +312,15 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.ClassDeclaration: {
-        const modifiers = printModifiers(node.modifiers);
+        const decorators =
+          node.modifiers?.filter((modifier) => modifier.kind === TsNodeKind.Decorator) ?? [];
+        const keywordModifiers = node.modifiers?.filter(
+          (modifier) => modifier.kind !== TsNodeKind.Decorator,
+        );
+        decorators.forEach((decorator) => parts.push(printLine(printInline(decorator))));
+        const modifiers = printModifiers(keywordModifiers);
         let heading = `${modifiers}class`;
-        if (node.name) heading += ` ${node.name}`;
+        if (node.name) heading += ` ${printName(node.name)}`;
         heading += printTypeParameters(node.typeParameters);
         if (node.heritageClauses) {
           heading += node.heritageClauses.map((clause) => ` ${printInline(clause)}`).join('');
@@ -258,7 +331,15 @@ export function createPrinter(options?: TsPrinterOptions) {
         }
         parts.push(printLine(`${heading} {`));
         indentLevel += 1;
-        node.members.forEach((member) => parts.push(printNode(member)));
+        node.members.forEach((member) => {
+          // The DSL marks an explicit blank line between members with a lone-newline identifier.
+          const marker = member as TsNode;
+          if (marker.kind === TsNodeKind.Identifier && marker.text === '\n') {
+            parts.push(printLine(''));
+            return;
+          }
+          parts.push(printNode(member));
+        });
         indentLevel -= 1;
         parts.push(printLine('}'));
         break;
@@ -271,6 +352,13 @@ export function createPrinter(options?: TsPrinterOptions) {
       case TsNodeKind.ConditionalExpression: {
         parts.push(
           `${printInline(node.condition)} ${printInline(node.questionToken)} ${printInline(node.whenTrue)} ${printInline(node.colonToken)} ${printInline(node.whenFalse)}`,
+        );
+        break;
+      }
+
+      case TsNodeKind.ConditionalType: {
+        parts.push(
+          `${printInline(node.checkType)} extends ${printInline(node.extendsType)} ? ${printInline(node.trueType)} : ${printInline(node.falseType)}`,
         );
         break;
       }
@@ -296,32 +384,35 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.ElementAccessExpression:
         parts.push(
-          `${printInline(node.expression)}${node.questionDotToken ? '?.' : ''}[${printInline(node.argumentExpression)}]`,
+          `${printAccessTarget(node.expression)}${node.questionDotToken ? '?.' : ''}[${printInline(node.argumentExpression)}]`,
         );
         break;
 
       case TsNodeKind.EnumDeclaration: {
         let header = '';
-        if (node.modifiers) {
+        if (node.modifiers?.length) {
           header += `${node.modifiers.map((modifier) => printInline(modifier)).join(' ')} `;
         }
-        header += `enum ${node.name}`;
+        header += `enum ${printName(node.name)}`;
         if (node.members.length === 0) {
           parts.push(printLine(`${header} {}`));
           break;
         }
         parts.push(printLine(`${header} {`));
         indentLevel += 1;
-        node.members.forEach((member) => parts.push(printNode(member)));
+        node.members.forEach((member, index) => {
+          const text = printNode(member);
+          parts.push(index < node.members.length - 1 ? `${text},` : text);
+        });
         indentLevel -= 1;
         parts.push(printLine('}'));
         break;
       }
 
       case TsNodeKind.EnumMember: {
-        let text = node.name;
+        let text = printName(node.name);
         if (node.initializer) text += ` = ${printInline(node.initializer)}`;
-        parts.push(printLine(`${text},`));
+        parts.push(printLine(text));
         break;
       }
 
@@ -349,7 +440,7 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.ExpressionWithTypeArguments: {
         let text = printInline(node.expression);
-        if (node.typeArguments)
+        if (node.typeArguments && node.typeArguments.length > 0)
           text += `<${node.typeArguments.map((typeArgument) => printInline(typeArgument)).join(', ')}>`;
         parts.push(text);
         break;
@@ -399,7 +490,7 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.FunctionExpression: {
         let text = '';
-        if (node.modifiers) {
+        if (node.modifiers?.length) {
           text += node.modifiers.map((modifier) => `${printInline(modifier)} `).join('');
         }
         text += 'function';
@@ -427,7 +518,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       case TsNodeKind.GetAccessor: {
         const modifiers = printModifiers(node.modifiers);
         const parameters = node.parameters.map((parameter) => printInline(parameter)).join(', ');
-        let signature = `${modifiers}get ${node.name}(${parameters})`;
+        let signature = `${modifiers}get ${printName(node.name)}(${parameters})`;
         if (node.type) signature += `: ${printInline(node.type)}`;
         parts.push(
           printLine(node.body ? `${signature} ${printInline(node.body)}` : `${signature};`),
@@ -484,12 +575,12 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.IndexSignature: {
         let text = '';
-        if (node.modifiers) {
+        if (node.modifiers?.length) {
           text += `${node.modifiers.map((modifier) => printInline(modifier)).join(' ')} `;
         }
         const parameters = node.parameters
           .map((parameter) => {
-            let entry = parameter.name;
+            let entry = printName(parameter.name);
             if (parameter.type) entry += `: ${printInline(parameter.type)}`;
             return entry;
           })
@@ -505,7 +596,7 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.InterfaceDeclaration: {
         let header = '';
-        if (node.modifiers) {
+        if (node.modifiers?.length) {
           header += `${node.modifiers.map((modifier) => printInline(modifier)).join(' ')} `;
         }
         header += `interface ${node.name}`;
@@ -543,7 +634,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.IntersectionType:
-        parts.push(node.types.map((type) => printInline(type)).join(' & '));
+        parts.push(node.types.map((type) => printIntersectionMember(type)).join(' & '));
         break;
 
       case TsNodeKind.JSDoc: {
@@ -580,26 +671,29 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
 
       case TsNodeKind.MappedType: {
-        let text = '{ ';
+        let member = '';
         if (node.readonlyToken) {
-          text +=
+          member +=
             node.readonlyToken.syntaxKind === SyntaxKind.ReadonlyKeyword
               ? 'readonly '
               : `${printInline(node.readonlyToken)}readonly `;
         }
-        text += `[${node.typeParameter.name}`;
+        member += `[${printName(node.typeParameter.name)}`;
         if (node.typeParameter.constraint)
-          text += ` in ${printInline(node.typeParameter.constraint)}`;
-        if (node.nameType) text += ` as ${printInline(node.nameType)}`;
-        text += ']';
+          member += ` in ${printInline(node.typeParameter.constraint)}`;
+        if (node.nameType) member += ` as ${printInline(node.nameType)}`;
+        member += ']';
         if (node.questionToken) {
-          text +=
+          member +=
             node.questionToken.syntaxKind === SyntaxKind.QuestionToken
               ? '?'
               : `${printInline(node.questionToken)}?`;
         }
-        if (node.type) text += `: ${printInline(node.type)}`;
-        parts.push(`${text} }`);
+        if (node.type) member += `: ${printInline(node.type)}`;
+        indentLevel += 1;
+        const memberLine = printLine(`${member};`);
+        indentLevel -= 1;
+        parts.push(['{', memberLine, printLine('}')].join('\n'));
         break;
       }
 
@@ -608,7 +702,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         const parameters = node.parameters.map((parameter) => printInline(parameter)).join(', ');
         let signature = modifiers;
         if (node.asteriskToken) signature += printInline(node.asteriskToken);
-        signature += node.name;
+        signature += printName(node.name);
         if (node.questionToken) signature += printInline(node.questionToken);
         signature += printTypeParameters(node.typeParameters);
         signature += `(${parameters})`;
@@ -634,7 +728,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       case TsNodeKind.NamedTupleMember: {
         let text = '';
         if (node.dotDotDotToken) text += printInline(node.dotDotDotToken);
-        text += node.name;
+        text += printName(node.name);
         if (node.questionToken) text += printInline(node.questionToken);
         text += `: ${printInline(node.type)}`;
         parts.push(text);
@@ -650,8 +744,8 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
 
       case TsNodeKind.NewExpression: {
-        let text = `new ${printInline(node.expression)}`;
-        if (node.typeArguments)
+        let text = `new ${printAccessTarget(node.expression)}`;
+        if (node.typeArguments && node.typeArguments.length > 0)
           text += `<${node.typeArguments.map((typeArgument) => printInline(typeArgument)).join(', ')}>`;
         text += `(${(node.arguments ?? []).map((argument) => printInline(argument)).join(', ')})`;
         parts.push(text);
@@ -664,7 +758,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.NonNullExpression:
-        parts.push(`${printInline(node.expression)}!`);
+        parts.push(`${printAccessTarget(node.expression)}!`);
         break;
 
       case TsNodeKind.NumericLiteral:
@@ -678,14 +772,32 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.ObjectLiteralExpression: {
+        if (node.properties.length === 0) {
+          parts.push('{}');
+          break;
+        }
+        if (node.multiLine) {
+          const lines: Array<string> = ['{'];
+          indentLevel += 1;
+          node.properties.forEach((property, index) => {
+            const text = printLine(printInline(property));
+            lines.push(index < node.properties.length - 1 ? `${text},` : text);
+          });
+          indentLevel -= 1;
+          lines.push(printLine('}'));
+          parts.push(lines.join('\n'));
+          break;
+        }
+        indentLevel += 1;
         const properties = node.properties.map((property) => printInline(property)).join(', ');
-        parts.push(properties ? `{ ${properties} }` : '{}');
+        indentLevel -= 1;
+        parts.push(`{ ${properties} }`);
         break;
       }
 
       case TsNodeKind.Parameter: {
         let text = '';
-        if (node.modifiers) {
+        if (node.modifiers?.length) {
           text += node.modifiers.map((modifier) => `${printInline(modifier)} `).join('');
         }
         if (node.dotDotDotToken) text += printInline(node.dotDotDotToken);
@@ -718,7 +830,7 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.PropertyAccessExpression:
         parts.push(
-          `${printInline(node.expression)}${node.questionDotToken ? '?.' : '.'}${printInline(node.name)}`,
+          `${printAccessTarget(node.expression)}${node.questionDotToken ? '?.' : '.'}${printInline(node.name)}`,
         );
         break;
 
@@ -728,7 +840,7 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.PropertyDeclaration: {
         const modifiers = printModifiers(node.modifiers);
-        let text = `${modifiers}${node.name}`;
+        let text = `${modifiers}${printName(node.name)}`;
         if (node.questionToken) text += printInline(node.questionToken);
         if (node.exclamationToken) text += printInline(node.exclamationToken);
         if (node.type) text += `: ${printInline(node.type)}`;
@@ -739,10 +851,10 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.PropertySignature: {
         let text = '';
-        if (node.modifiers) {
+        if (node.modifiers?.length) {
           text += `${node.modifiers.map((modifier) => printInline(modifier)).join(' ')} `;
         }
-        text += node.name;
+        text += printName(node.name);
         if (node.questionToken) text += printInline(node.questionToken);
         if (node.type) text += `: ${printInline(node.type)}`;
         parts.push(printLine(`${text};`));
@@ -772,7 +884,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       case TsNodeKind.SetAccessor: {
         const modifiers = printModifiers(node.modifiers);
         const parameters = node.parameters.map((parameter) => printInline(parameter)).join(', ');
-        const signature = `${modifiers}set ${node.name}(${parameters})`;
+        const signature = `${modifiers}set ${printName(node.name)}(${parameters})`;
         parts.push(
           printLine(node.body ? `${signature} ${printInline(node.body)}` : `${signature};`),
         );
@@ -810,7 +922,7 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.TaggedTemplateExpression: {
         let text = printInline(node.tag);
-        if (node.typeArguments)
+        if (node.typeArguments && node.typeArguments.length > 0)
           text += `<${node.typeArguments.map((typeArgument) => printInline(typeArgument)).join(', ')}>`;
         text += printInline(node.template);
         parts.push(text);
@@ -867,21 +979,32 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.TupleType: {
-        const elements = node.elements.map((element) => printInline(element)).join(', ');
-        parts.push(`[${elements}]`);
+        if (node.elements.length === 0) {
+          parts.push('[]');
+          break;
+        }
+        const lines: Array<string> = ['['];
+        indentLevel += 1;
+        node.elements.forEach((element, index) => {
+          const text = printLine(printInline(element));
+          lines.push(index < node.elements.length - 1 ? `${text},` : text);
+        });
+        indentLevel -= 1;
+        lines.push(printLine(']'));
+        parts.push(lines.join('\n'));
         break;
       }
 
       case TsNodeKind.TypeAliasDeclaration: {
         let header = '';
-        if (node.modifiers) {
+        if (node.modifiers?.length) {
           header += `${node.modifiers.map((modifier) => printInline(modifier)).join(' ')} `;
         }
-        header += `type ${node.name}`;
+        header += `type ${printName(node.name)}`;
         if (node.typeParameters?.length) {
           header += `<${node.typeParameters
             .map((typeParameter) => {
-              let text = typeParameter.name;
+              let text = printName(typeParameter.name);
               if (typeParameter.constraint)
                 text += ` extends ${printInline(typeParameter.constraint)}`;
               if (typeParameter.default) text += ` = ${printInline(typeParameter.default)}`;
@@ -893,13 +1016,21 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
       }
 
-      case TsNodeKind.TypeLiteral:
-        parts.push(
-          node.members.length === 0
-            ? '{}'
-            : `{ ${node.members.map((member) => printInline(member)).join('; ')} }`,
-        );
+      case TsNodeKind.TypeLiteral: {
+        if (node.members.length === 0) {
+          parts.push('{}');
+          break;
+        }
+        const lines: Array<string> = ['{'];
+        indentLevel += 1;
+        for (const member of node.members) {
+          lines.push(printNode(member));
+        }
+        indentLevel -= 1;
+        lines.push(printLine('}'));
+        parts.push(lines.join('\n'));
         break;
+      }
 
       case TsNodeKind.TypeOfExpression: {
         parts.push(`typeof ${printInline(node.expression)}`);
@@ -913,7 +1044,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       case TsNodeKind.TypeParameter: {
         const modifiers =
           node.modifiers?.map((modifier) => `${TOKEN_TEXT[modifier.syntaxKind]} `).join('') ?? '';
-        let text = `${modifiers}${node.name}`;
+        let text = `${modifiers}${printName(node.name)}`;
         if (node.constraint) text += ` extends ${printInline(node.constraint)}`;
         if (node.default) text += ` = ${printInline(node.default)}`;
         parts.push(text);
@@ -940,11 +1071,11 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.UnionType:
-        parts.push(node.types.map((type) => printInline(type)).join(' | '));
+        parts.push(node.types.map((type) => printUnionMember(type)).join(' | '));
         break;
 
       case TsNodeKind.VariableDeclaration: {
-        let text = node.name;
+        let text = printName(node.name);
         if (node.exclamationToken) text += printInline(node.exclamationToken);
         if (node.type) text += `: ${printInline(node.type)}`;
         if (node.initializer) text += ` = ${printInline(node.initializer)}`;
@@ -967,7 +1098,9 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.VariableStatement:
-        parts.push(printLine(`${printInline(node.declarationList)};`));
+        parts.push(
+          printLine(`${printModifiers(node.modifiers)}${printInline(node.declarationList)};`),
+        );
         break;
 
       case TsNodeKind.VoidExpression: {
@@ -997,6 +1130,11 @@ export function createPrinter(options?: TsPrinterOptions) {
 
   return {
     printFile,
+    printNode: (
+      _emitHint: EmitHint,
+      node: TsNode,
+      _sourceFile?: TsNode, // eslint-disable-line @typescript-eslint/no-unused-vars
+    ): string => printNode(node),
   };
 }
 
