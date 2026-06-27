@@ -204,6 +204,7 @@ export namespace ts {
   export type JSDocText = _TsJSDocText;
   export type KeywordTypeNode = _TsKeywordTypeNode;
   export type LiteralTypeNode = _TsLiteralTypeNode;
+  export type LiteralValue = bigint | boolean | null | number | string;
   export type MappedTypeNode = _TsMappedTypeNode;
   export type MethodDeclaration = _TsMethodDeclaration;
   export type ModifierLike = _TsModifierLike;
