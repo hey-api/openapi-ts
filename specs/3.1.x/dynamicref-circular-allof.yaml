@@ -1,0 +1,67 @@
+openapi: 3.1.0
+info:
+  title: DynamicRef Circular allOf Test
+  description: >
+    Minimal fixture: circular generic ref through allOf with extra properties.
+    The circular binding should produce an `interface extends` instead of
+    a `type` alias to avoid TS2456.
+  version: 0.1.0
+servers:
+  - url: https://api.example.com
+security: []
+
+paths:
+  /branches:
+    get:
+      summary: Get branch nodes
+      operationId: getBranches
+      tags: [Tree]
+      responses:
+        '200':
+          description: Branch list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Branch'
+
+components:
+  schemas:
+    NodeTemplate:
+      $id: https://example.com/schemas/NodeTemplate
+      $defs:
+        nodeType:
+          $dynamicAnchor: nodeType
+          not: {}
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+        child:
+          $dynamicRef: '#nodeType'
+
+    Branch:
+      allOf:
+        - $defs:
+            nodeType:
+              $dynamicAnchor: nodeType
+              $ref: '#/components/schemas/Branch'
+          $ref: '#/components/schemas/NodeTemplate'
+        - type: object
+          required: [name]
+          properties:
+            name:
+              type: string
+            level:
+              type: integer
+
+    Leaf:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+        value:
+          type: string

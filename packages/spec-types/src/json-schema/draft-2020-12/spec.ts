@@ -8,6 +8,22 @@ export interface BaseDocument<TDocument = unknown>
    */
   $comment?: string;
   /**
+   * The `$defs` keyword is used to define schema definitions that can be referenced elsewhere in the schema using `$ref`, `$dynamicRef`, or other reference keywords. This allows for schema reuse and helps reduce duplication.
+   */
+  $defs?: Record<string, TDocument>;
+  /**
+   * The `$dynamicAnchor` keyword marks a location in a schema that can be resolved by `$dynamicRef`. It associates a name with a schema node, allowing that node to be dynamically resolved in the scope of the referencing schema.
+   *
+   * {@link https://json-schema.org/draft/2020-12/json-schema-core#section-7.7 Dynamic References}
+   */
+  $dynamicAnchor?: string;
+  /**
+   * The `$dynamicRef` keyword is like `$ref`, but enables dynamic scope resolution based on `$dynamicAnchor` declarations. This allows template schemas to resolve types based on the context in which they are referenced, enabling generic type support.
+   *
+   * {@link https://json-schema.org/draft/2020-12/json-schema-core#section-7.7 Dynamic References}
+   */
+  $dynamicRef?: string;
+  /**
    * A schema can reference another schema using the `$ref` keyword. The value of `$ref` is a URI-reference that is resolved against the schema's {@link https://json-schema.org/understanding-json-schema/structuring#base-uri Base URI}. When evaluating a `$ref`, an implementation uses the resolved identifier to retrieve the referenced schema and applies that schema to the {@link https://json-schema.org/learn/glossary#instance instance}.
    *
    * The `$ref` keyword may be used to create recursive schemas that refer to themselves.

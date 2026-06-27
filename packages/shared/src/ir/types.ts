@@ -146,6 +146,14 @@ export interface IRSchemaObject
    */
   additionalProperties?: IRSchemaObject | false;
   /**
+   * Reference to symbol instead of `$ref` string.
+   */
+  /**
+   * When true, this schema produces a circular type alias (e.g., `type X = Generic<X>`).
+   * The codegen layer should emit an interface declaration instead to avoid TS2456.
+   */
+  circularTypeAlias?: boolean;
+  /**
    * When present on a union schema, indicates that this union uses a
    * discriminator for polymorphism.
    */
@@ -190,9 +198,6 @@ export interface IRSchemaObject
    * follow a specific convention.
    */
   propertyNames?: IRSchemaObject;
-  /**
-   * Reference to symbol instead of `$ref` string.
-   */
   symbolRef?: Symbol;
   /**
    * Each schema eventually resolves into `type`.
@@ -211,6 +216,20 @@ export interface IRSchemaObject
     | 'undefined'
     | 'unknown'
     | 'void';
+  /**
+   * Type arguments for generic schema references. Set on `$ref` schemas that
+   * instantiate a generic template (e.g., `PaginatedTemplate<User>`).
+   */
+  typeArgs?: Array<IRSchemaObject>;
+  /**
+   * Type parameters for generic schema templates. Set on template schemas
+   * (e.g., `PaginatedTemplate`) to indicate generic parameters derived from
+   * `$dynamicAnchor` declarations.
+   */
+  typeParams?: ReadonlyArray<{
+    anchor: string;
+    paramName: string;
+  }>;
 }
 
 type IRSecurityObject = OpenAPIV3_1.SecuritySchemeObject & {

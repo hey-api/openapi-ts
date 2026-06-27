@@ -1,0 +1,56 @@
+openapi: 3.1.0
+info:
+  title: DynamicRef Fallback API
+  version: 0.1.0
+  license:
+    name: MIT
+    identifier: MIT
+servers:
+  - url: https://api.dynamicref.test
+security: []
+paths:
+  /fallback:
+    get:
+      summary: Get fallback example
+      operationId: getFallback
+      tags: [Fallback]
+      responses:
+        '200':
+          description: Fallback example
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FallbackResponse'
+        default:
+          description: Error response
+components:
+  schemas:
+    BaseNode:
+      $dynamicAnchor: nodeType
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    AmbiguousNode:
+      $dynamicAnchor: ambiguousType
+      type: object
+      properties:
+        value:
+          type: string
+    AmbiguousOther:
+      $dynamicAnchor: ambiguousType
+      type: object
+      properties:
+        other:
+          type: string
+    FallbackResponse:
+      type: object
+      required: [resolved, unresolvable]
+      properties:
+        resolved:
+          $dynamicRef: '#nodeType'
+        unresolvable:
+          $dynamicRef: '#ambiguousType'

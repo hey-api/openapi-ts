@@ -1039,6 +1039,56 @@ describe(`OpenAPI ${version}`, () => {
       }),
       description: 'anyOf string and binary string',
     },
+    {
+      config: createConfig({
+        input: 'dynamicref-petstore-showcase.yaml',
+        output: 'dynamicref-petstore-showcase',
+      }),
+      description: 'resolves $dynamicRef in petstore showcase',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-external-ref.yaml',
+        output: 'dynamicref-external-ref',
+      }),
+      description: 'handles external $dynamicRef without crashing',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-scope-isolation.yaml',
+        output: 'dynamicref-scope-isolation',
+      }),
+      description: 'keeps $dynamicRef bindings isolated between sibling schemas',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-circular-oneof.yaml',
+        output: 'dynamicref-circular-oneof',
+      }),
+      description:
+        'detects circular $dynamicRef through oneOf (emits type alias — TS2456, unfixable)',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-circular-allof.yaml',
+        output: 'dynamicref-circular-allof',
+      }),
+      description: 'emits interface extends for circular $dynamicRef through allOf',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-circular-naked.yaml',
+        output: 'dynamicref-circular-naked',
+      }),
+      description: 'emits interface extends for circular $dynamicRef without allOf',
+    },
+    {
+      config: createConfig({
+        input: 'dynamicref-fallback.yaml',
+        output: 'dynamicref-fallback',
+      }),
+      description: 'falls back to components.schemas scan for unscoped $dynamicRef',
+    },
   ];
 
   it.each(scenarios)('$description', async ({ config }) => {

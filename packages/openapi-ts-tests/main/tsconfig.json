@@ -4,6 +4,10 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true
   },
-  "exclude": ["test/custom/request.ts", "test/generated/**"],
+  "exclude": [
+    "test/custom/request.ts",
+    "test/generated/**",
+    "test/__snapshots__/3.1.x/dynamicref-circular-oneof"
+  ],
   "references": [{ "path": "../../openapi-ts" }]
 }
