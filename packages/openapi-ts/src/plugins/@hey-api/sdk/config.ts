@@ -8,6 +8,8 @@ import { mapLegacyToConfig } from './operations/config';
 import { handler } from './plugin';
 import type { Config, HeyApiSdkPlugin } from './types';
 
+/* oxlint-disable sort-keys */
+
 const transformerInferWarn =
   'You set `transformer: true` but no transformer plugin was found in your plugins. Add a transformer plugin like `@hey-api/transformers` to enable this feature. The transformer option has been disabled.';
 const validatorInferWarn =
@@ -140,7 +142,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       strategyDefaultTag: 'default',
     },
     paramsStructure: 'grouped',
-    response: 'body', // Deprecated - kept for backward compatibility
     responseStyle: 'fields',
     transformer: {
       $coerceAny: ({ type, value }) => ({
@@ -181,6 +182,10 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
         return value ?? false;
       }),
     },
+
+    // Deprecated - kept for backward compatibility
+    // oxlint-disable-next-line sort-keys
+    response: 'body',
   },
   dependencies: ['@hey-api/typescript'],
   handler,
