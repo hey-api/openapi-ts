@@ -44,7 +44,7 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hey-api/types": "workspace:*",
@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "eslint": "9.39.4",
-    "typescript": "6.0.3"
+    "typescript": "7.0.1-rc"
   },
   "engines": {
     "node": ">=22.18.0"
