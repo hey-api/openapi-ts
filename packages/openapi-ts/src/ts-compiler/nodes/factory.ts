@@ -6,13 +6,16 @@ import { createConstructorDeclaration } from './declarations/constructor-declara
 import { createDecorator } from './declarations/decorator';
 import { createEnumDeclaration } from './declarations/enum-declaration';
 import { createEnumMember } from './declarations/enum-member';
+import { createExportAssignment } from './declarations/export-assignment';
 import { createExportDeclaration } from './declarations/export-declaration';
 import { createExportSpecifier } from './declarations/export-specifier';
+import { createExternalModuleReference } from './declarations/external-module-reference';
 import { createFunctionDeclaration } from './declarations/function-declaration';
 import { createGetAccessorDeclaration } from './declarations/get-accessor-declaration';
 import { createHeritageClause } from './declarations/heritage-clause';
 import { createImportClause } from './declarations/import-clause';
 import { createImportDeclaration } from './declarations/import-declaration';
+import { createImportEqualsDeclaration } from './declarations/import-equals-declaration';
 import { createImportSpecifier } from './declarations/import-specifier';
 import { createIndexSignature } from './declarations/index-signature-declaration';
 import { createInterfaceDeclaration } from './declarations/interface-declaration';
@@ -87,6 +90,19 @@ import { createVoidExpression } from './expressions/void-expression';
 import { createYieldExpression } from './expressions/yield-expression';
 import { createJSDocComment } from './jsdoc/jsdoc';
 import { createJSDocText } from './jsdoc/jsdoc-text';
+import { createJsxAttribute } from './jsx/jsx-attribute';
+import { createJsxAttributes } from './jsx/jsx-attributes';
+import { createJsxClosingElement } from './jsx/jsx-closing-element';
+import { createJsxClosingFragment } from './jsx/jsx-closing-fragment';
+import { createJsxElement } from './jsx/jsx-element';
+import { createJsxExpression } from './jsx/jsx-expression';
+import { createJsxFragment } from './jsx/jsx-fragment';
+import { createJsxNamespacedName } from './jsx/jsx-namespaced-name';
+import { createJsxOpeningElement } from './jsx/jsx-opening-element';
+import { createJsxOpeningFragment } from './jsx/jsx-opening-fragment';
+import { createJsxSelfClosingElement } from './jsx/jsx-self-closing-element';
+import { createJsxSpreadAttribute } from './jsx/jsx-spread-attribute';
+import { createJsxText } from './jsx/jsx-text';
 import { createNodeArray } from './node-array';
 import { createBlock } from './statements/block';
 import { createBreakStatement } from './statements/break-statement';
@@ -114,18 +130,26 @@ import { createSourceFile } from './structure/source-file';
 import { createModifier, createToken } from './token';
 import { createArrayTypeNode } from './types/array-type-node';
 import { createConditionalTypeNode } from './types/conditional-type-node';
+import { createConstructorTypeNode } from './types/constructor-type-node';
 import { createFunctionTypeNode } from './types/function-type-node';
+import { createImportTypeNode } from './types/import-type-node';
 import { createIndexedAccessTypeNode } from './types/indexed-access-type-node';
+import { createInferTypeNode } from './types/infer-type-node';
 import { createIntersectionTypeNode } from './types/intersection-type-node';
 import { createKeywordTypeNode } from './types/keyword-type-node';
 import { createLiteralTypeNode } from './types/literal-type-node';
 import { createMappedTypeNode } from './types/mapped-type-node';
 import { createNamedTupleMember } from './types/named-tuple-member';
+import { createOptionalTypeNode } from './types/optional-type-node';
+import { createParenthesizedType } from './types/parenthesized-type-node';
+import { createRestTypeNode } from './types/rest-type-node';
 import { createTemplateLiteralType } from './types/template-literal-type';
 import { createTemplateLiteralTypeSpan } from './types/template-literal-type-span';
+import { createThisTypeNode } from './types/this-type-node';
 import { createTupleTypeNode } from './types/tuple-type-node';
 import { createTypeLiteralNode } from './types/type-literal-node';
 import { createTypeOperatorNode } from './types/type-operator-node';
+import { createTypePredicateNode } from './types/type-predicate-node';
 import { createTypeQueryNode } from './types/type-query-node';
 import { createTypeReferenceNode } from './types/type-reference-node';
 import { createUnionTypeNode } from './types/union-type-node';
@@ -154,6 +178,7 @@ export const factory = {
   createConditionalExpression,
   createConditionalTypeNode,
   createConstructorDeclaration,
+  createConstructorTypeNode,
   createContinueStatement,
   createDebuggerStatement,
   createDecorator,
@@ -165,10 +190,12 @@ export const factory = {
   createEmptyStatement,
   createEnumDeclaration,
   createEnumMember,
+  createExportAssignment,
   createExportDeclaration,
   createExportSpecifier,
   createExpressionStatement,
   createExpressionWithTypeArguments,
+  createExternalModuleReference,
   createFalse,
   createForInStatement,
   createForOfStatement,
@@ -182,13 +209,29 @@ export const factory = {
   createIfStatement,
   createImportClause,
   createImportDeclaration,
+  createImportEqualsDeclaration,
   createImportSpecifier,
+  createImportTypeNode,
   createIndexSignature,
   createIndexedAccessTypeNode,
+  createInferTypeNode,
   createInterfaceDeclaration,
   createIntersectionTypeNode,
   createJSDocComment,
   createJSDocText,
+  createJsxAttribute,
+  createJsxAttributes,
+  createJsxClosingElement,
+  createJsxClosingFragment,
+  createJsxElement,
+  createJsxExpression,
+  createJsxFragment,
+  createJsxNamespacedName,
+  createJsxOpeningElement,
+  createJsxOpeningFragment,
+  createJsxSelfClosingElement,
+  createJsxSpreadAttribute,
+  createJsxText,
   createKeywordTypeNode,
   createLabeledStatement,
   createLiteralTypeNode,
@@ -212,8 +255,10 @@ export const factory = {
   createObjectBindingPattern,
   createObjectLiteralExpression,
   createOmittedExpression,
+  createOptionalTypeNode,
   createParameterDeclaration,
   createParenthesizedExpression,
+  createParenthesizedType,
   createPostfixUnaryExpression,
   createPrefixUnaryExpression,
   createPrivateIdentifier,
@@ -224,6 +269,7 @@ export const factory = {
   createPropertySignature,
   createQualifiedName,
   createRegularExpressionLiteral,
+  createRestTypeNode,
   createReturnStatement,
   createSatisfiesExpression,
   createSetAccessorDeclaration,
@@ -241,6 +287,7 @@ export const factory = {
   createTemplateMiddle,
   createTemplateSpan,
   createTemplateTail,
+  createThisTypeNode,
   createThrowStatement,
   createToken,
   createTrue,
@@ -251,6 +298,7 @@ export const factory = {
   createTypeOfExpression,
   createTypeOperatorNode,
   createTypeParameterDeclaration,
+  createTypePredicateNode,
   createTypeQueryNode,
   createTypeReferenceNode,
   createUnionTypeNode,

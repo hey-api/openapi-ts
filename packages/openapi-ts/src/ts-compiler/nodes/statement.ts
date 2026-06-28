@@ -2,10 +2,12 @@ import type { TsClassDeclaration } from './declarations/class-declaration';
 import type { TsConstructorDeclaration } from './declarations/constructor-declaration';
 import type { TsEnumDeclaration } from './declarations/enum-declaration';
 import type { TsEnumMember } from './declarations/enum-member';
+import type { TsExportAssignment } from './declarations/export-assignment';
 import type { TsExportDeclaration } from './declarations/export-declaration';
 import type { TsFunctionDeclaration } from './declarations/function-declaration';
 import type { TsGetAccessorDeclaration } from './declarations/get-accessor-declaration';
 import type { TsImportDeclaration } from './declarations/import-declaration';
+import type { TsImportEqualsDeclaration } from './declarations/import-equals-declaration';
 import type { TsIndexSignatureDeclaration } from './declarations/index-signature-declaration';
 import type { TsInterfaceDeclaration } from './declarations/interface-declaration';
 import type { TsMethodDeclaration } from './declarations/method-declaration';
@@ -47,6 +49,7 @@ export type TsStatement =
   | TsEmptyStatement
   | TsEnumDeclaration
   | TsEnumMember
+  | TsExportAssignment
   | TsExportDeclaration
   | TsExpressionStatement
   | TsForInStatement
@@ -56,6 +59,7 @@ export type TsStatement =
   | TsGetAccessorDeclaration
   | TsIfStatement
   | TsImportDeclaration
+  | TsImportEqualsDeclaration
   | TsIndexSignatureDeclaration
   | TsInterfaceDeclaration
   | TsLabeledStatement

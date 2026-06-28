@@ -36,6 +36,9 @@ import type { TsTemplateExpression } from './expressions/template-expression';
 import type { TsTypeOfExpression } from './expressions/type-of-expression';
 import type { TsVoidExpression } from './expressions/void-expression';
 import type { TsYieldExpression } from './expressions/yield-expression';
+import type { TsJsxElement } from './jsx/jsx-element';
+import type { TsJsxFragment } from './jsx/jsx-fragment';
+import type { TsJsxSelfClosingElement } from './jsx/jsx-self-closing-element';
 import type { TsToken } from './token';
 
 export type TsExpression =
@@ -55,6 +58,9 @@ export type TsExpression =
   | TsExpressionWithTypeArguments
   | TsFunctionExpression
   | TsIdentifier
+  | TsJsxElement
+  | TsJsxFragment
+  | TsJsxSelfClosingElement
   | TsMetaProperty
   | TsNewExpression
   | TsNoSubstitutionTemplateLiteral

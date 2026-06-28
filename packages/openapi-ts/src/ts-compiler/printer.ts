@@ -138,7 +138,6 @@ export function createPrinter(options?: TsPrinterOptions) {
     return indentUnit.repeat(indentLevel) + line;
   }
 
-  // Append the statement terminator unless the `semicolons` option is off.
   function terminate(statement: string): string {
     return semicolons ? `${statement};` : statement;
   }
@@ -147,8 +146,6 @@ export function createPrinter(options?: TsPrinterOptions) {
     return printNode(node, { ...context, inline: true });
   }
 
-  // Strip the leading indent a statement's own case applied via printLine, since it's composed
-  // inline after `if (…) `/`while (…) `/etc. (a block starts with `{`, so this is a no-op there).
   function printEmbeddedStatement(statement: TsNode): string {
     return printInline(statement).replace(/^ +/, '');
   }
@@ -168,7 +165,6 @@ export function createPrinter(options?: TsPrinterOptions) {
     const lines: Array<string> = ['{'];
     indentLevel += 1;
     for (const member of members) {
-      // The DSL marks an explicit blank line between members with a lone-newline identifier.
       if (member.kind === TsNodeKind.Identifier && member.text === '\n') {
         lines.push(printLine(''));
         continue;
@@ -206,6 +202,19 @@ export function createPrinter(options?: TsPrinterOptions) {
       expression.kind === TsNodeKind.TypeOfExpression ||
       expression.kind === TsNodeKind.VoidExpression ||
       expression.kind === TsNodeKind.DeleteExpression
+      ? `(${text})`
+      : text;
+  }
+
+  function printArrayElement(type: TsNode): string {
+    const text = printInline(type);
+    return type.kind === TsNodeKind.UnionType ||
+      type.kind === TsNodeKind.IntersectionType ||
+      type.kind === TsNodeKind.FunctionType ||
+      type.kind === TsNodeKind.ConstructorType ||
+      type.kind === TsNodeKind.ConditionalType ||
+      type.kind === TsNodeKind.InferType ||
+      type.kind === TsNodeKind.TypeOperator
       ? `(${text})`
       : text;
   }
@@ -265,7 +274,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.ArrayType:
-        parts.push(`${printInline(node.elementType)}[]`);
+        parts.push(`${printArrayElement(node.elementType)}[]`);
         break;
 
       case TsNodeKind.ArrowFunction: {
@@ -447,6 +456,18 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
       }
 
+      case TsNodeKind.ConstructorType: {
+        const typeParameters =
+          node.typeParameters && node.typeParameters.length > 0
+            ? `<${node.typeParameters.map((typeParameter) => printInline(typeParameter)).join(', ')}>`
+            : '';
+        const parameters = node.parameters.map((parameter) => printInline(parameter)).join(', ');
+        parts.push(
+          `${printModifiers(node.modifiers)}new ${typeParameters}(${parameters}) => ${printInline(node.type)}`,
+        );
+        break;
+      }
+
       case TsNodeKind.ContinueStatement:
         parts.push(
           printLine(
@@ -527,6 +548,14 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
       }
 
+      case TsNodeKind.ExportAssignment: {
+        let text = printModifiers(node.modifiers);
+        text += node.isExportEquals ? 'export = ' : 'export default ';
+        text += printInline(node.expression);
+        parts.push(printLine(terminate(text)));
+        break;
+      }
+
       case TsNodeKind.ExportDeclaration: {
         let text = 'export ';
         if (node.typeOnlyToken) text += `${printInline(node.typeOnlyToken)} `;
@@ -556,6 +585,10 @@ export function createPrinter(options?: TsPrinterOptions) {
         parts.push(text);
         break;
       }
+
+      case TsNodeKind.ExternalModuleReference:
+        parts.push(`require(${printInline(node.expression)})`);
+        break;
 
       case TsNodeKind.ForInStatement:
         parts.push(
@@ -679,11 +712,30 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
       }
 
+      case TsNodeKind.ImportEqualsDeclaration: {
+        let text = `${printModifiers(node.modifiers)}import `;
+        if (node.typeOnlyToken) text += `${printInline(node.typeOnlyToken)} `;
+        text += `${printInline(node.name)} = ${printInline(node.moduleReference)}`;
+        parts.push(printLine(terminate(text)));
+        break;
+      }
+
       case TsNodeKind.ImportSpecifier: {
         let text = '';
         if (node.typeOnlyToken) text += `${printInline(node.typeOnlyToken)} `;
         if (node.propertyName) text += `${printInline(node.propertyName)} as `;
         text += printInline(node.name);
+        parts.push(text);
+        break;
+      }
+
+      case TsNodeKind.ImportType: {
+        let text = `import(${printInline(node.argument)})`;
+        if (node.qualifier) text += `.${printInline(node.qualifier)}`;
+        if (node.typeArguments && node.typeArguments.length > 0) {
+          text += `<${node.typeArguments.map((argument) => printInline(argument)).join(', ')}>`;
+        }
+        if (node.isTypeOf) text = `typeof ${text}`;
         parts.push(text);
         break;
       }
@@ -707,6 +759,10 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.IndexedAccessType:
         parts.push(`${printInline(node.objectType)}[${printInline(node.indexType)}]`);
+        break;
+
+      case TsNodeKind.InferType:
+        parts.push(`infer ${printInline(node.typeParameter)}`);
         break;
 
       case TsNodeKind.InterfaceDeclaration: {
@@ -774,6 +830,95 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.JSDocText:
+        parts.push(node.text);
+        break;
+
+      case TsNodeKind.JsxAttribute: {
+        let text = printInline(node.name);
+        if (node.initializer) {
+          text +=
+            node.initializer.kind === TsNodeKind.StringLiteral
+              ? `="${node.initializer.text}"`
+              : `=${printInline(node.initializer)}`;
+        }
+        parts.push(text);
+        break;
+      }
+
+      case TsNodeKind.JsxAttributes:
+        parts.push(node.properties.map((property) => printInline(property)).join(' '));
+        break;
+
+      case TsNodeKind.JsxClosingElement:
+        parts.push(`</${printInline(node.tagName)}>`);
+        break;
+
+      case TsNodeKind.JsxClosingFragment:
+        parts.push('</>');
+        break;
+
+      case TsNodeKind.JsxElement: {
+        const lines: Array<string> = [printInline(node.openingElement)];
+        indentLevel += 1;
+        for (const child of node.children) lines.push(printLine(printInline(child)));
+        indentLevel -= 1;
+        lines.push(printLine(printInline(node.closingElement)));
+        parts.push(lines.join('\n'));
+        break;
+      }
+
+      case TsNodeKind.JsxExpression: {
+        const dotDotDot = node.dotDotDotToken ? '...' : '';
+        const expression = node.expression ? printInline(node.expression) : '';
+        parts.push(`{${dotDotDot}${expression}}`);
+        break;
+      }
+
+      case TsNodeKind.JsxFragment: {
+        const lines: Array<string> = [printInline(node.openingFragment)];
+        indentLevel += 1;
+        for (const child of node.children) lines.push(printLine(printInline(child)));
+        indentLevel -= 1;
+        lines.push(printLine(printInline(node.closingFragment)));
+        parts.push(lines.join('\n'));
+        break;
+      }
+
+      case TsNodeKind.JsxNamespacedName:
+        parts.push(`${printInline(node.namespace)}:${printInline(node.name)}`);
+        break;
+
+      case TsNodeKind.JsxOpeningElement: {
+        let text = `<${printInline(node.tagName)}`;
+        if (node.typeArguments && node.typeArguments.length > 0)
+          text += `<${node.typeArguments.map((typeArgument) => printInline(typeArgument)).join(', ')}>`;
+        const attributes = printInline(node.attributes);
+        if (attributes) text += ` ${attributes}`;
+        text += '>';
+        parts.push(text);
+        break;
+      }
+
+      case TsNodeKind.JsxOpeningFragment:
+        parts.push('<>');
+        break;
+
+      case TsNodeKind.JsxSelfClosingElement: {
+        let text = `<${printInline(node.tagName)}`;
+        if (node.typeArguments && node.typeArguments.length > 0)
+          text += `<${node.typeArguments.map((typeArgument) => printInline(typeArgument)).join(', ')}>`;
+        const attributes = printInline(node.attributes);
+        if (attributes) text += ` ${attributes}`;
+        text += ' />';
+        parts.push(text);
+        break;
+      }
+
+      case TsNodeKind.JsxSpreadAttribute:
+        parts.push(`{...${printInline(node.expression)}}`);
+        break;
+
+      case TsNodeKind.JsxText:
         parts.push(node.text);
         break;
 
@@ -937,6 +1082,10 @@ export function createPrinter(options?: TsPrinterOptions) {
         parts.push('');
         break;
 
+      case TsNodeKind.OptionalType:
+        parts.push(`${printInline(node.type)}?`);
+        break;
+
       case TsNodeKind.Parameter: {
         let text = '';
         if (node.modifiers?.length) {
@@ -953,6 +1102,10 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.ParenthesizedExpression:
         parts.push(`(${printInline(node.expression)})`);
+        break;
+
+      case TsNodeKind.ParenthesizedType:
+        parts.push(`(${printInline(node.type)})`);
         break;
 
       case TsNodeKind.PostfixUnaryExpression: {
@@ -1011,6 +1164,10 @@ export function createPrinter(options?: TsPrinterOptions) {
         parts.push(node.text);
         break;
       }
+
+      case TsNodeKind.RestType:
+        parts.push(`...${printInline(node.type)}`);
+        break;
 
       case TsNodeKind.ReturnStatement:
         parts.push(
@@ -1115,6 +1272,10 @@ export function createPrinter(options?: TsPrinterOptions) {
         parts.push(`}${formatTemplateText(node.text)}\``);
         break;
 
+      case TsNodeKind.ThisType:
+        parts.push('this');
+        break;
+
       case TsNodeKind.ThrowStatement:
         parts.push(printLine(terminate(`throw ${printInline(node.expression)}`)));
         break;
@@ -1200,6 +1361,15 @@ export function createPrinter(options?: TsPrinterOptions) {
         let text = `${modifiers}${printName(node.name)}`;
         if (node.constraint) text += ` extends ${printInline(node.constraint)}`;
         if (node.default) text += ` = ${printInline(node.default)}`;
+        parts.push(text);
+        break;
+      }
+
+      case TsNodeKind.TypePredicate: {
+        let text = '';
+        if (node.assertsModifier) text += 'asserts ';
+        text += printName(node.parameterName);
+        if (node.type) text += ` is ${printInline(node.type)}`;
         parts.push(text);
         break;
       }

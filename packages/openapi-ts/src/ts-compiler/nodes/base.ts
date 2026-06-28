@@ -3,6 +3,7 @@ import type { TsBindingElement } from './declarations/binding-element';
 import type { TsClassStaticBlockDeclaration } from './declarations/class-static-block-declaration';
 import type { TsDecorator } from './declarations/decorator';
 import type { TsExportSpecifier } from './declarations/export-specifier';
+import type { TsExternalModuleReference } from './declarations/external-module-reference';
 import type { TsHeritageClause } from './declarations/heritage-clause';
 import type { TsImportClause } from './declarations/import-clause';
 import type { TsImportSpecifier } from './declarations/import-specifier';
@@ -24,6 +25,16 @@ import type { TsTemplateSpan } from './expressions/template-span';
 import type { TsTemplateTail } from './expressions/template-tail';
 import type { TsJSDoc } from './jsdoc/jsdoc';
 import type { TsJSDocText } from './jsdoc/jsdoc-text';
+import type { TsJsxAttribute } from './jsx/jsx-attribute';
+import type { TsJsxAttributes } from './jsx/jsx-attributes';
+import type { TsJsxClosingElement } from './jsx/jsx-closing-element';
+import type { TsJsxClosingFragment } from './jsx/jsx-closing-fragment';
+import type { TsJsxExpression } from './jsx/jsx-expression';
+import type { TsJsxNamespacedName } from './jsx/jsx-namespaced-name';
+import type { TsJsxOpeningElement } from './jsx/jsx-opening-element';
+import type { TsJsxOpeningFragment } from './jsx/jsx-opening-fragment';
+import type { TsJsxSpreadAttribute } from './jsx/jsx-spread-attribute';
+import type { TsJsxText } from './jsx/jsx-text';
 import type { TsNodeKind } from './kinds';
 import type { TsStatement } from './statement';
 import type { TsCaseBlock } from './statements/case-block';
@@ -52,11 +63,22 @@ export type TsNode =
   | TsDefaultClause
   | TsExportSpecifier
   | TsExpression
+  | TsExternalModuleReference
   | TsHeritageClause
   | TsImportClause
   | TsImportSpecifier
   | TsJSDoc
   | TsJSDocText
+  | TsJsxAttribute
+  | TsJsxAttributes
+  | TsJsxClosingElement
+  | TsJsxClosingFragment
+  | TsJsxExpression
+  | TsJsxNamespacedName
+  | TsJsxOpeningElement
+  | TsJsxOpeningFragment
+  | TsJsxSpreadAttribute
+  | TsJsxText
   | TsModuleBlock
   | TsNamedExports
   | TsNamedImports
