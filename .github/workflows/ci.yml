@@ -91,7 +91,7 @@ jobs:
 
       - name: Build executables
         if: matrix.is-primary
-        run: pnpm turbo run build:exe
+        run: ./scripts/turbo-run-scoped.sh build:exe
 
       - name: Smoke test executable
         if: matrix.is-primary
