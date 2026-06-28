@@ -21,6 +21,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
+    "build:exe": "turbo run build:exe",
     "changelog:assemble": "tsx scripts/changelog/assemble.ts",
     "changelog:release:name": "tsx scripts/changelog/release-name.ts",
     "changelog:release:notes": "tsx scripts/changelog/release-notes.ts",
@@ -48,6 +49,7 @@
     "tw": "turbo run build && vitest watch --project",
     "tu": "turbo run build && vitest watch --update --project",
     "tb": "turbo run build --filter",
+    "tb:exe": "turbo run build:exe --filter",
     "ty": "turbo run typecheck --filter",
     "dev:ts": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false --include='./typescript/**/*.ts' --include='./inputs.ts' --include='./hey-api.ts' --include='*.config.ts' ../packages/openapi-ts/src/run.ts",
     "dev:py": "cd dev && HEYAPI_CODEGEN_ENV=development tsx watch --clear-screen=false --include='./python/**/*.ts' --include='./inputs.ts' --include='./hey-api.ts' --include='*.config.ts' ../packages/openapi-python/src/run.ts",
@@ -62,6 +64,7 @@
     "@changesets/types": "6.1.0",
     "@hey-api/custom-client": "workspace:*",
     "@hey-api/openapi-ts": "workspace:*",
+    "@tsdown/exe": "0.22.3",
     "@types/node": "24.13.2",
     "@typescript/native-preview": "7.0.0-dev.20260622.1",
     "@vitest/coverage-v8": "4.1.9",
