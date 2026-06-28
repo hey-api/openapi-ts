@@ -16,13 +16,13 @@ interface RequestPart {
  * Follows the same pattern as valibot's `buildOperationSchema`.
  */
 function irParametersToIrSchema(
-  params: Record<string, IR.ParameterObject>,
+  parameters: Record<string, IR.ParameterObject>,
 ): IR.SchemaObject | undefined {
   const properties: Record<string, IR.SchemaObject> = {};
   const required: Array<string> = [];
 
-  for (const key in params) {
-    const parameter = params[key]!;
+  for (const key in parameters) {
+    const parameter = parameters[key]!;
     properties[parameter.name] = parameter.schema;
     if (parameter.required) {
       required.push(parameter.name);
@@ -51,11 +51,11 @@ function collectRequestParts(
     for (const location of ['header', 'path', 'query'] satisfies ReadonlyArray<
       keyof typeof operation.parameters
     >) {
-      const params = operation.parameters[location];
-      if (!params) continue;
+      const parameters = operation.parameters[location];
+      if (!parameters) continue;
 
       const propKey = location === 'header' ? 'headers' : location;
-      const schema = irParametersToIrSchema(params);
+      const schema = irParametersToIrSchema(parameters);
       if (schema) {
         parts.push({ key: propKey, schema });
       }

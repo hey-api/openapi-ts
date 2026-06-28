@@ -5,14 +5,16 @@ import ts from 'typescript';
 import { TsDsl, TypeTsDsl } from '../base';
 import { DocMixin } from '../mixins/doc';
 import { HintMixin } from '../mixins/hint';
-import { DefaultMixin, ExportMixin } from '../mixins/modifiers';
+import { DeclareMixin, DefaultMixin, ExportMixin } from '../mixins/modifiers';
 import { PatternMixin } from '../mixins/pattern';
 import { ValueMixin } from '../mixins/value';
 import { TypeExprTsDsl } from '../type/expr';
 import { safeRuntimeName } from '../utils/name';
 
-const Mixed = DefaultMixin(
-  DocMixin(ExportMixin(HintMixin(PatternMixin(ValueMixin(TsDsl<ts.VariableStatement>))))),
+const Mixed = DeclareMixin(
+  DefaultMixin(
+    DocMixin(ExportMixin(HintMixin(PatternMixin(ValueMixin(TsDsl<ts.VariableStatement>))))),
+  ),
 );
 
 export class VarTsDsl extends Mixed {

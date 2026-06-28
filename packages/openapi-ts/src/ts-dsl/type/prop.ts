@@ -4,6 +4,7 @@ import ts from 'typescript';
 
 import type { MaybeTsDsl } from '../base';
 import { TsDsl } from '../base';
+import { IdTsDsl } from '../expr/id';
 import { DocMixin } from '../mixins/doc';
 import { ReadonlyMixin } from '../mixins/modifiers';
 import { OptionalMixin } from '../mixins/optional';
@@ -11,7 +12,7 @@ import { TokenTsDsl } from '../token';
 import { safePropName } from '../utils/name';
 
 export type TypePropType = NodeName | MaybeTsDsl<ts.TypeNode>;
-export type TypePropKind = 'prop';
+export type TypePropKind = 'computed' | 'prop';
 
 const Mixed = DocMixin(OptionalMixin(ReadonlyMixin(TsDsl<ts.TypeElement>)));
 
@@ -19,17 +20,19 @@ export class TypePropTsDsl extends Mixed {
   readonly '~dsl' = 'TypePropTsDsl';
   override scope: NodeScope = 'type';
 
+  private _kind: TypePropKind;
   protected _type?: Ref<TypePropType>;
 
-  constructor(name: NodeName, fn: (p: TypePropTsDsl) => void) {
+  constructor(name: NodeName, fn: (p: TypePropTsDsl) => void, kind: TypePropKind = 'prop') {
     super();
     this.name.set(name);
+    this._kind = kind;
     fn(this);
   }
 
   /** Element kind. */
   get kind(): TypePropKind {
-    return 'prop';
+    return this._kind;
   }
 
   /** Property name. */
@@ -58,7 +61,9 @@ export class TypePropTsDsl extends Mixed {
     const name = this.name.toString();
     const node = ts.factory.createPropertySignature(
       this.modifiers,
-      this.$node(safePropName(name)),
+      this._kind === 'computed'
+        ? ts.factory.createComputedPropertyName(this.$node(new IdTsDsl(name)))
+        : this.$node(safePropName(name)),
       this._optional ? this.$node(new TokenTsDsl().optional()) : undefined,
       this.$type(this._type),
     );

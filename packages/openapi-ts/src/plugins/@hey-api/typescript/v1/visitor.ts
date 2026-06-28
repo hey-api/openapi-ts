@@ -23,6 +23,8 @@ import { unknownToAst } from './toAst/unknown';
 import { voidToAst } from './toAst/void';
 
 export interface VisitorConfig {
+  /** Whether the type is brandable. */
+  brandable?: boolean;
   /** The plugin instance. */
   plugin: HeyApiTypeScriptPlugin['Instance'];
   /** Optional schema extractor function. */
@@ -69,7 +71,7 @@ export function createVisitor(
       };
     },
     integer(schema, ctx) {
-      const type = numberToAst({ path: ctx.path, plugin, schema });
+      const type = numberToAst({ brandable: config.brandable, path: ctx.path, plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
@@ -132,7 +134,7 @@ export function createVisitor(
       };
     },
     number(schema, ctx) {
-      const type = numberToAst({ path: ctx.path, plugin, schema });
+      const type = numberToAst({ brandable: config.brandable, path: ctx.path, plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,
@@ -178,7 +180,7 @@ export function createVisitor(
       };
     },
     string(schema, ctx) {
-      const type = stringToAst({ path: ctx.path, plugin, schema });
+      const type = stringToAst({ brandable: config.brandable, path: ctx.path, plugin, schema });
       return {
         meta: defaultMeta(schema),
         type,

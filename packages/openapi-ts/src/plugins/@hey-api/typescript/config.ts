@@ -1,4 +1,4 @@
-import { definePluginConfig } from '@hey-api/shared';
+import { coerce, definePluginConfig } from '@hey-api/shared';
 
 import { Api } from './api';
 import { typescriptImports } from './imports';
@@ -9,6 +9,15 @@ export const defaultConfig: HeyApiTypeScriptPlugin['Config'] = {
   api: new Api(),
   config: {
     $cascade: ['case'],
+    brand: coerce((value) => {
+      if (typeof value === 'string') {
+        return (name) => value.replace('{{name}}', name);
+      }
+      if (typeof value === 'function') {
+        return value;
+      }
+      return () => Boolean(value);
+    }),
     case: 'PascalCase',
     comments: true,
     definitions: {

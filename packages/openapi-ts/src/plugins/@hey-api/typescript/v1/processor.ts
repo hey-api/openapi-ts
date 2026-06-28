@@ -39,7 +39,7 @@ export function createProcessor(plugin: HeyApiTypeScriptPlugin['Instance']): Pro
     const shouldExport = ctx.export !== false;
 
     return processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
-      const visitor = createVisitor({ plugin, schemaExtractor });
+      const visitor = createVisitor({ brandable: ctx.brandable, plugin, schemaExtractor });
       const walk = createSchemaWalker(visitor);
 
       const result = walk(ctx.schema, {

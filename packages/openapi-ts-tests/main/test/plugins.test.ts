@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { createClient, type DefinePlugin, type UserConfig } from '@hey-api/openapi-ts';
+import type { DefinePlugin, UserConfig } from '@hey-api/openapi-ts';
+import { createClient, plugins } from '@hey-api/openapi-ts';
 
 import { getFilePaths, getSpecsPath } from '../../utils';
 
@@ -35,33 +36,45 @@ for (const version of versions) {
             : userConfig.plugins[0]!.name,
           typeof userConfig.output === 'string' ? userConfig.output : '',
         ),
-        plugins: userConfig.plugins ?? ['@hey-api/client-fetch'],
+        plugins: userConfig.plugins ?? [plugins.clientFetch()],
       }) as const satisfies UserConfig;
 
     const scenarios = [
       {
         config: createConfig({
           output: 'default',
-          plugins: ['@hey-api/schemas'],
+          plugins: [plugins.schemas()],
         }),
         description: 'generate schemas',
       },
       {
         config: createConfig({
           output: 'default',
-          plugins: ['@hey-api/sdk', '@hey-api/client-fetch'],
+          plugins: [plugins.sdk(), plugins.clientFetch()],
         }),
         description: 'generate SDK',
       },
       {
         config: createConfig({
+          output: 'brand',
+          plugins: [
+            plugins.typescript({
+              brand: true,
+            }),
+            plugins.sdk(),
+            plugins.clientFetch(),
+          ],
+        }),
+        description: 'generate SDK with branded types',
+      },
+      {
+        config: createConfig({
           output: 'throwOnError',
           plugins: [
-            '@hey-api/sdk',
-            {
-              name: '@hey-api/client-fetch',
+            plugins.sdk(),
+            plugins.clientFetch({
               throwOnError: true,
-            },
+            }),
           ],
         }),
         description: 'generate SDK that throws on error',
@@ -71,11 +84,10 @@ for (const version of versions) {
           input: 'sdk-instance.yaml',
           output: 'instance',
           plugins: [
-            {
+            plugins.sdk({
               instance: true,
-              name: '@hey-api/sdk',
-            },
-            '@hey-api/client-fetch',
+            }),
+            plugins.clientFetch(),
           ],
         }),
         description: 'generate SDK instance',
@@ -83,7 +95,7 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'default',
-          plugins: ['fastify'],
+          plugins: [plugins.fastify()],
         }),
         description: 'generate Fastify types with Fastify plugin',
       },
@@ -96,7 +108,7 @@ for (const version of versions) {
               readWrite: false,
             },
           },
-          plugins: ['@hey-api/typescript', '@hey-api/client-fetch'],
+          plugins: [plugins.typescript(), plugins.clientFetch()],
         }),
         description: 'ignores read-only and write-only handling',
       },
@@ -112,7 +124,7 @@ for (const version of versions) {
               },
             },
           },
-          plugins: ['@hey-api/typescript', '@hey-api/client-fetch'],
+          plugins: [plugins.typescript(), plugins.clientFetch()],
         }),
         description: 'custom read-only and write-only naming',
       },
@@ -121,12 +133,11 @@ for (const version of versions) {
           input: 'sdk-nested-classes.yaml',
           output: 'sdk-nested-classes',
           plugins: [
-            '@hey-api/client-fetch',
-            {
+            plugins.clientFetch(),
+            plugins.sdk({
               asClass: true,
               classStructure: 'auto',
-              name: '@hey-api/sdk',
-            },
+            }),
           ],
         }),
         description: 'generate nested classes with auto class structure',
@@ -136,13 +147,12 @@ for (const version of versions) {
           input: 'sdk-nested-classes.yaml',
           output: 'sdk-nested-classes-instance',
           plugins: [
-            '@hey-api/client-fetch',
-            {
+            plugins.clientFetch(),
+            plugins.sdk({
               asClass: true,
               classStructure: 'auto',
               instance: 'NestedSdkWithInstance',
-              name: '@hey-api/sdk',
-            },
+            }),
           ],
         }),
         description: 'generate nested classes with auto class structure',
@@ -150,7 +160,7 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'fetch',
-          plugins: ['@pinia/colada', '@hey-api/client-fetch'],
+          plugins: [plugins.piniaColada(), plugins.clientFetch()],
         }),
         description: 'generate Fetch API client with Pinia Colada plugin',
       },
@@ -159,13 +169,12 @@ for (const version of versions) {
           input: 'sdk-instance.yaml',
           output: 'asClass',
           plugins: [
-            '@pinia/colada',
-            '@hey-api/client-fetch',
-            {
+            plugins.piniaColada(),
+            plugins.clientFetch(),
+            plugins.sdk({
               asClass: true,
               classNameBuilder: '{{name}}Service',
-              name: '@hey-api/sdk',
-            },
+            }),
           ],
         }),
         description: 'generate Fetch API client with Pinia Colada plugin using class-based SDKs',
@@ -173,7 +182,7 @@ for (const version of versions) {
       {
         config: createConfig({
           output: 'default',
-          plugins: ['@angular/common', '@hey-api/client-angular'],
+          plugins: [plugins.angularCommon(), plugins.clientAngular()],
         }),
         description: 'generate Angular requests and resources',
       },
@@ -181,7 +190,7 @@ for (const version of versions) {
         config: createConfig({
           output: 'default-class',
           plugins: [
-            {
+            plugins.angularCommon({
               httpRequests: {
                 containerName: '{{name}}ServiceRequests',
                 segmentName: '{{name}}Service',
@@ -192,9 +201,8 @@ for (const version of versions) {
                 segmentName: '{{name}}Service',
                 strategy: 'byTags',
               },
-              name: '@angular/common',
-            },
-            '@hey-api/client-angular',
+            }),
+            plugins.clientAngular(),
           ],
         }),
         description: 'generate Angular requests and resources (class)',
@@ -245,7 +253,7 @@ describe('custom plugin', () => {
         level: 'silent',
       },
       output: path.join(import.meta.dirname, 'generated', 'my-plugin', 'default'),
-      plugins: [myPlugin, '@hey-api/client-fetch'],
+      plugins: [myPlugin, plugins.clientFetch()],
     });
 
     expect(myPlugin.handler).toHaveBeenCalled();
@@ -269,7 +277,7 @@ describe('custom plugin', () => {
           level: 'silent',
         },
         output: path.join(import.meta.dirname, 'generated', 'my-plugin', 'default'),
-        plugins: [myPlugin, '@hey-api/client-fetch'],
+        plugins: [myPlugin, plugins.clientFetch()],
       }),
     ).rejects.toThrowError(/Found 1 configuration error./g);
 
