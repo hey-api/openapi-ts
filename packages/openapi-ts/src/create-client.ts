@@ -20,6 +20,7 @@ import colors from 'ansi-colors';
 
 import { postProcessors } from './config/output/postprocess';
 import type { Config } from './config/types';
+import { cleanupSeaExtract } from './generate/client';
 import { generateOutput } from './generate/output';
 import { TypeScriptRenderer } from './ts-dsl';
 
@@ -169,6 +170,7 @@ export async function createClient({
 
     const eventGenerator = logger.timeEvent('generator');
     const { fileCount } = await generateOutput(context);
+    cleanupSeaExtract();
     eventGenerator.timeEnd();
 
     const totalMs = Date.now() - jobStart;

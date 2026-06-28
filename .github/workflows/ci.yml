@@ -96,12 +96,21 @@ jobs:
       - name: Smoke test executable
         if: matrix.is-primary
         run: |
+          found=0
           for bin in packages/*/build/*-linux-x64; do
             if [ -f "$bin" ]; then
+              found=$((found + 1))
               chmod +x "$bin"
+              echo "Testing $(basename "$bin")..."
               "$bin" --version
+              "$bin" --help > /dev/null
             fi
           done
+          if [ "$found" -eq 0 ]; then
+            echo "::error::No linux-x64 executables found in packages/*/build/"
+            exit 1
+          fi
+          echo "Tested $found executable(s)"
 
       - name: Upload executables
         if: matrix.is-primary && github.ref == 'refs/heads/main'

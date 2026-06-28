@@ -14,6 +14,21 @@ import { SEA_MANIFEST_KEY, seaAssetKey } from '../sea';
 
 let _sea: typeof Sea | undefined;
 let _manifest: Record<string, Array<string>>;
+let _seaExtractDir: string | undefined;
+
+function getSeaExtractDir(): string {
+  if (!_seaExtractDir) {
+    _seaExtractDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hey-api-sea-'));
+  }
+  return _seaExtractDir;
+}
+
+export function cleanupSeaExtract(): void {
+  if (_seaExtractDir) {
+    fs.rmSync(_seaExtractDir, { force: true, recursive: true });
+    _seaExtractDir = undefined;
+  }
+}
 
 async function getSea(): Promise<typeof Sea> {
   if (!_sea) {
@@ -43,12 +58,15 @@ async function extractSeaClientFiles(clientName: string): Promise<string> {
   const sea = await getSea();
   const manifest = await getSeaManifest();
 
-  const tmpDir = path.resolve(os.tmpdir(), 'hey-api-sea', clientName);
+  const tmpDir = path.resolve(getSeaExtractDir(), clientName);
   fs.mkdirSync(tmpDir, { recursive: true });
 
   const files = manifest[clientName];
   if (files) {
     for (const file of files) {
+      if (file.includes('..') || path.isAbsolute(file)) {
+        throw new Error(`Invalid SEA asset filename: ${file}`);
+      }
       const content = sea.getAsset(seaAssetKey(clientName, file), 'utf-8');
       fs.writeFileSync(path.resolve(tmpDir, file), content);
     }

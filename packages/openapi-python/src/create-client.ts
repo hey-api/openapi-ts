@@ -21,6 +21,7 @@ import colors from 'ansi-colors';
 
 import { postProcessors } from './config/output/postprocess';
 import type { Config } from './config/types';
+import { cleanupSeaExtract } from './generate/client';
 import { generateOutput } from './generate/output';
 import { PythonRenderer } from './py-dsl';
 import { ENUM, TYPING } from './symbols';
@@ -183,6 +184,7 @@ export async function createClient({
 
     const eventGenerator = logger.timeEvent('generator');
     const { fileCount } = await generateOutput(context);
+    cleanupSeaExtract();
     eventGenerator.timeEnd();
 
     const totalMs = Date.now() - jobStart;

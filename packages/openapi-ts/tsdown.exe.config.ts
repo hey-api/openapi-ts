@@ -12,8 +12,7 @@ import { clientPlugins, getClientBundleDir, replaceCoreImports } from './tsdown-
 const assets: Record<string, string> = {};
 const manifest: Record<string, Array<string>> = {};
 
-const seaTmpDir = path.resolve(os.tmpdir(), 'sea-assets');
-fs.mkdirSync(seaTmpDir, { recursive: true });
+const seaTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hey-api-sea-'));
 
 for (const pluginName of clientPlugins) {
   const clientName = pluginName.slice('client-'.length);
@@ -36,7 +35,7 @@ for (const pluginName of clientPlugins) {
   }
 }
 
-const manifestPath = path.resolve(os.tmpdir(), 'sea-manifest.json');
+const manifestPath = path.resolve(seaTmpDir, 'sea-manifest.json');
 fs.writeFileSync(manifestPath, JSON.stringify(manifest));
 assets[SEA_MANIFEST_KEY] = manifestPath;
 
@@ -49,7 +48,6 @@ export default defineConfig(() => {
     ? ([
         { arch: 'x64', nodeVersion, platform: 'linux' },
         { arch: 'arm64', nodeVersion, platform: 'linux' },
-        { arch: 'x64', nodeVersion, platform: 'darwin' },
         { arch: 'arm64', nodeVersion, platform: 'darwin' },
         { arch: 'x64', nodeVersion, platform: 'win' },
       ] as const satisfies Array<ExeTarget>)
