@@ -6,8 +6,6 @@ import { ts } from '../../ts-compiler';
 
 const printer = ts.createPrinter({
   indentSize: 4,
-  newLine: ts.NewLineKind.LineFeed,
-  removeComments: false,
 });
 
 const blankFile = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS);

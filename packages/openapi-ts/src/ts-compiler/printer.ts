@@ -1,7 +1,6 @@
 import type { TsNode } from './nodes/base';
 import type { EmitHint } from './nodes/emit-hint';
 import { TsNodeKind } from './nodes/kinds';
-import type { NewLineKind } from './nodes/new-line-kind';
 import { TsNodeFlags } from './nodes/node-flags';
 import { SyntaxKind } from './nodes/syntax-kind';
 
@@ -13,15 +12,11 @@ export interface TsPrinterOptions {
    */
   indentSize?: number;
   /**
-   * Maximum line length before the printer wraps elements
-   * such as parameters, fields, or list items.
-   * Set to `0` to disable wrapping.
+   * Whether to add trailing semicolons to statements.
    *
-   * @default 80
+   * @default true
    */
-  maxLineLength?: number;
-  newLine?: NewLineKind;
-  removeComments?: boolean;
+  semicolons?: boolean;
 }
 
 interface PrintContext {
@@ -116,6 +111,7 @@ function formatTemplateText(text: string): string {
 
 export function createPrinter(options?: TsPrinterOptions) {
   const indentUnit = ' '.repeat(options?.indentSize ?? 2);
+  const semicolon = (options?.semicolons ?? true) ? ';' : '';
   let indentLevel = 0;
 
   function printComments(
@@ -392,7 +388,9 @@ export function createPrinter(options?: TsPrinterOptions) {
         const parameters = node.parameters.map((parameter) => printInline(parameter)).join(', ');
         const signature = `${modifiers}constructor(${parameters})`;
         parts.push(
-          printLine(node.body ? `${signature} ${printInline(node.body)}` : `${signature};`),
+          printLine(
+            node.body ? `${signature} ${printInline(node.body)}` : `${signature}${semicolon}`,
+          ),
         );
         break;
       }
@@ -445,7 +443,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         if (node.typeOnlyToken) text += `${printInline(node.typeOnlyToken)} `;
         text += node.exportClause ? printInline(node.exportClause) : '*';
         if (node.moduleSpecifier) text += ` from ${printInline(node.moduleSpecifier)}`;
-        parts.push(printLine(`${text};`));
+        parts.push(printLine(`${text}${semicolon}`));
         break;
       }
 
@@ -459,7 +457,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       }
 
       case TsNodeKind.ExpressionStatement:
-        parts.push(printLine(`${printInline(node.expression)};`));
+        parts.push(printLine(`${printInline(node.expression)}${semicolon}`));
         break;
 
       case TsNodeKind.ExpressionWithTypeArguments: {
@@ -511,7 +509,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         parts.push(
           node.body
             ? `${printLine(signature)} ${printInline(node.body)}`
-            : printLine(`${signature};`),
+            : printLine(`${signature}${semicolon}`),
         );
         break;
       }
@@ -549,7 +547,9 @@ export function createPrinter(options?: TsPrinterOptions) {
         let signature = `${modifiers}get ${printName(node.name)}(${parameters})`;
         if (node.type) signature += `: ${printInline(node.type)}`;
         parts.push(
-          printLine(node.body ? `${signature} ${printInline(node.body)}` : `${signature};`),
+          printLine(
+            node.body ? `${signature} ${printInline(node.body)}` : `${signature}${semicolon}`,
+          ),
         );
         break;
       }
@@ -588,7 +588,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         let text = 'import ';
         if (node.importClause) text += `${printInline(node.importClause)} from `;
         text += printInline(node.moduleSpecifier);
-        parts.push(printLine(`${text};`));
+        parts.push(printLine(`${text}${semicolon}`));
         break;
       }
 
@@ -614,7 +614,7 @@ export function createPrinter(options?: TsPrinterOptions) {
           })
           .join(', ');
         text += `[${parameters}]: ${printInline(node.type)}`;
-        parts.push(printLine(`${text};`));
+        parts.push(printLine(`${text}${semicolon}`));
         break;
       }
 
@@ -719,7 +719,7 @@ export function createPrinter(options?: TsPrinterOptions) {
               : `${printInline(node.questionToken)}?`;
         }
         if (node.type) member += `: ${printInline(node.type)}`;
-        const memberLine = printLine(`${member};`);
+        const memberLine = printLine(`${member}${semicolon}`);
         indentLevel -= 1;
         parts.push(['{', memberLine, printLine('}')].join('\n'));
         break;
@@ -736,7 +736,9 @@ export function createPrinter(options?: TsPrinterOptions) {
         signature += `(${parameters})`;
         if (node.type) signature += `: ${printInline(node.type)}`;
         parts.push(
-          printLine(node.body ? `${signature} ${printInline(node.body)}` : `${signature};`),
+          printLine(
+            node.body ? `${signature} ${printInline(node.body)}` : `${signature}${semicolon}`,
+          ),
         );
         break;
       }
@@ -873,7 +875,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         if (node.exclamationToken) text += printInline(node.exclamationToken);
         if (node.type) text += `: ${printInline(node.type)}`;
         if (node.initializer) text += ` = ${printInline(node.initializer)}`;
-        parts.push(printLine(`${text};`));
+        parts.push(printLine(`${text}${semicolon}`));
         break;
       }
 
@@ -885,7 +887,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         text += printName(node.name);
         if (node.questionToken) text += printInline(node.questionToken);
         if (node.type) text += `: ${printInline(node.type)}`;
-        parts.push(printLine(`${text};`));
+        parts.push(printLine(`${text}${semicolon}`));
         break;
       }
 
@@ -900,7 +902,11 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.ReturnStatement:
         parts.push(
-          printLine(node.expression ? `return ${printInline(node.expression)};` : 'return;'),
+          printLine(
+            node.expression
+              ? `return ${printInline(node.expression)}${semicolon}`
+              : `return${semicolon}`,
+          ),
         );
         break;
 
@@ -914,7 +920,9 @@ export function createPrinter(options?: TsPrinterOptions) {
         const parameters = node.parameters.map((parameter) => printInline(parameter)).join(', ');
         const signature = `${modifiers}set ${printName(node.name)}(${parameters})`;
         parts.push(
-          printLine(node.body ? `${signature} ${printInline(node.body)}` : `${signature};`),
+          printLine(
+            node.body ? `${signature} ${printInline(node.body)}` : `${signature}${semicolon}`,
+          ),
         );
         break;
       }
@@ -991,7 +999,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
 
       case TsNodeKind.ThrowStatement:
-        parts.push(printLine(`throw ${printInline(node.expression)};`));
+        parts.push(printLine(`throw ${printInline(node.expression)}${semicolon}`));
         break;
 
       case TsNodeKind.Token:
@@ -1040,7 +1048,7 @@ export function createPrinter(options?: TsPrinterOptions) {
             })
             .join(', ')}>`;
         }
-        parts.push(printLine(`${header} = ${printInline(node.type)};`));
+        parts.push(printLine(`${header} = ${printInline(node.type)}${semicolon}`));
         break;
       }
 
@@ -1127,7 +1135,9 @@ export function createPrinter(options?: TsPrinterOptions) {
 
       case TsNodeKind.VariableStatement:
         parts.push(
-          printLine(`${printModifiers(node.modifiers)}${printInline(node.declarationList)};`),
+          printLine(
+            `${printModifiers(node.modifiers)}${printInline(node.declarationList)}${semicolon}`,
+          ),
         );
         break;
 
