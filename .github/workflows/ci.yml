@@ -89,9 +89,21 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Cache Node.js SEA binaries
+        if: matrix.is-primary
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/tsdown/node
+          key: tsdown-node-${{ hashFiles('.nvmrc') }}
+
       - name: Build executables
         if: matrix.is-primary
-        run: ./scripts/turbo-run-scoped.sh build:exe
+        run: |
+          if ! ./scripts/turbo-run-scoped.sh build:exe; then
+            echo "::warning::First build:exe attempt failed, clearing cache and retrying..."
+            rm -rf ~/.cache/tsdown/node
+            ./scripts/turbo-run-scoped.sh build:exe
+          fi
 
       - name: Smoke test executable
         if: matrix.is-primary
