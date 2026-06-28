@@ -5,7 +5,7 @@ export function addSyntheticLeadingComment<T extends TsNode>(
   node: T,
   kind: SyntaxKind.SingleLineCommentTrivia | SyntaxKind.MultiLineCommentTrivia,
   text: string,
-  hasTrailingNewLine?: boolean, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _hasTrailingNewLine?: boolean,
 ): T {
   node.leadingComments = [...(node.leadingComments ?? []), text];
   return node;
@@ -15,7 +15,7 @@ export function addSyntheticTrailingComment<T extends TsNode>(
   node: T,
   kind: SyntaxKind.SingleLineCommentTrivia | SyntaxKind.MultiLineCommentTrivia,
   text: string,
-  hasTrailingNewLine?: boolean, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _hasTrailingNewLine?: boolean,
 ): T {
   node.trailingComments = [...(node.trailingComments ?? []), text];
   return node;

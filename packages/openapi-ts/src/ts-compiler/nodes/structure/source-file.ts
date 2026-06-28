@@ -22,7 +22,6 @@ export function createSourceFile(
   };
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export function parseSourceFile(
   _fileName: string,
   _sourceText: string,
@@ -32,4 +31,3 @@ export function parseSourceFile(
 ): TsSourceFile {
   return { kind: TsNodeKind.SourceFile, statements: [] };
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */

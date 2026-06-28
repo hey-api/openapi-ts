@@ -54,7 +54,6 @@
     "@types/cross-spawn": "6.0.6",
     "@types/js-yaml": "4.0.9",
     "@types/semver": "7.7.1",
-    "eslint": "9.39.4",
     "js-yaml": "4.2.0",
     "typescript": "6.0.3"
   },
