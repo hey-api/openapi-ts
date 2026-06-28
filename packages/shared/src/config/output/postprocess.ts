@@ -25,7 +25,7 @@ export type UserPostProcessor = {
    */
   args: ReadonlyArray<string>;
   /**
-   * The command to run (e.g., 'biome', 'prettier', 'eslint').
+   * The command to run (e.g., 'biome', 'prettier', 'oxlint').
    */
   command: string;
   /**

@@ -140,6 +140,7 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
       strategyDefaultTag: 'default',
     },
     paramsStructure: 'grouped',
+    response: 'body', // Deprecated - kept for backward compatibility
     responseStyle: 'fields',
     transformer: {
       $coerceAny: ({ type, value }) => ({
@@ -180,10 +181,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
         return value ?? false;
       }),
     },
-
-    // Deprecated - kept for backward compatibility
-    // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-    response: 'body',
   },
   dependencies: ['@hey-api/typescript'],
   handler,

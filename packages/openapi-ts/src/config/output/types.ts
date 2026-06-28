@@ -36,7 +36,7 @@ export type UserOutput = BaseUserOutput<'.js' | '.ts'> & {
    *
    * @example ['biome:lint', 'prettier']
    * @example [{ command: 'dprint', args: ['fmt', '{{path}}'] }]
-   * @example ['eslint', { command: 'prettier', args: ['{{path}}', '--write'] }]
+   * @example ['oxlint', { command: 'prettier', args: ['{{path}}', '--write'] }]
    *
    * @default []
    */

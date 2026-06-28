@@ -8,7 +8,7 @@ export type Formatters = 'biome' | 'prettier';
 /**
  * @deprecated Use `PostProcessorPreset` instead.
  */
-export type Linters = 'biome' | 'eslint' | 'oxlint';
+export type Linters = 'biome' | 'oxlint';
 
 export const postProcessors = {
   'biome:check': {
@@ -25,11 +25,6 @@ export const postProcessors = {
     args: ['lint', '--write', '{{path}}'],
     command: 'biome',
     name: 'Biome (Lint)',
-  },
-  eslint: {
-    args: ['{{path}}', '--fix'],
-    command: 'eslint',
-    name: 'ESLint',
   },
   oxfmt: {
     args: ['{{path}}'],
