@@ -4,8 +4,50 @@ import { toCase } from '@hey-api/shared';
 
 import { $ } from '../../../../../ts-dsl';
 import type { StringResolverContext } from '../../resolvers';
+import { brandType } from '../../shared/brand';
 import type { Type } from '../../shared/types';
 import type { HeyApiTypeScriptPlugin } from '../../types';
+
+function typeidMeta(resourceId: string) {
+  return {
+    artifact: 'types',
+    category: 'type',
+    resource: 'type-id',
+    resourceId,
+  } as const satisfies SymbolMeta;
+}
+
+const typeidContainerMeta = {
+  artifact: 'types',
+  category: 'type',
+  resource: 'type-id',
+  variant: 'container',
+} as const satisfies SymbolMeta;
+
+function ensureTypeidContainer(plugin: HeyApiTypeScriptPlugin['Instance']): void {
+  // TODO: contract (self)
+  if (plugin.querySymbol(typeidContainerMeta)) return;
+
+  const symbolTypeId = plugin.symbol('TypeID', {
+    meta: typeidContainerMeta,
+  });
+  const nodeTypeId = $.type
+    .alias(symbolTypeId)
+    .export()
+    .generic('T', (g) => g.extends('string'))
+    .type($.type.template().add($.type('T')).add('_').add($.type('string')));
+  plugin.node(nodeTypeId);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function baseNode(ctx: StringResolverContext): Type {
+  return $.type('string');
+}
+
+function brandNode(ctx: StringResolverContext): Type | undefined {
+  const base = ctx.nodes.base(ctx);
+  return brandType({ base, brandable: ctx.brandable, path: ctx.path, plugin: ctx.plugin });
+}
 
 function constNode(ctx: StringResolverContext): Type | undefined {
   const { schema } = ctx;
@@ -40,35 +82,13 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
     const parts = String(schema.example).split('_');
     parts.pop();
     const typeidBase = parts.join('_');
+    const typeidQuery = typeidMeta(typeidBase);
 
-    const typeidQuery: SymbolMeta = {
-      artifact: 'types',
-      category: 'type',
-      resource: 'type-id',
-      resourceId: typeidBase,
-    };
     // TODO: contract (self)
     if (!plugin.querySymbol(typeidQuery)) {
-      const containerQuery: SymbolMeta = {
-        artifact: 'types',
-        category: 'type',
-        resource: 'type-id',
-        variant: 'container',
-      };
+      ensureTypeidContainer(plugin);
       // TODO: contract (self)
-      if (!plugin.querySymbol(containerQuery)) {
-        const symbolTypeId = plugin.symbol('TypeID', {
-          meta: containerQuery,
-        });
-        const nodeTypeId = $.type
-          .alias(symbolTypeId)
-          .export()
-          .generic('T', (g) => g.extends('string'))
-          .type($.type.template().add($.type('T')).add('_').add($.type('string')));
-        plugin.node(nodeTypeId);
-      }
-      // TODO: contract (self)
-      const refSymbol = plugin.referenceSymbol(containerQuery);
+      const refSymbol = plugin.referenceSymbol(typeidContainerMeta);
       const symbolTypeName = plugin.symbol(toCase(`${typeidBase}_id`, plugin.config.case), {
         meta: typeidQuery,
       });
@@ -83,11 +103,6 @@ function formatNode(ctx: StringResolverContext): Type | undefined {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function baseNode(ctx: StringResolverContext): Type {
-  return $.type('string');
-}
-
 function stringResolver(ctx: StringResolverContext): Type {
   if (ctx.schema.const !== undefined) {
     const constResult = ctx.nodes.const(ctx);
@@ -97,20 +112,27 @@ function stringResolver(ctx: StringResolverContext): Type {
   const formatResult = ctx.nodes.format(ctx);
   if (formatResult) return formatResult;
 
+  const brandResult = ctx.nodes.brand(ctx);
+  if (brandResult) return brandResult;
+
   return ctx.nodes.base(ctx);
 }
 
 export function stringToAst({
+  brandable,
   path,
   plugin,
   schema,
 }: SchemaVisitorContext<HeyApiTypeScriptPlugin['Instance']> & {
+  brandable?: boolean;
   schema: SchemaWithType<'string'>;
 }): Type {
   const ctx: StringResolverContext = {
     $,
+    brandable,
     nodes: {
       base: baseNode,
+      brand: brandNode,
       const: constNode,
       format: formatNode,
     },

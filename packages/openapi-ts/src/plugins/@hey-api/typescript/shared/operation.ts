@@ -5,11 +5,7 @@ import { $ } from '../../../../ts-dsl';
 import type { HeyApiTypeScriptPlugin } from '../types';
 import { createProcessor } from '../v1/processor';
 
-const irParametersToIrSchema = ({
-  parameters,
-}: {
-  parameters: Record<string, IR.ParameterObject>;
-}): IR.SchemaObject => {
+function irParametersToIrSchema(parameters: Record<string, IR.ParameterObject>): IR.SchemaObject {
   const irSchema: IR.SchemaObject = {
     type: 'object',
   };
@@ -39,9 +35,9 @@ const irParametersToIrSchema = ({
   }
 
   return irSchema;
-};
+}
 
-export const operationToType = ({
+export function operationToType({
   operation,
   path,
   plugin,
@@ -51,7 +47,7 @@ export const operationToType = ({
   path: ReadonlyArray<string | number>;
   plugin: HeyApiTypeScriptPlugin['Instance'];
   tags?: ReadonlyArray<string>;
-}): void => {
+}): void {
   const processor = createProcessor(plugin);
 
   const data: IR.SchemaObject = {
@@ -59,16 +55,14 @@ export const operationToType = ({
       body: operation.body?.schema ?? { type: 'never' },
       ...(operation.parameters?.header
         ? {
-            headers: irParametersToIrSchema({
-              parameters: operation.parameters.header,
-            }),
+            headers: irParametersToIrSchema(operation.parameters.header),
           }
         : {}),
       path: operation.parameters?.path
-        ? irParametersToIrSchema({ parameters: operation.parameters.path })
+        ? irParametersToIrSchema(operation.parameters.path)
         : { type: 'never' },
       query: operation.parameters?.query
-        ? irParametersToIrSchema({ parameters: operation.parameters.query })
+        ? irParametersToIrSchema(operation.parameters.query)
         : { type: 'never' },
       url: {
         const: operation.path,
@@ -104,6 +98,7 @@ export const operationToType = ({
   }
 
   const dataResult = processor.process({
+    brandable: false,
     export: false,
     meta: {
       resource: 'operation',
@@ -269,4 +264,4 @@ export const operationToType = ({
       plugin.node(responseNode);
     }
   }
-};
+}

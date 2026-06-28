@@ -4,6 +4,7 @@ import type { HeyApiTypeScriptPlugin } from '../types';
 import type { TypeScriptFinal } from './types';
 
 export type ProcessorContext = SchemaProcessorContext & {
+  brandable?: boolean;
   /** Whether to export the result (default: true) */
   export?: boolean;
   naming: NamingConfig;

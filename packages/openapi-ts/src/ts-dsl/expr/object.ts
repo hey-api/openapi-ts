@@ -48,23 +48,22 @@ export class ObjectTsDsl extends Mixed {
 
   /** Adds a computed property (e.g., `{ [expr]: value }`), or removes if null. */
   computed(name: string, expr: Expr | null): this {
+    const key = `computed:${name}`;
     if (expr === null) {
-      this._props.delete(`computed:${name}`);
+      this._props.delete(key);
     } else {
-      this._props.set(
-        `computed:${name}`,
-        new ObjectPropTsDsl({ kind: 'computed', name }).value(expr),
-      );
+      this._props.set(key, new ObjectPropTsDsl({ kind: 'computed', name }).value(expr));
     }
     return this;
   }
 
   /** Adds a getter property (e.g., `{ get foo() { ... } }`), or removes if null. */
   getter(name: string, stmt: Stmt | null): this {
+    const key = `getter:${name}`;
     if (stmt === null) {
-      this._props.delete(`getter:${name}`);
+      this._props.delete(key);
     } else {
-      this._props.set(`getter:${name}`, new ObjectPropTsDsl({ kind: 'getter', name }).value(stmt));
+      this._props.set(key, new ObjectPropTsDsl({ kind: 'getter', name }).value(stmt));
     }
     return this;
   }
@@ -81,23 +80,22 @@ export class ObjectTsDsl extends Mixed {
 
   /** Adds a method property (e.g., `{ foo() { ... } }`), or removes if null. */
   method(name: string, fn: ((m: MethodTsDsl) => void) | null): this {
+    const key = `method:${name}`;
     if (fn === null) {
-      this._props.delete(`method:${name}`);
+      this._props.delete(key);
     } else {
-      this._props.set(
-        `method:${name}`,
-        new ObjectPropTsDsl({ kind: 'method', name }).value(f.method(name, fn)),
-      );
+      this._props.set(key, new ObjectPropTsDsl({ kind: 'method', name }).value(f.method(name, fn)));
     }
     return this;
   }
 
   /** Adds a property assignment, or removes if null. */
   prop(name: string, expr: Expr | null): this {
+    const key = `prop:${name}`;
     if (expr === null) {
-      this._props.delete(`prop:${name}`);
+      this._props.delete(key);
     } else {
-      this._props.set(`prop:${name}`, new ObjectPropTsDsl({ kind: 'prop', name }).value(expr));
+      this._props.set(key, new ObjectPropTsDsl({ kind: 'prop', name }).value(expr));
     }
     return this;
   }
@@ -112,10 +110,11 @@ export class ObjectTsDsl extends Mixed {
 
   /** Adds a setter property (e.g., `{ set foo(v) { ... } }`), or removes if null. */
   setter(name: string, stmt: Stmt | null): this {
+    const key = `setter:${name}`;
     if (stmt === null) {
-      this._props.delete(`setter:${name}`);
+      this._props.delete(key);
     } else {
-      this._props.set(`setter:${name}`, new ObjectPropTsDsl({ kind: 'setter', name }).value(stmt));
+      this._props.set(key, new ObjectPropTsDsl({ kind: 'setter', name }).value(stmt));
     }
     return this;
   }

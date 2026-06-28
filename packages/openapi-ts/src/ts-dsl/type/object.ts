@@ -1,4 +1,4 @@
-import type { AnalysisContext, NodeScope } from '@hey-api/codegen-core';
+import type { AnalysisContext, NodeName, NodeScope } from '@hey-api/codegen-core';
 import ts from 'typescript';
 
 import { TsDsl } from '../base';
@@ -18,6 +18,17 @@ export class TypeObjectTsDsl extends Mixed {
     for (const prop of this._props.values()) {
       ctx.analyze(prop);
     }
+  }
+
+  /** Adds a computed property signature (e.g., `{ [expr]: Type }`), or removes if fn is null. */
+  computed(name: NodeName, fn: ((p: TypePropTsDsl) => void) | null): this {
+    const key = `computed:${name}`;
+    if (fn === null) {
+      this._props.delete(key);
+    } else {
+      this._props.set(key, new TypePropTsDsl(name, fn, 'computed'));
+    }
+    return this;
   }
 
   /** Returns true if object has at least one property or index signature. */

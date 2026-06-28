@@ -232,10 +232,15 @@ export interface NumberResolverContext
        */
       base: (ctx: NumberResolverContext) => Type;
       /**
+       * Returns a branded wrapper around the base type.
+       */
+      brand: (ctx: NumberResolverContext) => Type | undefined;
+      /**
        * Returns the literal type for const values.
        */
       const: (ctx: NumberResolverContext) => Type | undefined;
     }> {
+  brandable?: boolean;
   schema: SchemaWithType<'integer' | 'number'>;
 }
 
@@ -265,6 +270,10 @@ export interface StringResolverContext
        */
       base: (ctx: StringResolverContext) => Type;
       /**
+       * Returns a branded wrapper around the base type.
+       */
+      brand: (ctx: StringResolverContext) => Type | undefined;
+      /**
        * Returns the literal type for const values.
        */
       const: (ctx: StringResolverContext) => Type | undefined;
@@ -273,6 +282,7 @@ export interface StringResolverContext
        */
       format: (ctx: StringResolverContext) => Type | undefined;
     }> {
+  brandable?: boolean;
   schema: SchemaWithType<'string'>;
 }
 
