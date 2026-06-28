@@ -1,9 +1,6 @@
 import { ts } from '../../../index';
 import { assertPrintedMatchesSnapshot } from '../utils';
 
-const stringType = ts.factory.createIdentifier('string') as unknown as ts.TypeNode;
-const unknownType = ts.factory.createIdentifier('unknown') as unknown as ts.TypeNode;
-
 describe('index-signature', () => {
   it('readonly', async () => {
     const file = ts.factory.createSourceFile([
@@ -16,11 +13,11 @@ describe('index-signature', () => {
               undefined,
               'key',
               undefined,
-              stringType,
+              ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
               undefined,
             ),
           ],
-          unknownType,
+          ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword),
         ),
       ]),
     ]);

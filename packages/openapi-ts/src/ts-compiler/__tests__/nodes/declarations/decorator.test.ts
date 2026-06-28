@@ -1,13 +1,11 @@
 import { ts } from '../../../index';
-import { createClassDeclaration } from '../../../nodes/declarations/class-declaration';
-import { createMethodDeclaration } from '../../../nodes/declarations/method-declaration';
 import { assertPrintedMatchesSnapshot } from '../utils';
 
 describe('decorator', () => {
   it('parameter decorator', async () => {
     const file = ts.factory.createSourceFile([
-      createClassDeclaration(undefined, 'Service', undefined, undefined, [
-        createMethodDeclaration(
+      ts.factory.createClassDeclaration(undefined, 'Service', undefined, undefined, [
+        ts.factory.createMethodDeclaration(
           undefined,
           undefined,
           'handle',
