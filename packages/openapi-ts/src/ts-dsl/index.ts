@@ -1,6 +1,6 @@
 import type { NodeName } from '@hey-api/codegen-core';
-import type ts from 'typescript';
 
+import type { ts } from '../ts-compiler';
 import { ClassTsDsl } from './decl/class';
 import { DecoratorTsDsl } from './decl/decorator';
 import { EnumTsDsl } from './decl/enum';

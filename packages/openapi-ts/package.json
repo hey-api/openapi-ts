@@ -116,9 +116,6 @@
     "vue": "3.5.25",
     "zone.js": "0.16.2"
   },
-  "peerDependencies": {
-    "typescript": ">=5.5.3 || >=6.0.0 || 6.0.1-rc"
-  },
   "engines": {
     "node": ">=22.18.0"
   }
