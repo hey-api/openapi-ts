@@ -79,6 +79,7 @@ const TOKEN_TEXT: Record<SyntaxKind, string> = {
   [SyntaxKind.NewKeyword]: 'new',
   [SyntaxKind.UniqueKeyword]: 'unique',
   [SyntaxKind.AnyKeyword]: 'any',
+  [SyntaxKind.AssertsKeyword]: 'asserts',
   [SyntaxKind.BigIntKeyword]: 'bigint',
   [SyntaxKind.BooleanKeyword]: 'boolean',
   [SyntaxKind.FalseKeyword]: 'false',
@@ -223,6 +224,7 @@ export function createPrinter(options?: TsPrinterOptions) {
     const text = printInline(type);
     return type.kind === TsNodeKind.UnionType ||
       type.kind === TsNodeKind.FunctionType ||
+      type.kind === TsNodeKind.ConstructorType ||
       type.kind === TsNodeKind.ConditionalType
       ? `(${text})`
       : text;
@@ -232,6 +234,7 @@ export function createPrinter(options?: TsPrinterOptions) {
     const text = printInline(type);
     return type.kind === TsNodeKind.IntersectionType ||
       type.kind === TsNodeKind.FunctionType ||
+      type.kind === TsNodeKind.ConstructorType ||
       type.kind === TsNodeKind.ConditionalType
       ? `(${text})`
       : text;
@@ -990,7 +993,8 @@ export function createPrinter(options?: TsPrinterOptions) {
         break;
 
       case TsNodeKind.ModuleDeclaration: {
-        let header = `${printModifiers(node.modifiers)}namespace ${printName(node.name)}`;
+        const keyword = node.name.kind === TsNodeKind.StringLiteral ? 'module' : 'namespace';
+        let header = `${printModifiers(node.modifiers)}${keyword} ${printInline(node.name)}`;
         if (node.body) header += ` ${printInline(node.body)}`;
         parts.push(printLine(header));
         break;

@@ -27,4 +27,26 @@ describe('module-declaration', () => {
     ]);
     await assertPrintedMatchesSnapshot(file, 'exported-namespace.ts');
   });
+
+  it('declare module with string-literal name', async () => {
+    const file = ts.factory.createSourceFile([
+      ts.factory.createModuleDeclaration(
+        [ts.factory.createModifier(ts.SyntaxKind.DeclareKeyword)],
+        ts.factory.createStringLiteral('foo'),
+        ts.factory.createModuleBlock([]),
+      ),
+    ]);
+    await assertPrintedMatchesSnapshot(file, 'declare-module.ts');
+  });
+
+  it('namespace with qualified name', async () => {
+    const file = ts.factory.createSourceFile([
+      ts.factory.createModuleDeclaration(
+        undefined,
+        ts.factory.createQualifiedName(ts.factory.createIdentifier('A'), 'B'),
+        ts.factory.createModuleBlock([]),
+      ),
+    ]);
+    await assertPrintedMatchesSnapshot(file, 'qualified-namespace.ts');
+  });
 });

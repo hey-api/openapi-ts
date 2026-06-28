@@ -351,6 +351,7 @@ export namespace ts {
     export type AmpersandAmpersandToken = _SyntaxKindEnum.AmpersandAmpersandToken;
     export type AmpersandToken = _SyntaxKindEnum.AmpersandToken;
     export type AnyKeyword = _SyntaxKindEnum.AnyKeyword;
+    export type AssertsKeyword = _SyntaxKindEnum.AssertsKeyword;
     export type AsteriskAsteriskToken = _SyntaxKindEnum.AsteriskAsteriskToken;
     export type AsteriskToken = _SyntaxKindEnum.AsteriskToken;
     export type AsyncKeyword = _SyntaxKindEnum.AsyncKeyword;

@@ -36,4 +36,15 @@ describe('import-type-node', () => {
     ]);
     await assertPrintedMatchesSnapshot(file, 'typeof.ts');
   });
+
+  it('stores attributes on the node', () => {
+    const attributes = ts.factory.createObjectLiteralExpression([]);
+    const node = ts.factory.createImportTypeNode(
+      ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral('module')),
+      attributes,
+      undefined,
+      undefined,
+    );
+    expect(node.attributes).toBe(attributes);
+  });
 });

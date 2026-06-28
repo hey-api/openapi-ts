@@ -5,6 +5,7 @@ export enum SyntaxKind {
   AmpersandAmpersandToken = 'AmpersandAmpersandToken',
   AmpersandToken = 'AmpersandToken',
   AnyKeyword = 'AnyKeyword',
+  AssertsKeyword = 'AssertsKeyword',
   AsteriskAsteriskToken = 'AsteriskAsteriskToken',
   AsteriskToken = 'AsteriskToken',
   AsyncKeyword = 'AsyncKeyword',
