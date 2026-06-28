@@ -158,8 +158,7 @@ export class PythonRenderer implements Renderer {
     return text;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static toExportAst(group: ModuleExport, options?: ExportsOptions): py.Assignment {
+  static toExportAst(group: ModuleExport, _options?: ExportsOptions): py.Assignment {
     const specifiers = group.exports.map((exp) => py.factory.createLiteral(exp.exportedName));
     return py.factory.createAssignment(
       py.factory.createIdentifier('__all__'),

@@ -1168,11 +1168,7 @@ export function createPrinter(options?: TsPrinterOptions) {
 
   return {
     printFile,
-    printNode: (
-      _emitHint: EmitHint,
-      node: TsNode,
-      _sourceFile?: TsNode, // eslint-disable-line @typescript-eslint/no-unused-vars
-    ): string => printNode(node),
+    printNode: (_emitHint: EmitHint, node: TsNode, _sourceFile?: TsNode): string => printNode(node),
   };
 }
 

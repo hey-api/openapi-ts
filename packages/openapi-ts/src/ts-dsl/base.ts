@@ -23,7 +23,6 @@ export abstract class TsDsl<
   T extends ts.Node = ts.Node,
   L extends Language = 'typescript',
 > implements Node<T> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   analyze(_: AnalysisContext): void {}
   clone(): this {
     const cloned = Object.create(Object.getPrototypeOf(this));

@@ -150,7 +150,6 @@ import type { TsUnionTypeNode as _TsUnionTypeNode } from './nodes/types/union-ty
 import type { TsPrinterOptions as _TsPrinterOptions } from './printer';
 import { createPrinter, printAst } from './printer';
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace ts {
   export type ArrayBindingElement = _TsArrayBindingElement;
   export type ArrayBindingPattern = _TsArrayBindingPattern;
@@ -262,7 +261,7 @@ export namespace ts {
   export type SpreadElement = _TsSpreadElement;
   export type Statement = _TsStatement;
   export type StringLiteral = _TsStringLiteral;
-  // eslint-disable-next-line @typescript-eslint/no-namespace
+
   export namespace SyntaxKind {
     export type AbstractKeyword = _SyntaxKindEnum.AbstractKeyword;
     export type AccessorKeyword = _SyntaxKindEnum.AccessorKeyword;
