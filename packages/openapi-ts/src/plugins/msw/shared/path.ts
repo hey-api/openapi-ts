@@ -1,5 +1,3 @@
-/* oxlint-disable no-control-regex */
-
 /**
  * path-to-regexp v6 (used by MSW) only allows word characters in param names.
  * So transform what's necessary: replace non-word chars with camelCase transitions,
@@ -19,8 +17,11 @@ export function sanitizeParamName(name: string): string {
  * patterns.
  */
 export function sanitizePath(path: string): string {
-  return path
-    .replace(/\{([^}]+)\}/g, (_, name: string) => `\0${sanitizeParamName(name)}`)
-    .replace(/:/g, String.raw`\:`)
-    .replace(/\0/g, ':');
+  return (
+    path
+      .replace(/\{([^}]+)\}/g, (_, name: string) => `\0${sanitizeParamName(name)}`)
+      .replace(/:/g, String.raw`\:`)
+      // oxlint-disable-next-line no-control-regex
+      .replace(/\0/g, ':')
+  );
 }

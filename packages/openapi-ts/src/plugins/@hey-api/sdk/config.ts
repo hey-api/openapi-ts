@@ -8,14 +8,13 @@ import { mapLegacyToConfig } from './operations/config';
 import { handler } from './plugin';
 import type { Config, HeyApiSdkPlugin } from './types';
 
-/* oxlint-disable sort-keys */
-
 const transformerInferWarn =
   'You set `transformer: true` but no transformer plugin was found in your plugins. Add a transformer plugin like `@hey-api/transformers` to enable this feature. The transformer option has been disabled.';
 const validatorInferWarn =
   'You set `validator: true` but no validator plugin was found in your plugins. Add a validator plugin like `zod` to enable this feature. The validator option has been disabled.';
 
 export const defaultConfig: HeyApiSdkPlugin['Config'] = {
+  // oxlint-disable-next-line sort-keys
   config: {
     $dependencies: ['client'],
     $finalize(config, input) {
@@ -184,7 +183,6 @@ export const defaultConfig: HeyApiSdkPlugin['Config'] = {
     },
 
     // Deprecated - kept for backward compatibility
-    // oxlint-disable-next-line sort-keys
     response: 'body',
   },
   dependencies: ['@hey-api/typescript'],
