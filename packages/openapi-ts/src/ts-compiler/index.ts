@@ -295,6 +295,7 @@ export namespace ts {
     export type GreaterThanEqualsToken = _SyntaxKindEnum.GreaterThanEqualsToken;
     export type GreaterThanToken = _SyntaxKindEnum.GreaterThanToken;
     export type ImplementsKeyword = _SyntaxKindEnum.ImplementsKeyword;
+    export type ImportKeyword = _SyntaxKindEnum.ImportKeyword;
     export type InKeyword = _SyntaxKindEnum.InKeyword;
     export type KeyOfKeyword = _SyntaxKindEnum.KeyOfKeyword;
     export type LessThanEqualsToken = _SyntaxKindEnum.LessThanEqualsToken;
@@ -303,6 +304,7 @@ export namespace ts {
     export type MinusToken = _SyntaxKindEnum.MinusToken;
     export type MultiLineCommentTrivia = _SyntaxKindEnum.MultiLineCommentTrivia;
     export type NeverKeyword = _SyntaxKindEnum.NeverKeyword;
+    export type NewKeyword = _SyntaxKindEnum.NewKeyword;
     export type NullKeyword = _SyntaxKindEnum.NullKeyword;
     export type NumberKeyword = _SyntaxKindEnum.NumberKeyword;
     export type ObjectKeyword = _SyntaxKindEnum.ObjectKeyword;

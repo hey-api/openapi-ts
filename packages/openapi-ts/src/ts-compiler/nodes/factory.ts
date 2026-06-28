@@ -1,6 +1,7 @@
 import { createArrayBindingPattern } from './declarations/array-binding-pattern';
 import { createBindingElement } from './declarations/binding-element';
 import { createClassDeclaration } from './declarations/class-declaration';
+import { createClassStaticBlockDeclaration } from './declarations/class-static-block-declaration';
 import { createConstructorDeclaration } from './declarations/constructor-declaration';
 import { createDecorator } from './declarations/decorator';
 import { createEnumDeclaration } from './declarations/enum-declaration';
@@ -16,6 +17,8 @@ import { createImportSpecifier } from './declarations/import-specifier';
 import { createIndexSignature } from './declarations/index-signature-declaration';
 import { createInterfaceDeclaration } from './declarations/interface-declaration';
 import { createMethodDeclaration } from './declarations/method-declaration';
+import { createModuleBlock } from './declarations/module-block';
+import { createModuleDeclaration } from './declarations/module-declaration';
 import { createNamedExports } from './declarations/named-exports';
 import { createNamedImports } from './declarations/named-imports';
 import { createNamespaceExport } from './declarations/namespace-export';
@@ -37,6 +40,8 @@ import { createAwaitExpression } from './expressions/await-expression';
 import { createBigIntLiteral } from './expressions/big-int-literal';
 import { createBinaryExpression } from './expressions/binary-expression';
 import { createCallExpression } from './expressions/call-expression';
+import { createClassExpression } from './expressions/class-expression';
+import { createCommaListExpression } from './expressions/comma-list-expression';
 import { createComputedPropertyName } from './expressions/computed-property-name';
 import { createConditionalExpression } from './expressions/conditional-expression';
 import { createDeleteExpression } from './expressions/delete-expression';
@@ -48,11 +53,13 @@ import { createExpressionWithTypeArguments } from './expressions/expression-with
 import { createFunctionExpression } from './expressions/function-expression';
 import { createIdentifier } from './expressions/identifier';
 import { createFalse, createNull, createTrue } from './expressions/keyword-literals';
+import { createMetaProperty } from './expressions/meta-property';
 import { createNewExpression } from './expressions/new-expression';
 import { createNoSubstitutionTemplateLiteral } from './expressions/no-substitution-template-literal';
 import { createNonNullExpression } from './expressions/non-null-expression';
 import { createNumericLiteral } from './expressions/numeric-literal';
 import { createObjectLiteralExpression } from './expressions/object-literal-expression';
+import { createOmittedExpression } from './expressions/omitted-expression';
 import { createParenthesizedExpression } from './expressions/parenthesized-expression';
 import { createPostfixUnaryExpression } from './expressions/postfix-unary-expression';
 import { createPrefixUnaryExpression } from './expressions/prefix-unary-expression';
@@ -77,19 +84,32 @@ import { createTemplateSpan } from './expressions/template-span';
 import { createTemplateTail } from './expressions/template-tail';
 import { createTypeOfExpression } from './expressions/type-of-expression';
 import { createVoidExpression } from './expressions/void-expression';
+import { createYieldExpression } from './expressions/yield-expression';
 import { createJSDocComment } from './jsdoc/jsdoc';
 import { createJSDocText } from './jsdoc/jsdoc-text';
 import { createNodeArray } from './node-array';
 import { createBlock } from './statements/block';
+import { createBreakStatement } from './statements/break-statement';
+import { createCaseBlock } from './statements/case-block';
+import { createCaseClause } from './statements/case-clause';
 import { createCatchClause } from './statements/catch-clause';
+import { createContinueStatement } from './statements/continue-statement';
+import { createDebuggerStatement } from './statements/debugger-statement';
+import { createDefaultClause } from './statements/default-clause';
+import { createDoStatement } from './statements/do-statement';
+import { createEmptyStatement } from './statements/empty-statement';
 import { createExpressionStatement } from './statements/expression-statement';
 import { createForInStatement } from './statements/for-in-statement';
 import { createForOfStatement } from './statements/for-of-statement';
 import { createForStatement } from './statements/for-statement';
 import { createIfStatement } from './statements/if-statement';
+import { createLabeledStatement } from './statements/labeled-statement';
 import { createReturnStatement } from './statements/return-statement';
+import { createSwitchStatement } from './statements/switch-statement';
 import { createThrowStatement } from './statements/throw-statement';
 import { createTryStatement } from './statements/try-statement';
+import { createWhileStatement } from './statements/while-statement';
+import { createWithStatement } from './statements/with-statement';
 import { createSourceFile } from './structure/source-file';
 import { createModifier, createToken } from './token';
 import { createArrayTypeNode } from './types/array-type-node';
@@ -121,17 +141,28 @@ export const factory = {
   createBinaryExpression,
   createBindingElement,
   createBlock,
+  createBreakStatement,
   createCallExpression,
+  createCaseBlock,
+  createCaseClause,
   createCatchClause,
   createClassDeclaration,
+  createClassExpression,
+  createClassStaticBlockDeclaration,
+  createCommaListExpression,
   createComputedPropertyName,
   createConditionalExpression,
   createConditionalTypeNode,
   createConstructorDeclaration,
+  createContinueStatement,
+  createDebuggerStatement,
   createDecorator,
+  createDefaultClause,
   createDeleteExpression,
+  createDoStatement,
   createElementAccessChain,
   createElementAccessExpression,
+  createEmptyStatement,
   createEnumDeclaration,
   createEnumMember,
   createExportDeclaration,
@@ -159,10 +190,14 @@ export const factory = {
   createJSDocComment,
   createJSDocText,
   createKeywordTypeNode,
+  createLabeledStatement,
   createLiteralTypeNode,
   createMappedTypeNode,
+  createMetaProperty,
   createMethodDeclaration,
   createModifier,
+  createModuleBlock,
+  createModuleDeclaration,
   createNamedExports,
   createNamedImports,
   createNamedTupleMember,
@@ -176,6 +211,7 @@ export const factory = {
   createNumericLiteral,
   createObjectBindingPattern,
   createObjectLiteralExpression,
+  createOmittedExpression,
   createParameterDeclaration,
   createParenthesizedExpression,
   createPostfixUnaryExpression,
@@ -196,6 +232,7 @@ export const factory = {
   createSpreadAssignment,
   createSpreadElement,
   createStringLiteral,
+  createSwitchStatement,
   createTaggedTemplateExpression,
   createTemplateExpression,
   createTemplateHead,
@@ -221,4 +258,7 @@ export const factory = {
   createVariableDeclarationList,
   createVariableStatement,
   createVoidExpression,
+  createWhileStatement,
+  createWithStatement,
+  createYieldExpression,
 } as const;

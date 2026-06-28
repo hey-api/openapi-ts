@@ -9,6 +9,7 @@ import type { TsImportDeclaration } from './declarations/import-declaration';
 import type { TsIndexSignatureDeclaration } from './declarations/index-signature-declaration';
 import type { TsInterfaceDeclaration } from './declarations/interface-declaration';
 import type { TsMethodDeclaration } from './declarations/method-declaration';
+import type { TsModuleDeclaration } from './declarations/module-declaration';
 import type { TsPropertyDeclaration } from './declarations/property-declaration';
 import type { TsPropertySignature } from './declarations/property-signature';
 import type { TsSetAccessorDeclaration } from './declarations/set-accessor-declaration';
@@ -17,19 +18,33 @@ import type { TsVariableDeclaration } from './declarations/variable-declaration'
 import type { TsVariableDeclarationList } from './declarations/variable-declaration-list';
 import type { TsVariableStatement } from './declarations/variable-statement';
 import type { TsBlock } from './statements/block';
+import type { TsBreakStatement } from './statements/break-statement';
+import type { TsContinueStatement } from './statements/continue-statement';
+import type { TsDebuggerStatement } from './statements/debugger-statement';
+import type { TsDoStatement } from './statements/do-statement';
+import type { TsEmptyStatement } from './statements/empty-statement';
 import type { TsExpressionStatement } from './statements/expression-statement';
 import type { TsForInStatement } from './statements/for-in-statement';
 import type { TsForOfStatement } from './statements/for-of-statement';
 import type { TsForStatement } from './statements/for-statement';
 import type { TsIfStatement } from './statements/if-statement';
+import type { TsLabeledStatement } from './statements/labeled-statement';
 import type { TsReturnStatement } from './statements/return-statement';
+import type { TsSwitchStatement } from './statements/switch-statement';
 import type { TsThrowStatement } from './statements/throw-statement';
 import type { TsTryStatement } from './statements/try-statement';
+import type { TsWhileStatement } from './statements/while-statement';
+import type { TsWithStatement } from './statements/with-statement';
 
 export type TsStatement =
   | TsBlock
+  | TsBreakStatement
   | TsClassDeclaration
   | TsConstructorDeclaration
+  | TsContinueStatement
+  | TsDebuggerStatement
+  | TsDoStatement
+  | TsEmptyStatement
   | TsEnumDeclaration
   | TsEnumMember
   | TsExportDeclaration
@@ -43,14 +58,19 @@ export type TsStatement =
   | TsImportDeclaration
   | TsIndexSignatureDeclaration
   | TsInterfaceDeclaration
+  | TsLabeledStatement
   | TsMethodDeclaration
+  | TsModuleDeclaration
   | TsPropertyDeclaration
   | TsPropertySignature
   | TsReturnStatement
   | TsSetAccessorDeclaration
+  | TsSwitchStatement
   | TsThrowStatement
   | TsTryStatement
   | TsTypeAliasDeclaration
   | TsVariableDeclaration
   | TsVariableDeclarationList
-  | TsVariableStatement;
+  | TsVariableStatement
+  | TsWhileStatement
+  | TsWithStatement;

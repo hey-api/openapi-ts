@@ -1,10 +1,12 @@
 import type { TsArrayBindingPattern } from './declarations/array-binding-pattern';
 import type { TsBindingElement } from './declarations/binding-element';
+import type { TsClassStaticBlockDeclaration } from './declarations/class-static-block-declaration';
 import type { TsDecorator } from './declarations/decorator';
 import type { TsExportSpecifier } from './declarations/export-specifier';
 import type { TsHeritageClause } from './declarations/heritage-clause';
 import type { TsImportClause } from './declarations/import-clause';
 import type { TsImportSpecifier } from './declarations/import-specifier';
+import type { TsModuleBlock } from './declarations/module-block';
 import type { TsNamedExports } from './declarations/named-exports';
 import type { TsNamedImports } from './declarations/named-imports';
 import type { TsNamespaceExport } from './declarations/namespace-export';
@@ -24,7 +26,10 @@ import type { TsJSDoc } from './jsdoc/jsdoc';
 import type { TsJSDocText } from './jsdoc/jsdoc-text';
 import type { TsNodeKind } from './kinds';
 import type { TsStatement } from './statement';
+import type { TsCaseBlock } from './statements/case-block';
+import type { TsCaseClause } from './statements/case-clause';
 import type { TsCatchClause } from './statements/catch-clause';
+import type { TsDefaultClause } from './statements/default-clause';
 import type { TsSourceFile } from './structure/source-file';
 import type { TsToken } from './token';
 import type { TsTypeNode } from './type';
@@ -39,8 +44,12 @@ export interface TsNodeBase {
 export type TsNode =
   | TsArrayBindingPattern
   | TsBindingElement
+  | TsCaseBlock
+  | TsCaseClause
   | TsCatchClause
+  | TsClassStaticBlockDeclaration
   | TsDecorator
+  | TsDefaultClause
   | TsExportSpecifier
   | TsExpression
   | TsHeritageClause
@@ -48,6 +57,7 @@ export type TsNode =
   | TsImportSpecifier
   | TsJSDoc
   | TsJSDocText
+  | TsModuleBlock
   | TsNamedExports
   | TsNamedImports
   | TsNamespaceExport
