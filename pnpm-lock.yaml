@@ -57,7 +57,7 @@ importers:
         specifier: 0.55.0
         version: 0.55.0(svelte@5.19.9)
       oxlint:
-        specifier: ^1.71.0
+        specifier: 1.71.0
         version: 1.71.0
       publint:
         specifier: 0.3.21
@@ -200,7 +200,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 21.2.15
-        version: 21.2.15(77e67e4eca4e2f816867f31799a80d09)
+        version: 21.2.15(d50c4b0cc5a7c79601ab719a7399b455)
       '@angular/cli':
         specifier: 21.2.15
         version: 21.2.15(@types/node@24.13.2)(chokidar@5.0.0)
@@ -224,7 +224,7 @@ importers:
         version: 6.1.0
       karma:
         specifier: 6.4.4
-        version: 6.4.4
+        version: 6.4.4(debug@4.4.3)
       karma-chrome-launcher:
         specifier: 3.2.0
         version: 3.2.0
@@ -312,7 +312,7 @@ importers:
         version: 6.1.0
       karma:
         specifier: 6.4.4
-        version: 6.4.4
+        version: 6.4.4(debug@4.4.3)
       karma-chrome-launcher:
         specifier: 3.2.0
         version: 3.2.0
@@ -345,7 +345,7 @@ importers:
         version: 3.1.6(@types/react-dom@19.0.1)(@types/react@19.0.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       axios:
         specifier: 1.8.2
-        version: 1.8.2
+        version: 1.8.2(debug@4.4.3)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -606,7 +606,7 @@ importers:
         version: link:../../packages/nuxt
       nuxt:
         specifier: 3.14.1592
-        version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.13.2)(@vercel/functions@3.5.1)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.4(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.1.2)(rollup@4.61.1)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))(vue-tsc@3.2.4(typescript@6.0.3))
+        version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.13.2)(@vercel/functions@3.5.1)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.4(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.5.2)(optionator@0.9.4)(rolldown@1.1.2)(rollup@4.61.1)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))(vue-tsc@3.2.4(typescript@6.0.3))
       vue:
         specifier: 3.5.13
         version: 3.5.13(typescript@6.0.3)
@@ -881,7 +881,7 @@ importers:
         version: 6.1.0
       karma:
         specifier: 6.4.4
-        version: 6.4.4
+        version: 6.4.4(debug@4.4.3)
       karma-chrome-launcher:
         specifier: 3.2.0
         version: 3.2.0
@@ -1286,7 +1286,7 @@ importers:
         version: 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/animations@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       axios:
         specifier: 1.13.4
-        version: 1.13.4
+        version: 1.13.4(debug@4.4.3)
       eslint:
         specifier: 9.39.4
         version: 9.39.4(jiti@2.6.1)
@@ -1295,7 +1295,7 @@ importers:
         version: 1.14.3
       nuxt:
         specifier: 3.14.1592
-        version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.13.2)(@vercel/functions@3.5.1)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.4(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.5.2)(optionator@0.9.4)(rolldown@1.1.2)(rollup@4.61.1)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.3)(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))(vue-tsc@3.2.4(typescript@6.0.3))
+        version: 3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.13.2)(@vercel/functions@3.5.1)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.4(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.3.5)(optionator@0.9.4)(rolldown@1.1.2)(rollup@4.61.1)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))(vue-tsc@3.2.4(typescript@6.0.3))
       ofetch:
         specifier: 1.5.1
         version: 1.5.1
@@ -1382,7 +1382,7 @@ importers:
         version: 2.2.1
       axios:
         specifier: 1.13.4
-        version: 1.13.4
+        version: 1.13.4(debug@4.4.3)
       cross-spawn:
         specifier: 7.0.6
         version: 7.0.6
@@ -1496,7 +1496,7 @@ importers:
         version: 5.92.9(vue@3.5.34(typescript@6.0.3))
       axios:
         specifier: 1.13.4
-        version: 1.13.4
+        version: 1.13.4(debug@4.4.3)
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -15210,7 +15210,98 @@ snapshots:
       '@angular/platform-server': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/compiler@21.2.17)(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/animations@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       '@angular/ssr': 21.2.15(475757bebd303986cec4777626468fad)
       esbuild: 0.27.3
-      karma: 6.4.4
+      karma: 6.4.4(debug@4.4.3)
+      tailwindcss: 3.4.19
+    transitivePeerDependencies:
+      - '@angular/compiler'
+      - '@emnapi/core'
+      - '@emnapi/runtime'
+      - '@rspack/core'
+      - '@swc/core'
+      - '@types/node'
+      - bufferutil
+      - chokidar
+      - debug
+      - html-webpack-plugin
+      - jiti
+      - lightningcss
+      - node-sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - tsx
+      - uglify-js
+      - utf-8-validate
+      - vitest
+      - webpack-cli
+      - yaml
+
+  '@angular-devkit/build-angular@21.2.15(d50c4b0cc5a7c79601ab719a7399b455)':
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@angular-devkit/architect': 0.2102.15(chokidar@5.0.0)
+      '@angular-devkit/build-webpack': 0.2102.15(chokidar@5.0.0)(webpack-dev-server@5.2.3(tslib@2.8.1)(webpack@5.105.2(esbuild@0.27.3)))(webpack@5.105.2(esbuild@0.27.3))
+      '@angular-devkit/core': 21.2.15(chokidar@5.0.0)
+      '@angular/build': 21.2.15(d64ecf60a27d8d2ef6fc3a338b507f23)
+      '@angular/compiler-cli': 21.2.17(@angular/compiler@21.2.17)(typescript@6.0.3)
+      '@babel/core': 7.29.0
+      '@babel/generator': 7.29.1
+      '@babel/helper-annotate-as-pure': 7.27.3
+      '@babel/helper-split-export-declaration': 7.24.7
+      '@babel/plugin-transform-async-generator-functions': 7.29.0(@babel/core@7.29.0)
+      '@babel/plugin-transform-async-to-generator': 7.28.6(@babel/core@7.29.0)
+      '@babel/plugin-transform-runtime': 7.29.0(@babel/core@7.29.0)
+      '@babel/preset-env': 7.29.2(@babel/core@7.29.0)
+      '@babel/runtime': 7.29.2
+      '@discoveryjs/json-ext': 0.6.3
+      '@ngtools/webpack': 21.2.15(@angular/compiler-cli@21.2.17(@angular/compiler@21.2.17)(typescript@6.0.3))(typescript@6.0.3)(webpack@5.105.2(esbuild@0.27.3))
+      ansi-colors: 4.1.3
+      autoprefixer: 10.4.27(postcss@8.5.12)
+      babel-loader: 10.0.0(@babel/core@7.29.0)(webpack@5.105.2(esbuild@0.27.3))
+      browserslist: 4.28.2
+      copy-webpack-plugin: 14.0.0(webpack@5.105.2(esbuild@0.27.3))
+      css-loader: 7.1.3(webpack@5.105.2(esbuild@0.27.3))
+      esbuild-wasm: 0.27.3
+      http-proxy-middleware: 3.0.5
+      istanbul-lib-instrument: 6.0.3
+      jsonc-parser: 3.3.1
+      karma-source-map-support: 1.4.0
+      less: 4.4.2
+      less-loader: 12.3.1(less@4.4.2)(webpack@5.105.2(esbuild@0.27.3))
+      license-webpack-plugin: 4.0.2(webpack@5.105.2(esbuild@0.27.3))
+      loader-utils: 3.3.1
+      mini-css-extract-plugin: 2.10.0(webpack@5.105.2(esbuild@0.27.3))
+      open: 11.0.0
+      ora: 9.3.0
+      picomatch: 4.0.4
+      piscina: 5.1.4
+      postcss: 8.5.12
+      postcss-loader: 8.2.0(postcss@8.5.12)(typescript@6.0.3)(webpack@5.105.2(esbuild@0.27.3))
+      resolve-url-loader: 5.0.0
+      rxjs: 7.8.2
+      sass: 1.97.3
+      sass-loader: 16.0.7(sass@1.97.3)(webpack@5.105.2(esbuild@0.27.3))
+      semver: 7.7.4
+      source-map-loader: 5.0.0(webpack@5.105.2(esbuild@0.27.3))
+      source-map-support: 0.5.21
+      terser: 5.46.0
+      tinyglobby: 0.2.15
+      tree-kill: 1.2.2
+      tslib: 2.8.1
+      typescript: 6.0.3
+      webpack: 5.105.2(esbuild@0.27.3)
+      webpack-dev-middleware: 7.4.5(tslib@2.8.1)(webpack@5.105.2(esbuild@0.27.3))
+      webpack-dev-server: 5.2.3(tslib@2.8.1)(webpack@5.105.2(esbuild@0.27.3))
+      webpack-merge: 6.0.1
+      webpack-subresource-integrity: 5.1.0(webpack@5.105.2(esbuild@0.27.3))
+    optionalDependencies:
+      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/platform-browser': 21.2.17(@angular/animations@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
+      '@angular/platform-server': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/compiler@21.2.17)(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/animations@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
+      '@angular/ssr': 21.2.15(475757bebd303986cec4777626468fad)
+      esbuild: 0.27.3
+      karma: 6.4.4(debug@4.4.3)
       tailwindcss: 3.4.19
     transitivePeerDependencies:
       - '@angular/compiler'
@@ -15310,7 +15401,66 @@ snapshots:
       '@angular/platform-browser': 21.2.17(@angular/animations@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
       '@angular/platform-server': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/compiler@21.2.17)(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/animations@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
       '@angular/ssr': 21.2.15(475757bebd303986cec4777626468fad)
-      karma: 6.4.4
+      karma: 6.4.4(debug@4.4.3)
+      less: 4.4.2
+      lmdb: 3.5.1
+      postcss: 8.5.12
+      tailwindcss: 3.4.19
+      vitest: 4.1.9(@types/node@24.13.2)(@vitest/coverage-v8@4.1.9)(jsdom@29.1.1)(msw@2.13.2(@types/node@24.13.2)(typescript@6.0.3))(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
+      - '@types/node'
+      - chokidar
+      - jiti
+      - lightningcss
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
+
+  '@angular/build@21.2.15(d64ecf60a27d8d2ef6fc3a338b507f23)':
+    dependencies:
+      '@ampproject/remapping': 2.3.0
+      '@angular-devkit/architect': 0.2102.15(chokidar@5.0.0)
+      '@angular/compiler': 21.2.17
+      '@angular/compiler-cli': 21.2.17(@angular/compiler@21.2.17)(typescript@6.0.3)
+      '@babel/core': 7.29.0
+      '@babel/helper-annotate-as-pure': 7.27.3
+      '@babel/helper-split-export-declaration': 7.24.7
+      '@inquirer/confirm': 5.1.21(@types/node@24.13.2)
+      '@vitejs/plugin-basic-ssl': 2.1.4(vite@7.3.2(@types/node@24.13.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))
+      beasties: 0.4.1
+      browserslist: 4.28.2
+      esbuild: 0.27.3
+      https-proxy-agent: 7.0.6
+      istanbul-lib-instrument: 6.0.3
+      jsonc-parser: 3.3.1
+      listr2: 9.0.5
+      magic-string: 0.30.21
+      mrmime: 2.0.1
+      parse5-html-rewriting-stream: 8.0.0
+      picomatch: 4.0.4
+      piscina: 5.1.4
+      rolldown: 1.0.0-rc.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
+      sass: 1.97.3
+      semver: 7.7.4
+      source-map-support: 0.5.21
+      tinyglobby: 0.2.15
+      tslib: 2.8.1
+      typescript: 6.0.3
+      undici: 7.24.4
+      vite: 7.3.2(@types/node@24.13.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)
+      watchpack: 2.5.1
+    optionalDependencies:
+      '@angular/core': 21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)
+      '@angular/platform-browser': 21.2.17(@angular/animations@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))
+      '@angular/platform-server': 21.2.17(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/compiler@21.2.17)(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@21.2.17(@angular/animations@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@21.2.17(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@21.2.17(@angular/compiler@21.2.17)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
+      '@angular/ssr': 21.2.15(475757bebd303986cec4777626468fad)
+      karma: 6.4.4(debug@4.4.3)
       less: 4.4.2
       lmdb: 3.5.1
       postcss: 8.5.12
@@ -18249,15 +18399,6 @@ snapshots:
 
   '@nuxt/devalue@2.0.2': {}
 
-  '@nuxt/devtools-kit@1.7.0(magicast@0.3.5)(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))':
-    dependencies:
-      '@nuxt/kit': 3.21.2(magicast@0.3.5)
-      '@nuxt/schema': 3.16.2
-      execa: 7.2.0
-      vite: 5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)
-    transitivePeerDependencies:
-      - magicast
-
   '@nuxt/devtools-kit@1.7.0(magicast@0.3.5)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))':
     dependencies:
       '@nuxt/kit': 3.21.2(magicast@0.3.5)
@@ -18345,53 +18486,6 @@ snapshots:
       vite: 8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)
       vite-plugin-inspect: 0.8.9(@nuxt/kit@3.21.2(magicast@0.3.5))(rollup@3.29.5)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))
       vite-plugin-vue-inspector: 5.3.2(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))
-      which: 3.0.1
-      ws: 8.18.3
-    transitivePeerDependencies:
-      - bufferutil
-      - rollup
-      - supports-color
-      - utf-8-validate
-      - vue
-
-  '@nuxt/devtools@1.7.0(rollup@4.61.1)(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))(vue@3.5.25(typescript@6.0.3))':
-    dependencies:
-      '@antfu/utils': 0.7.10
-      '@nuxt/devtools-kit': 1.7.0(magicast@0.3.5)(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))
-      '@nuxt/devtools-wizard': 1.7.0
-      '@nuxt/kit': 3.21.2(magicast@0.3.5)
-      '@vue/devtools-core': 7.6.8(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))(vue@3.5.25(typescript@6.0.3))
-      '@vue/devtools-kit': 7.6.8
-      birpc: 0.2.19
-      consola: 3.4.2
-      cronstrue: 2.59.0
-      destr: 2.0.5
-      error-stack-parser-es: 0.1.5
-      execa: 7.2.0
-      fast-npm-meta: 0.2.2
-      flatted: 3.3.3
-      get-port-please: 3.2.0
-      hookable: 5.5.3
-      image-meta: 0.2.2
-      is-installed-globally: 1.0.0
-      launch-editor: 2.12.0
-      local-pkg: 0.5.1
-      magicast: 0.3.5
-      nypm: 0.4.1
-      ohash: 1.1.6
-      pathe: 1.1.2
-      perfect-debounce: 1.0.0
-      pkg-types: 1.3.1
-      rc9: 2.1.2
-      scule: 1.3.0
-      semver: 7.8.4
-      simple-git: 3.30.0
-      sirv: 3.0.2
-      tinyglobby: 0.2.17
-      unimport: 3.14.6(rollup@4.61.1)
-      vite: 5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)
-      vite-plugin-inspect: 0.8.9(@nuxt/kit@3.21.2(magicast@0.3.5))(rollup@4.61.1)(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))
-      vite-plugin-vue-inspector: 5.3.2(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))
       which: 3.0.1
       ws: 8.18.3
     transitivePeerDependencies:
@@ -22064,18 +22158,6 @@ snapshots:
     dependencies:
       '@vue/devtools-kit': 8.0.5
 
-  '@vue/devtools-core@7.6.8(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))(vue@3.5.25(typescript@6.0.3))':
-    dependencies:
-      '@vue/devtools-kit': 7.7.7
-      '@vue/devtools-shared': 7.7.7
-      mitt: 3.0.1
-      nanoid: 5.1.5
-      pathe: 1.1.2
-      vite-hot-client: 0.2.4(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))
-      vue: 3.5.25(typescript@6.0.3)
-    transitivePeerDependencies:
-      - vite
-
   '@vue/devtools-core@7.6.8(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.25(typescript@6.0.3))':
     dependencies:
       '@vue/devtools-kit': 7.7.7
@@ -22835,7 +22917,7 @@ snapshots:
       '@fastify/error': 4.2.0
       fastq: 1.19.1
 
-  axios@1.13.4:
+  axios@1.13.4(debug@4.4.3):
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.3)
       form-data: 4.0.4
@@ -22843,7 +22925,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  axios@1.8.2:
+  axios@1.8.2(debug@4.4.3):
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.3)
       form-data: 4.0.4
@@ -25624,19 +25706,19 @@ snapshots:
   karma-jasmine-html-reporter@2.1.0(jasmine-core@6.1.0)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4):
     dependencies:
       jasmine-core: 6.1.0
-      karma: 6.4.4
+      karma: 6.4.4(debug@4.4.3)
       karma-jasmine: 5.1.0(karma@6.4.4)
 
   karma-jasmine@5.1.0(karma@6.4.4):
     dependencies:
       jasmine-core: 4.6.1
-      karma: 6.4.4
+      karma: 6.4.4(debug@4.4.3)
 
   karma-source-map-support@1.4.0:
     dependencies:
       source-map-support: 0.5.21
 
-  karma@6.4.4:
+  karma@6.4.4(debug@4.4.3):
     dependencies:
       '@colors/colors': 1.5.0
       body-parser: 1.20.3
@@ -27225,7 +27307,7 @@ snapshots:
       unhead: 1.11.20
       unimport: 3.14.6(rollup@4.61.1)
       unplugin: 1.16.1
-      unplugin-vue-router: 0.10.9(rollup@4.61.1)(vue-router@4.5.0(vue@3.5.13(typescript@6.0.3)))(vue@3.5.25(typescript@6.0.3))
+      unplugin-vue-router: 0.10.9(rollup@4.61.1)(vue-router@4.5.0(vue@3.5.25(typescript@6.0.3)))(vue@3.5.25(typescript@6.0.3))
       unstorage: 1.17.5(@netlify/blobs@9.1.2)(@vercel/functions@3.5.1)(db0@0.3.4)(ioredis@5.9.2)
       untyped: 1.5.2
       vue: 3.5.25(typescript@6.0.3)
@@ -27287,10 +27369,10 @@ snapshots:
       - vue-tsc
       - xml2js
 
-  nuxt@3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.13.2)(@vercel/functions@3.5.1)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.4(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.5.2)(optionator@0.9.4)(rolldown@1.1.2)(rollup@4.61.1)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.3)(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))(vue-tsc@3.2.4(typescript@6.0.3)):
+  nuxt@3.14.1592(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.13.2)(@vercel/functions@3.5.1)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.4(jiti@2.6.1))(ioredis@5.9.2)(less@4.4.2)(lightningcss@1.32.0)(magicast@0.5.2)(optionator@0.9.4)(rolldown@1.1.2)(rollup@4.61.1)(sass@1.97.3)(terser@5.46.0)(typescript@6.0.3)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))(vue-tsc@3.2.4(typescript@6.0.3)):
     dependencies:
       '@nuxt/devalue': 2.0.2
-      '@nuxt/devtools': 1.7.0(rollup@4.61.1)(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0))(vue@3.5.25(typescript@6.0.3))
+      '@nuxt/devtools': 1.7.0(rollup@4.61.1)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))(vue@3.5.25(typescript@6.0.3))
       '@nuxt/kit': 3.14.1592(magicast@0.5.2)(rollup@4.61.1)
       '@nuxt/schema': 3.14.1592(magicast@0.5.2)(rollup@4.61.1)
       '@nuxt/telemetry': 2.6.6(magicast@0.5.2)
@@ -27346,7 +27428,7 @@ snapshots:
       unhead: 1.11.20
       unimport: 3.14.6(rollup@4.61.1)
       unplugin: 1.16.1
-      unplugin-vue-router: 0.10.9(rollup@4.61.1)(vue-router@4.5.0(vue@3.5.25(typescript@6.0.3)))(vue@3.5.25(typescript@6.0.3))
+      unplugin-vue-router: 0.10.9(rollup@4.61.1)(vue-router@4.5.0(vue@3.5.13(typescript@6.0.3)))(vue@3.5.25(typescript@6.0.3))
       unstorage: 1.17.5(@netlify/blobs@9.1.2)(@vercel/functions@3.5.1)(db0@0.3.4)(ioredis@5.9.2)
       untyped: 1.5.2
       vue: 3.5.25(typescript@6.0.3)
@@ -30529,10 +30611,6 @@ snapshots:
       vite: 8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)
       vite-hot-client: 2.1.0(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0))
 
-  vite-hot-client@0.2.4(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)):
-    dependencies:
-      vite: 5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)
-
   vite-hot-client@0.2.4(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)):
     dependencies:
       vite: 8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)
@@ -30638,24 +30716,6 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-inspect@0.8.9(@nuxt/kit@3.21.2(magicast@0.3.5))(rollup@4.61.1)(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)):
-    dependencies:
-      '@antfu/utils': 0.7.10
-      '@rollup/pluginutils': 5.3.0(rollup@4.61.1)
-      debug: 4.4.3
-      error-stack-parser-es: 0.1.5
-      fs-extra: 11.3.1
-      open: 10.2.0
-      perfect-debounce: 1.0.0
-      picocolors: 1.1.1
-      sirv: 3.0.2
-      vite: 5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)
-    optionalDependencies:
-      '@nuxt/kit': 3.21.2(magicast@0.3.5)
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-
   vite-plugin-inspect@0.8.9(@nuxt/kit@3.21.2(magicast@0.3.5))(rollup@4.61.1)(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)):
     dependencies:
       '@antfu/utils': 0.7.10
@@ -30705,21 +30765,6 @@ snapshots:
       - '@nuxt/kit'
       - supports-color
       - vue
-
-  vite-plugin-vue-inspector@5.3.2(vite@5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)):
-    dependencies:
-      '@babel/core': 7.29.0
-      '@babel/plugin-proposal-decorators': 7.28.0(@babel/core@7.29.0)
-      '@babel/plugin-syntax-import-attributes': 7.27.1(@babel/core@7.29.0)
-      '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.29.0)
-      '@babel/plugin-transform-typescript': 7.28.6(@babel/core@7.29.0)
-      '@vue/babel-plugin-jsx': 1.5.0(@babel/core@7.29.0)
-      '@vue/compiler-dom': 3.5.25
-      kolorist: 1.8.0
-      magic-string: 0.30.21
-      vite: 5.4.19(@types/node@24.13.2)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)
-    transitivePeerDependencies:
-      - supports-color
 
   vite-plugin-vue-inspector@5.3.2(vite@8.0.16(@types/node@24.13.2)(esbuild@0.27.3)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.21.0)(yaml@2.9.0)):
     dependencies:
