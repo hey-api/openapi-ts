@@ -128,33 +128,39 @@ jobs:
           path: ~/.cache/tsdown/node
           key: tsdown-sea-${{ hashFiles('.nvmrc') }}
 
-      - name: Build
+      # Workaround: @tsdown/exe uses `tar` for all platforms, but Windows
+      # Node.js binaries are .zip files. GNU tar on Linux cannot extract zip.
+      # Pre-extract with unzip into tsdown's cache so it skips the download.
+      # TODO: remove when https://github.com/rolldown/tsdown/issues/XXX is fixed
+      - name: Pre-extract Windows Node.js binary
         run: |
-          for attempt in 1 2 3; do
-            if pnpm turbo run build:exe --filter="@hey-api/${{ matrix.package }}"; then
-              exit 0
-            fi
-            echo "::warning::build:exe attempt $attempt failed"
-            rm -rf ~/.cache/tsdown/node
-            sleep $((attempt * 15))
-          done
-          echo "::error::build:exe failed after 3 attempts"
-          exit 1
+          NODE_VERSION=$(cat .nvmrc)
+          CACHE_DIR="$HOME/.cache/tsdown/node/v${NODE_VERSION}/win-x64"
+          if [ ! -f "$CACHE_DIR/node.exe" ]; then
+            mkdir -p "$CACHE_DIR"
+            curl -fsSL -o /tmp/node-win.zip \
+              "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-win-x64.zip"
+            unzip -jo /tmp/node-win.zip "node-v${NODE_VERSION}-win-x64/node.exe" -d "$CACHE_DIR"
+            rm /tmp/node-win.zip
+          fi
+
+      - name: Build
+        run: pnpm turbo run build:exe --filter="@hey-api/${{ matrix.package }}"
 
       - name: Smoke test
         run: |
           build_dir="packages/${{ matrix.package }}/build"
 
           # Verify all expected targets exist
-          expected=0
+          found=0
           for bin in "$build_dir"/*; do
-            [ -f "$bin" ] && expected=$((expected + 1))
+            [ -f "$bin" ] && found=$((found + 1))
           done
-          if [ "$expected" -eq 0 ]; then
+          if [ "$found" -eq 0 ]; then
             echo "::error::No executables found in $build_dir"
             exit 1
           fi
-          echo "Found $expected executable(s)"
+          echo "Found $found executable(s)"
 
           # Execute the linux-x64 binary (only one we can run on this runner)
           bin=$(find "$build_dir" -name '*-linux-x64' -type f | head -1)
