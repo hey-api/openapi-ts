@@ -64,7 +64,6 @@ import type { PySourceFile as _PySourceFile } from './nodes/structure/source-fil
 import type { PyPrinterOptions as _PyPrinterOptions } from './printer';
 import { createPrinter, printAst } from './printer';
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace py {
   // Base / Core
   export type Node = _PyNode;

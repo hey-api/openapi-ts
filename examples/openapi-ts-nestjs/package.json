@@ -21,7 +21,6 @@
     "@nestjs/testing": "11.0.1",
     "@swc-node/register": "1.10.10",
     "@swc/core": "1.11.29",
-    "eslint": "9.39.4",
     "oxfmt": "0.55.0",
     "typescript": "6.0.3",
     "unplugin-swc": "1.5.9",

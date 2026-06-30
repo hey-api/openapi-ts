@@ -1,8 +1,8 @@
 import type { RenderContext, Renderer } from '@hey-api/codegen-core';
 import type { BaseOutput } from '@hey-api/shared';
 import type { MaybeArray, MaybeFunc } from '@hey-api/types';
-import ts from 'typescript';
 
+import { ts } from '../../ts-compiler';
 import type { TsDsl } from '../../ts-dsl';
 import { $ } from '../../ts-dsl';
 import type { ModuleExport, ModuleImport, SortGroup, SortKey, SortModule } from './render-utils';
