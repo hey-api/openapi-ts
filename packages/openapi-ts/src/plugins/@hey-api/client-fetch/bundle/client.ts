@@ -17,6 +17,8 @@ type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
   headers: ReturnType<typeof mergeHeaders>;
 };
 
+type ParseAs = NonNullable<Config['parseAs']>;
+
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
 
@@ -27,15 +29,21 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const interceptors = createInterceptors<Request, Response, unknown, ResolvedRequestOptions>();
+  const interceptors = createInterceptors<
+    Request,
+    Response,
+    unknown,
+    ResolvedRequestOptions<'fields' | 'data', boolean, string, ParseAs>
+  >();
 
   const beforeRequest = async <
     TData = unknown,
     TResponseStyle extends 'data' | 'fields' = 'fields',
     ThrowOnError extends boolean = boolean,
     Url extends string = string,
+    TParseAs extends ParseAs = 'auto',
   >(
-    options: RequestOptions<TData, TResponseStyle, ThrowOnError, Url>,
+    options: RequestOptions<TData, TResponseStyle, ThrowOnError, Url, TParseAs>,
   ) => {
     const opts = {
       ..._config,
@@ -63,7 +71,7 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     const resolvedOpts = opts as typeof opts &
-      ResolvedRequestOptions<TResponseStyle, ThrowOnError, Url>;
+      ResolvedRequestOptions<TResponseStyle, ThrowOnError, Url, TParseAs>;
     const url = buildUrl(resolvedOpts);
 
     return { opts: resolvedOpts, url };
@@ -110,10 +118,9 @@ export const createClient = (config: Config = {}): Client => {
       };
 
       if (response.ok) {
-        const parseAs =
-          (opts.parseAs === 'auto'
-            ? getParseAs(response.headers.get('Content-Type'))
-            : opts.parseAs) ?? 'json';
+        const parseAs = ((opts.parseAs === 'auto'
+          ? getParseAs(response.headers.get('Content-Type'))
+          : opts.parseAs) ?? 'json') as Exclude<ParseAs, 'auto'>;
 
         if (response.status === 204 || response.headers.get('Content-Length') === '0') {
           let emptyData: any;

@@ -30,6 +30,10 @@ export function sdkImports(plugin: PluginInstance) {
         resource: 'client.Composable',
       },
     }),
+    Config: factory.register('Config', {
+      external: clientModule,
+      kind: 'type',
+    }),
     Options: factory.register('Options', {
       external: clientModule,
       kind: 'type',

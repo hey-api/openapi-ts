@@ -3,6 +3,7 @@
 import {
   type Client,
   type ClientMeta,
+  type Config,
   formDataBodySerializer,
   type Options as Options2,
   type RequestResult,
@@ -354,7 +355,8 @@ export type Options<
   TData extends TDataShape = TDataShape,
   ThrowOnError extends boolean = boolean,
   TResponse = unknown,
-> = Options2<TData, ThrowOnError, TResponse> & {
+  TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+> = Options2<TData, ThrowOnError, TResponse, 'fields', TParseAs> & {
   /**
    * You can provide a client instance returned by `createClient()` instead of
    * individual options. This might be also useful if you want to implement a
@@ -407,10 +409,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of assistants.
    */
-  public listAssistants<ThrowOnError extends boolean = false>(
-    options?: Options<ListAssistantsData, ThrowOnError>,
-  ): RequestResult<ListAssistantsResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListAssistantsResponses, unknown, ThrowOnError>({
+  public listAssistants<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListAssistantsData, ThrowOnError, ListAssistantsResponses, TParseAs>,
+  ): RequestResult<ListAssistantsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListAssistantsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants',
       ...options,
@@ -422,10 +433,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Create an assistant with a model and instructions.
    */
-  public createAssistant<ThrowOnError extends boolean = false>(
-    options: Options<CreateAssistantData, ThrowOnError>,
-  ): RequestResult<CreateAssistantResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateAssistantResponses, unknown, ThrowOnError>({
+  public createAssistant<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateAssistantData, ThrowOnError, CreateAssistantResponses, TParseAs>,
+  ): RequestResult<CreateAssistantResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateAssistantResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants',
       ...options,
@@ -441,10 +461,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete an assistant.
    */
-  public deleteAssistant<ThrowOnError extends boolean = false>(
-    options: Options<DeleteAssistantData, ThrowOnError>,
-  ): RequestResult<DeleteAssistantResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).delete<DeleteAssistantResponses, unknown, ThrowOnError>({
+  public deleteAssistant<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteAssistantData, ThrowOnError, DeleteAssistantResponses, TParseAs>,
+  ): RequestResult<DeleteAssistantResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).delete<
+      DeleteAssistantResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants/{assistant_id}',
       ...options,
@@ -456,10 +485,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves an assistant.
    */
-  public getAssistant<ThrowOnError extends boolean = false>(
-    options: Options<GetAssistantData, ThrowOnError>,
-  ): RequestResult<GetAssistantResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetAssistantResponses, unknown, ThrowOnError>({
+  public getAssistant<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetAssistantData, ThrowOnError, GetAssistantResponses, TParseAs>,
+  ): RequestResult<GetAssistantResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetAssistantResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants/{assistant_id}',
       ...options,
@@ -471,10 +509,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Modifies an assistant.
    */
-  public modifyAssistant<ThrowOnError extends boolean = false>(
-    options: Options<ModifyAssistantData, ThrowOnError>,
-  ): RequestResult<ModifyAssistantResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ModifyAssistantResponses, unknown, ThrowOnError>({
+  public modifyAssistant<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyAssistantData, ThrowOnError, ModifyAssistantResponses, TParseAs>,
+  ): RequestResult<ModifyAssistantResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ModifyAssistantResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/assistants/{assistant_id}',
       ...options,
@@ -490,10 +537,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Generates audio from the input text.
    */
-  public createSpeech<ThrowOnError extends boolean = false>(
-    options: Options<CreateSpeechData, ThrowOnError>,
-  ): RequestResult<CreateSpeechResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateSpeechResponses, unknown, ThrowOnError>({
+  public createSpeech<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateSpeechData, ThrowOnError, CreateSpeechResponses, TParseAs>,
+  ): RequestResult<CreateSpeechResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateSpeechResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/audio/speech',
       ...options,
@@ -509,13 +565,18 @@ export class OpenAi extends HeyApiClient {
    *
    * Transcribes audio into the input language.
    */
-  public createTranscription<ThrowOnError extends boolean = false>(
-    options: Options<CreateTranscriptionData, ThrowOnError>,
-  ): RequestResult<CreateTranscriptionResponses, unknown, ThrowOnError> {
+  public createTranscription<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateTranscriptionData, ThrowOnError, CreateTranscriptionResponses, TParseAs>,
+  ): RequestResult<CreateTranscriptionResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateTranscriptionResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       ...formDataBodySerializer,
       security: [{ scheme: 'bearer', type: 'http' }],
@@ -533,10 +594,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Translates audio into English.
    */
-  public createTranslation<ThrowOnError extends boolean = false>(
-    options: Options<CreateTranslationData, ThrowOnError>,
-  ): RequestResult<CreateTranslationResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateTranslationResponses, unknown, ThrowOnError>({
+  public createTranslation<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateTranslationData, ThrowOnError, CreateTranslationResponses, TParseAs>,
+  ): RequestResult<CreateTranslationResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateTranslationResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       ...formDataBodySerializer,
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/audio/translations',
@@ -553,10 +623,19 @@ export class OpenAi extends HeyApiClient {
    *
    * List your organization's batches.
    */
-  public listBatches<ThrowOnError extends boolean = false>(
-    options?: Options<ListBatchesData, ThrowOnError>,
-  ): RequestResult<ListBatchesResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListBatchesResponses, unknown, ThrowOnError>({
+  public listBatches<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListBatchesData, ThrowOnError, ListBatchesResponses, TParseAs>,
+  ): RequestResult<ListBatchesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListBatchesResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/batches',
       ...options,
@@ -568,10 +647,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Creates and executes a batch from an uploaded file of requests
    */
-  public createBatch<ThrowOnError extends boolean = false>(
-    options: Options<CreateBatchData, ThrowOnError>,
-  ): RequestResult<CreateBatchResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateBatchResponses, unknown, ThrowOnError>({
+  public createBatch<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateBatchData, ThrowOnError, CreateBatchResponses, TParseAs>,
+  ): RequestResult<CreateBatchResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateBatchResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/batches',
       ...options,
@@ -587,10 +675,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a batch.
    */
-  public retrieveBatch<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveBatchData, ThrowOnError>,
-  ): RequestResult<RetrieveBatchResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<RetrieveBatchResponses, unknown, ThrowOnError>({
+  public retrieveBatch<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RetrieveBatchData, ThrowOnError, RetrieveBatchResponses, TParseAs>,
+  ): RequestResult<RetrieveBatchResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      RetrieveBatchResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/batches/{batch_id}',
       ...options,
@@ -602,10 +699,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Cancels an in-progress batch. The batch will be in status `cancelling` for up to 10 minutes, before changing to `cancelled`, where it will have partial results (if any) available in the output file.
    */
-  public cancelBatch<ThrowOnError extends boolean = false>(
-    options: Options<CancelBatchData, ThrowOnError>,
-  ): RequestResult<CancelBatchResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CancelBatchResponses, unknown, ThrowOnError>({
+  public cancelBatch<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CancelBatchData, ThrowOnError, CancelBatchResponses, TParseAs>,
+  ): RequestResult<CancelBatchResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CancelBatchResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/batches/{batch_id}/cancel',
       ...options,
@@ -619,13 +725,23 @@ export class OpenAi extends HeyApiClient {
    * with the `store` parameter set to `true` will be returned.
    *
    */
-  public listChatCompletions<ThrowOnError extends boolean = false>(
-    options?: Options<ListChatCompletionsData, ThrowOnError>,
-  ): RequestResult<ListChatCompletionsResponses, unknown, ThrowOnError> {
+  public listChatCompletions<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<
+      ListChatCompletionsData,
+      ThrowOnError,
+      ListChatCompletionsResponses,
+      TParseAs
+    >,
+  ): RequestResult<ListChatCompletionsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options?.client ?? this.client).get<
       ListChatCompletionsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions',
@@ -653,13 +769,23 @@ export class OpenAi extends HeyApiClient {
    * [refer to the reasoning guide](https://platform.openai.com/docs/guides/reasoning).
    *
    */
-  public createChatCompletion<ThrowOnError extends boolean = false>(
-    options: Options<CreateChatCompletionData, ThrowOnError>,
-  ): RequestResult<CreateChatCompletionResponses, unknown, ThrowOnError> {
+  public createChatCompletion<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CreateChatCompletionData,
+      ThrowOnError,
+      CreateChatCompletionResponses,
+      TParseAs
+    >,
+  ): RequestResult<CreateChatCompletionResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateChatCompletionResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions',
@@ -678,13 +804,23 @@ export class OpenAi extends HeyApiClient {
    * created with the `store` parameter set to `true` can be deleted.
    *
    */
-  public deleteChatCompletion<ThrowOnError extends boolean = false>(
-    options: Options<DeleteChatCompletionData, ThrowOnError>,
-  ): RequestResult<DeleteChatCompletionResponses, unknown, ThrowOnError> {
+  public deleteChatCompletion<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      DeleteChatCompletionData,
+      ThrowOnError,
+      DeleteChatCompletionResponses,
+      TParseAs
+    >,
+  ): RequestResult<DeleteChatCompletionResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).delete<
       DeleteChatCompletionResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions/{completion_id}',
@@ -699,10 +835,19 @@ export class OpenAi extends HeyApiClient {
    * with the `store` parameter set to `true` will be returned.
    *
    */
-  public getChatCompletion<ThrowOnError extends boolean = false>(
-    options: Options<GetChatCompletionData, ThrowOnError>,
-  ): RequestResult<GetChatCompletionResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetChatCompletionResponses, unknown, ThrowOnError>({
+  public getChatCompletion<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetChatCompletionData, ThrowOnError, GetChatCompletionResponses, TParseAs>,
+  ): RequestResult<GetChatCompletionResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetChatCompletionResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions/{completion_id}',
       ...options,
@@ -717,13 +862,23 @@ export class OpenAi extends HeyApiClient {
    * the only supported modification is to update the `metadata` field.
    *
    */
-  public updateChatCompletion<ThrowOnError extends boolean = false>(
-    options: Options<UpdateChatCompletionData, ThrowOnError>,
-  ): RequestResult<UpdateChatCompletionResponses, unknown, ThrowOnError> {
+  public updateChatCompletion<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      UpdateChatCompletionData,
+      ThrowOnError,
+      UpdateChatCompletionResponses,
+      TParseAs
+    >,
+  ): RequestResult<UpdateChatCompletionResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       UpdateChatCompletionResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions/{completion_id}',
@@ -743,13 +898,23 @@ export class OpenAi extends HeyApiClient {
    * returned.
    *
    */
-  public getChatCompletionMessages<ThrowOnError extends boolean = false>(
-    options: Options<GetChatCompletionMessagesData, ThrowOnError>,
-  ): RequestResult<GetChatCompletionMessagesResponses, unknown, ThrowOnError> {
+  public getChatCompletionMessages<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      GetChatCompletionMessagesData,
+      ThrowOnError,
+      GetChatCompletionMessagesResponses,
+      TParseAs
+    >,
+  ): RequestResult<GetChatCompletionMessagesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       GetChatCompletionMessagesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/chat/completions/{completion_id}/messages',
@@ -762,10 +927,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Creates a completion for the provided prompt and parameters.
    */
-  public createCompletion<ThrowOnError extends boolean = false>(
-    options: Options<CreateCompletionData, ThrowOnError>,
-  ): RequestResult<CreateCompletionResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateCompletionResponses, unknown, ThrowOnError>({
+  public createCompletion<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateCompletionData, ThrowOnError, CreateCompletionResponses, TParseAs>,
+  ): RequestResult<CreateCompletionResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateCompletionResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/completions',
       ...options,
@@ -781,10 +955,19 @@ export class OpenAi extends HeyApiClient {
    *
    * List Containers
    */
-  public listContainers<ThrowOnError extends boolean = false>(
-    options?: Options<ListContainersData, ThrowOnError>,
-  ): RequestResult<ListContainersResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListContainersResponses, unknown, ThrowOnError>({
+  public listContainers<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListContainersData, ThrowOnError, ListContainersResponses, TParseAs>,
+  ): RequestResult<ListContainersResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListContainersResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers',
       ...options,
@@ -796,10 +979,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Create Container
    */
-  public createContainer<ThrowOnError extends boolean = false>(
-    options?: Options<CreateContainerData, ThrowOnError>,
-  ): RequestResult<CreateContainerResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).post<CreateContainerResponses, unknown, ThrowOnError>({
+  public createContainer<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<CreateContainerData, ThrowOnError, CreateContainerResponses, TParseAs>,
+  ): RequestResult<CreateContainerResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).post<
+      CreateContainerResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers',
       ...options,
@@ -815,10 +1007,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete Container
    */
-  public deleteContainer<ThrowOnError extends boolean = false>(
-    options: Options<DeleteContainerData, ThrowOnError>,
-  ): RequestResult<DeleteContainerResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).delete<DeleteContainerResponses, unknown, ThrowOnError>({
+  public deleteContainer<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteContainerData, ThrowOnError, DeleteContainerResponses, TParseAs>,
+  ): RequestResult<DeleteContainerResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).delete<
+      DeleteContainerResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}',
       ...options,
@@ -830,10 +1031,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieve Container
    */
-  public retrieveContainer<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveContainerData, ThrowOnError>,
-  ): RequestResult<RetrieveContainerResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<RetrieveContainerResponses, unknown, ThrowOnError>({
+  public retrieveContainer<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RetrieveContainerData, ThrowOnError, RetrieveContainerResponses, TParseAs>,
+  ): RequestResult<RetrieveContainerResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      RetrieveContainerResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}',
       ...options,
@@ -845,10 +1055,19 @@ export class OpenAi extends HeyApiClient {
    *
    * List Container files
    */
-  public listContainerFiles<ThrowOnError extends boolean = false>(
-    options: Options<ListContainerFilesData, ThrowOnError>,
-  ): RequestResult<ListContainerFilesResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<ListContainerFilesResponses, unknown, ThrowOnError>({
+  public listContainerFiles<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ListContainerFilesData, ThrowOnError, ListContainerFilesResponses, TParseAs>,
+  ): RequestResult<ListContainerFilesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      ListContainerFilesResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files',
       ...options,
@@ -863,13 +1082,18 @@ export class OpenAi extends HeyApiClient {
    * You can send either a multipart/form-data request with the raw file content, or a JSON request with a file ID.
    *
    */
-  public createContainerFile<ThrowOnError extends boolean = false>(
-    options: Options<CreateContainerFileData, ThrowOnError>,
-  ): RequestResult<CreateContainerFileResponses, unknown, ThrowOnError> {
+  public createContainerFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateContainerFileData, ThrowOnError, CreateContainerFileResponses, TParseAs>,
+  ): RequestResult<CreateContainerFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateContainerFileResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       ...formDataBodySerializer,
       security: [{ scheme: 'bearer', type: 'http' }],
@@ -887,13 +1111,18 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete Container File
    */
-  public deleteContainerFile<ThrowOnError extends boolean = false>(
-    options: Options<DeleteContainerFileData, ThrowOnError>,
-  ): RequestResult<DeleteContainerFileResponses, unknown, ThrowOnError> {
+  public deleteContainerFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteContainerFileData, ThrowOnError, DeleteContainerFileResponses, TParseAs>,
+  ): RequestResult<DeleteContainerFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).delete<
       DeleteContainerFileResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files/{file_id}',
@@ -906,13 +1135,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieve Container File
    */
-  public retrieveContainerFile<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveContainerFileData, ThrowOnError>,
-  ): RequestResult<RetrieveContainerFileResponses, unknown, ThrowOnError> {
+  public retrieveContainerFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      RetrieveContainerFileData,
+      ThrowOnError,
+      RetrieveContainerFileResponses,
+      TParseAs
+    >,
+  ): RequestResult<RetrieveContainerFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       RetrieveContainerFileResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files/{file_id}',
@@ -925,13 +1164,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieve Container File Content
    */
-  public retrieveContainerFileContent<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveContainerFileContentData, ThrowOnError>,
-  ): RequestResult<RetrieveContainerFileContentResponses, unknown, ThrowOnError> {
+  public retrieveContainerFileContent<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      RetrieveContainerFileContentData,
+      ThrowOnError,
+      RetrieveContainerFileContentResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    RetrieveContainerFileContentResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).get<
       RetrieveContainerFileContentResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/containers/{container_id}/files/{file_id}/content',
@@ -944,10 +1199,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Creates an embedding vector representing the input text.
    */
-  public createEmbedding<ThrowOnError extends boolean = false>(
-    options: Options<CreateEmbeddingData, ThrowOnError>,
-  ): RequestResult<CreateEmbeddingResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateEmbeddingResponses, unknown, ThrowOnError>({
+  public createEmbedding<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateEmbeddingData, ThrowOnError, CreateEmbeddingResponses, TParseAs>,
+  ): RequestResult<CreateEmbeddingResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateEmbeddingResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/embeddings',
       ...options,
@@ -964,10 +1228,19 @@ export class OpenAi extends HeyApiClient {
    * List evaluations for a project.
    *
    */
-  public listEvals<ThrowOnError extends boolean = false>(
-    options?: Options<ListEvalsData, ThrowOnError>,
-  ): RequestResult<ListEvalsResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListEvalsResponses, unknown, ThrowOnError>({
+  public listEvals<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListEvalsData, ThrowOnError, ListEvalsResponses, TParseAs>,
+  ): RequestResult<ListEvalsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListEvalsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals',
       ...options,
@@ -982,10 +1255,19 @@ export class OpenAi extends HeyApiClient {
    * For more information, see the [Evals guide](https://platform.openai.com/docs/guides/evals).
    *
    */
-  public createEval<ThrowOnError extends boolean = false>(
-    options: Options<CreateEvalData, ThrowOnError>,
-  ): RequestResult<CreateEvalResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateEvalResponses, unknown, ThrowOnError>({
+  public createEval<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateEvalData, ThrowOnError, CreateEvalResponses, TParseAs>,
+  ): RequestResult<CreateEvalResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateEvalResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals',
       ...options,
@@ -1002,13 +1284,18 @@ export class OpenAi extends HeyApiClient {
    * Delete an evaluation.
    *
    */
-  public deleteEval<ThrowOnError extends boolean = false>(
-    options: Options<DeleteEvalData, ThrowOnError>,
-  ): RequestResult<DeleteEvalResponses, DeleteEvalErrors, ThrowOnError> {
+  public deleteEval<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteEvalData, ThrowOnError, DeleteEvalResponses, TParseAs>,
+  ): RequestResult<DeleteEvalResponses, DeleteEvalErrors, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).delete<
       DeleteEvalResponses,
       DeleteEvalErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}',
@@ -1022,10 +1309,19 @@ export class OpenAi extends HeyApiClient {
    * Get an evaluation by ID.
    *
    */
-  public getEval<ThrowOnError extends boolean = false>(
-    options: Options<GetEvalData, ThrowOnError>,
-  ): RequestResult<GetEvalResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetEvalResponses, unknown, ThrowOnError>({
+  public getEval<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetEvalData, ThrowOnError, GetEvalResponses, TParseAs>,
+  ): RequestResult<GetEvalResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetEvalResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}',
       ...options,
@@ -1038,10 +1334,19 @@ export class OpenAi extends HeyApiClient {
    * Update certain properties of an evaluation.
    *
    */
-  public updateEval<ThrowOnError extends boolean = false>(
-    options: Options<UpdateEvalData, ThrowOnError>,
-  ): RequestResult<UpdateEvalResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<UpdateEvalResponses, unknown, ThrowOnError>({
+  public updateEval<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UpdateEvalData, ThrowOnError, UpdateEvalResponses, TParseAs>,
+  ): RequestResult<UpdateEvalResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      UpdateEvalResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}',
       ...options,
@@ -1058,10 +1363,19 @@ export class OpenAi extends HeyApiClient {
    * Get a list of runs for an evaluation.
    *
    */
-  public getEvalRuns<ThrowOnError extends boolean = false>(
-    options: Options<GetEvalRunsData, ThrowOnError>,
-  ): RequestResult<GetEvalRunsResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetEvalRunsResponses, unknown, ThrowOnError>({
+  public getEvalRuns<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetEvalRunsData, ThrowOnError, GetEvalRunsResponses, TParseAs>,
+  ): RequestResult<GetEvalRunsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetEvalRunsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs',
       ...options,
@@ -1074,13 +1388,18 @@ export class OpenAi extends HeyApiClient {
    * Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation.
    *
    */
-  public createEvalRun<ThrowOnError extends boolean = false>(
-    options: Options<CreateEvalRunData, ThrowOnError>,
-  ): RequestResult<CreateEvalRunResponses, CreateEvalRunErrors, ThrowOnError> {
+  public createEvalRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateEvalRunData, ThrowOnError, CreateEvalRunResponses, TParseAs>,
+  ): RequestResult<CreateEvalRunResponses, CreateEvalRunErrors, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateEvalRunResponses,
       CreateEvalRunErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs',
@@ -1098,13 +1417,18 @@ export class OpenAi extends HeyApiClient {
    * Delete an eval run.
    *
    */
-  public deleteEvalRun<ThrowOnError extends boolean = false>(
-    options: Options<DeleteEvalRunData, ThrowOnError>,
-  ): RequestResult<DeleteEvalRunResponses, DeleteEvalRunErrors, ThrowOnError> {
+  public deleteEvalRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteEvalRunData, ThrowOnError, DeleteEvalRunResponses, TParseAs>,
+  ): RequestResult<DeleteEvalRunResponses, DeleteEvalRunErrors, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).delete<
       DeleteEvalRunResponses,
       DeleteEvalRunErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}',
@@ -1118,10 +1442,19 @@ export class OpenAi extends HeyApiClient {
    * Get an evaluation run by ID.
    *
    */
-  public getEvalRun<ThrowOnError extends boolean = false>(
-    options: Options<GetEvalRunData, ThrowOnError>,
-  ): RequestResult<GetEvalRunResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetEvalRunResponses, unknown, ThrowOnError>({
+  public getEvalRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetEvalRunData, ThrowOnError, GetEvalRunResponses, TParseAs>,
+  ): RequestResult<GetEvalRunResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetEvalRunResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}',
       ...options,
@@ -1134,10 +1467,19 @@ export class OpenAi extends HeyApiClient {
    * Cancel an ongoing evaluation run.
    *
    */
-  public cancelEvalRun<ThrowOnError extends boolean = false>(
-    options: Options<CancelEvalRunData, ThrowOnError>,
-  ): RequestResult<CancelEvalRunResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CancelEvalRunResponses, unknown, ThrowOnError>({
+  public cancelEvalRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CancelEvalRunData, ThrowOnError, CancelEvalRunResponses, TParseAs>,
+  ): RequestResult<CancelEvalRunResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CancelEvalRunResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}',
       ...options,
@@ -1150,13 +1492,23 @@ export class OpenAi extends HeyApiClient {
    * Get a list of output items for an evaluation run.
    *
    */
-  public getEvalRunOutputItems<ThrowOnError extends boolean = false>(
-    options: Options<GetEvalRunOutputItemsData, ThrowOnError>,
-  ): RequestResult<GetEvalRunOutputItemsResponses, unknown, ThrowOnError> {
+  public getEvalRunOutputItems<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      GetEvalRunOutputItemsData,
+      ThrowOnError,
+      GetEvalRunOutputItemsResponses,
+      TParseAs
+    >,
+  ): RequestResult<GetEvalRunOutputItemsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       GetEvalRunOutputItemsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}/output_items',
@@ -1170,13 +1522,23 @@ export class OpenAi extends HeyApiClient {
    * Get an evaluation run output item by ID.
    *
    */
-  public getEvalRunOutputItem<ThrowOnError extends boolean = false>(
-    options: Options<GetEvalRunOutputItemData, ThrowOnError>,
-  ): RequestResult<GetEvalRunOutputItemResponses, unknown, ThrowOnError> {
+  public getEvalRunOutputItem<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      GetEvalRunOutputItemData,
+      ThrowOnError,
+      GetEvalRunOutputItemResponses,
+      TParseAs
+    >,
+  ): RequestResult<GetEvalRunOutputItemResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       GetEvalRunOutputItemResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/evals/{eval_id}/runs/{run_id}/output_items/{output_item_id}',
@@ -1189,10 +1551,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of files.
    */
-  public listFiles<ThrowOnError extends boolean = false>(
-    options?: Options<ListFilesData, ThrowOnError>,
-  ): RequestResult<ListFilesResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListFilesResponses, unknown, ThrowOnError>({
+  public listFiles<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListFilesData, ThrowOnError, ListFilesResponses, TParseAs>,
+  ): RequestResult<ListFilesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListFilesResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files',
       ...options,
@@ -1213,10 +1584,19 @@ export class OpenAi extends HeyApiClient {
    * Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
    *
    */
-  public createFile<ThrowOnError extends boolean = false>(
-    options: Options<CreateFileData, ThrowOnError>,
-  ): RequestResult<CreateFileResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateFileResponses, unknown, ThrowOnError>({
+  public createFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateFileData, ThrowOnError, CreateFileResponses, TParseAs>,
+  ): RequestResult<CreateFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateFileResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       ...formDataBodySerializer,
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files',
@@ -1233,10 +1613,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete a file.
    */
-  public deleteFile<ThrowOnError extends boolean = false>(
-    options: Options<DeleteFileData, ThrowOnError>,
-  ): RequestResult<DeleteFileResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).delete<DeleteFileResponses, unknown, ThrowOnError>({
+  public deleteFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteFileData, ThrowOnError, DeleteFileResponses, TParseAs>,
+  ): RequestResult<DeleteFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).delete<
+      DeleteFileResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files/{file_id}',
       ...options,
@@ -1248,10 +1637,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns information about a specific file.
    */
-  public retrieveFile<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveFileData, ThrowOnError>,
-  ): RequestResult<RetrieveFileResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<RetrieveFileResponses, unknown, ThrowOnError>({
+  public retrieveFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RetrieveFileData, ThrowOnError, RetrieveFileResponses, TParseAs>,
+  ): RequestResult<RetrieveFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      RetrieveFileResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files/{file_id}',
       ...options,
@@ -1263,10 +1661,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns the contents of the specified file.
    */
-  public downloadFile<ThrowOnError extends boolean = false>(
-    options: Options<DownloadFileData, ThrowOnError>,
-  ): RequestResult<DownloadFileResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<DownloadFileResponses, unknown, ThrowOnError>({
+  public downloadFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DownloadFileData, ThrowOnError, DownloadFileResponses, TParseAs>,
+  ): RequestResult<DownloadFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      DownloadFileResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/files/{file_id}/content',
       ...options,
@@ -1279,10 +1686,19 @@ export class OpenAi extends HeyApiClient {
    * Run a grader.
    *
    */
-  public runGrader<ThrowOnError extends boolean = false>(
-    options: Options<RunGraderData, ThrowOnError>,
-  ): RequestResult<RunGraderResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<RunGraderResponses, unknown, ThrowOnError>({
+  public runGrader<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RunGraderData, ThrowOnError, RunGraderResponses, TParseAs>,
+  ): RequestResult<RunGraderResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      RunGraderResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/alpha/graders/run',
       ...options,
@@ -1299,10 +1715,19 @@ export class OpenAi extends HeyApiClient {
    * Validate a grader.
    *
    */
-  public validateGrader<ThrowOnError extends boolean = false>(
-    options: Options<ValidateGraderData, ThrowOnError>,
-  ): RequestResult<ValidateGraderResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ValidateGraderResponses, unknown, ThrowOnError>({
+  public validateGrader<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ValidateGraderData, ThrowOnError, ValidateGraderResponses, TParseAs>,
+  ): RequestResult<ValidateGraderResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ValidateGraderResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/alpha/graders/validate',
       ...options,
@@ -1321,13 +1746,29 @@ export class OpenAi extends HeyApiClient {
    * Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.
    *
    */
-  public listFineTuningCheckpointPermissions<ThrowOnError extends boolean = false>(
-    options: Options<ListFineTuningCheckpointPermissionsData, ThrowOnError>,
-  ): RequestResult<ListFineTuningCheckpointPermissionsResponses, unknown, ThrowOnError> {
+  public listFineTuningCheckpointPermissions<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ListFineTuningCheckpointPermissionsData,
+      ThrowOnError,
+      ListFineTuningCheckpointPermissionsResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    ListFineTuningCheckpointPermissionsResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).get<
       ListFineTuningCheckpointPermissionsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions',
@@ -1343,13 +1784,29 @@ export class OpenAi extends HeyApiClient {
    * This enables organization owners to share fine-tuned models with other projects in their organization.
    *
    */
-  public createFineTuningCheckpointPermission<ThrowOnError extends boolean = false>(
-    options: Options<CreateFineTuningCheckpointPermissionData, ThrowOnError>,
-  ): RequestResult<CreateFineTuningCheckpointPermissionResponses, unknown, ThrowOnError> {
+  public createFineTuningCheckpointPermission<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CreateFineTuningCheckpointPermissionData,
+      ThrowOnError,
+      CreateFineTuningCheckpointPermissionResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    CreateFineTuningCheckpointPermissionResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       CreateFineTuningCheckpointPermissionResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions',
@@ -1369,13 +1826,29 @@ export class OpenAi extends HeyApiClient {
    * Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.
    *
    */
-  public deleteFineTuningCheckpointPermission<ThrowOnError extends boolean = false>(
-    options: Options<DeleteFineTuningCheckpointPermissionData, ThrowOnError>,
-  ): RequestResult<DeleteFineTuningCheckpointPermissionResponses, unknown, ThrowOnError> {
+  public deleteFineTuningCheckpointPermission<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      DeleteFineTuningCheckpointPermissionData,
+      ThrowOnError,
+      DeleteFineTuningCheckpointPermissionResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    DeleteFineTuningCheckpointPermissionResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).delete<
       DeleteFineTuningCheckpointPermissionResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions/{permission_id}',
@@ -1389,13 +1862,29 @@ export class OpenAi extends HeyApiClient {
    * List your organization's fine-tuning jobs
    *
    */
-  public listPaginatedFineTuningJobs<ThrowOnError extends boolean = false>(
-    options?: Options<ListPaginatedFineTuningJobsData, ThrowOnError>,
-  ): RequestResult<ListPaginatedFineTuningJobsResponses, unknown, ThrowOnError> {
+  public listPaginatedFineTuningJobs<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<
+      ListPaginatedFineTuningJobsData,
+      ThrowOnError,
+      ListPaginatedFineTuningJobsResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    ListPaginatedFineTuningJobsResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options?.client ?? this.client).get<
       ListPaginatedFineTuningJobsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs',
@@ -1413,13 +1902,18 @@ export class OpenAi extends HeyApiClient {
    * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
    *
    */
-  public createFineTuningJob<ThrowOnError extends boolean = false>(
-    options: Options<CreateFineTuningJobData, ThrowOnError>,
-  ): RequestResult<CreateFineTuningJobResponses, unknown, ThrowOnError> {
+  public createFineTuningJob<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateFineTuningJobData, ThrowOnError, CreateFineTuningJobResponses, TParseAs>,
+  ): RequestResult<CreateFineTuningJobResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateFineTuningJobResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs',
@@ -1439,13 +1933,23 @@ export class OpenAi extends HeyApiClient {
    * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/model-optimization)
    *
    */
-  public retrieveFineTuningJob<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveFineTuningJobData, ThrowOnError>,
-  ): RequestResult<RetrieveFineTuningJobResponses, unknown, ThrowOnError> {
+  public retrieveFineTuningJob<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      RetrieveFineTuningJobData,
+      ThrowOnError,
+      RetrieveFineTuningJobResponses,
+      TParseAs
+    >,
+  ): RequestResult<RetrieveFineTuningJobResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       RetrieveFineTuningJobResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}',
@@ -1459,13 +1963,18 @@ export class OpenAi extends HeyApiClient {
    * Immediately cancel a fine-tune job.
    *
    */
-  public cancelFineTuningJob<ThrowOnError extends boolean = false>(
-    options: Options<CancelFineTuningJobData, ThrowOnError>,
-  ): RequestResult<CancelFineTuningJobResponses, unknown, ThrowOnError> {
+  public cancelFineTuningJob<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CancelFineTuningJobData, ThrowOnError, CancelFineTuningJobResponses, TParseAs>,
+  ): RequestResult<CancelFineTuningJobResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CancelFineTuningJobResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/cancel',
@@ -1479,13 +1988,29 @@ export class OpenAi extends HeyApiClient {
    * List checkpoints for a fine-tuning job.
    *
    */
-  public listFineTuningJobCheckpoints<ThrowOnError extends boolean = false>(
-    options: Options<ListFineTuningJobCheckpointsData, ThrowOnError>,
-  ): RequestResult<ListFineTuningJobCheckpointsResponses, unknown, ThrowOnError> {
+  public listFineTuningJobCheckpoints<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ListFineTuningJobCheckpointsData,
+      ThrowOnError,
+      ListFineTuningJobCheckpointsResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    ListFineTuningJobCheckpointsResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).get<
       ListFineTuningJobCheckpointsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/checkpoints',
@@ -1499,13 +2024,23 @@ export class OpenAi extends HeyApiClient {
    * Get status updates for a fine-tuning job.
    *
    */
-  public listFineTuningEvents<ThrowOnError extends boolean = false>(
-    options: Options<ListFineTuningEventsData, ThrowOnError>,
-  ): RequestResult<ListFineTuningEventsResponses, unknown, ThrowOnError> {
+  public listFineTuningEvents<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ListFineTuningEventsData,
+      ThrowOnError,
+      ListFineTuningEventsResponses,
+      TParseAs
+    >,
+  ): RequestResult<ListFineTuningEventsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       ListFineTuningEventsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/events',
@@ -1519,16 +2054,23 @@ export class OpenAi extends HeyApiClient {
    * Pause a fine-tune job.
    *
    */
-  public pauseFineTuningJob<ThrowOnError extends boolean = false>(
-    options: Options<PauseFineTuningJobData, ThrowOnError>,
-  ): RequestResult<PauseFineTuningJobResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<PauseFineTuningJobResponses, unknown, ThrowOnError>(
-      {
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/fine_tuning/jobs/{fine_tuning_job_id}/pause',
-        ...options,
-      },
-    );
+  public pauseFineTuningJob<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<PauseFineTuningJobData, ThrowOnError, PauseFineTuningJobResponses, TParseAs>,
+  ): RequestResult<PauseFineTuningJobResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      PauseFineTuningJobResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
+      security: [{ scheme: 'bearer', type: 'http' }],
+      url: '/fine_tuning/jobs/{fine_tuning_job_id}/pause',
+      ...options,
+    });
   }
 
   /**
@@ -1537,13 +2079,18 @@ export class OpenAi extends HeyApiClient {
    * Resume a fine-tune job.
    *
    */
-  public resumeFineTuningJob<ThrowOnError extends boolean = false>(
-    options: Options<ResumeFineTuningJobData, ThrowOnError>,
-  ): RequestResult<ResumeFineTuningJobResponses, unknown, ThrowOnError> {
+  public resumeFineTuningJob<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ResumeFineTuningJobData, ThrowOnError, ResumeFineTuningJobResponses, TParseAs>,
+  ): RequestResult<ResumeFineTuningJobResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       ResumeFineTuningJobResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/fine_tuning/jobs/{fine_tuning_job_id}/resume',
@@ -1556,10 +2103,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Creates an edited or extended image given one or more source images and a prompt. This endpoint only supports `gpt-image-1` and `dall-e-2`.
    */
-  public createImageEdit<ThrowOnError extends boolean = false>(
-    options: Options<CreateImageEditData, ThrowOnError>,
-  ): RequestResult<CreateImageEditResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateImageEditResponses, unknown, ThrowOnError>({
+  public createImageEdit<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateImageEditData, ThrowOnError, CreateImageEditResponses, TParseAs>,
+  ): RequestResult<CreateImageEditResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateImageEditResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       ...formDataBodySerializer,
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/images/edits',
@@ -1577,10 +2133,19 @@ export class OpenAi extends HeyApiClient {
    * Creates an image given a prompt. [Learn more](https://platform.openai.com/docs/guides/images).
    *
    */
-  public createImage<ThrowOnError extends boolean = false>(
-    options: Options<CreateImageData, ThrowOnError>,
-  ): RequestResult<CreateImageResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateImageResponses, unknown, ThrowOnError>({
+  public createImage<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateImageData, ThrowOnError, CreateImageResponses, TParseAs>,
+  ): RequestResult<CreateImageResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateImageResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/images/generations',
       ...options,
@@ -1596,13 +2161,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Creates a variation of a given image. This endpoint only supports `dall-e-2`.
    */
-  public createImageVariation<ThrowOnError extends boolean = false>(
-    options: Options<CreateImageVariationData, ThrowOnError>,
-  ): RequestResult<CreateImageVariationResponses, unknown, ThrowOnError> {
+  public createImageVariation<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CreateImageVariationData,
+      ThrowOnError,
+      CreateImageVariationResponses,
+      TParseAs
+    >,
+  ): RequestResult<CreateImageVariationResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateImageVariationResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       ...formDataBodySerializer,
       security: [{ scheme: 'bearer', type: 'http' }],
@@ -1620,10 +2195,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Lists the currently available models, and provides basic information about each one such as the owner and availability.
    */
-  public listModels<ThrowOnError extends boolean = false>(
-    options?: Options<ListModelsData, ThrowOnError>,
-  ): RequestResult<ListModelsResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListModelsResponses, unknown, ThrowOnError>({
+  public listModels<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListModelsData, ThrowOnError, ListModelsResponses, TParseAs>,
+  ): RequestResult<ListModelsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListModelsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/models',
       ...options,
@@ -1635,10 +2219,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
    */
-  public deleteModel<ThrowOnError extends boolean = false>(
-    options: Options<DeleteModelData, ThrowOnError>,
-  ): RequestResult<DeleteModelResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).delete<DeleteModelResponses, unknown, ThrowOnError>({
+  public deleteModel<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteModelData, ThrowOnError, DeleteModelResponses, TParseAs>,
+  ): RequestResult<DeleteModelResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).delete<
+      DeleteModelResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/models/{model}',
       ...options,
@@ -1650,10 +2243,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
    */
-  public retrieveModel<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveModelData, ThrowOnError>,
-  ): RequestResult<RetrieveModelResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<RetrieveModelResponses, unknown, ThrowOnError>({
+  public retrieveModel<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RetrieveModelData, ThrowOnError, RetrieveModelResponses, TParseAs>,
+  ): RequestResult<RetrieveModelResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      RetrieveModelResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/models/{model}',
       ...options,
@@ -1667,10 +2269,19 @@ export class OpenAi extends HeyApiClient {
    * more in the [moderation guide](https://platform.openai.com/docs/guides/moderation).
    *
    */
-  public createModeration<ThrowOnError extends boolean = false>(
-    options: Options<CreateModerationData, ThrowOnError>,
-  ): RequestResult<CreateModerationResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateModerationResponses, unknown, ThrowOnError>({
+  public createModeration<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateModerationData, ThrowOnError, CreateModerationResponses, TParseAs>,
+  ): RequestResult<CreateModerationResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateModerationResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/moderations',
       ...options,
@@ -1686,10 +2297,19 @@ export class OpenAi extends HeyApiClient {
    *
    * List organization API keys
    */
-  public adminApiKeysList<ThrowOnError extends boolean = false>(
-    options?: Options<AdminApiKeysListData, ThrowOnError>,
-  ): RequestResult<AdminApiKeysListResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<AdminApiKeysListResponses, unknown, ThrowOnError>({
+  public adminApiKeysList<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<AdminApiKeysListData, ThrowOnError, AdminApiKeysListResponses, TParseAs>,
+  ): RequestResult<AdminApiKeysListResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      AdminApiKeysListResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/admin_api_keys',
       ...options,
@@ -1701,20 +2321,27 @@ export class OpenAi extends HeyApiClient {
    *
    * Create an organization admin API key
    */
-  public adminApiKeysCreate<ThrowOnError extends boolean = false>(
-    options: Options<AdminApiKeysCreateData, ThrowOnError>,
-  ): RequestResult<AdminApiKeysCreateResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<AdminApiKeysCreateResponses, unknown, ThrowOnError>(
-      {
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/organization/admin_api_keys',
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
+  public adminApiKeysCreate<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<AdminApiKeysCreateData, ThrowOnError, AdminApiKeysCreateResponses, TParseAs>,
+  ): RequestResult<AdminApiKeysCreateResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      AdminApiKeysCreateResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
+      security: [{ scheme: 'bearer', type: 'http' }],
+      url: '/organization/admin_api_keys',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
       },
-    );
+    });
   }
 
   /**
@@ -1722,13 +2349,18 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete an organization admin API key
    */
-  public adminApiKeysDelete<ThrowOnError extends boolean = false>(
-    options: Options<AdminApiKeysDeleteData, ThrowOnError>,
-  ): RequestResult<AdminApiKeysDeleteResponses, unknown, ThrowOnError> {
+  public adminApiKeysDelete<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<AdminApiKeysDeleteData, ThrowOnError, AdminApiKeysDeleteResponses, TParseAs>,
+  ): RequestResult<AdminApiKeysDeleteResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).delete<
       AdminApiKeysDeleteResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/admin_api_keys/{key_id}',
@@ -1741,10 +2373,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieve a single organization API key
    */
-  public adminApiKeysGet<ThrowOnError extends boolean = false>(
-    options: Options<AdminApiKeysGetData, ThrowOnError>,
-  ): RequestResult<AdminApiKeysGetResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<AdminApiKeysGetResponses, unknown, ThrowOnError>({
+  public adminApiKeysGet<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<AdminApiKeysGetData, ThrowOnError, AdminApiKeysGetResponses, TParseAs>,
+  ): RequestResult<AdminApiKeysGetResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      AdminApiKeysGetResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/admin_api_keys/{key_id}',
       ...options,
@@ -1756,10 +2397,19 @@ export class OpenAi extends HeyApiClient {
    *
    * List user actions and configuration changes within this organization.
    */
-  public listAuditLogs<ThrowOnError extends boolean = false>(
-    options?: Options<ListAuditLogsData, ThrowOnError>,
-  ): RequestResult<ListAuditLogsResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListAuditLogsResponses, unknown, ThrowOnError>({
+  public listAuditLogs<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListAuditLogsData, ThrowOnError, ListAuditLogsResponses, TParseAs>,
+  ): RequestResult<ListAuditLogsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListAuditLogsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       querySerializer: { parameters: { effective_at: { object: { style: 'form' } } } },
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/audit_logs',
@@ -1772,13 +2422,29 @@ export class OpenAi extends HeyApiClient {
    *
    * List uploaded certificates for this organization.
    */
-  public listOrganizationCertificates<ThrowOnError extends boolean = false>(
-    options?: Options<ListOrganizationCertificatesData, ThrowOnError>,
-  ): RequestResult<ListOrganizationCertificatesResponses, unknown, ThrowOnError> {
+  public listOrganizationCertificates<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<
+      ListOrganizationCertificatesData,
+      ThrowOnError,
+      ListOrganizationCertificatesResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    ListOrganizationCertificatesResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options?.client ?? this.client).get<
       ListOrganizationCertificatesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates',
@@ -1794,10 +2460,19 @@ export class OpenAi extends HeyApiClient {
    * Organizations can upload up to 50 certificates.
    *
    */
-  public uploadCertificate<ThrowOnError extends boolean = false>(
-    options: Options<UploadCertificateData, ThrowOnError>,
-  ): RequestResult<UploadCertificateResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<UploadCertificateResponses, unknown, ThrowOnError>({
+  public uploadCertificate<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UploadCertificateData, ThrowOnError, UploadCertificateResponses, TParseAs>,
+  ): RequestResult<UploadCertificateResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      UploadCertificateResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates',
       ...options,
@@ -1816,13 +2491,29 @@ export class OpenAi extends HeyApiClient {
    * You can atomically and idempotently activate up to 10 certificates at a time.
    *
    */
-  public activateOrganizationCertificates<ThrowOnError extends boolean = false>(
-    options: Options<ActivateOrganizationCertificatesData, ThrowOnError>,
-  ): RequestResult<ActivateOrganizationCertificatesResponses, unknown, ThrowOnError> {
+  public activateOrganizationCertificates<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ActivateOrganizationCertificatesData,
+      ThrowOnError,
+      ActivateOrganizationCertificatesResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    ActivateOrganizationCertificatesResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       ActivateOrganizationCertificatesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/activate',
@@ -1842,13 +2533,29 @@ export class OpenAi extends HeyApiClient {
    * You can atomically and idempotently deactivate up to 10 certificates at a time.
    *
    */
-  public deactivateOrganizationCertificates<ThrowOnError extends boolean = false>(
-    options: Options<DeactivateOrganizationCertificatesData, ThrowOnError>,
-  ): RequestResult<DeactivateOrganizationCertificatesResponses, unknown, ThrowOnError> {
+  public deactivateOrganizationCertificates<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      DeactivateOrganizationCertificatesData,
+      ThrowOnError,
+      DeactivateOrganizationCertificatesResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    DeactivateOrganizationCertificatesResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       DeactivateOrganizationCertificatesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/deactivate',
@@ -1868,13 +2575,18 @@ export class OpenAi extends HeyApiClient {
    * The certificate must be inactive for the organization and all projects.
    *
    */
-  public deleteCertificate<ThrowOnError extends boolean = false>(
-    options?: Options<DeleteCertificateData, ThrowOnError>,
-  ): RequestResult<DeleteCertificateResponses, unknown, ThrowOnError> {
+  public deleteCertificate<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<DeleteCertificateData, ThrowOnError, DeleteCertificateResponses, TParseAs>,
+  ): RequestResult<DeleteCertificateResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options?.client ?? this.client).delete<
       DeleteCertificateResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/{certificate_id}',
@@ -1890,10 +2602,19 @@ export class OpenAi extends HeyApiClient {
    * You can get a certificate regardless of whether it is active or not.
    *
    */
-  public getCertificate<ThrowOnError extends boolean = false>(
-    options: Options<GetCertificateData, ThrowOnError>,
-  ): RequestResult<GetCertificateResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetCertificateResponses, unknown, ThrowOnError>({
+  public getCertificate<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetCertificateData, ThrowOnError, GetCertificateResponses, TParseAs>,
+  ): RequestResult<GetCertificateResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetCertificateResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/{certificate_id}',
       ...options,
@@ -1906,10 +2627,19 @@ export class OpenAi extends HeyApiClient {
    * Modify a certificate. Note that only the name can be modified.
    *
    */
-  public modifyCertificate<ThrowOnError extends boolean = false>(
-    options: Options<ModifyCertificateData, ThrowOnError>,
-  ): RequestResult<ModifyCertificateResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ModifyCertificateResponses, unknown, ThrowOnError>({
+  public modifyCertificate<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyCertificateData, ThrowOnError, ModifyCertificateResponses, TParseAs>,
+  ): RequestResult<ModifyCertificateResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ModifyCertificateResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/certificates/{certificate_id}',
       ...options,
@@ -1925,10 +2655,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Get costs details for the organization.
    */
-  public usageCosts<ThrowOnError extends boolean = false>(
-    options: Options<UsageCostsData, ThrowOnError>,
-  ): RequestResult<UsageCostsResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<UsageCostsResponses, unknown, ThrowOnError>({
+  public usageCosts<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UsageCostsData, ThrowOnError, UsageCostsResponses, TParseAs>,
+  ): RequestResult<UsageCostsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      UsageCostsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/costs',
       ...options,
@@ -1940,10 +2679,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of invites in the organization.
    */
-  public listInvites<ThrowOnError extends boolean = false>(
-    options?: Options<ListInvitesData, ThrowOnError>,
-  ): RequestResult<ListInvitesResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListInvitesResponses, unknown, ThrowOnError>({
+  public listInvites<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListInvitesData, ThrowOnError, ListInvitesResponses, TParseAs>,
+  ): RequestResult<ListInvitesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListInvitesResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/invites',
       ...options,
@@ -1955,10 +2703,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Create an invite for a user to the organization. The invite must be accepted by the user before they have access to the organization.
    */
-  public inviteUser<ThrowOnError extends boolean = false>(
-    options: Options<InviteUserData, ThrowOnError>,
-  ): RequestResult<InviteUserResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<InviteUserResponses, unknown, ThrowOnError>({
+  public inviteUser<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<InviteUserData, ThrowOnError, InviteUserResponses, TParseAs>,
+  ): RequestResult<InviteUserResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      InviteUserResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/invites',
       ...options,
@@ -1974,10 +2731,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete an invite. If the invite has already been accepted, it cannot be deleted.
    */
-  public deleteInvite<ThrowOnError extends boolean = false>(
-    options: Options<DeleteInviteData, ThrowOnError>,
-  ): RequestResult<DeleteInviteResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).delete<DeleteInviteResponses, unknown, ThrowOnError>({
+  public deleteInvite<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteInviteData, ThrowOnError, DeleteInviteResponses, TParseAs>,
+  ): RequestResult<DeleteInviteResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).delete<
+      DeleteInviteResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/invites/{invite_id}',
       ...options,
@@ -1989,10 +2755,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves an invite.
    */
-  public retrieveInvite<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveInviteData, ThrowOnError>,
-  ): RequestResult<RetrieveInviteResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<RetrieveInviteResponses, unknown, ThrowOnError>({
+  public retrieveInvite<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RetrieveInviteData, ThrowOnError, RetrieveInviteResponses, TParseAs>,
+  ): RequestResult<RetrieveInviteResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      RetrieveInviteResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/invites/{invite_id}',
       ...options,
@@ -2004,10 +2779,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of projects.
    */
-  public listProjects<ThrowOnError extends boolean = false>(
-    options?: Options<ListProjectsData, ThrowOnError>,
-  ): RequestResult<ListProjectsResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListProjectsResponses, unknown, ThrowOnError>({
+  public listProjects<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListProjectsData, ThrowOnError, ListProjectsResponses, TParseAs>,
+  ): RequestResult<ListProjectsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListProjectsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects',
       ...options,
@@ -2019,10 +2803,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Create a new project in the organization. Projects can be created and archived, but cannot be deleted.
    */
-  public createProject<ThrowOnError extends boolean = false>(
-    options: Options<CreateProjectData, ThrowOnError>,
-  ): RequestResult<CreateProjectResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateProjectResponses, unknown, ThrowOnError>({
+  public createProject<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateProjectData, ThrowOnError, CreateProjectResponses, TParseAs>,
+  ): RequestResult<CreateProjectResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateProjectResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects',
       ...options,
@@ -2038,10 +2831,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a project.
    */
-  public retrieveProject<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveProjectData, ThrowOnError>,
-  ): RequestResult<RetrieveProjectResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<RetrieveProjectResponses, unknown, ThrowOnError>({
+  public retrieveProject<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RetrieveProjectData, ThrowOnError, RetrieveProjectResponses, TParseAs>,
+  ): RequestResult<RetrieveProjectResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      RetrieveProjectResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}',
       ...options,
@@ -2053,13 +2855,18 @@ export class OpenAi extends HeyApiClient {
    *
    * Modifies a project in the organization.
    */
-  public modifyProject<ThrowOnError extends boolean = false>(
-    options: Options<ModifyProjectData, ThrowOnError>,
-  ): RequestResult<ModifyProjectResponses, ModifyProjectErrors, ThrowOnError> {
+  public modifyProject<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyProjectData, ThrowOnError, ModifyProjectResponses, TParseAs>,
+  ): RequestResult<ModifyProjectResponses, ModifyProjectErrors, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       ModifyProjectResponses,
       ModifyProjectErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}',
@@ -2076,10 +2883,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of API keys in the project.
    */
-  public listProjectApiKeys<ThrowOnError extends boolean = false>(
-    options: Options<ListProjectApiKeysData, ThrowOnError>,
-  ): RequestResult<ListProjectApiKeysResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<ListProjectApiKeysResponses, unknown, ThrowOnError>({
+  public listProjectApiKeys<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ListProjectApiKeysData, ThrowOnError, ListProjectApiKeysResponses, TParseAs>,
+  ): RequestResult<ListProjectApiKeysResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      ListProjectApiKeysResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/api_keys',
       ...options,
@@ -2091,13 +2907,24 @@ export class OpenAi extends HeyApiClient {
    *
    * Deletes an API key from the project.
    */
-  public deleteProjectApiKey<ThrowOnError extends boolean = false>(
-    options: Options<DeleteProjectApiKeyData, ThrowOnError>,
-  ): RequestResult<DeleteProjectApiKeyResponses, DeleteProjectApiKeyErrors, ThrowOnError> {
+  public deleteProjectApiKey<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteProjectApiKeyData, ThrowOnError, DeleteProjectApiKeyResponses, TParseAs>,
+  ): RequestResult<
+    DeleteProjectApiKeyResponses,
+    DeleteProjectApiKeyErrors,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).delete<
       DeleteProjectApiKeyResponses,
       DeleteProjectApiKeyErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/api_keys/{key_id}',
@@ -2110,13 +2937,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves an API key in the project.
    */
-  public retrieveProjectApiKey<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveProjectApiKeyData, ThrowOnError>,
-  ): RequestResult<RetrieveProjectApiKeyResponses, unknown, ThrowOnError> {
+  public retrieveProjectApiKey<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      RetrieveProjectApiKeyData,
+      ThrowOnError,
+      RetrieveProjectApiKeyResponses,
+      TParseAs
+    >,
+  ): RequestResult<RetrieveProjectApiKeyResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       RetrieveProjectApiKeyResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/api_keys/{key_id}',
@@ -2129,10 +2966,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Archives a project in the organization. Archived projects cannot be used or updated.
    */
-  public archiveProject<ThrowOnError extends boolean = false>(
-    options: Options<ArchiveProjectData, ThrowOnError>,
-  ): RequestResult<ArchiveProjectResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ArchiveProjectResponses, unknown, ThrowOnError>({
+  public archiveProject<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ArchiveProjectData, ThrowOnError, ArchiveProjectResponses, TParseAs>,
+  ): RequestResult<ArchiveProjectResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ArchiveProjectResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/archive',
       ...options,
@@ -2144,13 +2990,23 @@ export class OpenAi extends HeyApiClient {
    *
    * List certificates for this project.
    */
-  public listProjectCertificates<ThrowOnError extends boolean = false>(
-    options: Options<ListProjectCertificatesData, ThrowOnError>,
-  ): RequestResult<ListProjectCertificatesResponses, unknown, ThrowOnError> {
+  public listProjectCertificates<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ListProjectCertificatesData,
+      ThrowOnError,
+      ListProjectCertificatesResponses,
+      TParseAs
+    >,
+  ): RequestResult<ListProjectCertificatesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       ListProjectCertificatesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/certificates',
@@ -2166,13 +3022,29 @@ export class OpenAi extends HeyApiClient {
    * You can atomically and idempotently activate up to 10 certificates at a time.
    *
    */
-  public activateProjectCertificates<ThrowOnError extends boolean = false>(
-    options: Options<ActivateProjectCertificatesData, ThrowOnError>,
-  ): RequestResult<ActivateProjectCertificatesResponses, unknown, ThrowOnError> {
+  public activateProjectCertificates<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ActivateProjectCertificatesData,
+      ThrowOnError,
+      ActivateProjectCertificatesResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    ActivateProjectCertificatesResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       ActivateProjectCertificatesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/certificates/activate',
@@ -2191,13 +3063,29 @@ export class OpenAi extends HeyApiClient {
    * idempotently deactivate up to 10 certificates at a time.
    *
    */
-  public deactivateProjectCertificates<ThrowOnError extends boolean = false>(
-    options: Options<DeactivateProjectCertificatesData, ThrowOnError>,
-  ): RequestResult<DeactivateProjectCertificatesResponses, unknown, ThrowOnError> {
+  public deactivateProjectCertificates<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      DeactivateProjectCertificatesData,
+      ThrowOnError,
+      DeactivateProjectCertificatesResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    DeactivateProjectCertificatesResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       DeactivateProjectCertificatesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/certificates/deactivate',
@@ -2214,13 +3102,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns the rate limits per model for a project.
    */
-  public listProjectRateLimits<ThrowOnError extends boolean = false>(
-    options: Options<ListProjectRateLimitsData, ThrowOnError>,
-  ): RequestResult<ListProjectRateLimitsResponses, unknown, ThrowOnError> {
+  public listProjectRateLimits<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ListProjectRateLimitsData,
+      ThrowOnError,
+      ListProjectRateLimitsResponses,
+      TParseAs
+    >,
+  ): RequestResult<ListProjectRateLimitsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       ListProjectRateLimitsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/rate_limits',
@@ -2233,13 +3131,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Updates a project rate limit.
    */
-  public updateProjectRateLimits<ThrowOnError extends boolean = false>(
-    options: Options<UpdateProjectRateLimitsData, ThrowOnError>,
-  ): RequestResult<UpdateProjectRateLimitsResponses, UpdateProjectRateLimitsErrors, ThrowOnError> {
+  public updateProjectRateLimits<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      UpdateProjectRateLimitsData,
+      ThrowOnError,
+      UpdateProjectRateLimitsResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    UpdateProjectRateLimitsResponses,
+    UpdateProjectRateLimitsErrors,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       UpdateProjectRateLimitsResponses,
       UpdateProjectRateLimitsErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/rate_limits/{rate_limit_id}',
@@ -2256,17 +3170,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of service accounts in the project.
    */
-  public listProjectServiceAccounts<ThrowOnError extends boolean = false>(
-    options: Options<ListProjectServiceAccountsData, ThrowOnError>,
+  public listProjectServiceAccounts<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ListProjectServiceAccountsData,
+      ThrowOnError,
+      ListProjectServiceAccountsResponses,
+      TParseAs
+    >,
   ): RequestResult<
     ListProjectServiceAccountsResponses,
     ListProjectServiceAccountsErrors,
-    ThrowOnError
+    ThrowOnError,
+    'fields',
+    TParseAs
   > {
     return (options.client ?? this.client).get<
       ListProjectServiceAccountsResponses,
       ListProjectServiceAccountsErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/service_accounts',
@@ -2279,17 +3205,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Creates a new service account in the project. This also returns an unredacted API key for the service account.
    */
-  public createProjectServiceAccount<ThrowOnError extends boolean = false>(
-    options: Options<CreateProjectServiceAccountData, ThrowOnError>,
+  public createProjectServiceAccount<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CreateProjectServiceAccountData,
+      ThrowOnError,
+      CreateProjectServiceAccountResponses,
+      TParseAs
+    >,
   ): RequestResult<
     CreateProjectServiceAccountResponses,
     CreateProjectServiceAccountErrors,
-    ThrowOnError
+    ThrowOnError,
+    'fields',
+    TParseAs
   > {
     return (options.client ?? this.client).post<
       CreateProjectServiceAccountResponses,
       CreateProjectServiceAccountErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/service_accounts',
@@ -2306,13 +3244,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Deletes a service account from the project.
    */
-  public deleteProjectServiceAccount<ThrowOnError extends boolean = false>(
-    options: Options<DeleteProjectServiceAccountData, ThrowOnError>,
-  ): RequestResult<DeleteProjectServiceAccountResponses, unknown, ThrowOnError> {
+  public deleteProjectServiceAccount<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      DeleteProjectServiceAccountData,
+      ThrowOnError,
+      DeleteProjectServiceAccountResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    DeleteProjectServiceAccountResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).delete<
       DeleteProjectServiceAccountResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/service_accounts/{service_account_id}',
@@ -2325,13 +3279,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a service account in the project.
    */
-  public retrieveProjectServiceAccount<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveProjectServiceAccountData, ThrowOnError>,
-  ): RequestResult<RetrieveProjectServiceAccountResponses, unknown, ThrowOnError> {
+  public retrieveProjectServiceAccount<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      RetrieveProjectServiceAccountData,
+      ThrowOnError,
+      RetrieveProjectServiceAccountResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    RetrieveProjectServiceAccountResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).get<
       RetrieveProjectServiceAccountResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/service_accounts/{service_account_id}',
@@ -2344,13 +3314,24 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of users in the project.
    */
-  public listProjectUsers<ThrowOnError extends boolean = false>(
-    options: Options<ListProjectUsersData, ThrowOnError>,
-  ): RequestResult<ListProjectUsersResponses, ListProjectUsersErrors, ThrowOnError> {
+  public listProjectUsers<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ListProjectUsersData, ThrowOnError, ListProjectUsersResponses, TParseAs>,
+  ): RequestResult<
+    ListProjectUsersResponses,
+    ListProjectUsersErrors,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).get<
       ListProjectUsersResponses,
       ListProjectUsersErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users',
@@ -2363,13 +3344,24 @@ export class OpenAi extends HeyApiClient {
    *
    * Adds a user to the project. Users must already be members of the organization to be added to a project.
    */
-  public createProjectUser<ThrowOnError extends boolean = false>(
-    options: Options<CreateProjectUserData, ThrowOnError>,
-  ): RequestResult<CreateProjectUserResponses, CreateProjectUserErrors, ThrowOnError> {
+  public createProjectUser<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateProjectUserData, ThrowOnError, CreateProjectUserResponses, TParseAs>,
+  ): RequestResult<
+    CreateProjectUserResponses,
+    CreateProjectUserErrors,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       CreateProjectUserResponses,
       CreateProjectUserErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users',
@@ -2386,13 +3378,24 @@ export class OpenAi extends HeyApiClient {
    *
    * Deletes a user from the project.
    */
-  public deleteProjectUser<ThrowOnError extends boolean = false>(
-    options: Options<DeleteProjectUserData, ThrowOnError>,
-  ): RequestResult<DeleteProjectUserResponses, DeleteProjectUserErrors, ThrowOnError> {
+  public deleteProjectUser<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteProjectUserData, ThrowOnError, DeleteProjectUserResponses, TParseAs>,
+  ): RequestResult<
+    DeleteProjectUserResponses,
+    DeleteProjectUserErrors,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).delete<
       DeleteProjectUserResponses,
       DeleteProjectUserErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users/{user_id}',
@@ -2405,16 +3408,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a user in the project.
    */
-  public retrieveProjectUser<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveProjectUserData, ThrowOnError>,
-  ): RequestResult<RetrieveProjectUserResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<RetrieveProjectUserResponses, unknown, ThrowOnError>(
-      {
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/organization/projects/{project_id}/users/{user_id}',
-        ...options,
-      },
-    );
+  public retrieveProjectUser<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RetrieveProjectUserData, ThrowOnError, RetrieveProjectUserResponses, TParseAs>,
+  ): RequestResult<RetrieveProjectUserResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      RetrieveProjectUserResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
+      security: [{ scheme: 'bearer', type: 'http' }],
+      url: '/organization/projects/{project_id}/users/{user_id}',
+      ...options,
+    });
   }
 
   /**
@@ -2422,13 +3432,24 @@ export class OpenAi extends HeyApiClient {
    *
    * Modifies a user's role in the project.
    */
-  public modifyProjectUser<ThrowOnError extends boolean = false>(
-    options: Options<ModifyProjectUserData, ThrowOnError>,
-  ): RequestResult<ModifyProjectUserResponses, ModifyProjectUserErrors, ThrowOnError> {
+  public modifyProjectUser<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyProjectUserData, ThrowOnError, ModifyProjectUserResponses, TParseAs>,
+  ): RequestResult<
+    ModifyProjectUserResponses,
+    ModifyProjectUserErrors,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       ModifyProjectUserResponses,
       ModifyProjectUserErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/projects/{project_id}/users/{user_id}',
@@ -2445,10 +3466,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Get audio speeches usage details for the organization.
    */
-  public usageAudioSpeeches<ThrowOnError extends boolean = false>(
-    options: Options<UsageAudioSpeechesData, ThrowOnError>,
-  ): RequestResult<UsageAudioSpeechesResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<UsageAudioSpeechesResponses, unknown, ThrowOnError>({
+  public usageAudioSpeeches<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UsageAudioSpeechesData, ThrowOnError, UsageAudioSpeechesResponses, TParseAs>,
+  ): RequestResult<UsageAudioSpeechesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      UsageAudioSpeechesResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/audio_speeches',
       ...options,
@@ -2460,13 +3490,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Get audio transcriptions usage details for the organization.
    */
-  public usageAudioTranscriptions<ThrowOnError extends boolean = false>(
-    options: Options<UsageAudioTranscriptionsData, ThrowOnError>,
-  ): RequestResult<UsageAudioTranscriptionsResponses, unknown, ThrowOnError> {
+  public usageAudioTranscriptions<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      UsageAudioTranscriptionsData,
+      ThrowOnError,
+      UsageAudioTranscriptionsResponses,
+      TParseAs
+    >,
+  ): RequestResult<UsageAudioTranscriptionsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       UsageAudioTranscriptionsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/audio_transcriptions',
@@ -2479,13 +3519,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Get code interpreter sessions usage details for the organization.
    */
-  public usageCodeInterpreterSessions<ThrowOnError extends boolean = false>(
-    options: Options<UsageCodeInterpreterSessionsData, ThrowOnError>,
-  ): RequestResult<UsageCodeInterpreterSessionsResponses, unknown, ThrowOnError> {
+  public usageCodeInterpreterSessions<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      UsageCodeInterpreterSessionsData,
+      ThrowOnError,
+      UsageCodeInterpreterSessionsResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    UsageCodeInterpreterSessionsResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).get<
       UsageCodeInterpreterSessionsResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/code_interpreter_sessions',
@@ -2498,10 +3554,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Get completions usage details for the organization.
    */
-  public usageCompletions<ThrowOnError extends boolean = false>(
-    options: Options<UsageCompletionsData, ThrowOnError>,
-  ): RequestResult<UsageCompletionsResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<UsageCompletionsResponses, unknown, ThrowOnError>({
+  public usageCompletions<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UsageCompletionsData, ThrowOnError, UsageCompletionsResponses, TParseAs>,
+  ): RequestResult<UsageCompletionsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      UsageCompletionsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/completions',
       ...options,
@@ -2513,10 +3578,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Get embeddings usage details for the organization.
    */
-  public usageEmbeddings<ThrowOnError extends boolean = false>(
-    options: Options<UsageEmbeddingsData, ThrowOnError>,
-  ): RequestResult<UsageEmbeddingsResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<UsageEmbeddingsResponses, unknown, ThrowOnError>({
+  public usageEmbeddings<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UsageEmbeddingsData, ThrowOnError, UsageEmbeddingsResponses, TParseAs>,
+  ): RequestResult<UsageEmbeddingsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      UsageEmbeddingsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/embeddings',
       ...options,
@@ -2528,10 +3602,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Get images usage details for the organization.
    */
-  public usageImages<ThrowOnError extends boolean = false>(
-    options: Options<UsageImagesData, ThrowOnError>,
-  ): RequestResult<UsageImagesResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<UsageImagesResponses, unknown, ThrowOnError>({
+  public usageImages<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UsageImagesData, ThrowOnError, UsageImagesResponses, TParseAs>,
+  ): RequestResult<UsageImagesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      UsageImagesResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/images',
       ...options,
@@ -2543,10 +3626,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Get moderations usage details for the organization.
    */
-  public usageModerations<ThrowOnError extends boolean = false>(
-    options: Options<UsageModerationsData, ThrowOnError>,
-  ): RequestResult<UsageModerationsResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<UsageModerationsResponses, unknown, ThrowOnError>({
+  public usageModerations<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UsageModerationsData, ThrowOnError, UsageModerationsResponses, TParseAs>,
+  ): RequestResult<UsageModerationsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      UsageModerationsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/moderations',
       ...options,
@@ -2558,10 +3650,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Get vector stores usage details for the organization.
    */
-  public usageVectorStores<ThrowOnError extends boolean = false>(
-    options: Options<UsageVectorStoresData, ThrowOnError>,
-  ): RequestResult<UsageVectorStoresResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<UsageVectorStoresResponses, unknown, ThrowOnError>({
+  public usageVectorStores<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<UsageVectorStoresData, ThrowOnError, UsageVectorStoresResponses, TParseAs>,
+  ): RequestResult<UsageVectorStoresResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      UsageVectorStoresResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/usage/vector_stores',
       ...options,
@@ -2573,10 +3674,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Lists all of the users in the organization.
    */
-  public listUsers<ThrowOnError extends boolean = false>(
-    options?: Options<ListUsersData, ThrowOnError>,
-  ): RequestResult<ListUsersResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListUsersResponses, unknown, ThrowOnError>({
+  public listUsers<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListUsersData, ThrowOnError, ListUsersResponses, TParseAs>,
+  ): RequestResult<ListUsersResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListUsersResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/users',
       ...options,
@@ -2588,10 +3698,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Deletes a user from the organization.
    */
-  public deleteUser<ThrowOnError extends boolean = false>(
-    options: Options<DeleteUserData, ThrowOnError>,
-  ): RequestResult<DeleteUserResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).delete<DeleteUserResponses, unknown, ThrowOnError>({
+  public deleteUser<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteUserData, ThrowOnError, DeleteUserResponses, TParseAs>,
+  ): RequestResult<DeleteUserResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).delete<
+      DeleteUserResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/users/{user_id}',
       ...options,
@@ -2603,10 +3722,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a user by their identifier.
    */
-  public retrieveUser<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveUserData, ThrowOnError>,
-  ): RequestResult<RetrieveUserResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<RetrieveUserResponses, unknown, ThrowOnError>({
+  public retrieveUser<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<RetrieveUserData, ThrowOnError, RetrieveUserResponses, TParseAs>,
+  ): RequestResult<RetrieveUserResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      RetrieveUserResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/users/{user_id}',
       ...options,
@@ -2618,10 +3746,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Modifies a user's role in the organization.
    */
-  public modifyUser<ThrowOnError extends boolean = false>(
-    options: Options<ModifyUserData, ThrowOnError>,
-  ): RequestResult<ModifyUserResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ModifyUserResponses, unknown, ThrowOnError>({
+  public modifyUser<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyUserData, ThrowOnError, ModifyUserResponses, TParseAs>,
+  ): RequestResult<ModifyUserResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ModifyUserResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/organization/users/{user_id}',
       ...options,
@@ -2644,13 +3781,23 @@ export class OpenAi extends HeyApiClient {
    * for the Realtime API.
    *
    */
-  public createRealtimeSession<ThrowOnError extends boolean = false>(
-    options: Options<CreateRealtimeSessionData, ThrowOnError>,
-  ): RequestResult<CreateRealtimeSessionResponses, unknown, ThrowOnError> {
+  public createRealtimeSession<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CreateRealtimeSessionData,
+      ThrowOnError,
+      CreateRealtimeSessionResponses,
+      TParseAs
+    >,
+  ): RequestResult<CreateRealtimeSessionResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateRealtimeSessionResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/realtime/sessions',
@@ -2674,13 +3821,29 @@ export class OpenAi extends HeyApiClient {
    * for the Realtime API.
    *
    */
-  public createRealtimeTranscriptionSession<ThrowOnError extends boolean = false>(
-    options: Options<CreateRealtimeTranscriptionSessionData, ThrowOnError>,
-  ): RequestResult<CreateRealtimeTranscriptionSessionResponses, unknown, ThrowOnError> {
+  public createRealtimeTranscriptionSession<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CreateRealtimeTranscriptionSessionData,
+      ThrowOnError,
+      CreateRealtimeTranscriptionSessionResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    CreateRealtimeTranscriptionSessionResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       CreateRealtimeTranscriptionSessionResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/realtime/transcription_sessions',
@@ -2704,10 +3867,19 @@ export class OpenAi extends HeyApiClient {
    * as input for the model's response.
    *
    */
-  public createResponse<ThrowOnError extends boolean = false>(
-    options: Options<CreateResponseData, ThrowOnError>,
-  ): RequestResult<CreateResponseResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateResponseResponses, unknown, ThrowOnError>({
+  public createResponse<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateResponseData, ThrowOnError, CreateResponseResponses, TParseAs>,
+  ): RequestResult<CreateResponseResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateResponseResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses',
       ...options,
@@ -2724,13 +3896,24 @@ export class OpenAi extends HeyApiClient {
    * Deletes a model response with the given ID.
    *
    */
-  public deleteResponse<ThrowOnError extends boolean = false>(
-    options: Options<DeleteResponseData, ThrowOnError>,
-  ): RequestResult<DeleteResponseResponses, DeleteResponseErrors, ThrowOnError> {
+  public deleteResponse<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteResponseData, ThrowOnError, DeleteResponseResponses, TParseAs>,
+  ): RequestResult<
+    DeleteResponseResponses,
+    DeleteResponseErrors,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).delete<
       DeleteResponseResponses,
       DeleteResponseErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses/{response_id}',
@@ -2744,10 +3927,19 @@ export class OpenAi extends HeyApiClient {
    * Retrieves a model response with the given ID.
    *
    */
-  public getResponse<ThrowOnError extends boolean = false>(
-    options: Options<GetResponseData, ThrowOnError>,
-  ): RequestResult<GetResponseResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetResponseResponses, unknown, ThrowOnError>({
+  public getResponse<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetResponseData, ThrowOnError, GetResponseResponses, TParseAs>,
+  ): RequestResult<GetResponseResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetResponseResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses/{response_id}',
       ...options,
@@ -2762,13 +3954,24 @@ export class OpenAi extends HeyApiClient {
    * [Learn more](https://platform.openai.com/docs/guides/background).
    *
    */
-  public cancelResponse<ThrowOnError extends boolean = false>(
-    options: Options<CancelResponseData, ThrowOnError>,
-  ): RequestResult<CancelResponseResponses, CancelResponseErrors, ThrowOnError> {
+  public cancelResponse<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CancelResponseData, ThrowOnError, CancelResponseResponses, TParseAs>,
+  ): RequestResult<
+    CancelResponseResponses,
+    CancelResponseErrors,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       CancelResponseResponses,
       CancelResponseErrors,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses/{response_id}/cancel',
@@ -2781,10 +3984,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of input items for a given response.
    */
-  public listInputItems<ThrowOnError extends boolean = false>(
-    options: Options<ListInputItemsData, ThrowOnError>,
-  ): RequestResult<ListInputItemsResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<ListInputItemsResponses, unknown, ThrowOnError>({
+  public listInputItems<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ListInputItemsData, ThrowOnError, ListInputItemsResponses, TParseAs>,
+  ): RequestResult<ListInputItemsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      ListInputItemsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/responses/{response_id}/input_items',
       ...options,
@@ -2796,10 +4008,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Create a thread.
    */
-  public createThread<ThrowOnError extends boolean = false>(
-    options?: Options<CreateThreadData, ThrowOnError>,
-  ): RequestResult<CreateThreadResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).post<CreateThreadResponses, unknown, ThrowOnError>({
+  public createThread<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<CreateThreadData, ThrowOnError, CreateThreadResponses, TParseAs>,
+  ): RequestResult<CreateThreadResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).post<
+      CreateThreadResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads',
       ...options,
@@ -2815,20 +4036,27 @@ export class OpenAi extends HeyApiClient {
    *
    * Create a thread and run it in one request.
    */
-  public createThreadAndRun<ThrowOnError extends boolean = false>(
-    options: Options<CreateThreadAndRunData, ThrowOnError>,
-  ): RequestResult<CreateThreadAndRunResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateThreadAndRunResponses, unknown, ThrowOnError>(
-      {
-        security: [{ scheme: 'bearer', type: 'http' }],
-        url: '/threads/runs',
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
+  public createThreadAndRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateThreadAndRunData, ThrowOnError, CreateThreadAndRunResponses, TParseAs>,
+  ): RequestResult<CreateThreadAndRunResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateThreadAndRunResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
+      security: [{ scheme: 'bearer', type: 'http' }],
+      url: '/threads/runs',
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
       },
-    );
+    });
   }
 
   /**
@@ -2836,10 +4064,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete a thread.
    */
-  public deleteThread<ThrowOnError extends boolean = false>(
-    options: Options<DeleteThreadData, ThrowOnError>,
-  ): RequestResult<DeleteThreadResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).delete<DeleteThreadResponses, unknown, ThrowOnError>({
+  public deleteThread<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteThreadData, ThrowOnError, DeleteThreadResponses, TParseAs>,
+  ): RequestResult<DeleteThreadResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).delete<
+      DeleteThreadResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}',
       ...options,
@@ -2851,10 +4088,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a thread.
    */
-  public getThread<ThrowOnError extends boolean = false>(
-    options: Options<GetThreadData, ThrowOnError>,
-  ): RequestResult<GetThreadResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetThreadResponses, unknown, ThrowOnError>({
+  public getThread<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetThreadData, ThrowOnError, GetThreadResponses, TParseAs>,
+  ): RequestResult<GetThreadResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetThreadResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}',
       ...options,
@@ -2866,10 +4112,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Modifies a thread.
    */
-  public modifyThread<ThrowOnError extends boolean = false>(
-    options: Options<ModifyThreadData, ThrowOnError>,
-  ): RequestResult<ModifyThreadResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ModifyThreadResponses, unknown, ThrowOnError>({
+  public modifyThread<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyThreadData, ThrowOnError, ModifyThreadResponses, TParseAs>,
+  ): RequestResult<ModifyThreadResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ModifyThreadResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}',
       ...options,
@@ -2885,10 +4140,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of messages for a given thread.
    */
-  public listMessages<ThrowOnError extends boolean = false>(
-    options: Options<ListMessagesData, ThrowOnError>,
-  ): RequestResult<ListMessagesResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<ListMessagesResponses, unknown, ThrowOnError>({
+  public listMessages<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ListMessagesData, ThrowOnError, ListMessagesResponses, TParseAs>,
+  ): RequestResult<ListMessagesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      ListMessagesResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages',
       ...options,
@@ -2900,10 +4164,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Create a message.
    */
-  public createMessage<ThrowOnError extends boolean = false>(
-    options: Options<CreateMessageData, ThrowOnError>,
-  ): RequestResult<CreateMessageResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateMessageResponses, unknown, ThrowOnError>({
+  public createMessage<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateMessageData, ThrowOnError, CreateMessageResponses, TParseAs>,
+  ): RequestResult<CreateMessageResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateMessageResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages',
       ...options,
@@ -2919,10 +4192,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Deletes a message.
    */
-  public deleteMessage<ThrowOnError extends boolean = false>(
-    options: Options<DeleteMessageData, ThrowOnError>,
-  ): RequestResult<DeleteMessageResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).delete<DeleteMessageResponses, unknown, ThrowOnError>({
+  public deleteMessage<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteMessageData, ThrowOnError, DeleteMessageResponses, TParseAs>,
+  ): RequestResult<DeleteMessageResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).delete<
+      DeleteMessageResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages/{message_id}',
       ...options,
@@ -2934,10 +4216,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieve a message.
    */
-  public getMessage<ThrowOnError extends boolean = false>(
-    options: Options<GetMessageData, ThrowOnError>,
-  ): RequestResult<GetMessageResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetMessageResponses, unknown, ThrowOnError>({
+  public getMessage<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetMessageData, ThrowOnError, GetMessageResponses, TParseAs>,
+  ): RequestResult<GetMessageResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetMessageResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages/{message_id}',
       ...options,
@@ -2949,10 +4240,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Modifies a message.
    */
-  public modifyMessage<ThrowOnError extends boolean = false>(
-    options: Options<ModifyMessageData, ThrowOnError>,
-  ): RequestResult<ModifyMessageResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ModifyMessageResponses, unknown, ThrowOnError>({
+  public modifyMessage<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyMessageData, ThrowOnError, ModifyMessageResponses, TParseAs>,
+  ): RequestResult<ModifyMessageResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ModifyMessageResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/messages/{message_id}',
       ...options,
@@ -2968,10 +4268,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of runs belonging to a thread.
    */
-  public listRuns<ThrowOnError extends boolean = false>(
-    options: Options<ListRunsData, ThrowOnError>,
-  ): RequestResult<ListRunsResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<ListRunsResponses, unknown, ThrowOnError>({
+  public listRuns<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ListRunsData, ThrowOnError, ListRunsResponses, TParseAs>,
+  ): RequestResult<ListRunsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      ListRunsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs',
       ...options,
@@ -2983,10 +4292,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Create a run.
    */
-  public createRun<ThrowOnError extends boolean = false>(
-    options: Options<CreateRunData, ThrowOnError>,
-  ): RequestResult<CreateRunResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateRunResponses, unknown, ThrowOnError>({
+  public createRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateRunData, ThrowOnError, CreateRunResponses, TParseAs>,
+  ): RequestResult<CreateRunResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateRunResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs',
       ...options,
@@ -3002,10 +4320,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a run.
    */
-  public getRun<ThrowOnError extends boolean = false>(
-    options: Options<GetRunData, ThrowOnError>,
-  ): RequestResult<GetRunResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetRunResponses, unknown, ThrowOnError>({
+  public getRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetRunData, ThrowOnError, GetRunResponses, TParseAs>,
+  ): RequestResult<GetRunResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetRunResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}',
       ...options,
@@ -3017,10 +4344,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Modifies a run.
    */
-  public modifyRun<ThrowOnError extends boolean = false>(
-    options: Options<ModifyRunData, ThrowOnError>,
-  ): RequestResult<ModifyRunResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ModifyRunResponses, unknown, ThrowOnError>({
+  public modifyRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyRunData, ThrowOnError, ModifyRunResponses, TParseAs>,
+  ): RequestResult<ModifyRunResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ModifyRunResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}',
       ...options,
@@ -3036,10 +4372,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Cancels a run that is `in_progress`.
    */
-  public cancelRun<ThrowOnError extends boolean = false>(
-    options: Options<CancelRunData, ThrowOnError>,
-  ): RequestResult<CancelRunResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CancelRunResponses, unknown, ThrowOnError>({
+  public cancelRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CancelRunData, ThrowOnError, CancelRunResponses, TParseAs>,
+  ): RequestResult<CancelRunResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CancelRunResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}/cancel',
       ...options,
@@ -3051,10 +4396,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of run steps belonging to a run.
    */
-  public listRunSteps<ThrowOnError extends boolean = false>(
-    options: Options<ListRunStepsData, ThrowOnError>,
-  ): RequestResult<ListRunStepsResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<ListRunStepsResponses, unknown, ThrowOnError>({
+  public listRunSteps<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ListRunStepsData, ThrowOnError, ListRunStepsResponses, TParseAs>,
+  ): RequestResult<ListRunStepsResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      ListRunStepsResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}/steps',
       ...options,
@@ -3066,10 +4420,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a run step.
    */
-  public getRunStep<ThrowOnError extends boolean = false>(
-    options: Options<GetRunStepData, ThrowOnError>,
-  ): RequestResult<GetRunStepResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetRunStepResponses, unknown, ThrowOnError>({
+  public getRunStep<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetRunStepData, ThrowOnError, GetRunStepResponses, TParseAs>,
+  ): RequestResult<GetRunStepResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetRunStepResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}/steps/{step_id}',
       ...options,
@@ -3082,13 +4445,23 @@ export class OpenAi extends HeyApiClient {
    * When a run has the `status: "requires_action"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
    *
    */
-  public submitToolOuputsToRun<ThrowOnError extends boolean = false>(
-    options: Options<SubmitToolOuputsToRunData, ThrowOnError>,
-  ): RequestResult<SubmitToolOuputsToRunResponses, unknown, ThrowOnError> {
+  public submitToolOuputsToRun<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      SubmitToolOuputsToRunData,
+      ThrowOnError,
+      SubmitToolOuputsToRunResponses,
+      TParseAs
+    >,
+  ): RequestResult<SubmitToolOuputsToRunResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       SubmitToolOuputsToRunResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/threads/{thread_id}/runs/{run_id}/submit_tool_outputs',
@@ -3122,10 +4495,19 @@ export class OpenAi extends HeyApiClient {
    * File](https://platform.openai.com/docs/api-reference/files/create).
    *
    */
-  public createUpload<ThrowOnError extends boolean = false>(
-    options: Options<CreateUploadData, ThrowOnError>,
-  ): RequestResult<CreateUploadResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateUploadResponses, unknown, ThrowOnError>({
+  public createUpload<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateUploadData, ThrowOnError, CreateUploadResponses, TParseAs>,
+  ): RequestResult<CreateUploadResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateUploadResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/uploads',
       ...options,
@@ -3142,10 +4524,19 @@ export class OpenAi extends HeyApiClient {
    * Cancels the Upload. No Parts may be added after an Upload is cancelled.
    *
    */
-  public cancelUpload<ThrowOnError extends boolean = false>(
-    options: Options<CancelUploadData, ThrowOnError>,
-  ): RequestResult<CancelUploadResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CancelUploadResponses, unknown, ThrowOnError>({
+  public cancelUpload<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CancelUploadData, ThrowOnError, CancelUploadResponses, TParseAs>,
+  ): RequestResult<CancelUploadResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CancelUploadResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/uploads/{upload_id}/cancel',
       ...options,
@@ -3164,10 +4555,19 @@ export class OpenAi extends HeyApiClient {
    * The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
    *
    */
-  public completeUpload<ThrowOnError extends boolean = false>(
-    options: Options<CompleteUploadData, ThrowOnError>,
-  ): RequestResult<CompleteUploadResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CompleteUploadResponses, unknown, ThrowOnError>({
+  public completeUpload<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CompleteUploadData, ThrowOnError, CompleteUploadResponses, TParseAs>,
+  ): RequestResult<CompleteUploadResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CompleteUploadResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/uploads/{upload_id}/complete',
       ...options,
@@ -3188,10 +4588,19 @@ export class OpenAi extends HeyApiClient {
    * It is possible to add multiple Parts in parallel. You can decide the intended order of the Parts when you [complete the Upload](https://platform.openai.com/docs/api-reference/uploads/complete).
    *
    */
-  public addUploadPart<ThrowOnError extends boolean = false>(
-    options: Options<AddUploadPartData, ThrowOnError>,
-  ): RequestResult<AddUploadPartResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<AddUploadPartResponses, unknown, ThrowOnError>({
+  public addUploadPart<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<AddUploadPartData, ThrowOnError, AddUploadPartResponses, TParseAs>,
+  ): RequestResult<AddUploadPartResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      AddUploadPartResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       ...formDataBodySerializer,
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/uploads/{upload_id}/parts',
@@ -3208,10 +4617,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of vector stores.
    */
-  public listVectorStores<ThrowOnError extends boolean = false>(
-    options?: Options<ListVectorStoresData, ThrowOnError>,
-  ): RequestResult<ListVectorStoresResponses, unknown, ThrowOnError> {
-    return (options?.client ?? this.client).get<ListVectorStoresResponses, unknown, ThrowOnError>({
+  public listVectorStores<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options?: Options<ListVectorStoresData, ThrowOnError, ListVectorStoresResponses, TParseAs>,
+  ): RequestResult<ListVectorStoresResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options?.client ?? this.client).get<
+      ListVectorStoresResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores',
       ...options,
@@ -3223,10 +4641,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Create a vector store.
    */
-  public createVectorStore<ThrowOnError extends boolean = false>(
-    options: Options<CreateVectorStoreData, ThrowOnError>,
-  ): RequestResult<CreateVectorStoreResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<CreateVectorStoreResponses, unknown, ThrowOnError>({
+  public createVectorStore<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<CreateVectorStoreData, ThrowOnError, CreateVectorStoreResponses, TParseAs>,
+  ): RequestResult<CreateVectorStoreResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      CreateVectorStoreResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores',
       ...options,
@@ -3242,13 +4669,18 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete a vector store.
    */
-  public deleteVectorStore<ThrowOnError extends boolean = false>(
-    options: Options<DeleteVectorStoreData, ThrowOnError>,
-  ): RequestResult<DeleteVectorStoreResponses, unknown, ThrowOnError> {
+  public deleteVectorStore<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<DeleteVectorStoreData, ThrowOnError, DeleteVectorStoreResponses, TParseAs>,
+  ): RequestResult<DeleteVectorStoreResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).delete<
       DeleteVectorStoreResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}',
@@ -3261,10 +4693,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a vector store.
    */
-  public getVectorStore<ThrowOnError extends boolean = false>(
-    options: Options<GetVectorStoreData, ThrowOnError>,
-  ): RequestResult<GetVectorStoreResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetVectorStoreResponses, unknown, ThrowOnError>({
+  public getVectorStore<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetVectorStoreData, ThrowOnError, GetVectorStoreResponses, TParseAs>,
+  ): RequestResult<GetVectorStoreResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetVectorStoreResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}',
       ...options,
@@ -3276,10 +4717,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Modifies a vector store.
    */
-  public modifyVectorStore<ThrowOnError extends boolean = false>(
-    options: Options<ModifyVectorStoreData, ThrowOnError>,
-  ): RequestResult<ModifyVectorStoreResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<ModifyVectorStoreResponses, unknown, ThrowOnError>({
+  public modifyVectorStore<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<ModifyVectorStoreData, ThrowOnError, ModifyVectorStoreResponses, TParseAs>,
+  ): RequestResult<ModifyVectorStoreResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      ModifyVectorStoreResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}',
       ...options,
@@ -3295,13 +4745,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Create a vector store file batch.
    */
-  public createVectorStoreFileBatch<ThrowOnError extends boolean = false>(
-    options: Options<CreateVectorStoreFileBatchData, ThrowOnError>,
-  ): RequestResult<CreateVectorStoreFileBatchResponses, unknown, ThrowOnError> {
+  public createVectorStoreFileBatch<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CreateVectorStoreFileBatchData,
+      ThrowOnError,
+      CreateVectorStoreFileBatchResponses,
+      TParseAs
+    >,
+  ): RequestResult<CreateVectorStoreFileBatchResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateVectorStoreFileBatchResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/file_batches',
@@ -3318,13 +4778,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a vector store file batch.
    */
-  public getVectorStoreFileBatch<ThrowOnError extends boolean = false>(
-    options: Options<GetVectorStoreFileBatchData, ThrowOnError>,
-  ): RequestResult<GetVectorStoreFileBatchResponses, unknown, ThrowOnError> {
+  public getVectorStoreFileBatch<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      GetVectorStoreFileBatchData,
+      ThrowOnError,
+      GetVectorStoreFileBatchResponses,
+      TParseAs
+    >,
+  ): RequestResult<GetVectorStoreFileBatchResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       GetVectorStoreFileBatchResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}',
@@ -3337,13 +4807,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
    */
-  public cancelVectorStoreFileBatch<ThrowOnError extends boolean = false>(
-    options: Options<CancelVectorStoreFileBatchData, ThrowOnError>,
-  ): RequestResult<CancelVectorStoreFileBatchResponses, unknown, ThrowOnError> {
+  public cancelVectorStoreFileBatch<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CancelVectorStoreFileBatchData,
+      ThrowOnError,
+      CancelVectorStoreFileBatchResponses,
+      TParseAs
+    >,
+  ): RequestResult<CancelVectorStoreFileBatchResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CancelVectorStoreFileBatchResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel',
@@ -3356,13 +4836,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of vector store files in a batch.
    */
-  public listFilesInVectorStoreBatch<ThrowOnError extends boolean = false>(
-    options: Options<ListFilesInVectorStoreBatchData, ThrowOnError>,
-  ): RequestResult<ListFilesInVectorStoreBatchResponses, unknown, ThrowOnError> {
+  public listFilesInVectorStoreBatch<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ListFilesInVectorStoreBatchData,
+      ThrowOnError,
+      ListFilesInVectorStoreBatchResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    ListFilesInVectorStoreBatchResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).get<
       ListFilesInVectorStoreBatchResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/file_batches/{batch_id}/files',
@@ -3375,13 +4871,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Returns a list of vector store files.
    */
-  public listVectorStoreFiles<ThrowOnError extends boolean = false>(
-    options: Options<ListVectorStoreFilesData, ThrowOnError>,
-  ): RequestResult<ListVectorStoreFilesResponses, unknown, ThrowOnError> {
+  public listVectorStoreFiles<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      ListVectorStoreFilesData,
+      ThrowOnError,
+      ListVectorStoreFilesResponses,
+      TParseAs
+    >,
+  ): RequestResult<ListVectorStoreFilesResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).get<
       ListVectorStoreFilesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files',
@@ -3394,13 +4900,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Create a vector store file by attaching a [File](https://platform.openai.com/docs/api-reference/files) to a [vector store](https://platform.openai.com/docs/api-reference/vector-stores/object).
    */
-  public createVectorStoreFile<ThrowOnError extends boolean = false>(
-    options: Options<CreateVectorStoreFileData, ThrowOnError>,
-  ): RequestResult<CreateVectorStoreFileResponses, unknown, ThrowOnError> {
+  public createVectorStoreFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      CreateVectorStoreFileData,
+      ThrowOnError,
+      CreateVectorStoreFileResponses,
+      TParseAs
+    >,
+  ): RequestResult<CreateVectorStoreFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).post<
       CreateVectorStoreFileResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files',
@@ -3417,13 +4933,23 @@ export class OpenAi extends HeyApiClient {
    *
    * Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](https://platform.openai.com/docs/api-reference/files/delete) endpoint.
    */
-  public deleteVectorStoreFile<ThrowOnError extends boolean = false>(
-    options: Options<DeleteVectorStoreFileData, ThrowOnError>,
-  ): RequestResult<DeleteVectorStoreFileResponses, unknown, ThrowOnError> {
+  public deleteVectorStoreFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      DeleteVectorStoreFileData,
+      ThrowOnError,
+      DeleteVectorStoreFileResponses,
+      TParseAs
+    >,
+  ): RequestResult<DeleteVectorStoreFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
     return (options.client ?? this.client).delete<
       DeleteVectorStoreFileResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files/{file_id}',
@@ -3436,10 +4962,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieves a vector store file.
    */
-  public getVectorStoreFile<ThrowOnError extends boolean = false>(
-    options: Options<GetVectorStoreFileData, ThrowOnError>,
-  ): RequestResult<GetVectorStoreFileResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).get<GetVectorStoreFileResponses, unknown, ThrowOnError>({
+  public getVectorStoreFile<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<GetVectorStoreFileData, ThrowOnError, GetVectorStoreFileResponses, TParseAs>,
+  ): RequestResult<GetVectorStoreFileResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).get<
+      GetVectorStoreFileResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files/{file_id}',
       ...options,
@@ -3451,13 +4986,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Update attributes on a vector store file.
    */
-  public updateVectorStoreFileAttributes<ThrowOnError extends boolean = false>(
-    options: Options<UpdateVectorStoreFileAttributesData, ThrowOnError>,
-  ): RequestResult<UpdateVectorStoreFileAttributesResponses, unknown, ThrowOnError> {
+  public updateVectorStoreFileAttributes<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      UpdateVectorStoreFileAttributesData,
+      ThrowOnError,
+      UpdateVectorStoreFileAttributesResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    UpdateVectorStoreFileAttributesResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).post<
       UpdateVectorStoreFileAttributesResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files/{file_id}',
@@ -3474,13 +5025,29 @@ export class OpenAi extends HeyApiClient {
    *
    * Retrieve the parsed contents of a vector store file.
    */
-  public retrieveVectorStoreFileContent<ThrowOnError extends boolean = false>(
-    options: Options<RetrieveVectorStoreFileContentData, ThrowOnError>,
-  ): RequestResult<RetrieveVectorStoreFileContentResponses, unknown, ThrowOnError> {
+  public retrieveVectorStoreFileContent<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<
+      RetrieveVectorStoreFileContentData,
+      ThrowOnError,
+      RetrieveVectorStoreFileContentResponses,
+      TParseAs
+    >,
+  ): RequestResult<
+    RetrieveVectorStoreFileContentResponses,
+    unknown,
+    ThrowOnError,
+    'fields',
+    TParseAs
+  > {
     return (options.client ?? this.client).get<
       RetrieveVectorStoreFileContentResponses,
       unknown,
-      ThrowOnError
+      ThrowOnError,
+      'fields',
+      TParseAs
     >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/files/{file_id}/content',
@@ -3493,10 +5060,19 @@ export class OpenAi extends HeyApiClient {
    *
    * Search a vector store for relevant chunks based on a query and file attributes filter.
    */
-  public searchVectorStore<ThrowOnError extends boolean = false>(
-    options: Options<SearchVectorStoreData, ThrowOnError>,
-  ): RequestResult<SearchVectorStoreResponses, unknown, ThrowOnError> {
-    return (options.client ?? this.client).post<SearchVectorStoreResponses, unknown, ThrowOnError>({
+  public searchVectorStore<
+    ThrowOnError extends boolean = false,
+    TParseAs extends NonNullable<Config['parseAs']> = 'auto',
+  >(
+    options: Options<SearchVectorStoreData, ThrowOnError, SearchVectorStoreResponses, TParseAs>,
+  ): RequestResult<SearchVectorStoreResponses, unknown, ThrowOnError, 'fields', TParseAs> {
+    return (options.client ?? this.client).post<
+      SearchVectorStoreResponses,
+      unknown,
+      ThrowOnError,
+      'fields',
+      TParseAs
+    >({
       security: [{ scheme: 'bearer', type: 'http' }],
       url: '/vector_stores/{vector_store_id}/search',
       ...options,

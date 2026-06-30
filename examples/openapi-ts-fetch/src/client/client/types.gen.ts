@@ -7,6 +7,22 @@ import type { Middleware } from './utils.gen';
 
 export type ResponseStyle = 'data' | 'fields';
 
+type ParseAs = 'arrayBuffer' | 'auto' | 'blob' | 'formData' | 'json' | 'stream' | 'text';
+
+type ParsedResponse<TData, TParseAs extends ParseAs> = TParseAs extends 'arrayBuffer'
+  ? ArrayBuffer
+  : TParseAs extends 'blob'
+    ? Blob
+    : TParseAs extends 'formData'
+      ? FormData
+      : TParseAs extends 'stream'
+        ? Response['body']
+        : TParseAs extends 'text'
+          ? string
+          : TData extends Record<string, unknown>
+            ? TData[keyof TData]
+            : TData;
+
 export interface Config<T extends ClientOptions = ClientOptions>
   extends Omit<RequestInit, 'body' | 'headers' | 'method'>, CoreConfig {
   /**
@@ -35,7 +51,7 @@ export interface Config<T extends ClientOptions = ClientOptions>
    *
    * @default 'auto'
    */
-  parseAs?: 'arrayBuffer' | 'auto' | 'blob' | 'formData' | 'json' | 'stream' | 'text';
+  parseAs?: T['parseAs'];
   /**
    * Should we return only data or multiple fields (data, error, response, etc.)?
    *
@@ -55,9 +71,11 @@ export interface RequestOptions<
   TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
+  TParseAs extends ParseAs = ParseAs,
 >
   extends
     Config<{
+      parseAs: TParseAs;
       responseStyle: TResponseStyle;
       throwOnError: ThrowOnError;
     }>,
@@ -89,7 +107,8 @@ export interface ResolvedRequestOptions<
   TResponseStyle extends ResponseStyle = 'fields',
   ThrowOnError extends boolean = boolean,
   Url extends string = string,
-> extends RequestOptions<unknown, TResponseStyle, ThrowOnError, Url> {
+  TParseAs extends ParseAs = ParseAs,
+> extends RequestOptions<unknown, TResponseStyle, ThrowOnError, Url, TParseAs> {
   headers: Headers;
   serializedBody?: string;
 }
@@ -99,24 +118,23 @@ export type RequestResult<
   TError = unknown,
   ThrowOnError extends boolean = boolean,
   TResponseStyle extends ResponseStyle = 'fields',
+  TParseAs extends ParseAs = 'auto',
 > = ThrowOnError extends true
   ? Promise<
       TResponseStyle extends 'data'
-        ? TData extends Record<string, unknown>
-          ? TData[keyof TData]
-          : TData
+        ? ParsedResponse<TData, TParseAs>
         : {
-            data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
+            data: ParsedResponse<TData, TParseAs>;
             request: Request;
             response: Response;
           }
     >
   : Promise<
       TResponseStyle extends 'data'
-        ? (TData extends Record<string, unknown> ? TData[keyof TData] : TData) | undefined
+        ? ParsedResponse<TData, TParseAs> | undefined
         : (
             | {
-                data: TData extends Record<string, unknown> ? TData[keyof TData] : TData;
+                data: ParsedResponse<TData, TParseAs>;
                 error: undefined;
               }
             | {
@@ -133,6 +151,7 @@ export type RequestResult<
 
 export interface ClientOptions {
   baseUrl?: string;
+  parseAs?: ParseAs;
   responseStyle?: ResponseStyle;
   throwOnError?: boolean;
 }
@@ -142,9 +161,10 @@ type MethodFn = <
   TError = unknown,
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
+  TParseAs extends ParseAs = 'auto',
 >(
-  options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError>, 'method'>,
-) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
+  options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError, string, TParseAs>, 'method'>,
+) => RequestResult<TData, TError, ThrowOnError, TResponseStyle, TParseAs>;
 
 type SseFn = <
   TData = unknown,
@@ -161,10 +181,11 @@ type RequestFn = <
   TError = unknown,
   ThrowOnError extends boolean = false,
   TResponseStyle extends ResponseStyle = 'fields',
+  TParseAs extends ParseAs = 'auto',
 >(
-  options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError>, 'method'> &
-    Pick<Required<RequestOptions<TData, TResponseStyle, ThrowOnError>>, 'method'>,
-) => RequestResult<TData, TError, ThrowOnError, TResponseStyle>;
+  options: Omit<RequestOptions<TData, TResponseStyle, ThrowOnError, string, TParseAs>, 'method'> &
+    Pick<Required<RequestOptions<TData, TResponseStyle, ThrowOnError, string, TParseAs>>, 'method'>,
+) => RequestResult<TData, TError, ThrowOnError, TResponseStyle, TParseAs>;
 
 type BuildUrlFn = <
   TData extends {
@@ -174,11 +195,16 @@ type BuildUrlFn = <
     url: string;
   },
 >(
-  options: TData & Options<TData>,
+  options: TData & Options<TData, boolean, unknown, 'fields', ParseAs>,
 ) => string;
 
 export type Client = CoreClient<RequestFn, Config, MethodFn, BuildUrlFn, SseFn> & {
-  interceptors: Middleware<Request, Response, unknown, ResolvedRequestOptions>;
+  interceptors: Middleware<
+    Request,
+    Response,
+    unknown,
+    ResolvedRequestOptions<ResponseStyle, boolean, string, ParseAs>
+  >;
 };
 
 /**
@@ -208,8 +234,9 @@ export type Options<
   ThrowOnError extends boolean = boolean,
   TResponse = unknown,
   TResponseStyle extends ResponseStyle = 'fields',
+  TParseAs extends ParseAs = 'auto',
 > = OmitKeys<
-  RequestOptions<TResponse, TResponseStyle, ThrowOnError>,
+  RequestOptions<TResponse, TResponseStyle, ThrowOnError, string, TParseAs>,
   'body' | 'path' | 'query' | 'url'
 > &
   ([TData] extends [never] ? unknown : Omit<TData, 'url'>);

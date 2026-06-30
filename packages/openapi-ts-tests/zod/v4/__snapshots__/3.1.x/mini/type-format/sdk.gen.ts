@@ -2,13 +2,13 @@
 
 import * as z from 'zod/mini';
 
-import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
+import type { Client, ClientMeta, Config, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
 import { postFooResponseTransformer } from './transformers.gen';
 import type { PostFooData, PostFooResponses } from './types.gen';
 import { zPostFooResponse } from './zod.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
+export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown, TParseAs extends NonNullable<Config['parseAs']> = 'auto'> = Options2<TData, ThrowOnError, TResponse, 'fields', TParseAs> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -22,7 +22,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
 
-export const postFoo = <ThrowOnError extends boolean = false>(options?: Options<PostFooData, ThrowOnError>): RequestResult<PostFooResponses, unknown, ThrowOnError> => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError>({
+export const postFoo = <ThrowOnError extends boolean = false, TParseAs extends NonNullable<Config['parseAs']> = 'auto'>(options?: Options<PostFooData, ThrowOnError, PostFooResponses, TParseAs>): RequestResult<PostFooResponses, unknown, ThrowOnError, 'fields', TParseAs> => (options?.client ?? client).post<PostFooResponses, unknown, ThrowOnError, 'fields', TParseAs>({
     requestValidator: async (data) => await z.object({
         body: z.optional(z.never()),
         path: z.optional(z.never()),

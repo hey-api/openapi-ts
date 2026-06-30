@@ -13,6 +13,7 @@ import { $, ctx } from '../../../../ts-dsl';
 import { getClientPlugin } from '../../../@hey-api/client-core/utils';
 import {
   createOperationComment,
+  hasOperationSse,
   isOperationOptionsRequired,
 } from '../../../shared/utils/operation';
 import { createClientClass, createRegistryClass } from '../shared/class';
@@ -265,7 +266,13 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
 }): T {
   const { node, operation, plugin } = args;
   const client = getClientPlugin(getTypedConfig(plugin));
+  const isFetchClient = client.name === '@hey-api/client-fetch';
   const isNuxtClient = client.name === '@hey-api/client-nuxt';
+  const isSse = hasOperationSse({ operation });
+  const supportsParseAs = isFetchClient && !isSse;
+  const parseAsType = $.type('NonNullable').generic(
+    $.type.idx($.type(plugin.imports.Config), $.type.literal('parseAs')),
+  );
   const isRequiredOptions = isOperationOptionsRequired({
     context: plugin.context,
     operation,
@@ -305,13 +312,17 @@ function implementFn<T extends ReturnType<typeof $.func | typeof $.method>>(args
             ),
           ),
       (m) =>
-        m.generic('ThrowOnError', (t) =>
-          t
-            .extends('boolean')
-            .default(
-              ('throwOnError' in client.config ? client.config.throwOnError : false) ?? false,
-            ),
-        ),
+        m
+          .generic('ThrowOnError', (t) =>
+            t
+              .extends('boolean')
+              .default(
+                ('throwOnError' in client.config ? client.config.throwOnError : false) ?? false,
+              ),
+          )
+          .$if(supportsParseAs, (m) =>
+            m.generic('TParseAs', (t) => t.extends(parseAsType).default($.type.literal('auto'))),
+          ),
     )
     .params(...opParameters.parameters)
     .returns(returnType)
