@@ -1,0 +1,23 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI 3.1.0 validators acyclic reference order example
+  version: 1
+paths: {}
+components:
+  schemas:
+    Parent:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: number
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Child'
+    Child:
+      type: object
+      properties:
+        id:
+          type: number

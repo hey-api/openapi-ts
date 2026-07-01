@@ -89,6 +89,13 @@ describe(`OpenAPI ${version}`, () => {
     },
     {
       config: createConfig({
+        input: 'validators-acyclic-ref-order.yaml',
+        output: 'validators-acyclic-ref-order',
+      }),
+      description: 'orders acyclic validator schema references before dependents',
+    },
+    {
+      config: createConfig({
         input: 'validators-circular-ref.json',
         output: 'validators-circular-ref',
       }),
