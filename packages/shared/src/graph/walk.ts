@@ -135,12 +135,13 @@ function computeTopologicalOrderUncached<T extends string = string>(
   const depsOf = new Map<string, Set<string>>();
   const inDegree = new Map<string, number>();
   const dependents = new Map<string, Set<string>>();
-  const heap = new MinHeap(declIndex);
+  const heap = new MinHeap();
 
   for (let index = 0, len = pointers.length; index < len; index++) {
     const pointer = pointers[index] as string;
     const priority = options?.getPointerPriority?.(pointer) ?? 10;
-    declIndex.set(pointer, priority * 1_000_000 + index);
+    const declPriority = priority * 1_000_000 + index;
+    declIndex.set(pointer, declPriority);
 
     const raw = graph.subtreeDependencies?.get(pointer);
     let deps: Set<string> | undefined;
@@ -165,7 +166,7 @@ function computeTopologicalOrderUncached<T extends string = string>(
       }
     } else {
       inDegree.set(pointer, 0);
-      heap.push(pointer);
+      heap.push(pointer, declPriority);
     }
   }
 
@@ -185,7 +186,7 @@ function computeTopologicalOrderUncached<T extends string = string>(
       const v = (inDegree.get(dep) ?? 0) - 1;
       inDegree.set(dep, v);
       if (v === 0) {
-        heap.push(dep);
+        heap.push(dep, declIndex.get(dep)!);
       }
     }
   }
@@ -230,13 +231,6 @@ function computeTopologicalOrderUncached<T extends string = string>(
       return options.preferGroups!.length;
     };
 
-    // proposed order: sort by (groupPriority, originalIndex)
-    // Precompute original indices to avoid O(N) indexOf inside the comparator.
-    const orderIndex = new Map<string, number>();
-    for (let i = 0; i < order.length; i++) {
-      orderIndex.set(order[i]!, i);
-    }
-
     // Memoize getGroup results since matchPointerToGroup can be expensive.
     const groupCache = new Map<string, number>();
     const getCachedGroup = (pointer: string): number => {
@@ -248,11 +242,11 @@ function computeTopologicalOrderUncached<T extends string = string>(
       return g;
     };
 
-    const proposed = [...order].sort((a, b) => {
-      const ga = getCachedGroup(a);
-      const gb = getCachedGroup(b);
-      return ga !== gb ? ga - gb : orderIndex.get(a)! - orderIndex.get(b)!;
-    });
+    // `order` is already topologically sorted; `Array.prototype.sort` is
+    // guaranteed stable (ES2019+), so sorting by group alone preserves
+    // relative order within a group without needing a separate original-index
+    // map as an explicit tiebreaker.
+    const proposed = [...order].sort((a, b) => getCachedGroup(a) - getCachedGroup(b));
 
     // build quick lookup of original index and proposed index
     const proposedIndex = new Map<string, number>();

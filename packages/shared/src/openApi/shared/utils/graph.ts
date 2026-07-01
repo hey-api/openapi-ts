@@ -43,11 +43,6 @@ type PointerDependenciesResult = {
 
 /**
  * Recursively collects all $ref dependencies in the subtree rooted at `pointer`.
- *
- * `cache`, `graph`, and `visited` are invariant across the whole recursion
- * (only `pointer` changes per call); passing them positionally instead of as
- * a destructured options object avoids allocating a wrapper object on every
- * one of the ~4 recursive calls made per graph node.
  */
 function collectPointerDependencies(
   cache: Cache,
@@ -248,17 +243,16 @@ export function buildGraph(
     transitiveDependencies: new Map(),
   };
 
-  const walk = ({
-    key,
-    node,
-    parentPointer,
-    pointer,
-  }: {
-    key: string | number | null;
-    node: unknown;
-    parentPointer: string | null;
-    pointer: string;
-  }) => {
+  // `key`/`node`/`parentPointer`/`pointer` are passed positionally rather
+  // than as a destructured options object, since this closure runs once per
+  // graph node (hundreds of thousands of times on a large spec) and a
+  // wrapper object would be allocated on every call for no benefit.
+  const walk = (
+    key: string | number | null,
+    node: unknown,
+    parentPointer: string | null,
+    pointer: string,
+  ) => {
     if (typeof node !== 'object' || node === null) {
       return;
     }
@@ -266,54 +260,52 @@ export function buildGraph(
     let deprecated: boolean | undefined;
     let tags: Set<string> | undefined;
 
-    if (typeof node === 'object' && node !== null) {
-      // Check for deprecated property
-      if ('deprecated' in node && typeof node.deprecated === 'boolean') {
-        deprecated = Boolean(node.deprecated);
+    // Check for deprecated property
+    if ('deprecated' in node && typeof node.deprecated === 'boolean') {
+      deprecated = Boolean(node.deprecated);
+    }
+    // If this node has a $ref, record the dependency
+    if ('$ref' in node && typeof node.$ref === 'string') {
+      const refPointer = normalizeJsonPointer(node.$ref);
+      let deps = graph.nodeDependencies.get(pointer);
+      if (!deps) {
+        deps = new Set();
+        graph.nodeDependencies.set(pointer, deps);
       }
-      // If this node has a $ref, record the dependency
-      if ('$ref' in node && typeof node.$ref === 'string') {
-        const refPointer = normalizeJsonPointer(node.$ref);
-        if (!graph.nodeDependencies.has(pointer)) {
-          graph.nodeDependencies.set(pointer, new Set());
+      deps.add(refPointer);
+    }
+    // Check for tags property (should be an array of strings)
+    if ('tags' in node && Array.isArray(node.tags)) {
+      for (let i = 0, len = node.tags.length; i < len; i++) {
+        const tag: unknown = node.tags[i];
+        if (typeof tag === 'string') {
+          (tags ??= new Set()).add(tag);
         }
-        graph.nodeDependencies.get(pointer)!.add(refPointer);
-      }
-      // Check for tags property (should be an array of strings)
-      if ('tags' in node && Array.isArray(node.tags)) {
-        tags = new Set(node.tags.filter((tag) => typeof tag === 'string'));
       }
     }
 
-    graph.nodes.set(pointer, { deprecated, key, node, parentPointer, tags });
+    // `scopes` is included explicitly (even though undefined here) so every
+    // `NodeInfo` object has the same hidden class from creation instead of
+    // one that changes shape later when scope-seeding assigns it.
+    graph.nodes.set(pointer, { deprecated, key, node, parentPointer, scopes: undefined, tags });
 
     if (Array.isArray(node)) {
       for (let index = 0, len = node.length; index < len; index++) {
-        walk({
-          key: index,
-          node: node[index],
-          parentPointer: pointer,
-          pointer: pointer + '/' + encodeJsonPointerSegment(index),
-        });
+        walk(index, node[index], pointer, pointer + '/' + encodeJsonPointerSegment(index));
       }
     } else {
-      for (const [childKey, value] of Object.entries(node)) {
-        walk({
-          key: childKey,
-          node: value,
-          parentPointer: pointer,
-          pointer: pointer + '/' + encodeJsonPointerSegment(childKey),
-        });
+      for (const childKey in node) {
+        walk(
+          childKey,
+          (node as Record<string, unknown>)[childKey],
+          pointer,
+          pointer + '/' + encodeJsonPointerSegment(childKey),
+        );
       }
     }
   };
 
-  walk({
-    key: null,
-    node: root,
-    parentPointer: null,
-    pointer: '#',
-  });
+  walk(null, root, null, '#');
 
   const cache: Cache = {
     parentToChildren: new Map(),
