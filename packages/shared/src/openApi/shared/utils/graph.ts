@@ -43,18 +43,18 @@ type PointerDependenciesResult = {
 
 /**
  * Recursively collects all $ref dependencies in the subtree rooted at `pointer`.
+ *
+ * `cache`, `graph`, and `visited` are invariant across the whole recursion
+ * (only `pointer` changes per call); passing them positionally instead of as
+ * a destructured options object avoids allocating a wrapper object on every
+ * one of the ~4 recursive calls made per graph node.
  */
-function collectPointerDependencies({
-  cache,
-  graph,
-  pointer,
-  visited,
-}: {
-  cache: Cache;
-  graph: Graph;
-  pointer: string;
-  visited: Set<string>;
-}): PointerDependenciesResult {
+function collectPointerDependencies(
+  cache: Cache,
+  graph: Graph,
+  pointer: string,
+  visited: Set<string>,
+): PointerDependenciesResult {
   if (cache.transitiveDependencies.has(pointer)) {
     return {
       subtreeDependencies: cache.subtreeDependencies.get(pointer) ?? null,
@@ -84,12 +84,7 @@ function collectPointerDependencies({
       (transitiveDependencies ??= new Set()).add(depPointer);
       (subtreeDependencies ??= new Set()).add(depPointer);
       // Recursively collect dependencies of the referenced node
-      const depResult = collectPointerDependencies({
-        cache,
-        graph,
-        pointer: depPointer,
-        visited,
-      });
+      const depResult = collectPointerDependencies(cache, graph, depPointer, visited);
       if (depResult.transitiveDependencies) {
         for (const dependency of depResult.transitiveDependencies) {
           transitiveDependencies.add(dependency);
@@ -101,12 +96,7 @@ function collectPointerDependencies({
   const children = cache.parentToChildren.get(pointer) ?? [];
   for (const childPointer of children) {
     if (!cache.transitiveDependencies.has(childPointer)) {
-      const childResult = collectPointerDependencies({
-        cache,
-        graph,
-        pointer: childPointer,
-        visited,
-      });
+      const childResult = collectPointerDependencies(cache, graph, childPointer, visited);
       cache.transitiveDependencies.set(childPointer, childResult.transitiveDependencies);
       cache.subtreeDependencies.set(childPointer, childResult.subtreeDependencies);
     }
@@ -130,45 +120,70 @@ function collectPointerDependencies({
 }
 
 /**
- * Propagates scopes through the graph using a multi-pass linear scan.
+ * Propagates scopes through the graph using a worklist algorithm.
  *
- * Nodes are visited in reverse DFS-pre-order (bottom-up): children tend to
- * appear before their parents so each node can push its scopes to its parent
- * within the same pass.  For typical OpenAPI specs (components declared after
- * paths) $ref targets also appear before $ref sources in this order, meaning
- * both tree propagation and $ref propagation usually converge in a single pass.
- *
- * The outer `while (changed)` loop guarantees correctness for any ordering:
- * it re-runs until no new scope values were added anywhere.  Because scopes
- * can only grow (at most 3 values: 'normal', 'read', 'write'), the loop
- * terminates in at most a handful of passes even for pathological specs.
+ * A node's scopes only ever flow to two places: its parent (tree edge) and
+ * any node that references it via `$ref` (dependency edge). So instead of
+ * repeatedly re-scanning every node until a full pass makes no changes (which
+ * on a large spec means re-visiting hundreds of thousands of already-settled
+ * nodes on every one of several passes), we seed a queue with the nodes that
+ * start out with scopes and only re-examine a node when one of its actual
+ * scope sources has just changed. Each node is processed once per net scope
+ * change it receives (at most 3 times, since scopes are one of 'normal' /
+ * 'read' / 'write' and can only grow), giving work proportional to the number
+ * of changes rather than (passes × total node count).
  *
  * @param graph - The Graph structure containing nodes and dependencies.
  */
 export function propagateScopes(graph: Graph): void {
-  // Reverse of insertion order (DFS pre-order) ≈ bottom-up: children before parents.
-  const nodesBottomUp = [...graph.nodes].reverse();
-
-  let changed = true;
-  while (changed) {
-    changed = false;
-    for (const [pointer, nodeInfo] of nodesBottomUp) {
-      // Pull scopes from $ref dependencies into this node.
-      const nodeDeps = graph.nodeDependencies.get(pointer);
-      if (nodeDeps) {
-        for (const depPointer of nodeDeps) {
-          const depInfo = graph.nodes.get(depPointer);
-          if (depInfo?.scopes && propagateScopesToNode(depInfo, nodeInfo)) {
-            changed = true;
-          }
-        }
+  // Reverse index: pointer -> nodes whose `nodeDependencies` reference it, so
+  // that when `pointer`'s scopes change we know which dependents to recheck.
+  const refDependents = new Map<string, Array<string>>();
+  for (const [pointer, deps] of graph.nodeDependencies) {
+    for (const depPointer of deps) {
+      let dependents = refDependents.get(depPointer);
+      if (!dependents) {
+        dependents = [];
+        refDependents.set(depPointer, dependents);
       }
+      dependents.push(pointer);
+    }
+  }
 
-      // Push this node's scopes up to its parent.
-      if (nodeInfo.scopes && nodeInfo.parentPointer) {
-        const parentInfo = graph.nodes.get(nodeInfo.parentPointer);
-        if (parentInfo && propagateScopesToNode(nodeInfo, parentInfo)) {
-          changed = true;
+  const queued = new Set<string>();
+  const queue: Array<string> = [];
+  const enqueue = (pointer: string): void => {
+    if (queued.has(pointer)) return;
+    queued.add(pointer);
+    queue.push(pointer);
+  };
+
+  for (const [pointer, nodeInfo] of graph.nodes) {
+    if (nodeInfo.scopes) enqueue(pointer);
+  }
+
+  let head = 0;
+  while (head < queue.length) {
+    const pointer = queue[head++] as string;
+    queued.delete(pointer);
+    const nodeInfo = graph.nodes.get(pointer);
+    if (!nodeInfo?.scopes) continue;
+
+    // Push this node's scopes up to its parent.
+    if (nodeInfo.parentPointer) {
+      const parentInfo = graph.nodes.get(nodeInfo.parentPointer);
+      if (parentInfo && propagateScopesToNode(nodeInfo, parentInfo)) {
+        enqueue(nodeInfo.parentPointer);
+      }
+    }
+
+    // Push this node's scopes to anything that $ref's it.
+    const dependents = refDependents.get(pointer);
+    if (dependents) {
+      for (const dependentPointer of dependents) {
+        const dependentInfo = graph.nodes.get(dependentPointer);
+        if (dependentInfo && propagateScopesToNode(nodeInfo, dependentInfo)) {
+          enqueue(dependentPointer);
         }
       }
     }
@@ -348,17 +363,24 @@ export function buildGraph(
   annotateChildScopes(graph.nodes);
 
   for (const pointer of graph.nodes.keys()) {
-    const result = collectPointerDependencies({
-      cache,
-      graph,
-      pointer,
-      visited: new Set(),
-    });
-    if (result.transitiveDependencies) {
-      graph.transitiveDependencies.set(pointer, result.transitiveDependencies);
+    // Earlier iterations often already resolved this pointer while walking a
+    // prior sibling's subtree (`children` recursion below), so skip the call
+    // (and the `visited` Set it would allocate) when the answer is cached.
+    let transitiveDependencies: Set<string> | null;
+    let subtreeDependencies: Set<string> | null;
+    if (cache.transitiveDependencies.has(pointer)) {
+      transitiveDependencies = cache.transitiveDependencies.get(pointer) ?? null;
+      subtreeDependencies = cache.subtreeDependencies.get(pointer) ?? null;
+    } else {
+      const result = collectPointerDependencies(cache, graph, pointer, new Set());
+      transitiveDependencies = result.transitiveDependencies;
+      subtreeDependencies = result.subtreeDependencies;
     }
-    if (result.subtreeDependencies) {
-      graph.subtreeDependencies.set(pointer, result.subtreeDependencies);
+    if (transitiveDependencies) {
+      graph.transitiveDependencies.set(pointer, transitiveDependencies);
+    }
+    if (subtreeDependencies) {
+      graph.subtreeDependencies.set(pointer, subtreeDependencies);
     }
   }
 
