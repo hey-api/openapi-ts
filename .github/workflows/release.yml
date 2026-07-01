@@ -24,6 +24,9 @@ jobs:
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       TURBO_TELEMETRY_DISABLED: 1
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
+      published-packages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -37,7 +40,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: pnpm
 
-      - name: Install dependencies
+      - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
@@ -144,7 +147,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: pnpm
 
-      - name: Install dependencies
+      - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
@@ -157,3 +160,69 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: release
+    if: |
+      needs.release.outputs.published == 'true' &&
+      contains(needs.release.outputs.published-packages, '"name":"@hey-api/openapi-python"')
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/hey-api
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Python dependencies
+        run: uv sync --frozen --no-dev
+
+      - name: Build openapi-python
+        run: pnpm tb "@hey-api/openapi-python"
+
+      - name: Cache Node.js SEA binaries
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/tsdown/node
+          key: tsdown-sea-${{ hashFiles('.nvmrc') }}
+
+      - name: Pre-extract Windows Node.js binary
+        run: |
+          NODE_VERSION=$(cat .nvmrc)
+          CACHE_DIR="$HOME/.cache/tsdown/node/v${NODE_VERSION}/win-x64"
+          if [ ! -f "$CACHE_DIR/node.exe" ]; then
+            mkdir -p "$CACHE_DIR"
+            curl -fsSL -o /tmp/node-win.zip \
+              "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-win-x64.zip"
+            unzip -jo /tmp/node-win.zip "node-v${NODE_VERSION}-win-x64/node.exe" -d "$CACHE_DIR"
+            rm /tmp/node-win.zip
+          fi
+
+      - name: Build executables
+        run: pnpm tb:exe "@hey-api/openapi-python"
+
+      - name: Build wheels
+        working-directory: packages/openapi-python/pypi
+        run: uv run python build-wheels.py
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
+        with:
+          packages-dir: packages/openapi-python/pypi/dist
+          skip-existing: true
