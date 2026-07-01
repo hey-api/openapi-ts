@@ -137,7 +137,8 @@ function computeTopologicalOrderUncached<T extends string = string>(
   const dependents = new Map<string, Set<string>>();
   const heap = new MinHeap(declIndex);
 
-  pointers.forEach((pointer, index) => {
+  for (let index = 0, len = pointers.length; index < len; index++) {
+    const pointer = pointers[index] as string;
     const priority = options?.getPointerPriority?.(pointer) ?? 10;
     declIndex.set(pointer, priority * 1_000_000 + index);
 
@@ -166,7 +167,7 @@ function computeTopologicalOrderUncached<T extends string = string>(
       inDegree.set(pointer, 0);
       heap.push(pointer);
     }
-  });
+  }
 
   const emitted = new Set<string>();
   const order: Array<string> = [];
@@ -189,12 +190,20 @@ function computeTopologicalOrderUncached<T extends string = string>(
     }
   }
 
-  // emit remaining nodes (cycles) in declaration order
-  const remaining = pointers.filter((pointer) => !emitted.has(pointer));
-  remaining.sort((a, b) => declIndex.get(a)! - declIndex.get(b)!);
-  for (const pointer of remaining) {
-    emitted.add(pointer);
-    order.push(pointer);
+  // emit remaining nodes (cycles) in declaration order. Cycles are rare, so
+  // skip building/sorting a `remaining` array entirely in the common case
+  // where everything was already emitted by the heap-driven pass above.
+  if (emitted.size < pointers.length) {
+    const remaining: Array<string> = [];
+    for (let i = 0, len = pointers.length; i < len; i++) {
+      const pointer = pointers[i] as string;
+      if (!emitted.has(pointer)) remaining.push(pointer);
+    }
+    remaining.sort((a, b) => declIndex.get(a)! - declIndex.get(b)!);
+    for (const pointer of remaining) {
+      emitted.add(pointer);
+      order.push(pointer);
+    }
   }
 
   // prefer specified groups when safe

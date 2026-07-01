@@ -288,14 +288,14 @@ export function buildGraph(
     graph.nodes.set(pointer, { deprecated, key, node, parentPointer, tags });
 
     if (Array.isArray(node)) {
-      node.forEach((item, index) =>
+      for (let index = 0, len = node.length; index < len; index++) {
         walk({
           key: index,
-          node: item,
+          node: node[index],
           parentPointer: pointer,
           pointer: pointer + '/' + encodeJsonPointerSegment(index),
-        }),
-      );
+        });
+      }
     } else {
       for (const [childKey, value] of Object.entries(node)) {
         walk({

@@ -84,8 +84,14 @@ export function normalizeJsonPointer(pointer: string): string {
  * @returns
  */
 export function pathToJsonPointer(path: ReadonlyArray<string | number>): string {
-  const segments = path.map(encodeJsonPointerSegment).join('/');
-  return '#' + (segments ? `/${segments}` : '');
+  const len = path.length;
+  if (len === 0) return '#';
+  let segments = encodeJsonPointerSegment(path[0] as string | number);
+  for (let i = 1; i < len; i++) {
+    segments += '/';
+    segments += encodeJsonPointerSegment(path[i] as string | number);
+  }
+  return `#/${segments}`;
 }
 
 /**
