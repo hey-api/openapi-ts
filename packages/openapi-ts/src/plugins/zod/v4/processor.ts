@@ -33,15 +33,20 @@ export function createProcessor(plugin: ZodPlugin['Instance']): ProcessorResult 
     return ctx.schema;
   };
 
+  // The visitor is stateless (only closes over `plugin`/`schemaExtractor`,
+  // both fixed for the plugin's lifetime), so it and the walker built from it
+  // are created once per plugin instance instead of once per top-level
+  // schema/operation/parameter — `process` runs per top-level node, which for
+  // large specs can be thousands of calls.
+  const visitor = createVisitor({ plugin, schemaExtractor });
+  const walk = createSchemaWalker(visitor);
+
   function process(ctx: ProcessorContext): ZodFinal | void {
     if (!processor.markEmitted(ctx.path)) return;
 
     const shouldExport = ctx.export !== false;
 
     return processor.withContext({ anchor: ctx.namingAnchor, tags: ctx.tags }, () => {
-      const visitor = createVisitor({ plugin, schemaExtractor });
-      const walk = createSchemaWalker(visitor);
-
       const result = walk(ctx.schema, {
         path: ref(ctx.path),
         plugin,
