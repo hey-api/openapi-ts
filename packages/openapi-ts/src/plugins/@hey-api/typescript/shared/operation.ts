@@ -51,13 +51,6 @@ export const operationToType = ({
   operation: IR.OperationObject;
   path: ReadonlyArray<string | number>;
   plugin: HeyApiTypeScriptPlugin['Instance'];
-  /**
-   * Shared processor from the plugin handler's `plugin.forEach` walk — passed
-   * in rather than created here so operations reuse the same schema-emission
-   * dedup state (`processor.hasEmitted`/`markEmitted`) as every other event
-   * in the same walk, instead of paying the cost of a fresh stateless
-   * visitor/walker on every single operation.
-   */
   processor: ProcessorResult;
   tags?: ReadonlyArray<string>;
 }): void => {

@@ -17,10 +17,6 @@ export function webhookToType({
   operation: IR.OperationObject;
   path: ReadonlyArray<string | number>;
   plugin: HeyApiTypeScriptPlugin['Instance'];
-  /**
-   * Shared processor from the plugin handler's `plugin.forEach` walk — see
-   * `operationToType` for why this is threaded in rather than created here.
-   */
   processor: ProcessorResult;
   tags?: ReadonlyArray<string>;
 }): Symbol {

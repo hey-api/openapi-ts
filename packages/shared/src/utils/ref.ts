@@ -7,7 +7,6 @@ export function refToName($ref: string): string {
   return name;
 }
 
-// Matches the first character (if any) that needs RFC 6901 escaping.
 const jsonPointerSegmentEscapeNeeded = /[~/]/;
 
 /**
@@ -123,10 +122,10 @@ export function normalizeJsonPointer(pointer: string): string {
 export function pathToJsonPointer(path: ReadonlyArray<string | number>): string {
   const len = path.length;
   if (len === 0) return '#';
-  let segments = encodeJsonPointerSegment(path[0] as string | number);
+  let segments = encodeJsonPointerSegment(path[0]!);
   for (let i = 1; i < len; i++) {
     segments += '/';
-    segments += encodeJsonPointerSegment(path[i] as string | number);
+    segments += encodeJsonPointerSegment(path[i]!);
   }
   return `#/${segments}`;
 }

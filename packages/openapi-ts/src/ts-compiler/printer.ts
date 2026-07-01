@@ -93,8 +93,6 @@ const TOKEN_TEXT: Record<SyntaxKind, string> = {
   [SyntaxKind.SingleLineCommentTrivia]: '',
 };
 
-// Matches the first character (if any) that needs escaping for a
-// single-quoted JS string literal.
 const stringLiteralEscapeNeeded = /['\\\n\r\t]/;
 
 /**
@@ -144,8 +142,6 @@ function formatStringLiteral(text: string): string {
   return `'${result}'`;
 }
 
-// Matches the first character (if any) that needs escaping for a
-// template-literal body: backslash, backtick, or the start of `${`.
 const templateTextEscapeNeeded = /[\\`]|\$\{/;
 
 /** Core idea as `formatStringLiteral` above, applied to template-literal text. */

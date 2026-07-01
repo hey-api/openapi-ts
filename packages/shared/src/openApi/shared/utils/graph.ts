@@ -247,12 +247,12 @@ export function buildGraph(
   // than as a destructured options object, since this closure runs once per
   // graph node (hundreds of thousands of times on a large spec) and a
   // wrapper object would be allocated on every call for no benefit.
-  const walk = (
+  function walk(
     key: string | number | null,
     node: unknown,
     parentPointer: string | null,
     pointer: string,
-  ) => {
+  ): void {
     if (typeof node !== 'object' || node === null) {
       return;
     }
@@ -260,7 +260,7 @@ export function buildGraph(
     let deprecated: boolean | undefined;
     let tags: Set<string> | undefined;
 
-    // Check for deprecated property
+    // Check for deprecated property (should be a boolean)
     if ('deprecated' in node && typeof node.deprecated === 'boolean') {
       deprecated = Boolean(node.deprecated);
     }
@@ -303,7 +303,7 @@ export function buildGraph(
         );
       }
     }
-  };
+  }
 
   walk(null, root, null, '#');
 

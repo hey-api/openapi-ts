@@ -20,8 +20,8 @@ const irPatterns: Record<IrTopLevelKind, RegExp> = {
   webhook: /^#\/webhooks\/[^/]+\/(get|put|post|delete|options|head|patch|trace)$/,
 };
 
-// Every pattern above requires a fixed literal prefix. Checking the prefix
-// with `startsWith` first lets us skip the regex entirely for the vast
+// Every pattern in `irPatterns` requires a fixed literal prefix. Checking the
+// prefix with `startsWith` first lets us skip the regex entirely for the vast
 // majority of pointers (deeply nested leaf nodes — properties, items, etc.)
 // that can never match any top-level kind, since this runs once per graph
 // node on every walk/priority lookup.

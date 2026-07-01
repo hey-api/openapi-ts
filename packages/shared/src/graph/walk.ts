@@ -62,20 +62,12 @@ const walkDeclarations: WalkFn = (graph, callback, options) => {
   }
 };
 
-// `graph` is built once per codegen run (see `create-client.ts`) and never
-// mutated afterward. `walkTopological` can be invoked once per plugin's
-// `plugin.forEach()` call (every plugin defaults to `order: 'topological'` —
-// see `instance.ts`), and on a large spec this Kahn's-algorithm computation
-// is expensive (hundreds of ms on a graph with hundreds of thousands of
-// nodes). A config with a single topological-order plugin active only pays
-// this cost once regardless, but nothing prevents multiple plugins from all
-// walking the same graph topologically.
+// Graph is built once per codegen run and never mutated afterward.
+// `walkTopological` can be invoked once per plugin's `plugin.forEach()` call,
+// and on a large spec this Kahn's-algorithm computation is expensive.
 //
 // We memoize the computed topological order per (graph, getPointerPriority,
-// matchPointerToGroup, preferGroups) identity. All of `plugin.forEach`'s
-// callers share the same default option object identities (see
-// `instance.ts`), so this cache hits whenever more than one such call
-// happens against the same graph.
+// matchPointerToGroup, preferGroups) identity.
 type TopologicalCacheKey = string;
 const topologicalOrderCache = new WeakMap<Graph, Map<TopologicalCacheKey, Array<string>>>();
 // Stable per-reference ids for functions/arrays used as part of the cache
@@ -97,7 +89,7 @@ function computeTopologicalOrder<T extends string = string>(
   options: WalkOptions<T> | undefined,
 ): Array<string> {
   let cacheForGraph = topologicalOrderCache.get(graph);
-  const cacheKey: TopologicalCacheKey = `${referenceId(options?.getPointerPriority)}:${referenceId(options?.matchPointerToGroup)}:${referenceId(options?.preferGroups as unknown as object)}`;
+  const cacheKey: TopologicalCacheKey = `${referenceId(options?.getPointerPriority)}:${referenceId(options?.matchPointerToGroup)}:${referenceId(options?.preferGroups)}`;
   if (cacheForGraph) {
     const cached = cacheForGraph.get(cacheKey);
     if (cached) return cached;

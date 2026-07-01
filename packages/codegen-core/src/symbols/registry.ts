@@ -19,12 +19,9 @@ export class SymbolRegistry implements ISymbolRegistry {
   private _stubs: Set<SymbolId> = new Set();
   private _stubCache: Map<QueryCacheKey, SymbolId> = new Map();
   /**
-   * Precomputed index key space for each live stub, keyed by symbol id.
-   * `replaceStubs` used to rebuild this (a recursive walk + JSON.stringify
-   * per meta leaf) from scratch for every stub on every single `register()`
-   * call — O(registrations × stubs × meta size). Since a stub's meta never
-   * changes after `reference()` creates it, its key space is computed once
-   * here and reused for the lifetime of the stub.
+   * Precomputed index key space for each live stub, keyed by symbol id. Since
+   * a stub's meta never changes after `reference()` creates it, its key space
+   * is computed once here and reused for the lifetime of the stub.
    */
   private _stubKeySpaces: Map<SymbolId, IndexKeySpace> = new Map();
   private _values: Map<SymbolId, Symbol> = new Map();
@@ -105,7 +102,6 @@ export class SymbolRegistry implements ISymbolRegistry {
     prefix = '',
     entries: Array<IndexEntry> = [],
   ): IndexKeySpace {
-    // `meta` is always a plain object here (never one with inherited enumerable properties)
     for (const key in meta) {
       const value = meta[key];
       const path = prefix ? `${prefix}.${key}` : key;
@@ -241,8 +237,6 @@ export class SymbolRegistry implements ISymbolRegistry {
 
   private replaceStubs(symbol: Symbol, indexKeySpace: IndexKeySpace): void {
     if (!this._stubs.size) return;
-    // Built once per call instead of once per stub inside `isSubset`, since
-    // every stub in this loop is checked against the same `indexKeySpace`.
     const supMap = new Map(indexKeySpace.map((e) => [e[0], e[1]] as const));
     for (const stubId of this._stubs.values()) {
       const stub = this._values.get(stubId);

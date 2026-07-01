@@ -32,19 +32,8 @@ export interface PyPrinterOptions {
 const DEFAULT_INDENT_SIZE = 4;
 const PARAMS_MULTILINE_THRESHOLD = 3;
 
-// Matches the first backslash (if any) in a string.
 const backslashEscapeNeeded = /\\/;
 
-/**
- * Doubles every backslash in `value`.
- *
- * Core idea: find the index of the first backslash. If there isn't one, the
- * string is returned unchanged. Otherwise walk from that index once,
- * copying unescaped runs in bulk (via `runStart`) and only inserting the
- * extra backslash where one is actually found, instead of running a global
- * regex replace over the whole string regardless of whether it contains any
- * backslashes at all.
- */
 function escapeBackslashes(value: string): string {
   const match = backslashEscapeNeeded.exec(value);
   if (match === null) return value;
