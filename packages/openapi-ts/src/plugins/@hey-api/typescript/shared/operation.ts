@@ -3,7 +3,7 @@ import { buildSymbolIn, deduplicateSchema, operationResponsesMap } from '@hey-ap
 
 import { $ } from '../../../../ts-dsl';
 import type { HeyApiTypeScriptPlugin } from '../types';
-import { createProcessor } from '../v1/processor';
+import type { ProcessorResult } from './processor';
 
 const irParametersToIrSchema = ({
   parameters,
@@ -45,15 +45,22 @@ export const operationToType = ({
   operation,
   path,
   plugin,
+  processor,
   tags,
 }: {
   operation: IR.OperationObject;
   path: ReadonlyArray<string | number>;
   plugin: HeyApiTypeScriptPlugin['Instance'];
+  /**
+   * Shared processor from the plugin handler's `plugin.forEach` walk — passed
+   * in rather than created here so operations reuse the same schema-emission
+   * dedup state (`processor.hasEmitted`/`markEmitted`) as every other event
+   * in the same walk, instead of paying the cost of a fresh stateless
+   * visitor/walker on every single operation.
+   */
+  processor: ProcessorResult;
   tags?: ReadonlyArray<string>;
 }): void => {
-  const processor = createProcessor(plugin);
-
   const data: IR.SchemaObject = {
     properties: {
       body: operation.body?.schema ?? { type: 'never' },
