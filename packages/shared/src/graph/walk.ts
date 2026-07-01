@@ -1,5 +1,6 @@
 import { MinHeap } from '../utils/minHeap';
-import type { GetPointerPriorityFn, WalkFn } from './types/walk';
+import type { Graph } from './types/graph';
+import type { GetPointerPriorityFn, WalkFn, WalkOptions } from './types/walk';
 
 /**
  * Walk the nodes of the graph in declaration (insertion) order.
@@ -61,15 +62,64 @@ const walkDeclarations: WalkFn = (graph, callback, options) => {
   }
 };
 
+// `graph` is built once per codegen run (see `create-client.ts`) and never
+// mutated afterward. `walkTopological` can be invoked once per plugin's
+// `plugin.forEach()` call (every plugin defaults to `order: 'topological'` —
+// see `instance.ts`), and on a large spec this Kahn's-algorithm computation
+// is expensive (hundreds of ms on a graph with hundreds of thousands of
+// nodes). A config with a single topological-order plugin active only pays
+// this cost once regardless, but nothing prevents multiple plugins from all
+// walking the same graph topologically.
+//
+// We memoize the computed topological order per (graph, getPointerPriority,
+// matchPointerToGroup, preferGroups) identity. All of `plugin.forEach`'s
+// callers share the same default option object identities (see
+// `instance.ts`), so this cache hits whenever more than one such call
+// happens against the same graph.
+type TopologicalCacheKey = string;
+const topologicalOrderCache = new WeakMap<Graph, Map<TopologicalCacheKey, Array<string>>>();
+// Stable per-reference ids for functions/arrays used as part of the cache
+// key, since neither Maps nor WeakMaps can be keyed on a tuple directly.
+const referenceIds = new WeakMap<object, number>();
+let nextReferenceId = 0;
+function referenceId(value: object | undefined): number {
+  if (value === undefined) return 0;
+  let id = referenceIds.get(value);
+  if (id === undefined) {
+    id = ++nextReferenceId;
+    referenceIds.set(value, id);
+  }
+  return id;
+}
+
+function computeTopologicalOrder<T extends string = string>(
+  graph: Graph,
+  options: WalkOptions<T> | undefined,
+): Array<string> {
+  let cacheForGraph = topologicalOrderCache.get(graph);
+  const cacheKey: TopologicalCacheKey = `${referenceId(options?.getPointerPriority)}:${referenceId(options?.matchPointerToGroup)}:${referenceId(options?.preferGroups as unknown as object)}`;
+  if (cacheForGraph) {
+    const cached = cacheForGraph.get(cacheKey);
+    if (cached) return cached;
+  } else {
+    cacheForGraph = new Map();
+    topologicalOrderCache.set(graph, cacheForGraph);
+  }
+
+  const order = computeTopologicalOrderUncached(graph, options);
+  cacheForGraph.set(cacheKey, order);
+  return order;
+}
+
 /**
- * Walks the nodes of the graph in topological order (dependencies before dependents).
- * Calls the callback for each node pointer in order.
- * Nodes in cycles are grouped together and emitted in arbitrary order within the group.
- *
- * @param graph - The dependency graph
- * @param callback - Function to call for each node pointer
+ * Computes the topological order (dependencies before dependents) of the
+ * graph's nodes. Nodes in cycles are grouped together and emitted in
+ * arbitrary order within the group.
  */
-const walkTopological: WalkFn = (graph, callback, options) => {
+function computeTopologicalOrderUncached<T extends string = string>(
+  graph: Graph,
+  options: WalkOptions<T> | undefined,
+): Array<string> {
   // stable Kahn's algorithm that respects declaration order as a tiebreaker.
   const pointers = Array.from(graph.nodes.keys());
 
@@ -78,6 +128,10 @@ const walkTopological: WalkFn = (graph, callback, options) => {
 
   // dependency sets, in-degree, reverse adjacency, and initial heap — all
   // built in a single pass over pointers to avoid repeated iteration.
+  // `depsOf` omits the entry entirely for dependency-free nodes (the common
+  // case — e.g. leaf schemas/properties) instead of storing an empty Set, to
+  // avoid allocating one per leaf on graphs with hundreds of thousands of
+  // nodes.
   const depsOf = new Map<string, Set<string>>();
   const inDegree = new Map<string, number>();
   const dependents = new Map<string, Set<string>>();
@@ -87,25 +141,31 @@ const walkTopological: WalkFn = (graph, callback, options) => {
     const priority = options?.getPointerPriority?.(pointer) ?? 10;
     declIndex.set(pointer, priority * 1_000_000 + index);
 
-    const raw = graph.subtreeDependencies?.get(pointer) ?? new Set();
-    const deps = new Set<string>();
-    for (const rawPointer of raw) {
-      if (rawPointer === pointer) continue; // ignore self-dependencies for ordering
-      if (graph.nodes.has(rawPointer)) deps.add(rawPointer);
-    }
-    depsOf.set(pointer, deps);
-    inDegree.set(pointer, deps.size);
-
-    for (const d of deps) {
-      let dep = dependents.get(d);
-      if (!dep) {
-        dep = new Set();
-        dependents.set(d, dep);
+    const raw = graph.subtreeDependencies?.get(pointer);
+    let deps: Set<string> | undefined;
+    if (raw && raw.size) {
+      for (const rawPointer of raw) {
+        if (rawPointer === pointer) continue; // ignore self-dependencies for ordering
+        if (!graph.nodes.has(rawPointer)) continue;
+        (deps ??= new Set()).add(rawPointer);
       }
-      dep.add(pointer);
     }
 
-    if (deps.size === 0) heap.push(pointer);
+    if (deps) {
+      depsOf.set(pointer, deps);
+      inDegree.set(pointer, deps.size);
+      for (const d of deps) {
+        let dep = dependents.get(d);
+        if (!dep) {
+          dep = new Set();
+          dependents.set(d, dep);
+        }
+        dep.add(pointer);
+      }
+    } else {
+      inDegree.set(pointer, 0);
+      heap.push(pointer);
+    }
   });
 
   const emitted = new Set<string>();
@@ -213,6 +273,19 @@ const walkTopological: WalkFn = (graph, callback, options) => {
     }
   }
 
+  return finalOrder;
+}
+
+/**
+ * Walks the nodes of the graph in topological order (dependencies before dependents).
+ * Calls the callback for each node pointer in order.
+ * Nodes in cycles are grouped together and emitted in arbitrary order within the group.
+ *
+ * @param graph - The dependency graph
+ * @param callback - Function to call for each node pointer
+ */
+const walkTopological: WalkFn = (graph, callback, options) => {
+  const finalOrder = computeTopologicalOrder(graph, options);
   for (const pointer of finalOrder) {
     callback(pointer, graph.nodes.get(pointer)!);
   }
