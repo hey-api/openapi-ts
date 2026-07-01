@@ -105,7 +105,9 @@ export class SymbolRegistry implements ISymbolRegistry {
     prefix = '',
     entries: Array<IndexEntry> = [],
   ): IndexKeySpace {
-    for (const [key, value] of Object.entries(meta)) {
+    // `meta` is always a plain object here (never one with inherited enumerable properties)
+    for (const key in meta) {
+      const value = meta[key];
       const path = prefix ? `${prefix}.${key}` : key;
       if (value && typeof value === 'object' && !Array.isArray(value)) {
         this.buildIndexKeySpace(value as ISymbolMeta, path, entries);
@@ -121,10 +123,11 @@ export class SymbolRegistry implements ISymbolRegistry {
    * Avoids rebuilding the key space when it's already available.
    */
   private cacheKeyFromKeySpace(indexKeySpace: IndexKeySpace): QueryCacheKey {
-    return indexKeySpace
-      .map((indexEntry) => indexEntry[2])
-      .sort() // ensure order-insensitivity
-      .join('|');
+    const serialized: Array<string> = [];
+    for (let i = 0, len = indexKeySpace.length; i < len; i++) {
+      serialized.push(indexKeySpace[i]![2]);
+    }
+    return serialized.sort().join('|');
   }
 
   private indexSymbol(symbolId: SymbolId, indexKeySpace: IndexKeySpace): void {
