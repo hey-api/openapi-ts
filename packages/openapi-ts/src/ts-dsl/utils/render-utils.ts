@@ -14,6 +14,12 @@ const blankFile = ts.createSourceFile('', '', ts.ScriptTarget.ESNext, false, ts.
 export function astToString(node: ts.Node): string {
   const result = printer.printNode(ts.EmitHint.Unspecified, node, blankFile);
 
+  // Skip the regex entirely with a cheap literal check when there's no escape
+  // sequence to fix up — most printed nodes contain no unicode escapes
+  if (!result.includes('\\u')) {
+    return result;
+  }
+
   try {
     /**
      * TypeScript Compiler API escapes unicode characters by default and there

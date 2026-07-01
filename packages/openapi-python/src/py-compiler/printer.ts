@@ -32,6 +32,26 @@ export interface PyPrinterOptions {
 const DEFAULT_INDENT_SIZE = 4;
 const PARAMS_MULTILINE_THRESHOLD = 3;
 
+const backslashEscapeNeeded = /\\/;
+
+function escapeBackslashes(value: string): string {
+  const match = backslashEscapeNeeded.exec(value);
+  if (match === null) return value;
+
+  let result = value.slice(0, match.index);
+  let runStart = match.index;
+
+  for (let i = match.index, len = value.length; i < len; i++) {
+    if (value.charCodeAt(i) !== 92) continue; // \
+    if (runStart !== i) result += value.slice(runStart, i);
+    result += '\\\\';
+    runStart = i + 1;
+  }
+
+  if (runStart !== value.length) result += value.slice(runStart);
+  return result;
+}
+
 export function createPrinter(options?: PyPrinterOptions) {
   const indentSize = options?.indentSize ?? DEFAULT_INDENT_SIZE;
   const quoteStyle = options?.quoteStyle ?? 'double';
@@ -54,7 +74,23 @@ export function createPrinter(options?: PyPrinterOptions) {
   function createStringLiteral(value: string): string {
     const result = selectQuote(value);
     if (result.conflict) {
-      return `${result.quote}${value.replaceAll(result.quote, `\\${result.quote}`)}${result.quote}`;
+      // `selectQuote` already confirmed `result.quote` occurs in `value` (via
+      // `.includes`), so unlike a general-purpose escaper there's no need to
+      // scan for a first-match index — go straight to the char-by-char pass,
+      // copying unescaped runs in bulk (via `runStart`) and only paying extra
+      // for the quote character itself.
+      const quoteCode = result.quote.charCodeAt(0);
+      const escape = `\\${result.quote}`;
+      let escaped = '';
+      let runStart = 0;
+      for (let i = 0, len = value.length; i < len; i++) {
+        if (value.charCodeAt(i) !== quoteCode) continue;
+        if (runStart !== i) escaped += value.slice(runStart, i);
+        escaped += escape;
+        runStart = i + 1;
+      }
+      if (runStart !== value.length) escaped += value.slice(runStart);
+      return `${result.quote}${escaped}${result.quote}`;
     }
     return `${result.quote}${value}${result.quote}`;
   }
@@ -352,9 +388,10 @@ export function createPrinter(options?: PyPrinterOptions) {
           if (node.value.includes('\n')) {
             const { quote } = selectQuote(node.value);
             const tripleQuote = quote.repeat(3);
-            const escaped = node.value
-              .replaceAll('\\', '\\\\')
-              .replaceAll(tripleQuote, `\\${quote}${quote}${quote}`);
+            const escaped = escapeBackslashes(node.value).replaceAll(
+              tripleQuote,
+              `\\${quote}${quote}${quote}`,
+            );
             parts.push(`${tripleQuote}${escaped}${tripleQuote}`);
           } else {
             parts.push(createStringLiteral(node.value));
@@ -387,14 +424,14 @@ export function createPrinter(options?: PyPrinterOptions) {
           trailingBackslashes !== undefined &&
           trailingBackslashes[0].length % 2 !== 0;
         if (endsWithOddBackslashes) {
-          parts.push(createStringLiteral(node.value.replaceAll('\\', '\\\\')));
+          parts.push(createStringLiteral(escapeBackslashes(node.value)));
           break;
         }
         const result = selectQuote(node.value);
         if (result.conflict) {
           const tripleQuote = result.quote.repeat(3);
           if (node.value.includes(tripleQuote)) {
-            parts.push(createStringLiteral(node.value.replaceAll('\\', '\\\\')));
+            parts.push(createStringLiteral(escapeBackslashes(node.value)));
           } else {
             parts.push(`r${tripleQuote}${node.value}${tripleQuote}`);
           }
