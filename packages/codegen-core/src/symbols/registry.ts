@@ -18,6 +18,15 @@ export class SymbolRegistry implements ISymbolRegistry {
   private _registered: Set<SymbolId> = new Set();
   private _stubs: Set<SymbolId> = new Set();
   private _stubCache: Map<QueryCacheKey, SymbolId> = new Map();
+  /**
+   * Precomputed index key space for each live stub, keyed by symbol id.
+   * `replaceStubs` used to rebuild this (a recursive walk + JSON.stringify
+   * per meta leaf) from scratch for every stub on every single `register()`
+   * call — O(registrations × stubs × meta size). Since a stub's meta never
+   * changes after `reference()` creates it, its key space is computed once
+   * here and reused for the lifetime of the stub.
+   */
+  private _stubKeySpaces: Map<SymbolId, IndexKeySpace> = new Map();
   private _values: Map<SymbolId, Symbol> = new Map();
 
   dump(): ReadonlyArray<RegistryDumpEntry> {
@@ -65,6 +74,7 @@ export class SymbolRegistry implements ISymbolRegistry {
     this._values.set(stub.id, stub);
     this._stubs.add(stub.id);
     this._stubCache.set(cacheKey, stub.id);
+    this._stubKeySpaces.set(stub.id, indexKeySpace);
     return stub;
   }
 
@@ -150,8 +160,7 @@ export class SymbolRegistry implements ISymbolRegistry {
     }
   }
 
-  private isSubset(sub: IndexKeySpace, sup: IndexKeySpace): boolean {
-    const supMap = new Map(sup.map((e) => [e[0], e[1]] as const));
+  private isSubset(sub: IndexKeySpace, supMap: Map<IndexEntry[0], IndexEntry[1]>): boolean {
     for (const [key, value] of sub) {
       if (!supMap.has(key) || supMap.get(key) !== value) {
         return false;
@@ -228,14 +237,19 @@ export class SymbolRegistry implements ISymbolRegistry {
   }
 
   private replaceStubs(symbol: Symbol, indexKeySpace: IndexKeySpace): void {
+    if (!this._stubs.size) return;
+    // Built once per call instead of once per stub inside `isSubset`, since
+    // every stub in this loop is checked against the same `indexKeySpace`.
+    const supMap = new Map(indexKeySpace.map((e) => [e[0], e[1]] as const));
     for (const stubId of this._stubs.values()) {
       const stub = this._values.get(stubId);
       if (stub?.meta) {
-        const stubKeySpace = this.buildIndexKeySpace(stub.meta);
-        if (this.isSubset(stubKeySpace, indexKeySpace)) {
+        const stubKeySpace = this._stubKeySpaces.get(stubId) ?? this.buildIndexKeySpace(stub.meta);
+        if (this.isSubset(stubKeySpace, supMap)) {
           const cacheKey = this.cacheKeyFromKeySpace(stubKeySpace);
           this._stubCache.delete(cacheKey);
           this._stubs.delete(stubId);
+          this._stubKeySpaces.delete(stubId);
           stub.setCanonical(symbol);
         }
       }
