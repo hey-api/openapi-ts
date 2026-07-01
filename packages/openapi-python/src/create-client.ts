@@ -155,6 +155,7 @@ export async function createClient({
           },
           module: config.output.module,
           preferExportAll: config.output.preferExportAll,
+          printer: config.output.printer,
         }),
       ],
       root: config.output.path,

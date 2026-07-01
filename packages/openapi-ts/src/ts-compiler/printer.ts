@@ -1,10 +1,9 @@
 import type { TsNode } from './nodes/base';
-import type { EmitHint } from './nodes/emit-hint';
 import { TsNodeKind } from './nodes/kinds';
 import { TsNodeFlags } from './nodes/node-flags';
 import { SyntaxKind } from './nodes/syntax-kind';
 
-export interface TsPrinterOptions {
+export type TsPrinterOptions = {
   /**
    * Number of spaces per indentation level.
    *
@@ -17,7 +16,15 @@ export interface TsPrinterOptions {
    * @default true
    */
   semicolons?: boolean;
-}
+};
+
+export type TsPrinter = {
+  format: (node: TsNode) => string;
+  formatNode: (node: TsNode) => string;
+};
+
+const DEFAULT_INDENT_SIZE = 2;
+const DEFAULT_SEMICOLONS = true;
 
 const TOKEN_TEXT: Record<SyntaxKind, string> = {
   [SyntaxKind.AmpersandAmpersandToken]: '&&',
@@ -193,9 +200,9 @@ function fastJoin(parts: ReadonlyArray<string>, separator: string): string {
   return result;
 }
 
-export function createPrinter(options?: TsPrinterOptions) {
-  const indentUnit = ' '.repeat(options?.indentSize ?? 2);
-  const semicolons = options?.semicolons ?? true;
+export function createPrinter(options?: TsPrinterOptions): TsPrinter {
+  const indentUnit = ' '.repeat(options?.indentSize ?? DEFAULT_INDENT_SIZE);
+  const semicolons = options?.semicolons ?? DEFAULT_SEMICOLONS;
   let indentLevel = 0;
 
   function printComments(
@@ -220,6 +227,7 @@ export function createPrinter(options?: TsPrinterOptions) {
   }
 
   function printLine(line: string): string {
+    if (line === '') return '';
     return indentUnit.repeat(indentLevel) + line;
   }
 
@@ -228,7 +236,7 @@ export function createPrinter(options?: TsPrinterOptions) {
   }
 
   function printInline(node: TsNode, skipComments?: boolean): string {
-    return printNode(node, true, skipComments);
+    return formatNode(node, true, skipComments);
   }
 
   // Joins each node's inline text with `separator`, avoiding the intermediate
@@ -265,7 +273,7 @@ export function createPrinter(options?: TsPrinterOptions) {
     if (items.length === 0) return '{}';
     const lines: Array<string> = ['{'];
     indentLevel += 1;
-    for (const item of items) lines.push(printNode(item));
+    for (const item of items) lines.push(formatNode(item));
     indentLevel -= 1;
     lines.push(printLine('}'));
     return lines.join('\n');
@@ -371,9 +379,9 @@ export function createPrinter(options?: TsPrinterOptions) {
     return `${TOKEN_TEXT[token.syntaxKind]} `;
   }
 
-  // `printNode` used to allocate a fresh `push` closure on every call (i.e.
+  // `formatNode` used to allocate a fresh `push` closure on every call (i.e.
   // once per AST node) purely to manage the `single`/`parts` accumulator
-  // below. Since printNode never runs re-entrantly through this closure
+  // below. Since formatNode never runs re-entrantly through this closure
   // (each call fully resolves its own `push` calls before returning), that
   // state can instead live in these two outer-scoped variables, saving one
   // closure allocation per node at the cost of save/restore around recursion.
@@ -391,13 +399,13 @@ export function createPrinter(options?: TsPrinterOptions) {
     }
   }
 
-  function printNode(node: TsNode, inline?: boolean, skipComments?: boolean): string {
+  function formatNode(node: TsNode, inline?: boolean, skipComments?: boolean): string {
     // Most node kinds push exactly one string and carry no comments, so the
     // switch below writes into `parts` lazily: `single` holds that one string
     // without ever allocating an array, and we only spill into a real
     // `Array<string>` once a second entry (comments, or a multi-line case
     // such as Block/ClassDeclaration) shows up. Save/restore the outer
-    // accumulator around this call so recursive printNode calls (which also
+    // accumulator around this call so recursive formatNode calls (which also
     // use `push`) don't clobber this frame's in-progress result.
     const savedSingle = accSingle;
     const savedParts = accParts;
@@ -511,7 +519,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         const lines: Array<string> = ['{'];
         indentLevel += 1;
         for (const statement of node.statements) {
-          lines.push(printNode(statement));
+          lines.push(formatNode(statement));
         }
         indentLevel -= 1;
         lines.push(printLine('}'));
@@ -546,7 +554,7 @@ export function createPrinter(options?: TsPrinterOptions) {
             const argument = args[i] as TsNode;
             const argumentParts: Array<string> = [];
             if (argument.leadingComments) printComments(argumentParts, argument.leadingComments);
-            argumentParts.push(printLine(printNode(argument, false, true)));
+            argumentParts.push(printLine(formatNode(argument, false, true)));
             renderedArguments[i] = fastJoin(argumentParts, '\n');
           }
           text += `(\n${fastJoin(renderedArguments, ',\n')})`;
@@ -565,7 +573,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         const lines: Array<string> = [printLine(`case ${printInline(node.expression)}:`)];
         indentLevel += 1;
         for (const statement of node.statements) {
-          lines.push(printNode(statement));
+          lines.push(formatNode(statement));
         }
         indentLevel -= 1;
         push(lines.join('\n'));
@@ -607,7 +615,7 @@ export function createPrinter(options?: TsPrinterOptions) {
             push(printLine(''));
             return;
           }
-          push(printNode(member));
+          push(formatNode(member));
         });
         indentLevel -= 1;
         push(printLine('}'));
@@ -641,7 +649,7 @@ export function createPrinter(options?: TsPrinterOptions) {
             push(printLine(''));
             return;
           }
-          push(printNode(member));
+          push(formatNode(member));
         });
         indentLevel -= 1;
         push(printLine('}'));
@@ -717,7 +725,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         const lines: Array<string> = [printLine('default:')];
         indentLevel += 1;
         for (const statement of node.statements) {
-          lines.push(printNode(statement));
+          lines.push(formatNode(statement));
         }
         indentLevel -= 1;
         push(lines.join('\n'));
@@ -762,7 +770,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         push(printLine(`${header} {`));
         indentLevel += 1;
         for (let i = 0, len = node.members.length; i < len; i++) {
-          const text = printNode(node.members[i] as TsNode);
+          const text = formatNode(node.members[i] as TsNode);
           push(i < len - 1 ? `${text},` : text);
         }
         indentLevel -= 1;
@@ -1004,7 +1012,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         push(printLine(`${header} {`));
         indentLevel += 1;
         for (let i = 0, len = node.members.length; i < len; i++)
-          push(printNode(node.members[i] as TsNode));
+          push(formatNode(node.members[i] as TsNode));
         indentLevel -= 1;
         push(printLine('}'));
         break;
@@ -1409,7 +1417,7 @@ export function createPrinter(options?: TsPrinterOptions) {
       case TsNodeKind.SourceFile: {
         for (let i = 0, len = node.statements.length; i < len; i++) {
           if (i > 0) push('');
-          push(printNode(node.statements[i] as TsNode));
+          push(formatNode(node.statements[i] as TsNode));
         }
         break;
       }
@@ -1533,7 +1541,7 @@ export function createPrinter(options?: TsPrinterOptions) {
         const lines: Array<string> = ['{'];
         indentLevel += 1;
         for (let i = 0, len = node.members.length; i < len; i++) {
-          lines.push(printNode(node.members[i] as TsNode));
+          lines.push(formatNode(node.members[i] as TsNode));
         }
         indentLevel -= 1;
         lines.push(printLine('}'));
@@ -1671,17 +1679,13 @@ export function createPrinter(options?: TsPrinterOptions) {
     return result;
   }
 
-  function printFile(node: TsNode): string {
-    const text = printNode(node);
+  function format(node: TsNode): string {
+    const text = formatNode(node);
     return text === '' ? '' : `${text}\n`;
   }
 
   return {
-    printFile,
-    printNode: (_emitHint: EmitHint, node: TsNode, _sourceFile?: TsNode): string => printNode(node),
+    format,
+    formatNode,
   };
-}
-
-export function printAst(node: TsNode): string {
-  return JSON.stringify(node, null, 2);
 }
