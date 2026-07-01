@@ -93,18 +93,96 @@ const TOKEN_TEXT: Record<SyntaxKind, string> = {
   [SyntaxKind.SingleLineCommentTrivia]: '',
 };
 
+// Matches the first character (if any) that needs escaping for a
+// single-quoted JS string literal.
+const stringLiteralEscapeNeeded = /['\\\n\r\t]/;
+
+/**
+ * Core idea: instead of chaining five separate `.replace`/`.replaceAll`
+ * passes (each a full scan of the string, building an intermediate string
+ * every time), first find the index of the earliest character that needs
+ * escaping. If none is found, the string is returned untouched. Otherwise,
+ * only walk from that index once, switching on `charCodeAt` per character —
+ * unescaped runs are copied in bulk via `slice` (using a pending start
+ * index) rather than character by character, and only characters that
+ * actually need escaping pay any extra cost.
+ */
 function formatStringLiteral(text: string): string {
-  const escaped = text
-    .replace(/\\/g, '\\\\')
-    .replaceAll("'", "\\'")
-    .replace(/\n/g, '\\n')
-    .replace(/\r/g, '\\r')
-    .replace(/\t/g, '\\t');
-  return `'${escaped}'`;
+  const match = stringLiteralEscapeNeeded.exec(text);
+  if (match === null) return `'${text}'`;
+
+  let result = text.slice(0, match.index);
+  let runStart = match.index;
+
+  for (let i = match.index, len = text.length; i < len; i++) {
+    let escape: string;
+    switch (text.charCodeAt(i)) {
+      case 39: // '
+        escape = "\\'";
+        break;
+      case 92: // \
+        escape = '\\\\';
+        break;
+      case 10: // \n
+        escape = '\\n';
+        break;
+      case 13: // \r
+        escape = '\\r';
+        break;
+      case 9: // \t
+        escape = '\\t';
+        break;
+      default:
+        continue;
+    }
+    if (runStart !== i) result += text.slice(runStart, i);
+    result += escape;
+    runStart = i + 1;
+  }
+
+  if (runStart !== text.length) result += text.slice(runStart);
+  return `'${result}'`;
 }
 
+// Matches the first character (if any) that needs escaping for a
+// template-literal body: backslash, backtick, or the start of `${`.
+const templateTextEscapeNeeded = /[\\`]|\$\{/;
+
+/** Core idea as `formatStringLiteral` above, applied to template-literal text. */
 function formatTemplateText(text: string): string {
-  return text.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
+  const match = templateTextEscapeNeeded.exec(text);
+  if (match === null) return text;
+
+  let result = text.slice(0, match.index);
+  let runStart = match.index;
+
+  for (let i = match.index, len = text.length; i < len; i++) {
+    let escape: string;
+    let skip = 0;
+    switch (text.charCodeAt(i)) {
+      case 92: // \
+        escape = '\\\\';
+        break;
+      case 96: // `
+        escape = '\\`';
+        break;
+      case 36: // $
+        // Only `${` needs escaping — a lone `$` is not special.
+        if (text.charCodeAt(i + 1) !== 123) continue;
+        escape = '\\${';
+        skip = 1;
+        break;
+      default:
+        continue;
+    }
+    if (runStart !== i) result += text.slice(runStart, i);
+    result += escape;
+    i += skip;
+    runStart = i + 1;
+  }
+
+  if (runStart !== text.length) result += text.slice(runStart);
+  return result;
 }
 
 // Faster than `Array.prototype.join` for plain string arrays.
