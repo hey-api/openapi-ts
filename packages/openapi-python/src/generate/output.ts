@@ -28,7 +28,7 @@ export async function generateOutput(context: Context): Promise<{ fileCount: num
   if ('bundle' in client.config && client.config.bundle && !config.dryRun) {
     // not proud of this one
     // @ts-expect-error
-    config._FRAGILE_CLIENT_BUNDLE_RENAMED = generateClientBundle({
+    config._FRAGILE_CLIENT_BUNDLE_RENAMED = await generateClientBundle({
       header: config.output.header,
       outputPath,
       // @ts-expect-error

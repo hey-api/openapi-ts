@@ -63,6 +63,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "build:exe": "tsdown --config tsdown.exe.config.ts",
     "dev": "tsdown --watch",
     "prepublishOnly": "pnpm build",
     "typecheck": "tsgo --noEmit",

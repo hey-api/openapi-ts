@@ -17,7 +17,7 @@ export type Scope = 'normal' | 'read' | 'write';
  *
  * @param nodes - Map of JSON Pointer to NodeInfo.
  */
-export const annotateChildScopes = (nodes: Graph['nodes']): void => {
+export function annotateChildScopes(nodes: Graph['nodes']): void {
   for (const [, nodeInfo] of nodes) {
     if (nodeInfo.scopes) continue;
 
@@ -28,7 +28,7 @@ export const annotateChildScopes = (nodes: Graph['nodes']): void => {
       }
     }
   }
-};
+}
 
 interface Cache {
   parentToChildren: Map<string, Array<string>>;
@@ -44,7 +44,7 @@ type PointerDependenciesResult = {
 /**
  * Recursively collects all $ref dependencies in the subtree rooted at `pointer`.
  */
-const collectPointerDependencies = ({
+function collectPointerDependencies({
   cache,
   graph,
   pointer,
@@ -54,7 +54,7 @@ const collectPointerDependencies = ({
   graph: Graph;
   pointer: string;
   visited: Set<string>;
-}): PointerDependenciesResult => {
+}): PointerDependenciesResult {
   if (cache.transitiveDependencies.has(pointer)) {
     return {
       subtreeDependencies: cache.subtreeDependencies.get(pointer) ?? null,
@@ -127,7 +127,7 @@ const collectPointerDependencies = ({
   cache.transitiveDependencies.set(pointer, transitiveDependencies);
   cache.subtreeDependencies.set(pointer, subtreeDependencies);
   return { subtreeDependencies, transitiveDependencies };
-};
+}
 
 /**
  * Propagates scopes through the graph using a multi-pass linear scan.
@@ -145,7 +145,7 @@ const collectPointerDependencies = ({
  *
  * @param graph - The Graph structure containing nodes and dependencies.
  */
-export const propagateScopes = (graph: Graph): void => {
+export function propagateScopes(graph: Graph): void {
   // Reverse of insertion order (DFS pre-order) ≈ bottom-up: children before parents.
   const nodesBottomUp = [...graph.nodes].reverse();
 
@@ -173,7 +173,7 @@ export const propagateScopes = (graph: Graph): void => {
       }
     }
   }
-};
+}
 
 /**
  * Propagates scopes from one node to another.
@@ -184,7 +184,7 @@ export const propagateScopes = (graph: Graph): void => {
  * @param toNodeInfo - The node to propagate scopes to
  * @returns boolean - Whether any scopes were added
  */
-const propagateScopesToNode = (fromNodeInfo: NodeInfo, toNodeInfo: NodeInfo): boolean => {
+function propagateScopesToNode(fromNodeInfo: NodeInfo, toNodeInfo: NodeInfo): boolean {
   if (!fromNodeInfo.scopes) {
     return false;
   }
@@ -203,7 +203,7 @@ const propagateScopesToNode = (fromNodeInfo: NodeInfo, toNodeInfo: NodeInfo): bo
   }
 
   return changed;
-};
+}
 
 /**
  * Builds a graph of all nodes in an OpenAPI spec, indexed by normalized JSON Pointer,
