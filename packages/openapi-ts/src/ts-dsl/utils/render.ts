@@ -31,9 +31,7 @@ function headerToLines(header: Header): ReadonlyArray<string> {
   return lines;
 }
 
-const defaultPrinter = ts.createPrinter({
-  indentSize: 4,
-});
+const defaultPrinter = ts.createPrinter();
 
 export class TypeScriptRenderer implements Renderer {
   /**
