@@ -1,5 +1,11 @@
 # @hey-api/json-schema-ref-parser
 
+## 1.4.5
+
+### Patch Changes
+
+- **merge**: fix: use synthetic root path ([#4147](https://github.com/hey-api/hey-api/pull/4147)) ([`2953324`](https://github.com/hey-api/hey-api/commit/2953324c30830a424022da7ff7d2e5bd73d9a9c5)) by [@pullfrog](https://github.com/apps/pullfrog)
+
 ## 1.4.4
 
 ### Patch Changes

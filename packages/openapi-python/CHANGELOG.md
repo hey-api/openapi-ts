@@ -1,5 +1,18 @@
 # @hey-api/openapi-python
 
+## 0.0.25
+
+### Patch Changes
+
+- **config**: expose `output.printer` options ([#4192](https://github.com/hey-api/hey-api/pull/4192)) ([`cb7e283`](https://github.com/hey-api/hey-api/commit/cb7e283a1c87f32e16639e1d295ed4e7aa1df1a2)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-cli@0.1.0
+- @hey-api/codegen-core@0.9.2
+- @hey-api/shared@0.5.1
+- @hey-api/json-schema-ref-parser@1.4.5
+
 ## 0.0.24
 
 ### Patch Changes

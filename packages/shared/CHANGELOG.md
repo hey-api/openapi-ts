@@ -1,5 +1,16 @@
 # @hey-api/shared
 
+## 0.5.1
+
+### Patch Changes
+
+- **perf**: speed up on large specs ([#4189](https://github.com/hey-api/hey-api/pull/4189)) ([`7d60829`](https://github.com/hey-api/hey-api/commit/7d608292d24284211f9221bf3e9a71dae4dfc8be)) by [@SukkaW](https://github.com/SukkaW)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-core@0.9.2
+- @hey-api/json-schema-ref-parser@1.4.5
+
 ## 0.5.0
 
 ### Minor Changes

@@ -1,5 +1,34 @@
 # @hey-api/openapi-ts
 
+## 0.100.0
+
+### Minor Changes
+
+- **BREAKING** **compiler**: custom compiler implementation ([#4163](https://github.com/hey-api/hey-api/pull/4163)) ([`03e9979`](https://github.com/hey-api/hey-api/commit/03e997919ef76e3bee2f460b1b6dd1edab982a44)) by [@ahmedrowaihi](https://github.com/ahmedrowaihi)
+
+- **BREAKING** **plugin(@hey-api/transformers)**: no longer accept TypeScript nodes directly for stricter types ([#4162](https://github.com/hey-api/hey-api/pull/4162)) ([`ad5fb33`](https://github.com/hey-api/hey-api/commit/ad5fb335a0a939ff2d79eaafe43ec9e3449113de)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **plugin(zod)**: no longer accept TypeScript nodes directly for stricter types ([#4162](https://github.com/hey-api/hey-api/pull/4162)) ([`ad5fb33`](https://github.com/hey-api/hey-api/commit/ad5fb335a0a939ff2d79eaafe43ec9e3449113de)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **plugin(valibot)**: no longer accept TypeScript nodes directly for stricter types ([#4162](https://github.com/hey-api/hey-api/pull/4162)) ([`ad5fb33`](https://github.com/hey-api/hey-api/commit/ad5fb335a0a939ff2d79eaafe43ec9e3449113de)) by [@mrlubos](https://github.com/mrlubos)
+
+- **BREAKING** **cli**: multiple values must be comma-separated ([#4148](https://github.com/hey-api/hey-api/pull/4148)) ([`55fca63`](https://github.com/hey-api/hey-api/commit/55fca632144872bcf864e837a9e851cf7a48cf16)) by [@mrlubos](https://github.com/mrlubos)
+
+### Patch Changes
+
+- **dependencies**: remove `typescript` from peer dependencies ([#4163](https://github.com/hey-api/hey-api/pull/4163)) ([`b7a39cc`](https://github.com/hey-api/hey-api/commit/b7a39cce7e7757dd5877cfd288550b1945e8a570)) by [@ahmedrowaihi](https://github.com/ahmedrowaihi)
+
+- **config**: expose `output.printer` options ([#4192](https://github.com/hey-api/hey-api/pull/4192)) ([`cb7e283`](https://github.com/hey-api/hey-api/commit/cb7e283a1c87f32e16639e1d295ed4e7aa1df1a2)) by [@mrlubos](https://github.com/mrlubos)
+
+- **printer**: change default indent to 2 spaces ([#4193](https://github.com/hey-api/hey-api/pull/4193)) ([`1a27afa`](https://github.com/hey-api/hey-api/commit/1a27afa4076e124a636c9dd4051f21211945cd97)) by [@mrlubos](https://github.com/mrlubos)
+
+### Updated Dependencies:
+
+- @hey-api/codegen-cli@0.1.0
+- @hey-api/codegen-core@0.9.2
+- @hey-api/shared@0.5.1
+- @hey-api/json-schema-ref-parser@1.4.5
+
 ## 0.99.0
 
 ### Minor Changes
