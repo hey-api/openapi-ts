@@ -17,7 +17,7 @@ export class DefaultServiceRequests {
             ...options
         });
     }
-    
+
     public patchApiVbyApiVersionNoTag<ThrowOnError extends boolean = false>(options?: Options<PatchApiVbyApiVersionNoTagData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -26,7 +26,7 @@ export class DefaultServiceRequests {
             ...options
         });
     }
-    
+
     public import<ThrowOnError extends boolean = false>(options: Options<ImportData, ThrowOnError>): HttpRequest<ImportResponse> {
         return (options?.client ?? client).requestOptions<ImportResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -35,7 +35,7 @@ export class DefaultServiceRequests {
             ...options
         });
     }
-    
+
     public fooWow<ThrowOnError extends boolean = false>(options?: Options<FooWowData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -44,7 +44,7 @@ export class DefaultServiceRequests {
             ...options
         });
     }
-    
+
     public getApiVbyApiVersionSimpleOperation<ThrowOnError extends boolean = false>(options: Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError>): HttpRequest<GetApiVbyApiVersionSimpleOperationResponse> {
         return (options?.client ?? client).requestOptions<GetApiVbyApiVersionSimpleOperationResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -90,7 +90,7 @@ export class SimpleServiceRequests {
             ...options
         });
     }
-    
+
     public getCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<GetCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -99,7 +99,7 @@ export class SimpleServiceRequests {
             ...options
         });
     }
-    
+
     public headCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<HeadCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -108,7 +108,7 @@ export class SimpleServiceRequests {
             ...options
         });
     }
-    
+
     public optionsCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -117,7 +117,7 @@ export class SimpleServiceRequests {
             ...options
         });
     }
-    
+
     public patchCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PatchCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -126,7 +126,7 @@ export class SimpleServiceRequests {
             ...options
         });
     }
-    
+
     public postCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PostCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -135,7 +135,7 @@ export class SimpleServiceRequests {
             ...options
         });
     }
-    
+
     public putCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: Options<PutCallWithoutParametersAndResponseData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -144,7 +144,7 @@ export class SimpleServiceRequests {
             ...options
         });
     }
-    
+
     private _apiService?: ApiService;
     get apiService(): ApiService {
         return this._apiService ??= new ApiService();
@@ -161,7 +161,7 @@ export class ParametersServiceRequests {
             ...options
         });
     }
-    
+
     public callWithParameters<ThrowOnError extends boolean = false>(options: Options<CallWithParametersData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -170,7 +170,7 @@ export class ParametersServiceRequests {
             ...options
         });
     }
-    
+
     public callWithWeirdParameterNames<ThrowOnError extends boolean = false>(options: Options<CallWithWeirdParameterNamesData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -179,7 +179,7 @@ export class ParametersServiceRequests {
             ...options
         });
     }
-    
+
     public getCallWithOptionalParam<ThrowOnError extends boolean = false>(options: Options<GetCallWithOptionalParamData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -188,7 +188,7 @@ export class ParametersServiceRequests {
             ...options
         });
     }
-    
+
     public postCallWithOptionalParam<ThrowOnError extends boolean = false>(options: Options<PostCallWithOptionalParamData, ThrowOnError>): HttpRequest<PostCallWithOptionalParamResponse> {
         return (options?.client ?? client).requestOptions<PostCallWithOptionalParamResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -260,7 +260,7 @@ export class DefaultsServiceRequests {
             ...options
         });
     }
-    
+
     public callWithDefaultOptionalParameters<ThrowOnError extends boolean = false>(options?: Options<CallWithDefaultOptionalParametersData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -269,7 +269,7 @@ export class DefaultsServiceRequests {
             ...options
         });
     }
-    
+
     public callToTestOrderOfParams<ThrowOnError extends boolean = false>(options: Options<CallToTestOrderOfParamsData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -290,7 +290,7 @@ export class DuplicateServiceRequests {
             ...options
         });
     }
-    
+
     public duplicateName2<ThrowOnError extends boolean = false>(options?: Options<DuplicateNameData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -299,7 +299,7 @@ export class DuplicateServiceRequests {
             ...options
         });
     }
-    
+
     public duplicateName22<ThrowOnError extends boolean = false>(options?: Options<DuplicateName2Data, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -308,7 +308,7 @@ export class DuplicateServiceRequests {
             ...options
         });
     }
-    
+
     public duplicateName3<ThrowOnError extends boolean = false>(options?: Options<DuplicateName3Data, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -317,7 +317,7 @@ export class DuplicateServiceRequests {
             ...options
         });
     }
-    
+
     public duplicateName4<ThrowOnError extends boolean = false>(options?: Options<DuplicateName4Data, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -350,7 +350,7 @@ export class ResponseServiceRequests {
             ...options
         });
     }
-    
+
     public callWithResponse<ThrowOnError extends boolean = false>(options?: Options<CallWithResponseData, ThrowOnError>): HttpRequest<CallWithResponseResponse> {
         return (options?.client ?? client).requestOptions<CallWithResponseResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -359,7 +359,7 @@ export class ResponseServiceRequests {
             ...options
         });
     }
-    
+
     public callWithDuplicateResponses<ThrowOnError extends boolean = false>(options?: Options<CallWithDuplicateResponsesData, ThrowOnError>): HttpRequest<CallWithDuplicateResponsesResponse> {
         return (options?.client ?? client).requestOptions<CallWithDuplicateResponsesResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -368,7 +368,7 @@ export class ResponseServiceRequests {
             ...options
         });
     }
-    
+
     public callWithResponses<ThrowOnError extends boolean = false>(options?: Options<CallWithResponsesData, ThrowOnError>): HttpRequest<CallWithResponsesResponse> {
         return (options?.client ?? client).requestOptions<CallWithResponsesResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -401,7 +401,7 @@ export class MultipleTags1ServiceRequests {
             ...options
         });
     }
-    
+
     public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<DummyBResponse> {
         return (options?.client ?? client).requestOptions<DummyBResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -422,7 +422,7 @@ export class MultipleTags2ServiceRequests {
             ...options
         });
     }
-    
+
     public dummyB<ThrowOnError extends boolean = false>(options?: Options<DummyBData, ThrowOnError>): HttpRequest<DummyBResponse> {
         return (options?.client ?? client).requestOptions<DummyBResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -503,7 +503,7 @@ export class ComplexServiceRequests {
             ...options
         });
     }
-    
+
     public complexParams<ThrowOnError extends boolean = false>(options: Options<ComplexParamsData, ThrowOnError>): HttpRequest<ComplexParamsResponse> {
         return (options?.client ?? client).requestOptions<ComplexParamsResponse, ThrowOnError>({
             responseStyle: 'data',
@@ -524,7 +524,7 @@ export class MultipartServiceRequests {
             ...options
         });
     }
-    
+
     public multipartRequest<ThrowOnError extends boolean = false>(options?: Options<MultipartRequestData, ThrowOnError>): HttpRequest<unknown> {
         return (options?.client ?? client).requestOptions<unknown, ThrowOnError>({
             responseStyle: 'data',
@@ -569,7 +569,7 @@ export class NonAsciiÆøåÆøÅöôêÊServiceRequests {
             ...options
         });
     }
-    
+
     /**
      * Login User
      */
@@ -591,28 +591,28 @@ export class DefaultServiceResources {
             return opts ? inject(DefaultServiceRequests).export(opts) : undefined;
         });
     }
-    
+
     public patchApiVbyApiVersionNoTag<ThrowOnError extends boolean = false>(options?: () => Options<PatchApiVbyApiVersionNoTagData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(DefaultServiceRequests).patchApiVbyApiVersionNoTag(opts) : undefined;
         });
     }
-    
+
     public import<ThrowOnError extends boolean = false>(options: () => Options<ImportData, ThrowOnError> | undefined) {
         return httpResource<ImportResponse>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(DefaultServiceRequests).import(opts) : undefined;
         });
     }
-    
+
     public fooWow<ThrowOnError extends boolean = false>(options?: () => Options<FooWowData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(DefaultServiceRequests).fooWow(opts) : undefined;
         });
     }
-    
+
     public getApiVbyApiVersionSimpleOperation<ThrowOnError extends boolean = false>(options: () => Options<GetApiVbyApiVersionSimpleOperationData, ThrowOnError> | undefined) {
         return httpResource<GetApiVbyApiVersionSimpleOperationResponse>(() => {
             const opts = options ? options() : undefined;
@@ -652,49 +652,49 @@ export class SimpleServiceResources {
             return opts ? inject(SimpleServiceRequests).deleteCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    
+
     public getCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<GetCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(SimpleServiceRequests).getCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    
+
     public headCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<HeadCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(SimpleServiceRequests).headCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    
+
     public optionsCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<OptionsCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(SimpleServiceRequests).optionsCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    
+
     public patchCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<PatchCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(SimpleServiceRequests).patchCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    
+
     public postCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<PostCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(SimpleServiceRequests).postCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    
+
     public putCallWithoutParametersAndResponse<ThrowOnError extends boolean = false>(options?: () => Options<PutCallWithoutParametersAndResponseData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(SimpleServiceRequests).putCallWithoutParametersAndResponse(opts) : undefined;
         });
     }
-    
+
     private _apiService?: ApiService2;
     get apiService(): ApiService2 {
         return this._apiService ??= new ApiService2();
@@ -709,28 +709,28 @@ export class ParametersServiceResources {
             return opts ? inject(ParametersServiceRequests).deleteFoo(opts) : undefined;
         });
     }
-    
+
     public callWithParameters<ThrowOnError extends boolean = false>(options: () => Options<CallWithParametersData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(ParametersServiceRequests).callWithParameters(opts) : undefined;
         });
     }
-    
+
     public callWithWeirdParameterNames<ThrowOnError extends boolean = false>(options: () => Options<CallWithWeirdParameterNamesData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(ParametersServiceRequests).callWithWeirdParameterNames(opts) : undefined;
         });
     }
-    
+
     public getCallWithOptionalParam<ThrowOnError extends boolean = false>(options: () => Options<GetCallWithOptionalParamData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(ParametersServiceRequests).getCallWithOptionalParam(opts) : undefined;
         });
     }
-    
+
     public postCallWithOptionalParam<ThrowOnError extends boolean = false>(options: () => Options<PostCallWithOptionalParamData, ThrowOnError> | undefined) {
         return httpResource<PostCallWithOptionalParamResponse>(() => {
             const opts = options ? options() : undefined;
@@ -790,14 +790,14 @@ export class DefaultsServiceResources {
             return opts ? inject(DefaultsServiceRequests).callWithDefaultParameters(opts) : undefined;
         });
     }
-    
+
     public callWithDefaultOptionalParameters<ThrowOnError extends boolean = false>(options?: () => Options<CallWithDefaultOptionalParametersData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(DefaultsServiceRequests).callWithDefaultOptionalParameters(opts) : undefined;
         });
     }
-    
+
     public callToTestOrderOfParams<ThrowOnError extends boolean = false>(options: () => Options<CallToTestOrderOfParamsData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
@@ -814,28 +814,28 @@ export class DuplicateServiceResources {
             return opts ? inject(DuplicateServiceRequests).duplicateName(opts) : undefined;
         });
     }
-    
+
     public duplicateName2<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateNameData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(DuplicateServiceRequests).duplicateName(opts) : undefined;
         });
     }
-    
+
     public duplicateName22<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName2Data, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(DuplicateServiceRequests).duplicateName22(opts) : undefined;
         });
     }
-    
+
     public duplicateName3<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName3Data, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(DuplicateServiceRequests).duplicateName3(opts) : undefined;
         });
     }
-    
+
     public duplicateName4<ThrowOnError extends boolean = false>(options?: () => Options<DuplicateName4Data, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
@@ -862,21 +862,21 @@ export class ResponseServiceResources {
             return opts ? inject(ResponseServiceRequests).callWithResponseAndNoContentResponse(opts) : undefined;
         });
     }
-    
+
     public callWithResponse<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponseData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponseResponse>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(ResponseServiceRequests).callWithResponse(opts) : undefined;
         });
     }
-    
+
     public callWithDuplicateResponses<ThrowOnError extends boolean = false>(options?: () => Options<CallWithDuplicateResponsesData, ThrowOnError> | undefined) {
         return httpResource<CallWithDuplicateResponsesResponse>(() => {
             const opts = options ? options() : undefined;
             return opts ? inject(ResponseServiceRequests).callWithDuplicateResponses(opts) : undefined;
         });
     }
-    
+
     public callWithResponses<ThrowOnError extends boolean = false>(options?: () => Options<CallWithResponsesData, ThrowOnError> | undefined) {
         return httpResource<CallWithResponsesResponse>(() => {
             const opts = options ? options() : undefined;
@@ -903,7 +903,7 @@ export class MultipleTags1ServiceResources {
             return opts ? inject(MultipleTags1ServiceRequests).dummyA(opts) : undefined;
         });
     }
-    
+
     public dummyB<ThrowOnError extends boolean = false>(options?: () => Options<DummyBData, ThrowOnError> | undefined) {
         return httpResource<DummyBResponse>(() => {
             const opts = options ? options() : undefined;
@@ -920,7 +920,7 @@ export class MultipleTags2ServiceResources {
             return opts ? inject(MultipleTags1ServiceRequests).dummyA(opts) : undefined;
         });
     }
-    
+
     public dummyB<ThrowOnError extends boolean = false>(options?: () => Options<DummyBData, ThrowOnError> | undefined) {
         return httpResource<DummyBResponse>(() => {
             const opts = options ? options() : undefined;
@@ -987,7 +987,7 @@ export class ComplexServiceResources {
             return opts ? inject(ComplexServiceRequests).complexTypes(opts) : undefined;
         });
     }
-    
+
     public complexParams<ThrowOnError extends boolean = false>(options: () => Options<ComplexParamsData, ThrowOnError> | undefined) {
         return httpResource<ComplexParamsResponse>(() => {
             const opts = options ? options() : undefined;
@@ -1004,7 +1004,7 @@ export class MultipartServiceResources {
             return opts ? inject(MultipartServiceRequests).multipartResponse(opts) : undefined;
         });
     }
-    
+
     public multipartRequest<ThrowOnError extends boolean = false>(options?: () => Options<MultipartRequestData, ThrowOnError> | undefined) {
         return httpResource<unknown>(() => {
             const opts = options ? options() : undefined;
@@ -1041,7 +1041,7 @@ export class NonAsciiÆøåÆøÅöôêÊServiceResources {
             return opts ? inject(NonAsciiÆøåÆøÅöôêÊServiceRequests).nonAsciiæøåÆøÅöôêÊ字符串(opts) : undefined;
         });
     }
-    
+
     /**
      * Login User
      */
