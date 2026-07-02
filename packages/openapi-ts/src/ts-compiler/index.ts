@@ -191,8 +191,8 @@ import type { TsTypePredicateNode as _TsTypePredicateNode } from './nodes/types/
 import type { TsTypeQueryNode as _TsTypeQueryNode } from './nodes/types/type-query-node';
 import type { TsTypeReferenceNode as _TsTypeReferenceNode } from './nodes/types/type-reference-node';
 import type { TsUnionTypeNode as _TsUnionTypeNode } from './nodes/types/union-type-node';
-import type { TsPrinterOptions as _TsPrinterOptions } from './printer';
-import { createPrinter, printAst } from './printer';
+import type { TsPrinter as _TsPrinter, TsPrinterOptions as _TsPrinterOptions } from './printer';
+import { createPrinter } from './printer';
 
 export namespace ts {
   export type ArrayBindingElement = _TsArrayBindingElement;
@@ -324,6 +324,7 @@ export namespace ts {
   export type PostfixUnaryOperator = _SyntaxKindEnum;
   export type PrefixUnaryExpression = _TsPrefixUnaryExpression;
   export type PrefixUnaryOperator = _SyntaxKindEnum;
+  export type Printer = _TsPrinter;
   export type PrinterOptions = _TsPrinterOptions;
   export type PrivateIdentifier = _TsPrivateIdentifier;
   export type PropertyAccessExpression = _TsPropertyAccessExpression;
@@ -478,7 +479,6 @@ export const ts = {
   isStringLiteral,
   isUnionTypeNode,
   isVariableStatement,
-  printAst,
   setSyntheticLeadingComments,
   setSyntheticTrailingComments,
 } as const;

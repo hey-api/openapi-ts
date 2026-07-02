@@ -22,7 +22,7 @@ export class Domains {
     public static get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>): RequestResult<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
-    
+
     public static post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>): RequestResult<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
@@ -36,7 +36,7 @@ export class Business {
     public static get<ThrowOnError extends boolean = false>(options?: Options<BusinessGetData, ThrowOnError>): RequestResult<BusinessGetResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).get<BusinessGetResponses, unknown, ThrowOnError>({ url: '/locations/businesses', ...options });
     }
-    
+
     static providers = Providers;
 }
 
@@ -48,7 +48,7 @@ export class Domains2 {
     public static get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>): RequestResult<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
-    
+
     public static post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>): RequestResult<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
@@ -70,7 +70,7 @@ export class Domains3 {
     public static get<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsGetData, ThrowOnError>): RequestResult<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).get<BusinessProvidersDomainsGetResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
-    
+
     public static post<ThrowOnError extends boolean = false>(options?: Options<BusinessProvidersDomainsPostData, ThrowOnError>): RequestResult<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).post<BusinessProvidersDomainsPostResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
@@ -88,7 +88,7 @@ export class Domains4 {
     public static putBusinessProvidersDomains<ThrowOnError extends boolean = false>(options?: Options<PutBusinessProvidersDomainsData, ThrowOnError>): RequestResult<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).put<PutBusinessProvidersDomainsResponses, unknown, ThrowOnError>({ url: '/business/providers/domains', ...options });
     }
-    
+
     static business = Business4;
 }
 
@@ -102,6 +102,6 @@ export class Locations {
     public static get<ThrowOnError extends boolean = false>(options?: Options<GetData, ThrowOnError>): RequestResult<GetResponses, unknown, ThrowOnError> {
         return (options?.client ?? client).get<GetResponses, unknown, ThrowOnError>({ url: '/locations', ...options });
     }
-    
+
     static business = Business5;
 }
